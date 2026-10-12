@@ -1,0 +1,50 @@
+[
+  {
+    "key": "fixture-1",
+    "title": "Learning support for students",
+    "category": "education",
+    "state": null,
+    "district": null,
+    "summary": "Explore how education assistance could appear, with requirements and evidence kept separate."
+  },
+  {
+    "key": "fixture-2",
+    "title": "Women’s enterprise pathway",
+    "category": "business",
+    "state": "Rajasthan",
+    "district": null,
+    "summary": "A fictional business support record for testing discovery. Open to no real applications."
+  },
+  {
+    "key": "fixture-3",
+    "title": "Community skills fellowship",
+    "category": "employment",
+    "state": "Rajasthan",
+    "district": "Dausa",
+    "summary": "A fictional local skills opportunity to demonstrate district-level discovery."
+  },
+  {
+    "key": "fixture-4",
+    "title": "Sustainable farming support",
+    "category": "agriculture",
+    "state": "Rajasthan",
+    "district": null,
+    "summary": "A demonstration of agricultural opportunity information and location context."
+  },
+  {
+    "key": "fixture-5",
+    "title": "Health access assistance",
+    "category": "healthcare",
+    "state": null,
+    "district": null,
+    "summary": "A fictional welfare record. Benefits and eligibility have not been established."
+  },
+  {
+    "key": "fixture-6",
+    "title": "Inclusive supplier programme",
+    "category": "procurement",
+    "state": null,
+    "district": null,
+    "summary": "A fictional procurement record for exploring the future business journey."
+  }
+]

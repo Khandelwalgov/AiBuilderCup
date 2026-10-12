@@ -1,0 +1,32 @@
+name: foundation
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: opportunity
+          POSTGRES_PASSWORD: local-development-only
+          POSTGRES_DB: opportunity
+        ports: [5432:5432]
+        options: >-
+          --health-cmd "pg_isready -U opportunity" --health-interval 3s
+          --health-timeout 3s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.28"
+          python-version: "3.12"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "11.25.0"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: make setup migrate seed contracts check
+      - run: git diff --exit-code -- packages/contracts/openapi.json apps/web/src/lib/api/schema.d.ts
+      - run: cd apps/web && pnpm exec playwright install --with-deps chromium
+      - run: make test-e2e
