@@ -27,6 +27,8 @@ def current_uid(
             app = firebase_admin.initialize_app(
                 options={"projectId": settings().firebase_project_id}
             )
+        if app.project_id != settings().firebase_project_id:
+            raise APIError(503, "auth_project_mismatch", "Firebase project configuration differs.")
         token = auth.verify_id_token(credentials.credentials, app=app, check_revoked=True)
         return token["uid"]
     except (

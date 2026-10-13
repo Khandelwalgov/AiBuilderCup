@@ -1,4 +1,4 @@
-"""Persistence foundation. No relationship implies permission; private APIs come later."""
+"""Persistence models. Relationships do not imply permission; services enforce ownership."""
 
 import uuid
 from datetime import date, datetime
@@ -30,6 +30,7 @@ class Entity(Base):
 class User(Entity):
     __tablename__ = "users"
     firebase_uid: Mapped[str] = mapped_column(String(128), unique=True)
+    is_admin: Mapped[bool] = mapped_column(default=False, server_default="false")
     language: Mapped[str] = mapped_column(default="en")
     notification_preferences: Mapped[dict] = mapped_column(JSON, default=dict)
 
@@ -151,6 +152,9 @@ class Source(Entity):
 class Opportunity(Entity):
     __tablename__ = "opportunities"
     source_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("sources.id"), index=True)
+    published_version_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("opportunity_versions.id", use_alter=True, name="fk_published_version")
+    )
     source_key: Mapped[str]
     category: Mapped[str] = mapped_column(index=True)
     is_synthetic: Mapped[bool] = mapped_column(default=False)
@@ -161,6 +165,12 @@ class OpportunityVersion(Entity):
     __tablename__ = "opportunity_versions"
     opportunity_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("opportunities.id"), index=True)
     version: Mapped[int]
+    publication_state: Mapped[str] = mapped_column(default="draft", server_default="draft")
+    category: Mapped[str | None]
+    snapshot_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("source_snapshots.id", name="fk_version_snapshot")
+    )
+    extraction: Mapped[dict | None] = mapped_column(JSON)
     title: Mapped[str]
     summary: Mapped[str]
     issuer: Mapped[str | None]
@@ -187,9 +197,15 @@ class OpportunityVersion(Entity):
         UniqueConstraint("opportunity_id", "version"),
         CheckConstraint("version > 0"),
         CheckConstraint(
+            "publication_state IN ('draft','published','rejected')", name="ck_publication_state"
+        ),
+        CheckConstraint(
+            "publication_state != 'published' OR status = 'verified'", name="ck_published_verified"
+        ),
+        CheckConstraint(
             (
-                "status IN "
-                "('discovered','parsed','needs_review','verified','superseded','closed','source_unreachable')"
+                "status IN ('discovered','parsed','needs_review','verified',"
+                "'superseded','closed','source_unreachable')"
             )
         ),
         CheckConstraint(
@@ -228,8 +244,8 @@ class MatchEvaluation(SubjectEntity):
         CheckConstraint(SUBJECT_CHECK),
         CheckConstraint(
             (
-                "status IN "
-                "('potential_match','possibly_eligible_missing_information','known_blocker','not_eligible_on_known_facts','ready_for_application_preflight')"
+                "status IN ('potential_match','possibly_eligible_missing_information',"
+                "'known_blocker','not_eligible_on_known_facts','ready_for_application_preflight')"
             )
         ),
     )
@@ -247,3 +263,48 @@ class ActionDependency(Entity):
     action_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("action_items.id"))
     requirement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("requirements.id"))
     __table_args__ = (UniqueConstraint("action_id", "requirement_id"),)
+
+
+class SourceSnapshot(Entity):
+    __tablename__ = "source_snapshots"
+    source_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("sources.id"), index=True)
+    content_hash: Mapped[str]
+    media_type: Mapped[str]
+    source_url: Mapped[str]
+    # Public authoritative text only; never personal documents. Binary blobs go to GCS later.
+    pages: Mapped[list] = mapped_column(JSON)
+    byte_count: Mapped[int]
+    response_metadata: Mapped[dict] = mapped_column(JSON)
+    __table_args__ = (UniqueConstraint("source_id", "content_hash"),)
+
+
+class IngestionRun(Entity):
+    __tablename__ = "ingestion_runs"
+    source_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("sources.id"), index=True)
+    actor_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
+    snapshot_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("source_snapshots.id"))
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    status: Mapped[str]
+    diagnostic_code: Mapped[str | None]
+    model: Mapped[str | None]
+    extractor_version: Mapped[str | None]
+    changed: Mapped[bool | None]
+    http_status: Mapped[int | None]
+
+
+class CandidateReview(Entity):
+    __tablename__ = "candidate_reviews"
+    version_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("opportunity_versions.id"), index=True)
+    reviewer_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
+    decision: Mapped[str]
+    note: Mapped[str]
+    before: Mapped[dict | None] = mapped_column(JSON)
+    after: Mapped[dict | None] = mapped_column(JSON)
+
+
+class AuditEvent(Entity):
+    __tablename__ = "audit_events"
+    actor_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), index=True)
+    action: Mapped[str]
+    object_id: Mapped[uuid.UUID]
+    details: Mapped[dict] = mapped_column(JSON, default=dict)

@@ -1,3 +1,4 @@
+import { Eligibility } from '../eligibility/Eligibility';
 import { useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
@@ -34,8 +35,9 @@ const categories: Record<string, { label: string; icon: typeof BookOpen; tone: s
 };
 export function Discover() {
   const t = useStrings();
-  const facets = useFacets();
   const [params, setParams] = useSearchParams();
+  const development = params.get('development') === 'true';
+  const facets = useFacets(development);
   const q = params.get('q') || '';
   const category = params.get('category') || '';
   const state = params.get('state') || '';
@@ -50,7 +52,7 @@ export function Discover() {
     setParams(next);
   }
   const query = useInfiniteQuery({
-    queryKey: ['opportunities', q, category, state, district],
+    queryKey: ['opportunities', q, category, state, district, development],
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {
       const { data, error } = await api.GET('/v1/opportunities', {
@@ -62,6 +64,7 @@ export function Discover() {
             district: district || undefined,
             cursor: pageParam,
             limit: 6,
+            development,
           },
         },
       });
@@ -142,8 +145,15 @@ export function Discover() {
       <div className="notice">
         <Info size={18} />
         <div>
-          <strong>{t.notice}</strong>
-          <span>{t.noticeText}</span>
+          <strong>{development ? t.notice : t.publishedCatalogue}</strong>
+          <span>{development ? t.noticeText : t.publishedNotice}</span>
+          {development ? (
+            <Link to="/discover">{t.publicView}</Link>
+          ) : (
+            import.meta.env.VITE_ENABLE_DEVELOPMENT_CATALOGUE === 'true' && (
+              <Link to="/discover?development=true">{t.developmentView}</Link>
+            )
+          )}
         </div>
       </div>
       <div className="catalogue-heading">
@@ -191,7 +201,10 @@ export function Discover() {
           <ChevronDown size={14} />
         </label>
         {(q || category || state || district) && (
-          <button className="text-button" onClick={() => setParams({})}>
+          <button
+            className="text-button"
+            onClick={() => setParams(development ? { development: 'true' } : {})}
+          >
             {t.reset}
           </button>
         )}
@@ -214,7 +227,10 @@ export function Discover() {
           <Search size={30} />
           <h2>{t.empty}</h2>
           <p>{t.emptyText}</p>
-          <button className="button" onClick={() => setParams({})}>
+          <button
+            className="button"
+            onClick={() => setParams(development ? { development: 'true' } : {})}
+          >
             {t.reset}
           </button>
         </div>
@@ -222,7 +238,7 @@ export function Discover() {
         <>
           <div className="card-grid">
             {items.map((item) => (
-              <Card key={item.id} item={item} />
+              <Card key={item.id} item={item} development={development} />
             ))}
           </div>
           {query.hasNextPage && (
@@ -244,7 +260,7 @@ export function Discover() {
     </div>
   );
 }
-function Card({ item }: { item: Opportunity }) {
+function Card({ item, development }: { item: Opportunity; development: boolean }) {
   const t = useStrings();
   const category = categories[item.category] ?? {
     label: item.category,
@@ -264,7 +280,9 @@ function Card({ item }: { item: Opportunity }) {
       </div>
       <span className="category-name">{category.label}</span>
       <h3>
-        <Link to={`/opportunities/${item.id}`}>{item.title}</Link>
+        <Link to={`/opportunities/${item.id}${development ? '?development=true' : ''}`}>
+          {item.title}
+        </Link>
       </h3>
       <p className="card-summary">{item.summary}</p>
       <div className="card-meta">
@@ -279,7 +297,10 @@ function Card({ item }: { item: Opportunity }) {
       </div>
       <div className="card-bottom">
         <span>{item.is_synthetic ? 'DEVELOPMENT FIXTURE' : item.issuer || t.unknown}</span>
-        <Link to={`/opportunities/${item.id}`} aria-label={`${t.detail}: ${item.title}`}>
+        <Link
+          to={`/opportunities/${item.id}${development ? '?development=true' : ''}`}
+          aria-label={`${t.detail}: ${item.title}`}
+        >
           <ArrowRight size={19} />
         </Link>
       </div>
@@ -310,21 +331,24 @@ function safeUrl(value: string | null) {
 }
 export function Detail() {
   const { id } = useParams();
+  const [params] = useSearchParams();
+  const development = params.get('development') === 'true';
   const t = useStrings();
   const query = useQuery({
-    queryKey: ['opportunity', id],
+    queryKey: ['opportunity', id, development],
     queryFn: async () => {
       const { data, error } = await api.GET('/v1/opportunities/{identifier}', {
-        params: { path: { identifier: id! } },
+        params: { path: { identifier: id! }, query: { development } },
       });
       return data ?? fail(error);
     },
   });
   const item = query.data;
   const sourceUrl = safeUrl(item?.source_url ?? null);
+  const applyUrl = safeUrl(item?.apply_url ?? null);
   return (
     <div className="page detail-page">
-      <Link to="/discover" className="back-link">
+      <Link to={development ? '/discover?development=true' : '/discover'} className="back-link">
         <ArrowLeft size={16} />
         {t.back}
       </Link>
@@ -363,6 +387,13 @@ export function Detail() {
                 </div>
               </div>
             )}
+            {item.source.status === 'source_unreachable' ||
+            item.source.status === 'needs_review' ? (
+              <div className="notice">
+                <p>{t.sourceWarning}</p>
+              </div>
+            ) : null}
+            {!item.is_synthetic && <Eligibility id={item.id} />}
             <div className="detail-grid">
               <div>
                 <section className="panel">
@@ -374,10 +405,85 @@ export function Detail() {
                     <dt>{t.deadline}</dt>
                     <dd>{item.closes_on || t.unknownDeadline}</dd>
                   </dl>
+                  {applyUrl && (
+                    <a className="button" href={applyUrl} target="_blank" rel="noreferrer">
+                      {t.officialApplication}
+                      <ExternalLink size={14} />
+                    </a>
+                  )}
+                  {item.restrictions.length > 0 && (
+                    <>
+                      <h3>{t.restrictions}</h3>
+                      <ul>
+                        {item.restrictions.map((r) => (
+                          <li key={r}>{r}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                  {item.required_documents.length > 0 && (
+                    <>
+                      <h3>{t.requiredDocuments}</h3>
+                      <ul>
+                        {item.required_documents.map((d) => (
+                          <li key={d}>{d}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                  {item.field_evidence.length > 0 && (
+                    <details>
+                      <summary>{t.sourceEvidence}</summary>
+                      {item.field_evidence.map((entry, i) => (
+                        <blockquote key={i}>
+                          <strong>{entry.field}</strong>
+                          <p>{entry.citation.passage}</p>
+                          <a href={entry.citation.source_url} target="_blank" rel="noreferrer">
+                            {t.officialCitation} · {t.page} {entry.citation.page}
+                          </a>
+                          <p>
+                            {entry.citation.language} · {entry.citation.basis}
+                          </p>
+                        </blockquote>
+                      ))}
+                    </details>
+                  )}
+                  {item.review_flags.length > 0 && (
+                    <details>
+                      <summary>{t.reviewFlags}</summary>
+                      <ul>
+                        {item.review_flags.map((f) => (
+                          <li key={f}>{f}</li>
+                        ))}
+                      </ul>
+                    </details>
+                  )}
+                  {item.missing_fields.length > 0 && (
+                    <details>
+                      <summary>{t.missingFields}</summary>
+                      <p>{item.missing_fields.join(', ')}</p>
+                    </details>
+                  )}
                 </section>
                 <section className="panel">
                   <h2>{t.requirements}</h2>
-                  <p>{t.notEstablished}</p>
+                  {item.requirements.length === 0 ? (
+                    <p>{t.notEstablished}</p>
+                  ) : (
+                    item.requirements.map((req) => (
+                      <div className="source-requirement" key={req.id}>
+                        <h3>{req.description}</h3>
+                        {req.citations.map((citation, i) => (
+                          <blockquote key={i}>
+                            <p>{citation.passage}</p>
+                            <a href={citation.source_url} target="_blank" rel="noreferrer">
+                              {t.officialCitation} · {t.page} {citation.page}
+                            </a>
+                          </blockquote>
+                        ))}
+                      </div>
+                    ))
+                  )}
                 </section>
                 <section className="panel">
                   <h2>{t.geography}</h2>

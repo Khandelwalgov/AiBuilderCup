@@ -1,0 +1,20 @@
+{
+  "project_id": "YOUR_PROJECT_ID",
+  "region": "asia-south1",
+  "service": "opportunity-api",
+  "repository": "opportunity",
+  "cloud_sql_connection": "YOUR_PROJECT_ID:asia-south1:opportunity-db",
+  "runtime_service_account": "opportunity-runtime@YOUR_PROJECT_ID.iam.gserviceaccount.com",
+  "migration_service_account": "opportunity-migrations@YOUR_PROJECT_ID.iam.gserviceaccount.com",
+  "database_secret": "opportunity-database-url",
+  "database_secret_version": "1",
+  "gemini_secret": "opportunity-gemini-key",
+  "gemini_secret_version": "1",
+  "gemini_model": "gemini-3.8-flash",
+  "firebase_web": {
+    "project_id": "YOUR_PROJECT_ID",
+    "api_key": "YOUR_PUBLIC_FIREBASE_WEB_API_KEY",
+    "auth_domain": "YOUR_PROJECT_ID.firebaseapp.com",
+    "app_id": "YOUR_FIREBASE_WEB_APP_ID"
+  }
+}

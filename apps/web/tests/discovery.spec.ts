@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test('public catalogue searches, filters, and opens database-backed detail', async ({ page }) => {
-  await page.goto('/discover');
+  await page.goto('/discover?development=true');
   await expect(page.getByRole('article')).toHaveCount(6);
   await expect(page.getByText('These fictional records help you explore')).toBeVisible();
   await page
@@ -12,7 +12,7 @@ test('public catalogue searches, filters, and opens database-backed detail', asy
   await expect(page.getByRole('heading', { name: 'Learning support for students' })).toBeVisible();
   await expect(page.getByText('No official source has been attached')).toBeVisible();
   await expect(page.getByText('Not verified', { exact: true })).toBeVisible();
-  await page.goto('/discover');
+  await page.goto('/discover?development=true');
   await page
     .getByRole('textbox', { name: 'Search opportunities, interests, or keywords' })
     .fill('no-such-opportunity');
@@ -28,7 +28,7 @@ test('public catalogue searches, filters, and opens database-backed detail', asy
 
 test('mobile navigation, Hindi preference, and truthful coverage', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/discover');
+  await page.goto('/discover?development=true');
   await expect(page.getByRole('article')).toHaveCount(6);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
@@ -44,7 +44,7 @@ test('mobile navigation, Hindi preference, and truthful coverage', async ({ page
 
 test('network failure gives a recoverable error state', async ({ page }) => {
   await page.route('**/v1/opportunities?**', (route) => route.abort());
-  await page.goto('/discover');
+  await page.goto('/discover?development=true');
   await expect(page.getByRole('heading', { name: 'We couldn’t load this page' })).toBeVisible();
   await page.unroute('**/v1/opportunities?**');
   await page.getByRole('button', { name: 'Try again', exact: true }).click();

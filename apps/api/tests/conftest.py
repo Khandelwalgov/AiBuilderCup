@@ -36,7 +36,10 @@ def db():
 
 
 @pytest.fixture
-def client(db):
+def client(db, monkeypatch):
+    from opportunity_platform.core.config import settings
+
+    monkeypatch.setattr(settings(), "enable_development_catalogue", True)
     app.dependency_overrides[get_session] = lambda: db
     with TestClient(app) as client:
         yield client

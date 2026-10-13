@@ -25,6 +25,8 @@ from opportunity_platform.opportunities.schemas import (
     OpportunityView,
     Status,
 )
+from opportunity_platform.profiles.service import AccountView, account
+from opportunity_platform.workflows import router
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger("opportunity")
@@ -32,6 +34,9 @@ app = FastAPI(
     title="Opportunity Intelligence API",
     version="0.1.0",
     responses={
+        403: {"model": ErrorEnvelope},
+        409: {"model": ErrorEnvelope},
+        429: {"model": ErrorEnvelope},
         401: {"model": ErrorEnvelope},
         404: {"model": ErrorEnvelope},
         422: {"model": ErrorEnvelope},
@@ -41,7 +46,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings().cors_origins,
-    allow_methods=["GET"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type"],
 )
 DB = Annotated[Session, Depends(get_session)]
@@ -110,6 +115,12 @@ class Health(BaseModel):
     database: str
 
 
+@app.get("/live", response_model=Health)
+def live():
+    # Liveness must not restart healthy processes during a database outage.
+    return Health(status="ok", database="not_checked")
+
+
 @app.get("/health", response_model=Health)
 def health(session: DB):
     session.execute(text("SELECT 1"))
@@ -128,27 +139,38 @@ def opportunities(
     deadline_before: date | None = None,
     cursor: uuid.UUID | None = None,
     limit: Annotated[int, Query(ge=1, le=100)] = 12,
+    development: bool = False,
 ):
     return service.browse(
-        session, q, category, state, district, issuer, status, deadline_before, cursor, limit
+        session,
+        q,
+        category,
+        state,
+        district,
+        issuer,
+        status,
+        deadline_before,
+        cursor,
+        limit,
+        development,
     )
 
 
 @app.get("/v1/opportunity-facets", response_model=Facets)
-def opportunity_facets(session: DB):
-    return service.facets(session)
+def opportunity_facets(session: DB, development: bool = False):
+    return service.facets(session, development)
 
 
 @app.get("/v1/opportunities/{identifier}", response_model=OpportunityView)
-def opportunity_detail(identifier: uuid.UUID, session: DB):
-    return service.detail(session, identifier)
+def opportunity_detail(identifier: uuid.UUID, session: DB, development: bool = False):
+    return service.detail(session, identifier, development)
 
 
-class Account(BaseModel):
-    uid: str
+@app.get("/v1/me", response_model=AccountView)
+def me(session: DB, uid: Annotated[str, Depends(current_uid)]):
+    user = account(session, uid)
+    session.commit()
+    return AccountView(uid=uid, is_admin=user.is_admin)
 
 
-@app.get("/v1/me", response_model=Account)
-def me(uid: Annotated[str, Depends(current_uid)]):
-    # Only the verified caller identity; no client-supplied object identifier.
-    return Account(uid=uid)
+app.include_router(router)

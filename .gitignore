@@ -17,3 +17,8 @@ playwright-report/
 test-results/
 .pnpm-store/
 repomix-output.xml
+# Local deployment choices/public web settings and live acceptance evidence.
+infra/deploy.local.json
+.live-validation/
+
+firebase-debug.log

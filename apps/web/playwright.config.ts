@@ -7,6 +7,7 @@ export default defineConfig({
       command:
         '../api/.venv/bin/uvicorn opportunity_platform.main:app --app-dir ../api/src --host 127.0.0.1 --port 8000',
       url: 'http://127.0.0.1:8000/health',
+      env: { ENABLE_DEVELOPMENT_CATALOGUE: 'true' },
       reuseExistingServer: !process.env.CI,
     },
     { command: 'pnpm dev', url: 'http://127.0.0.1:5173', reuseExistingServer: !process.env.CI },

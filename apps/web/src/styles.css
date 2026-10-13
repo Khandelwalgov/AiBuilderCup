@@ -1271,3 +1271,287 @@ dd {
     height: 44px;
   }
 }
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 12px;
+  color: #4b6242;
+  margin: 15px 0;
+  min-width: 0;
+}
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #d9e1d1;
+  border-radius: 6px;
+  padding: 12px;
+  background: #fcfdf9;
+  color: #263e33;
+  font: inherit;
+  font-size: 13px;
+}
+.field textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+.fact-editor {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 40px;
+  column-gap: 15px;
+  border-top: 1px solid #e6ebdf;
+  padding: 8px 0 17px;
+}
+.fact-editor .remove-fact {
+  align-self: center;
+  color: #8b6654;
+}
+.fact-editor .fact-dates {
+  grid-column: 1 / -1;
+}
+.fact-origin {
+  grid-column: 1 / -1;
+  color: #7b876f;
+  font-size: 10px;
+  margin-top: 12px;
+}
+.fact-dates .field {
+  display: inline-flex;
+  width: 45%;
+  margin-right: 5%;
+}
+.add-fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 12px 0 0;
+}
+.form-actions,
+.evaluation-actions,
+.review-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin: 20px 0;
+}
+.evaluation .eyebrow {
+  margin-bottom: 10px;
+}
+.evaluation .assessment-status {
+  font-size: 18px;
+  font-weight: 550;
+  color: #3b5b35;
+  margin: 28px 0 15px;
+}
+.requirement-result {
+  border: 1px solid #e0e7d7;
+  border-radius: 8px;
+  padding: 22px;
+  margin: 18px 0;
+}
+.requirement-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+.requirement-title svg {
+  flex-shrink: 0;
+  color: #6e8658;
+}
+.requirement-title h3 {
+  flex: 1;
+  font-size: 16px;
+}
+.requirement-title span {
+  font-size: 10px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  background: #eaf0e3;
+}
+.unsatisfied .requirement-title span {
+  background: #f6e7df;
+  color: #865139;
+}
+.unknown .requirement-title span {
+  background: #f5f0de;
+  color: #796637;
+}
+.evidence-gap {
+  color: #8a713d;
+  font-size: 12px;
+  display: block;
+  margin-bottom: 15px;
+}
+.evaluation details,
+.candidate-editor details {
+  font-size: 12px;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+.evaluation details summary,
+.candidate-editor details summary,
+.fact-dates summary {
+  cursor: pointer;
+  color: #536c44;
+  font-size: 12px;
+}
+.evaluation ul,
+.candidate-editor ul {
+  padding-left: 20px;
+  font-size: 12px;
+  line-height: 1.9;
+  color: #66785b;
+}
+blockquote {
+  margin: 16px 0;
+  padding: 12px 15px;
+  border-left: 3px solid #bdcba9;
+  background: #f5f7ef;
+  font-size: 12px;
+  color: #647656;
+}
+blockquote p {
+  font-size: 12px;
+  margin-bottom: 9px !important;
+}
+blockquote a,
+.notice a,
+.source-row a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.notice a {
+  display: inline-block;
+  margin-top: 10px;
+}
+.source-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 0;
+}
+.source-row strong,
+.run-row strong {
+  font-size: 13px;
+}
+.source-row small,
+.run-row small {
+  color: #7a886d;
+  font-size: 10px;
+}
+.review-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  background: #f8faf4;
+  border: 1px solid #e1e7d8;
+  border-radius: 6px;
+  padding: 16px;
+  margin: 10px 0;
+  color: #405c36;
+}
+.review-row span {
+  font-size: 13px;
+}
+.review-row small {
+  font-size: 10px;
+  flex-shrink: 0;
+}
+.run-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 15px 0;
+  border-bottom: 1px solid #e8ecdf;
+  align-items: center;
+}
+.run-row span {
+  font-size: 12px;
+}
+.review-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin: 25px 0;
+}
+.review-columns > div {
+  min-width: 0;
+}
+.candidate-editor pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 11px;
+  line-height: 1.7;
+  max-height: 450px;
+  overflow: auto;
+  padding: 15px;
+  background: #f5f7ef;
+}
+.candidate-editor code {
+  overflow-wrap: anywhere;
+  font-size: 10px;
+}
+.candidate-editor > .field textarea[rows] {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+}
+.candidate-editor h3 {
+  font-size: 16px;
+  margin: 18px 0 10px;
+}
+.checkbox-field {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 15px 0;
+  font-size: 12px;
+  color: #5c714e;
+  line-height: 1.7;
+}
+.checkbox-field input {
+  margin-top: 4px;
+  accent-color: #244f3f;
+}
+.source-requirement {
+  border-top: 1px solid #e4e9db;
+  padding-top: 20px;
+  margin-top: 22px;
+}
+.source-requirement h3 {
+  font-size: 16px;
+  line-height: 1.5;
+}
+@media (max-width: 700px) {
+  .review-columns {
+    grid-template-columns: 1fr;
+  }
+  .source-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .fact-editor {
+    grid-template-columns: 1fr 40px;
+  }
+  .fact-editor .field {
+    grid-column: 1;
+  }
+  .fact-editor .remove-fact {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+  .requirement-title {
+    flex-wrap: wrap;
+  }
+  .requirement-title h3 {
+    min-width: 70%;
+  }
+}

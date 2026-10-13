@@ -4,6 +4,8 @@ from typing import Literal
 
 from pydantic import BaseModel
 
+from opportunity_platform.ingestion.schemas import FieldCitation
+
 Status = Literal[
     "discovered", "parsed", "needs_review", "verified", "superseded", "closed", "source_unreachable"
 ]
@@ -18,9 +20,28 @@ class SourceView(BaseModel):
     status: str
 
 
+class CitationView(BaseModel):
+    source_url: str
+    passage: str
+    page: str | None
+
+
+class RequirementView(BaseModel):
+    id: uuid.UUID
+    description: str
+    rule: dict
+    subject_context: str
+    citations: list[CitationView]
+
+
 class OpportunityView(BaseModel):
     id: uuid.UUID
     version: int
+    publication_state: str
+    requirements: list[RequirementView]
+    field_evidence: list[FieldCitation]
+    review_flags: list[str]
+    missing_fields: list[str]
     title: str
     summary: str
     category: str

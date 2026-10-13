@@ -1,10 +1,12 @@
-# Opportunity Intelligence · Phase 1
+# Opportunity Intelligence · Phase 2
 
-Working name: **Unclaimed**, configurable with `VITE_APP_NAME`. India-first opportunity discovery, with a deliberately truthful development catalogue. This phase runs React → FastAPI → PostgreSQL. All six seeded records are **fictional synthetic examples**, not real programmes. No official URLs, deadlines, benefits, or eligibility decisions are fabricated.
+Working name: **Unclaimed**. React + TypeScript/Vite → FastAPI → PostgreSQL, with Firebase Authentication and server-side Google GenAI extraction. Phase 2 adds an official-source ingestion, human review, publication and deterministic personal eligibility pipeline while preserving the Phase 1 interface.
 
-## Run locally
+**Validation status:** the official PDFs were fetched and parsed live. Gemini and real Firebase sign-in require credentials that were unavailable during implementation. No real opportunity was extracted, reviewed or published during validation. The normal public catalogue is therefore empty; it never substitutes synthetic records. Automated extraction/review tests use clearly fictional data confined to tests.
 
-Prerequisites: Docker Desktop running, Python 3.12+, `uv` 0.11.28, Node.js 24+ and `pnpm` 11.25.0. Ports 5432, 8000, and 5173 must be free. Commands below run from the repository root.
+## Local setup
+
+Prerequisites: Docker Desktop, Python 3.12+, `uv` 0.11.28, Node.js 24+, `pnpm` 11.25.0. From the repository root:
 
 ```sh
 cp apps/api/.env.example apps/api/.env
@@ -12,103 +14,106 @@ cp apps/web/.env.example apps/web/.env.local
 make setup
 make db
 make migrate
-make seed
+make seed       # optional, six clearly fictional development examples
 make contracts
 ```
 
-Start these in **two terminals**:
+Start `make api` and `make web` in separate terminals. Open [the app](http://127.0.0.1:5173), [API docs](http://127.0.0.1:8000/docs) or [readiness](http://127.0.0.1:8000/health). Migrations preserve Phase 1 records. `docker compose stop` retains the database volume. Use `UV_CACHE_DIR=/tmp/opportunity-uv-cache` if the default cache is restricted.
+
+Normal discovery exposes only the explicitly selected, reviewed real version. To inspect the old fixtures locally, set `ENABLE_DEVELOPMENT_CATALOGUE=true` in the API environment and optionally `VITE_ENABLE_DEVELOPMENT_CATALOGUE=true` in the web environment, restart, then open `/discover?development=true`. Development mode exposes synthetic records only, labels them, and cannot publish or evaluate them. Both switches default to false; never enable them for production.
+
+## Credentials and first administrator
+
+1. In Firebase, register a web app, enable Google Authentication, and authorize localhost/127.0.0.1 and the deployment domain. Set `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, and `VITE_FIREBASE_APP_ID` in `apps/web/.env.local`.
+2. Set the same `FIREBASE_PROJECT_ID` in `apps/api/.env`. Configure appropriately authorized Application Default Credentials (`gcloud auth application-default login`, or a credential file **outside** this repository). The API validates Firebase ID tokens with revocation checking; there is no auth bypass.
+3. Set server-only `GEMINI_API_KEY` and `GEMINI_MODEL`. The configured default is `gemini-3.8-flash`; select a model available to your project. The locked SDK is `google-genai` 2.29.0. Extraction uses JSON schema output, Pydantic validation, and exact recorded-page quote checks. No private profile facts are sent to Gemini.
+4. Restart the servers, sign in, then grant the first administrator from a trusted operator terminal with database and Firebase IAM access:
 
 ```sh
-make api
+cd apps/api
+uv run python -m opportunity_platform.admin.bootstrap --project-id YOUR_PROJECT_ID --uid YOUR_FIREBASE_UID
+# To revoke:
+uv run python -m opportunity_platform.admin.bootstrap --project-id YOUR_PROJECT_ID --uid YOUR_FIREBASE_UID --revoke
 ```
+
+Bootstrap verifies that the Firebase account exists and is enabled, updates the database role, and writes an audit event. The command requires operator privileges; no HTTP route, browser field or caller-supplied role grants admin access. Refresh the app after role changes. Backend authorization rechecks the database on every admin request.
+
+`CORS_ORIGINS` is a JSON list; authenticated PUT/POST and OPTIONS preflight are supported. `VITE_API_BASE_URL` stays blank for the local Vite proxy, or holds the HTTPS API origin at build time. `VITE_*` configuration is public: never place server secrets there.
+
+## Official source and execution
+
+One source-specific adapter, `depwd-pre-matric`, targets **only the pre-matric scholarship section and applicable common conditions**, combining these official DEPwD documents:
+
+- [Official scholarship index](https://depwd.gov.in/en/scholarship/).
+- [Full guidelines, 25 September 2024](https://cdnbbsr.s3waas.gov.in/s3e58aea67b01fa747687f038dfde066f6/uploads/2024/09/202409261656732428.pdf).
+- [Amendment, 4 September 2025](https://cdnbbsr.s3waas.gov.in/s3e58aea67b01fa747687f038dfde066f6/uploads/2025/09/202509111852335844.pdf).
+
+The live check parsed 61 + 7 PDF pages. This is selected-document coverage, **not** a claim that the application round is open or that all subsequent amendments have been discovered. Reviewers must check the official index for completeness before publication. See [source policy](docs/source-policy.md).
+
+A signed-in administrator can open `/admin` and click **Ingest source**, or run:
 
 ```sh
-make web
+cd apps/api
+uv run python -m opportunity_platform.ingestion.service \
+  --source depwd-pre-matric --actor-uid YOUR_FIREBASE_UID
 ```
 
-Open [the application](http://127.0.0.1:5173), [API documentation](http://127.0.0.1:8000/docs), or [database readiness](http://127.0.0.1:8000/health). Public browsing needs no Firebase or Gemini credentials. `make seed` is idempotent and preserves existing records. `docker compose stop` stops PostgreSQL without deleting its named volume.
+Fetches enforce host allowlists, robots checks, HTTPS validation, size/page limits, timeouts and bounded retries. Runs, source fingerprints and text snapshots are persisted. A per-source advisory lock and configurable minimum interval serialize and rate-limit runs. Identical consecutive bytes reuse the snapshot and latest candidate without another model call; a reversion to older captured bytes creates a fresh review candidate; failed extraction can retry the same snapshot after configuration is fixed. Rejected candidates do not automatically reappear on unchanged input.
 
-If installation is blocked by a restricted cache location, use `UV_CACHE_DIR=/tmp/opportunity-uv-cache make setup`. pnpm can use a writable store via `pnpm --dir apps/web install --store-dir /tmp/opportunity-pnpm-store`; this affects only your local installation. Do not commit cache paths or credentials.
+A missing key produces `extraction_blocked / gemini_not_configured` after saving the fetched snapshot. Invalid model output/citations produce `extraction_failed`. Neither creates a public record. A fetch failure updates source freshness diagnostics and leaves the last published version intact.
 
-## What works
+## Complete configured journey
 
-- Responsive React application with working navigation, English/Hindi static strings, keyboard focus, skip link, and loading/empty/error states.
-- Public opportunity discovery with title/summary search, category, exact state and district filters, URL-persisted filters, cursor pagination, and detail/provenance pages. Location is a discovery filter, **not an eligibility determination**; selecting Rajasthan returns records tagged Rajasthan, not national records.
-- A database-backed overview reporting actual synthetic, verified, and verified-source counts.
-- FastAPI public catalogue and facets, database readiness, consistent error envelopes, redacted structured request logs and correlation IDs, bounded parameters, SQLAlchemy services, Alembic migration, and explicit development seeding.
-- Firebase Google sign-in integration and backend ID-token validation, including revocation checking. `/v1/me` returns only the verified caller identity; there is no bypass and no private-domain data endpoint.
-- Canonical domain schema foundations for people, households, consent, businesses, facts, evidence, versioned opportunities, requirements, evaluations and actions.
-- Generated OpenAPI + TypeScript contracts with `openapi-fetch` and TanStack Query.
+1. Administrator ingests the official source at `/admin`.
+2. Open the candidate; inspect original-document links, captured page text, proposed rules, metadata citations, review flags, and differences from the current publication. Correct the structured JSON if needed; edits are validated against captured evidence.
+3. Add a review note and confirm completeness/flags, then approve, reject, or request further review. Approval atomically writes immutable reviewed rules/citations and moves the published-version pointer. A newer draft cannot displace the published version.
+4. Sign in as a personal user. At `/profile`, enter **fictional demo information only**, adding relevant facts progressively. Blank values are unknown; user facts remain unverified. Income requires the exact definition and period from the rule; no household sum is inferred.
+5. Browse `/discover`, open a reviewed opportunity and click **Check my eligibility**. The backend evaluates stored typed rules against only the caller's profile and persists the rule version, fact snapshot, engine version and result time.
+6. Inspect satisfied, not satisfied and unknown requirements, original clauses, facts used and next steps. Missing documents remain evidence gaps. A substantive failure remains a failure even when an unrelated document is added. All-satisfied results are preliminary potential matches, never official approval or verified application readiness.
 
-Profile, family, business, and My Opportunities pages intentionally explain that their workflows are not implemented. The UI does not simulate matching, applications, document uploads, monitoring, or AI answers.
+The review editor is an advanced JSON interface with evidence alongside it. English/Hindi navigation, forms and outcome labels are localized; original policy passages and deterministic explanations retain English/source language. There is no conversational AI assistant in this milestone.
 
-## Firebase configuration
+## API and persistence
 
-To enable sign-in, create/select your own Firebase project and register a web app. Enable **Google** in Authentication → Sign-in method, and add `localhost`, `127.0.0.1`, and your eventual Hosting domain under authorised domains.
+All resource endpoints are under `/v1`; see generated `/docs` for schemas.
 
-In `apps/web/.env.local`, set the web app's:
+| Endpoints | Access / purpose |
+|---|---|
+| `GET /opportunities`, `/opportunity-facets`, `/opportunities/{id}` | Public, reviewed real versions; explicit gated development mode |
+| `GET /me` | Firebase caller identity and server-resolved admin role |
+| `GET/PUT /profile/me`, `GET /people/{id}` | Firebase caller's own profile only; other profiles return 404 |
+| `POST /opportunities/{id}/evaluate` | Caller-owned facts against published real rules |
+| `GET /admin/sources`, `POST /admin/sources/{key}/ingest` | Database-authorized administrators only |
+| `GET /admin/ingestion-runs` | Privileged run diagnostics |
+| `GET /admin/reviews`, `GET/POST /admin/reviews/{id}` | Admin queue, evidence, diff, correction and publication |
 
-```dotenv
-VITE_FIREBASE_API_KEY=
-VITE_FIREBASE_AUTH_DOMAIN=
-VITE_FIREBASE_PROJECT_ID=
-VITE_FIREBASE_APP_ID=
-```
+Migration `fcc8ecdfdfad` extends `57d3f03c34e3`: explicit publication pointer/state, version extraction/snapshot/category, server-managed admin role, snapshots, ingestion runs, candidate reviews and audit events. Old rows remain draft/unpublished. Services enforce immutability; no DB trigger protects against a privileged SQL operator. Public catalogue counts include only currently selected reviewed real publications, never drafts or fixtures.
 
-In `apps/api/.env`, set `FIREBASE_PROJECT_ID` to the **same project**. Backend revocation checks require Application Default Credentials with Firebase Authentication access. Locally use `gcloud auth application-default login` for an appropriately authorised account, or `GOOGLE_APPLICATION_CREDENTIALS` pointing to a credential file **outside this repository**. Cloud Run should use its attached service account and IAM. Restart both servers after configuration changes. In Settings, a signed-in account calls the protected API to verify the backend session. Firebase console configuration and real sign-in require your project; these were not tested against a live account in this milestone.
+Domain code lives in `ingestion/`, `admin/`, `profiles/`, `eligibility/`; `workflows.py` adapts HTTP. Closed typed rules support nested AND/OR, numeric comparisons, membership, geography, dates, income contexts and evidence prerequisites. No expressions are executed. Stable blocker hashes and fact keys prepare the future unlock graph. Household/business rule contexts currently return unknown pending authorized context support.
 
-[Vetted token verification behavior](https://firebase.google.com/docs/auth/admin/verify-id-tokens) and [session revocation](https://firebase.google.com/docs/auth/admin/manage-sessions) follow Firebase's Admin SDK guidance.
-
-`VITE_APP_NAME` controls the working product name. Leave `VITE_API_BASE_URL` blank locally to use the Vite `/v1` proxy. For Hosting, set it to the HTTPS API origin **before building**. `DATABASE_URL` configures PostgreSQL; `CORS_ORIGINS` is a JSON list of allowed frontend origins. Frontend `VITE_*` values are public build configuration; never put server credentials in them.
-
-## Checks and contracts
-
-With PostgreSQL running and dependencies installed:
+## Checks and reproducibility
 
 ```sh
 make check
 make contracts
-git diff -- packages/contracts/openapi.json apps/web/src/lib/api/schema.d.ts
+# Generated files must match the backend; do not edit them by hand.
 cd apps/web
 pnpm exec playwright install chromium
 pnpm exec playwright test
+# Optional live network check, from apps/api:
+RUN_LIVE_SOURCE_TESTS=1 uv run pytest -q tests/test_pipeline.py::test_live_official_source_capture
 ```
 
-`make check` runs Ruff lint/format verification, PostgreSQL integration tests, Alembic drift detection, ESLint, TypeScript and the production Vite build. Backend tests use isolated temporary PostgreSQL schemas and remove them afterward; they do not truncate application tables. `TEST_DATABASE_URL` optionally selects a dedicated PostgreSQL test database. Schema creation permission is required for the test role. Browser tests start API/Vite automatically if they are not already running and use the seeded application database. Run `make migrate seed` first.
+`make check` runs Ruff, PostgreSQL integration tests, Alembic drift detection, ESLint, TypeScript and production build. Tests use isolated schemas, removed afterward, without truncating application data. Set `TEST_DATABASE_URL` for a separate database; the role needs schema creation permission. The migration test upgrades the actual Phase 1 schema, preserves an existing account, checks drift and exercises downgrade/re-upgrade. Browser tests start local servers if necessary; existing API servers must have `ENABLE_DEVELOPMENT_CATALOGUE=true` for fixture regressions. Run `make migrate seed` first.
 
-CI performs these checks against PostgreSQL, regenerates and checks contracts, and runs Chromium journey tests. API contract changes must be regenerated via `make contracts`; do not edit `schema.d.ts` or `openapi.json` by hand. Typed client integration follows [openapi-fetch](https://openapi-ts.dev/openapi-fetch/api).
+Browser profile/evaluation tests use explicitly mocked auth/API responses confined to tests; other browser journeys use the actual database-backed public API. Backend tests override identity only inside tests and exercise actual PostgreSQL services, permissions, review/publication, source failures, unknown outcomes and exact evidence validation. The opt-in live test fetches the real PDFs with extraction intentionally unconfigured. Live Gemini output quality and real Firebase login are **not** validated by test doubles. See [validation record](docs/phase-2-validation.md) for executed results.
 
-## Repository layout
+## Limits and next milestone
 
-```text
-apps/api/
-  src/opportunity_platform/
-    core/                 configuration, Firebase auth, errors
-    db/                   SQLAlchemy domain models and sessions
-    opportunities/        catalogue services and Pydantic responses
-    main.py               HTTP routes and middleware
-    seed.py               explicit synthetic fixture loader
-  alembic/versions/       committed initial schema migration
-  tests/                  real PostgreSQL API and constraint tests
-  Dockerfile              Cloud Run-ready non-root API image
-apps/web/
-  src/app/                routing, shell, Firebase initialization
-  src/features/opportunities/  connected listing and detail
-  src/lib/api/            generated types and typed client
-  src/i18n/               English/Hindi interface strings
-  tests/                  desktop/mobile/error browser journeys
-packages/contracts/       generated OpenAPI
-infra/                    Hosting config and deployment guide
-data/fixtures/            explicitly synthetic catalogue JSON
-scripts/                  contract export
-docs/decisions/            foundation boundaries and privacy limits
-.github/workflows/        focused CI
-```
+No cloud resources were provisioned or deployed; [deployment preparation](infra/README.md) remains available. Add the new server environment variables when deploying and choose a request timeout adequate for synchronous ingestion. There is no scheduler, automatic selective re-evaluation, notification delivery, full PDF binary archive/GCS integration, document upload/verification, family consent workflow, business UI, application submission or graph planner. Public text snapshots and binary hashes are saved in PostgreSQL; original binaries are not retained. Unexpected process termination may roll back a run rather than leaving durable crash history.
 
-## Deployment preparation and limits
+Data export/deletion and verified-document correction flows are not implemented. Use synthetic personal information only. Do not onboard real sensitive data before retention, export/deletion and consent controls are ready. Source failure warnings appear in detail; manual checks are the only freshness guarantee. Exact quotation matching prevents fabricated quotes, but cannot prove semantic extraction correctness—human review is essential.
 
-See [infra/README.md](infra/README.md) for Firebase Hosting and Cloud Run instructions. No paid resources were provisioned or deployed. Local PostgreSQL is bound to loopback with a clearly development-only password. Never reuse that password remotely. Migrations run separately from application startup. Environment files, credentials, documents, build outputs, and caches are ignored.
+**Next milestone:** configure Firebase/Gemini, measure extraction on these real documents and complete a live reviewed-publication demo. Then add secure synthetic-document verification and one shared-blocker action that updates several version-aware evaluations. Preserve the existing architecture and truthful coverage boundaries. [Phase 2 decisions](docs/decisions/0002-reviewed-intelligence.md) supersede Phase 1 publication behavior.
 
-This is a Phase 1 foundation, not the full hackathon P0. There are no real-source records, ingestion jobs, Gemini calls, eligibility engine, live requirements, family/guardian administration, secure uploads, application tracking, notifications, or deployed services. Hindi applies to static UI; fixture text and category names remain English. Account preferences are local browser settings; `/v1/me` validates identity without creating personal data. Domain tables are schema foundations, not completed workflows. Data export/deletion and consent-management UI must exist before real sensitive-data onboarding. See [decision 0001](docs/decisions/0001-foundation.md).
-
-**Next milestone:** add one accessible official-source adapter, immutable snapshots and schema-validated Gemini extraction, a server-authorized admin candidate-review/publication workflow, and cited deterministic requirement evaluation. Preserve the last published opportunity when a newer candidate is under review or a source is unreachable, then connect progressive personal profiling with explicit permissions and unknown states.
+Phase 2.5 adds bounded model requests, sanitized failure codes, evidence preservation, production configuration guards and a plan-first deployment runner. See [live integration validation](docs/phase-2.5-validation.md) and [deployment procedure](infra/README.md). Run `make preflight` before attempting live acceptance; configuration readiness does not prove Firebase permissions or Gemini access.

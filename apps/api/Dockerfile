@@ -7,5 +7,6 @@ COPY alembic.ini ./
 COPY alembic ./alembic
 RUN uv sync --frozen --no-dev && useradd --create-home appuser
 USER appuser
-ENV PATH="/app/.venv/bin:$PATH"
+ENV PATH="/app/.venv/bin:$PATH" PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 CMD python -c "import os,urllib.request; urllib.request.urlopen('http://127.0.0.1:'+os.environ.get('PORT','8080')+'/live',timeout=3)"
 CMD ["sh", "-c", "uvicorn opportunity_platform.main:app --host 0.0.0.0 --port ${PORT:-8080}"]

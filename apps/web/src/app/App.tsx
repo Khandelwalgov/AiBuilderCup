@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { Profile } from '../features/profiles/Profile';
+import { Admin } from '../features/admin/Admin';
+import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import {
   ArrowDownLeft,
@@ -29,16 +31,19 @@ export function useStrings() {
   return strings[useContext(Locale)];
 }
 const brand = import.meta.env.VITE_APP_NAME || 'Unclaimed';
-export function useFacets() {
+export function useFacets(development = false) {
   return useQuery({
-    queryKey: ['facets'],
+    queryKey: ['facets', development],
     queryFn: async () => {
-      const { data, error } = await api.GET('/v1/opportunity-facets');
+      const { data, error } = await api.GET('/v1/opportunity-facets', {
+        params: { query: { development } },
+      });
       return data ?? fail(error);
     },
   });
 }
 export function App() {
+  const cache = useQueryClient();
   const [language, setLanguage] = useState<Language>(() =>
     localStorage.getItem('language') === 'hi' ? 'hi' : 'en',
   );
@@ -52,7 +57,25 @@ export function App() {
     localStorage.setItem('language', language);
     document.title = `${brand} · Opportunity Intelligence`;
   }, [language]);
-  useEffect(() => (auth ? onAuthStateChanged(auth, setUser) : undefined), []);
+  useEffect(
+    () =>
+      auth
+        ? onAuthStateChanged(auth, (next) => {
+            cache.clear();
+            setUser(next);
+          })
+        : undefined,
+    [cache],
+  );
+  const accountQuery = useQuery({
+    queryKey: ['account', user?.uid],
+    enabled: !!user,
+    retry: false,
+    queryFn: async () => {
+      const { data, error } = await api.GET('/v1/me');
+      return data ?? fail(error);
+    },
+  });
   useEffect(() => setMenu(false), [location.pathname]);
   useEffect(() => {
     const close = (event: KeyboardEvent) => {
@@ -81,6 +104,8 @@ export function App() {
     { to: '/businesses', label: t.businesses, icon: BriefcaseBusiness },
     { to: '/my-opportunities', label: t.saved, icon: Layers3 },
   ];
+  if (accountQuery.data?.is_admin)
+    navigation.push({ to: '/admin', label: t.adminReview, icon: ShieldCheck });
   return (
     <Locale.Provider value={language}>
       <a className="skip" href="#main">
@@ -119,7 +144,7 @@ export function App() {
             <div className="sidebar-note">
               <Leaf size={22} />
               <p>{t.footer}</p>
-              <span>INDIA FIRST · PHASE 01</span>
+              <span>INDIA FIRST · PHASE 02</span>
             </div>
             <NavLink className="settings-link" to="/settings">
               <Settings2 size={18} />
@@ -149,7 +174,9 @@ export function App() {
             </button>
             <span className="breadcrumb">
               {brand} <span>/</span>{' '}
-              {navigation.find((n) => location.pathname.startsWith(n.to))?.label || t.settings}
+              {location.pathname.startsWith('/opportunities/')
+                ? t.discover
+                : navigation.find((n) => location.pathname.startsWith(n.to))?.label || t.settings}
             </span>
             <div className="top-actions">
               <label className="language">
@@ -185,13 +212,15 @@ export function App() {
               {authError}
             </div>
           )}
-          <main id="main" tabIndex={-1}>
+          <main key={user?.uid || 'public'} id="main" tabIndex={-1}>
             <Routes>
               <Route path="/" element={<Navigate to="/discover" replace />} />
               <Route path="/discover" element={<Discover />} />
               <Route path="/opportunities/:id" element={<Detail />} />
               <Route path="/dashboard" element={<Overview />} />
-              {['profile', 'family', 'businesses', 'my-opportunities'].map((path) => (
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/admin" element={<Admin />} />
+              {['family', 'businesses', 'my-opportunities'].map((path) => (
                 <Route key={path} path={`/${path}`} element={<Future />} />
               ))}
               <Route
@@ -233,7 +262,7 @@ function Overview() {
       </div>
       <div className="stats">
         {[
-          [t.sampleCount, f.data?.synthetic],
+          [t.publishedCount, f.data?.total],
           [t.verified, f.data?.verified],
           [t.sources, f.data?.official_sources],
         ].map(([label, value]) => (
