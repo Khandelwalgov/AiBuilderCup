@@ -16,12 +16,13 @@ from opportunity_platform.db.models import (
     MatchEvaluation,
     Opportunity,
     Requirement,
+    RequirementEvidence,
     User,
 )
 from opportunity_platform.eligibility import service as eligibility
 from opportunity_platform.eligibility.rules import FactInput
 from opportunity_platform.opportunities.service import catalogue
-from opportunity_platform.subjects.service import SubjectRef, resolve
+from opportunity_platform.subjects.service import SubjectRef, resolve, subject_facts
 
 
 class PlanRequest(BaseModel):
@@ -124,6 +125,21 @@ def build(session, uid, subject, hypothetical=None):
     # Serialize plan mutation to avoid duplicate actions across simultaneous requests.
     session.execute(select(User).where(User.id == user.id).with_for_update())
     rows = list(session.execute(catalogue().order_by(Opportunity.id).limit(100)))
+    facts = subject_facts(session, subject.kind, obj.id)
+    requirements = {}
+    for requirement in session.scalars(
+        select(Requirement)
+        .where(Requirement.version_id.in_([row[1].id for row in rows]))
+        .order_by(Requirement.id)
+    ):
+        requirements.setdefault(requirement.version_id, []).append(requirement)
+    evidence = {}
+    reqids = [r.id for group in requirements.values() for r in group]
+    if reqids:
+        for item in session.scalars(
+            select(RequirementEvidence).where(RequirementEvidence.requirement_id.in_(reqids))
+        ):
+            evidence.setdefault(item.requirement_id, []).append(item)
     evaluations = [
         eligibility.check(
             session,
@@ -133,6 +149,12 @@ def build(session, uid, subject, hypothetical=None):
             hypothetical,
             commit=False,
             application_type=application_context(session, subject.kind, obj.id, row[1].id),
+            _prepared={
+                "row": row,
+                "facts": facts,
+                "requirements": requirements.get(row[1].id, []),
+                "evidence": evidence,
+            },
         )
         for row in rows
     ]

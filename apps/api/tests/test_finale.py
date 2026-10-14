@@ -166,3 +166,93 @@ def test_parallel_plans_and_separate_subjects(db, pipeline):  # noqa: F811
             403,
             404,
         )
+
+
+def test_national_discovery_opt_in_never_becomes_domicile_fact(client, db, pipeline):  # noqa: F811
+    publish_two(db, pipeline)
+    strict = client.get("/v1/opportunities?state=Rajasthan").json()
+    inclusive = client.get("/v1/opportunities?state=Rajasthan&include_national=true").json()
+    assert strict["total"] == 0 and inclusive["total"] == 2
+    assert all(item["state"] is None for item in inclusive["items"])
+
+
+def test_uuid_guessing_actions_simulation_explanation_and_revocation(client, db, pipeline):  # noqa: F811
+    from opportunity_platform.assistant import service as assistant
+    from opportunity_platform.core.auth import current_uid
+    from opportunity_platform.main import app
+
+    first, _ = publish_two(db, pipeline)
+    setup_person(db)
+    setup_person(db, "fictional-stranger")
+    household = subjects.create_household(
+        db, "fictional-owner", subjects.HouseholdWrite(name="Fictional household")
+    )
+    dependent = subjects.add_dependent(
+        db,
+        "fictional-owner",
+        household.id,
+        subjects.DependentWrite(
+            display_name="Fictional dependent",
+            facts=[],
+            guardian_responsibility_confirmed=True,
+            relationship="parent",
+        ),
+    )
+    ref = subjects.SubjectRef(id=dependent.id)
+    plan = planning.build(db, "fictional-owner", ref)
+    app.dependency_overrides[current_uid] = lambda: "fictional-stranger"
+    assert client.get(f"/v1/people/{dependent.id}").status_code == 404
+    assert (
+        client.put(
+            f"/v1/people/{dependent.id}", json={"display_name": "Denied", "facts": []}
+        ).status_code
+        == 404
+    )
+    for path, body in [
+        ("/v1/plan", {"subject": ref.model_dump(mode="json")}),
+        (
+            "/v1/plan/simulate",
+            {"subject": ref.model_dump(mode="json"), "facts": [{"key": "age", "value": 20}]},
+        ),
+        (f"/v1/opportunities/{first.id}/evaluate", {"subject": ref.model_dump(mode="json")}),
+        (
+            "/v1/assistant/explain",
+            {"evaluation_id": str(plan.evaluations[0].id), "question": "Why?"},
+        ),
+    ]:
+        assert client.post(path, json=body).status_code == 404
+    assert (
+        client.patch(
+            f"/v1/actions/{plan.actions[0].id}", json={"status": "in_progress"}
+        ).status_code
+        == 404
+    )
+    subjects.revoke_guardian_access(db, "fictional-owner", dependent.id)
+    with pytest.raises(Exception) as denied:
+        assistant.explain(
+            db,
+            "fictional-owner",
+            assistant.ExplanationRequest(evaluation_id=plan.evaluations[0].id, question="Why?"),
+        )
+    assert denied.value.code == "subject_not_found"
+    app.dependency_overrides.pop(current_uid, None)
+
+
+def test_old_assessment_explanation_is_rejected_after_relevant_fact_change(db, pipeline):  # noqa: F811
+    from opportunity_platform.assistant import service as assistant
+
+    first, _ = publish_two(db, pipeline)
+    setup_person(db)
+    old = eligibility.check(db, "fictional-owner", first.id)
+    save_profile(
+        db,
+        "fictional-owner",
+        ProfileWrite(display_name="Fictional", facts=[FactInput(key="age", value=12)]),
+    )
+    with pytest.raises(Exception) as caught:
+        assistant.explain(
+            db,
+            "fictional-owner",
+            assistant.ExplanationRequest(evaluation_id=old.id, question="Why?"),
+        )
+    assert caught.value.code == "evaluation_outdated"

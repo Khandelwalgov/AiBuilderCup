@@ -831,6 +831,13 @@ export interface components {
             previous_status?: string | null;
             /** Previous Version */
             previous_version?: number | null;
+            /**
+             * Changes
+             * @default []
+             */
+            changes: {
+                [key: string]: unknown;
+            }[];
         };
         /** ExplanationItem */
         ExplanationItem: {
@@ -1633,6 +1640,7 @@ export interface operations {
                 cursor?: string | null;
                 limit?: number;
                 development?: boolean;
+                include_national?: boolean;
             };
             header?: never;
             path?: never;

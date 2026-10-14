@@ -30,3 +30,13 @@ gemini-smoke:
 
 extraction-smoke:
 	cd apps/api && uv run python -m opportunity_platform.operations.extraction_smoke
+
+# Plan by default; explicit opt-in creates only disposable random test schemas.
+finale-demo:
+	cd apps/api && uv run python ../../scripts/finale_demo.py $(ARGS)
+
+release-local:
+	$(MAKE) preflight
+	$(MAKE) contracts
+	$(MAKE) check
+	$(MAKE) test-e2e

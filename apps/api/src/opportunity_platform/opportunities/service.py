@@ -113,6 +113,7 @@ def browse(
     cursor: uuid.UUID | None,
     limit: int,
     development: bool = False,
+    include_national: bool = False,
 ) -> OpportunityPage:
     query = catalogue(development)
     if q:
@@ -131,7 +132,22 @@ def browse(
         (OpportunityVersion.status, status),
     ]:
         if value is not None:
-            query = query.where(column == value)
+            if include_national and column in (
+                OpportunityVersion.state,
+                OpportunityVersion.district,
+            ):
+                query = query.where(
+                    or_(
+                        column == value,
+                        (
+                            OpportunityVersion.state.is_(None)
+                            & OpportunityVersion.district.is_(None)
+                            & OpportunityVersion.country.in_(["IN", "India"])
+                        ),
+                    )
+                )
+            else:
+                query = query.where(column == value)
     if deadline_before:
         query = query.where(OpportunityVersion.closes_on <= deadline_before)
     total = session.scalar(select(func.count()).select_from(query.subquery()))

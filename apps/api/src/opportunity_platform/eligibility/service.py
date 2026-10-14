@@ -46,6 +46,7 @@ class EvaluationView(BaseModel):
     opportunity_title: str = ""
     previous_status: str | None = None
     previous_version: int | None = None
+    changes: list[dict] = []
 
 
 def check(
@@ -56,6 +57,7 @@ def check(
     hypothetical: list[FactInput] | None = None,
     commit: bool = True,
     application_type: str | None = None,
+    _prepared: dict | None = None,
 ) -> EvaluationView:
     if application_type not in {None, "fresh", "renewal"}:
         raise APIError(422, "invalid_application_context", "Choose fresh, renewal or unknown.")
@@ -74,7 +76,7 @@ def check(
         session.execute(text("select pg_advisory_xact_lock(:key)"), {"key": lock})
         # Permissions are checked on every request before returning any cached assessment.
         resolve(session, uid, subject)
-    facts = subject_facts(session, subject.kind, profile.id)
+    facts = _prepared["facts"] if _prepared else subject_facts(session, subject.kind, profile.id)
     if hypothetical is not None:
         keys = {f.key for f in hypothetical}
         facts = [f for f in facts if f.key not in keys] + [
@@ -91,7 +93,11 @@ def check(
             )
             for f in hypothetical
         ]
-    row = session.execute(catalogue().where(Opportunity.id == opportunity_id)).first()
+    row = (
+        _prepared["row"]
+        if _prepared
+        else session.execute(catalogue().where(Opportunity.id == opportunity_id)).first()
+    )
     if row is None:
         raise APIError(
             404,
@@ -100,13 +106,19 @@ def check(
         )
     opportunity, version, _source = row
     results = []
-    requirements = list(
-        session.scalars(
-            select(Requirement).where(Requirement.version_id == version.id).order_by(Requirement.id)
+    requirements = (
+        _prepared["requirements"]
+        if _prepared
+        else list(
+            session.scalars(
+                select(Requirement)
+                .where(Requirement.version_id == version.id)
+                .order_by(Requirement.id)
+            )
         )
     )
-    evidence_by_requirement = {}
-    if requirements:
+    evidence_by_requirement = _prepared["evidence"] if _prepared else {}
+    if requirements and not _prepared:
         for evidence in session.scalars(
             select(RequirementEvidence).where(
                 RequirementEvidence.requirement_id.in_([r.id for r in requirements])
@@ -211,9 +223,8 @@ def check(
         .order_by(MatchEvaluation.created_at.desc(), MatchEvaluation.id)
         .limit(1)
     )
-    previous_version = (
-        session.get(OpportunityVersion, previous.version_id).version if previous else None
-    )
+    # Compare with the prior distinct snapshot; unchanged loads retain this meaningful diff.
+    baseline = previous
     now = datetime.now(timezone.utc)
     relevant_keys = {c.fact for r in results for c in rule_leaves(r.rule) if c.fact}
     canonical_facts = sorted(
@@ -262,6 +273,18 @@ def check(
         and previous.fingerprint == fingerprint
     ):
         record = previous
+        baseline = session.scalar(
+            select(MatchEvaluation)
+            .join(OpportunityVersion, OpportunityVersion.id == MatchEvaluation.version_id)
+            .where(
+                OpportunityVersion.opportunity_id == opportunity.id,
+                getattr(MatchEvaluation, subject.kind + "_id") == profile.id,
+                MatchEvaluation.id != record.id,
+                MatchEvaluation.created_at <= record.created_at,
+            )
+            .order_by(MatchEvaluation.created_at.desc(), MatchEvaluation.id)
+            .limit(1)
+        )
         now = previous.created_at
         if commit:
             session.commit()
@@ -273,14 +296,33 @@ def check(
             session.flush()
     else:
         record.id = uuid.uuid4()
+    previous_results = {r["requirement"]: r for r in baseline.results} if baseline else {}
+    changes = [
+        {
+            "requirement": r.requirement,
+            "before": previous_results[r.requirement]["result"]["outcome"]
+            if r.requirement in previous_results
+            else "not_previously_assessed",
+            "after": r.result.outcome,
+        }
+        for r in results
+        if baseline
+        and (
+            r.requirement not in previous_results
+            or previous_results[r.requirement]["result"]["outcome"] != r.result.outcome
+        )
+    ]
     return EvaluationView(
+        changes=changes,
         id=record.id,
         opportunity_id=opportunity.id,
         version_id=version.id,
         version=version.version,
         opportunity_title=version.title,
-        previous_status=previous.status if previous else None,
-        previous_version=previous_version,
+        previous_status=baseline.status if baseline else None,
+        previous_version=session.get(OpportunityVersion, baseline.version_id).version
+        if baseline
+        else None,
         evaluated_at=now,
         status=status,
         requirements=results,

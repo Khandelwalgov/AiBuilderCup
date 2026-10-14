@@ -245,7 +245,8 @@ def test_fact_edit_reevaluates_only_dependent_rules(db, pipeline):  # noqa: F811
     assert db.scalar(select(func.count()).select_from(MatchEvaluation)) == before + 1
     current = eligibility.check(db, "fictional-owner", first.id)
     assert current.status == "not_eligible_on_known_facts"
-    assert current.previous_status == "not_eligible_on_known_facts"
+    assert current.previous_status == "possibly_eligible_missing_information"
+    assert any(c["before"] == "satisfied" and c["after"] == "unsatisfied" for c in current.changes)
 
 
 def test_fresh_renewal_context_is_per_opportunity_and_unknown_is_safe(db, pipeline):  # noqa: F811

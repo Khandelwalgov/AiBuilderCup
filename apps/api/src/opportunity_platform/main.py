@@ -140,6 +140,7 @@ def opportunities(
     cursor: uuid.UUID | None = None,
     limit: Annotated[int, Query(ge=1, le=100)] = 12,
     development: bool = False,
+    include_national: bool = False,
 ):
     return service.browse(
         session,
@@ -153,6 +154,7 @@ def opportunities(
         cursor,
         limit,
         development,
+        include_national,
     )
 
 

@@ -351,6 +351,16 @@
               "default": false,
               "title": "Development"
             }
+          },
+          {
+            "name": "include_national",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Include National"
+            }
           }
         ],
         "responses": {
@@ -4707,6 +4717,15 @@
               }
             ],
             "title": "Previous Version"
+          },
+          "changes": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Changes",
+            "default": []
           }
         },
         "type": "object",

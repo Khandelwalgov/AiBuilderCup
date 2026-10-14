@@ -11,6 +11,7 @@ from typing import Literal
 from google import genai
 from google.genai import types
 from pydantic import BaseModel, ConfigDict, Field
+from sqlalchemy import select
 
 from opportunity_platform.core.config import settings
 from opportunity_platform.core.errors import APIError
@@ -121,6 +122,21 @@ def explain(session, uid, data):
             "evaluation_outdated",
             "Refresh the assessment against the current reviewed version.",
         )
+    latest = session.scalar(
+        select(MatchEvaluation)
+        .where(
+            MatchEvaluation.version_id == version.id,
+            getattr(MatchEvaluation, kind + "_id") == getattr(record, kind + "_id"),
+        )
+        .order_by(MatchEvaluation.created_at.desc(), MatchEvaluation.id)
+        .limit(1)
+    )
+    if latest and latest.id != record.id:
+        raise APIError(
+            409,
+            "evaluation_outdated",
+            "Facts were reassessed. Refresh the current plan before asking for an explanation.",
+        )
     selected, model = intent(data.question, data.use_ai)
     hi = data.language == "hi"
     messages = {
@@ -161,7 +177,33 @@ def explain(session, uid, data):
                 requirement_id=r.requirement_id,
                 condition=r.requirement,
                 outcome=r.result.outcome,
-                explanation=messages[r.result.outcome][int(hi)],
+                explanation=(
+                    (
+                        "प्रमाण की स्थिति अज्ञात है। स्वयं दी गई जानकारी सत्यापन नहीं है।"
+                        if hi
+                        else (
+                            "Verified documentary evidence is still missing. "
+                            "Self-reporting is not verification."
+                        )
+                    )
+                    if r.result.kind == "evidence_gap" and r.result.outcome == "unknown"
+                    else (
+                        "यह प्रशासनिक प्रक्रिया या प्रतिस्पर्धी चयन की शर्त है; इसे सार्वभौमिक अपात्रता न समझें।"
+                        if hi
+                        else (
+                            "This is an administrative or competitive selection condition; "
+                            "it is not a universal disqualifier."
+                        )
+                    )
+                    if r.kind in {"procedure", "selection"}
+                    else (
+                        "पहले स्पष्ट करें कि यह नया आवेदन है या नवीनीकरण।"
+                        if hi
+                        else "First clarify whether this is a fresh or renewal application."
+                    )
+                    if "application_type" in r.result.missing
+                    else messages[r.result.outcome][int(hi)]
+                ),
                 citations=[c.model_dump() for c in r.citations],
             )
         )
