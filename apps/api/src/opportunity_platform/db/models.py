@@ -232,6 +232,7 @@ class Requirement(Entity):
     subject_context: Mapped[str]
     kind: Mapped[str] = mapped_column(default="eligibility", server_default="eligibility")
     application_context: Mapped[str] = mapped_column(default="all", server_default="all")
+    document_dependency: Mapped[dict | None] = mapped_column(JSON)
 
 
 class RequirementEvidence(Entity):
@@ -246,6 +247,7 @@ class MatchEvaluation(SubjectEntity):
     __tablename__ = "match_evaluations"
     version_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("opportunity_versions.id"))
     status: Mapped[str]
+    fingerprint: Mapped[str | None] = mapped_column(String(64), index=True)
     fact_snapshot: Mapped[dict] = mapped_column(JSON)
     results: Mapped[list] = mapped_column(JSON)
     __table_args__ = (

@@ -5542,6 +5542,18 @@
             "title": "Application Context",
             "default": "all"
           },
+          "document_dependency": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Dependency"
+          },
           "result": {
             "$ref": "#/components/schemas/Result"
           },

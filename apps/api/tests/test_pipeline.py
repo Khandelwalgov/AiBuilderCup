@@ -219,7 +219,7 @@ def test_profile_to_cited_evaluation_and_object_authorization(client, db, pipeli
     assert any(r["result"]["kind"] == "evidence_gap" for r in result["requirements"])
     assert all(r["citations"][0]["passage"] == TEXT for r in result["requirements"])
     record = db.get(MatchEvaluation, result["id"]) if False else db.scalar(select(MatchEvaluation))
-    assert record.fact_snapshot["engine_version"] == "2"
+    assert record.fact_snapshot["engine_version"] == "3"
     app.dependency_overrides[current_uid] = lambda: actor.firebase_uid
     client.put("/v1/profile/me", json={"display_name": "Different fictional learner", "facts": []})
     assert client.get("/v1/people/" + own["id"]).status_code == 404

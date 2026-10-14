@@ -1110,6 +1110,10 @@ export interface components {
              * @default all
              */
             application_context: string;
+            /** Document Dependency */
+            document_dependency?: {
+                [key: string]: unknown;
+            } | null;
             result: components["schemas"]["Result"];
             /** Citations */
             citations: components["schemas"]["CitationView"][];

@@ -1,8 +1,10 @@
+import hashlib
+import json
 import uuid
 from datetime import date, datetime, timezone
 
 from pydantic import BaseModel
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
 from opportunity_platform.core.errors import APIError
@@ -26,6 +28,7 @@ class RequirementResult(BaseModel):
     rule: Rule
     kind: str = "eligibility"
     application_context: str = "all"
+    document_dependency: dict | None = None
     result: Result
     citations: list[CitationView]
     next_steps: list[str]
@@ -58,6 +61,19 @@ def check(
         raise APIError(422, "invalid_application_context", "Choose fresh, renewal or unknown.")
     subject = subject or SubjectRef()
     _user, profile, _role = resolve(session, uid, subject)
+    if hypothetical is None:
+        # Same subject across different authorized callers must serialize too.
+        namespace = session.scalar(text("select current_schema()"))
+        lock = int.from_bytes(
+            hashlib.sha256(f"{namespace}:assessment:{subject.kind}:{profile.id}".encode()).digest()[
+                :8
+            ],
+            "big",
+            signed=True,
+        )
+        session.execute(text("select pg_advisory_xact_lock(:key)"), {"key": lock})
+        # Permissions are checked on every request before returning any cached assessment.
+        resolve(session, uid, subject)
     facts = subject_facts(session, subject.kind, profile.id)
     if hypothetical is not None:
         keys = {f.key for f in hypothetical}
@@ -84,9 +100,20 @@ def check(
         )
     opportunity, version, _source = row
     results = []
-    for requirement in session.scalars(
-        select(Requirement).where(Requirement.version_id == version.id).order_by(Requirement.id)
-    ):
+    requirements = list(
+        session.scalars(
+            select(Requirement).where(Requirement.version_id == version.id).order_by(Requirement.id)
+        )
+    )
+    evidence_by_requirement = {}
+    if requirements:
+        for evidence in session.scalars(
+            select(RequirementEvidence).where(
+                RequirementEvidence.requirement_id.in_([r.id for r in requirements])
+            )
+        ):
+            evidence_by_requirement.setdefault(evidence.requirement_id, []).append(evidence)
+    for requirement in requirements:
         rule = Rule.model_validate(requirement.rule)
         result = (
             evaluate(rule, facts, date.today())
@@ -124,15 +151,13 @@ def check(
                 )
         citations = [
             CitationView(source_url=e.source_url, passage=e.passage, page=e.page)
-            for e in session.scalars(
-                select(RequirementEvidence).where(
-                    RequirementEvidence.requirement_id == requirement.id
-                )
-            )
+            for e in evidence_by_requirement.get(requirement.id, [])
         ]
-        if requirement.description.startswith("Required document: "):
-            import hashlib
-
+        if (
+            requirement.description.startswith("Required document: ")
+            and result.outcome != "not_applicable"
+            and requirement.subject_context == subject.kind
+        ):
             key = "document:" + hashlib.sha256(requirement.description.encode()).hexdigest()[:20]
             result = Result(
                 outcome="unknown",
@@ -163,6 +188,7 @@ def check(
                 rule=rule,
                 kind=requirement.kind,
                 application_context=requirement.application_context,
+                document_dependency=requirement.document_dependency,
                 result=result,
                 citations=citations,
                 next_steps=next_steps,
@@ -189,19 +215,57 @@ def check(
         session.get(OpportunityVersion, previous.version_id).version if previous else None
     )
     now = datetime.now(timezone.utc)
+    relevant_keys = {c.fact for r in results for c in rule_leaves(r.rule) if c.fact}
+    canonical_facts = sorted(
+        [
+            {
+                **{
+                    k: v for k, v in f.model_dump(mode="json").items() if k not in {"id", "context"}
+                },
+                "context": {k: f.context.get(k) for k in ["income_period", "income_definition"]},
+            }
+            for f in facts
+            if f.key in relevant_keys
+        ],
+        key=lambda f: json.dumps(f, sort_keys=True),
+    )
+    fingerprint = hashlib.sha256(
+        json.dumps(
+            {
+                "subject": [subject.kind, str(profile.id)],
+                "version": str(version.id),
+                "facts": canonical_facts,
+                "date": now.date().isoformat(),
+                "application_type": application_type,
+                "engine": "3",
+            },
+            sort_keys=True,
+        ).encode()
+    ).hexdigest()
     record = MatchEvaluation(
         **{subject.kind + "_id": profile.id},
         version_id=version.id,
+        fingerprint=fingerprint,
         status=status,
         fact_snapshot={
             "facts": [f.model_dump(mode="json") for f in facts],
             "evaluation_date": now.date().isoformat(),
-            "engine_version": "2",
+            "engine_version": "3",
             "application_type": application_type,
         },
         results=[r.model_dump(mode="json") for r in results],
     )
-    if hypothetical is None:
+    if (
+        hypothetical is None
+        and previous
+        and previous.version_id == version.id
+        and previous.fingerprint == fingerprint
+    ):
+        record = previous
+        now = previous.created_at
+        if commit:
+            session.commit()
+    elif hypothetical is None:
         session.add(record)
         if commit:
             session.commit()
@@ -225,4 +289,12 @@ def check(
             "Missing evidence remains unknown. The issuing authority decides "
             "eligibility, selection, availability and approval."
         ),
+    )
+
+
+def rule_leaves(rule):
+    return (
+        [rule.condition]
+        if rule.op == "condition"
+        else [c for r in rule.children for c in rule_leaves(r)]
     )

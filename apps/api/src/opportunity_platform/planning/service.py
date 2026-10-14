@@ -63,9 +63,28 @@ def leaves(rule):
 def identities(requirement):
     # One reusable information/evidence dependency, independent of tree shape and thresholds.
     # Income definition/period/date and subject context remain distinct.
+    if requirement.document_dependency and requirement.result.kind == "evidence_gap":
+        return [
+            (
+                dict(requirement.document_dependency),
+                requirement.requirement.removeprefix("Required document: "),
+            )
+        ]
     conditions = leaves(requirement.rule)
     result = []
     for c in conditions:
+        if c.op == "document" and c.fact in requirement.result.missing and requirement.citations:
+            from opportunity_platform.planning.documents import dependency
+
+            names = {
+                "has_udid_certificate": "Unique Disability Identity card (UDID)",
+                "has_disability_certificate": "Disability certificate",
+            }
+            if c.fact in names:
+                normalized = dependency(names[c.fact], requirement.citations[0])
+                if normalized:
+                    result.append((normalized, names[c.fact]))
+                    continue
         if c.fact and c.fact in requirement.result.missing:
             payload = {
                 "fact": c.fact,
@@ -230,7 +249,7 @@ class ActionProgressView(BaseModel):
 
 
 def progress(session, uid, identifier, data):
-    record = session.get(ActionItem, identifier)
+    record = session.scalar(select(ActionItem).where(ActionItem.id == identifier).with_for_update())
     if record is None:
         raise APIError(404, "action_not_found", "This action is not available.")
     kind = next(

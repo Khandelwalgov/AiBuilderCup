@@ -101,6 +101,11 @@ def read(session: Session, identifier: uuid.UUID) -> ReviewView:
             {
                 "decision": r.decision,
                 "note": r.note,
+                "changed_fields": sorted(
+                    k
+                    for k in set(r.before or {}) | set(r.after or {})
+                    if (r.before or {}).get(k) != (r.after or {}).get(k)
+                ),
                 "reviewer_id": str(r.reviewer_id),
                 "created_at": r.created_at.isoformat(),
             }
@@ -228,11 +233,14 @@ def review(session: Session, identifier: uuid.UUID, actor: User, data: ReviewWri
                 )
             )
         for item in candidate.document_evidence:
+            from opportunity_platform.planning.documents import dependency
+
             document = item.document
             citation = item.evidence
             record = Requirement(
                 version_id=version.id,
                 description="Required document: " + document,
+                document_dependency=dependency(document, citation),
                 kind="document",
                 rule={"op": "condition", "condition": {"op": "unknown"}, "children": []},
                 subject_context="person",
