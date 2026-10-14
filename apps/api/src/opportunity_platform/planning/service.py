@@ -1,0 +1,176 @@
+"""Version-aware reusable actions. Facts are never inferred from kinship or an action status."""
+
+import hashlib
+import json
+import uuid
+
+from pydantic import BaseModel, ConfigDict, Field
+from sqlalchemy import delete, select
+
+from opportunity_platform.db.models import ActionDependency, ActionItem, Opportunity, User
+from opportunity_platform.eligibility import service as eligibility
+from opportunity_platform.eligibility.rules import FactInput
+from opportunity_platform.opportunities.service import catalogue
+from opportunity_platform.subjects.service import SubjectRef, resolve
+
+
+class PlanRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    subject: SubjectRef = Field(default_factory=SubjectRef)
+
+
+class SimulationRequest(PlanRequest):
+    facts: list[FactInput] = Field(max_length=30)
+
+
+class ActionView(BaseModel):
+    id: uuid.UUID
+    title: str
+    status: str
+    identity: str
+    kind: str
+    opportunities: list[dict]
+    explanation: str
+
+
+class PlanView(BaseModel):
+    subject: SubjectRef
+    hypothetical: bool
+    evaluations: list[eligibility.EvaluationView]
+    actions: list[ActionView]
+    known_blockers: list[dict]
+
+
+def leaves(rule):
+    return (
+        [rule.condition]
+        if rule.op == "condition"
+        else [c for r in rule.children for c in leaves(r)]
+    )
+
+
+def identities(requirement):
+    # One reusable information/evidence dependency, independent of tree shape and thresholds.
+    # Income definition/period/date and subject context remain distinct.
+    conditions = leaves(requirement.rule)
+    result = []
+    for c in conditions:
+        if c.fact and c.fact in requirement.result.missing:
+            payload = {
+                "fact": c.fact,
+                "kind": "document" if c.op == "document" else "information",
+                "income_period": c.income_period,
+                "income_definition": c.income_definition,
+                "as_of": str(c.as_of),
+            }
+            result.append((payload, c.fact.replace("_", " ")))
+    if not result:
+        # Uninterpreted clauses never merge on an empty unknown rule hash.
+        result = [
+            (
+                {"requirement": str(requirement.requirement_id), "kind": "clarification"},
+                requirement.requirement,
+            )
+        ]
+    return result
+
+
+def build(session, uid, subject, hypothetical=None):
+    user, obj, _ = resolve(session, uid, subject)
+    subject = SubjectRef(kind=subject.kind, id=obj.id)
+    # Serialize plan mutation to avoid duplicate actions across simultaneous requests.
+    session.execute(select(User).where(User.id == user.id).with_for_update())
+    rows = list(session.execute(catalogue().order_by(Opportunity.id).limit(100)))
+    evaluations = [
+        eligibility.check(session, uid, row[0].id, subject, hypothetical, commit=False)
+        for row in rows
+    ]
+    grouped = {}
+    blockers = []
+    for ev in evaluations:
+        for r in ev.requirements:
+            link = {
+                "id": str(ev.opportunity_id),
+                "version_id": str(ev.version_id),
+                "requirement_id": str(r.requirement_id),
+                "requirement": r.requirement,
+                "citations": [c.model_dump() for c in r.citations],
+            }
+            if r.result.outcome == "unsatisfied":
+                blockers.append(link)
+                continue
+            if r.result.outcome != "unknown":
+                continue
+            for payload, label in identities(r):
+                payload["subject_context"] = subject.kind
+                identity = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+                entry = grouped.setdefault(
+                    identity,
+                    {
+                        "title": (
+                            "Verify evidence: "
+                            if payload["kind"] == "document"
+                            else "Clarify: "
+                            if payload["kind"] == "clarification"
+                            else "Provide: "
+                        )
+                        + label,
+                        "kind": payload["kind"],
+                        "opportunities": [],
+                    },
+                )
+                if link not in entry["opportunities"]:
+                    entry["opportunities"].append(link)
+    actions = []
+    existing = {
+        a.identity: a
+        for a in session.scalars(
+            select(ActionItem).where(getattr(ActionItem, subject.kind + "_id") == obj.id)
+        )
+    }
+    for identity, entry in grouped.items():
+        record = existing.get(identity)
+        if hypothetical is None:
+            if record is None:
+                record = ActionItem(
+                    **{subject.kind + "_id": obj.id}, identity=identity, title=entry["title"]
+                )
+                session.add(record)
+                session.flush()
+            record.status = "pending"
+            record.details = entry
+            session.execute(delete(ActionDependency).where(ActionDependency.action_id == record.id))
+            for requirement_id in {link["requirement_id"] for link in entry["opportunities"]}:
+                session.add(
+                    ActionDependency(action_id=record.id, requirement_id=uuid.UUID(requirement_id))
+                )
+        actions.append(
+            ActionView(
+                id=record.id if record else uuid.uuid4(),
+                identity=identity,
+                status="hypothetical" if hypothetical is not None else "pending",
+                explanation=(
+                    "Prioritized by the number of current published opportunities affected. "
+                    "Completing a task does not verify evidence "
+                    "or override a substantive condition."
+                ),
+                **entry,
+            )
+        )
+    if hypothetical is None:
+        for identity, record in existing.items():
+            if identity not in grouped:
+                record.status = "resolved_or_superseded"
+                session.execute(
+                    delete(ActionDependency).where(ActionDependency.action_id == record.id)
+                )
+        session.commit()
+    return PlanView(
+        subject=subject,
+        hypothetical=hypothetical is not None,
+        evaluations=evaluations,
+        actions=sorted(
+            actions, key=lambda a: (-len({link["id"] for link in a.opportunities}), a.title)
+        ),
+        known_blockers=blockers,
+    )

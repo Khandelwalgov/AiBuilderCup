@@ -10,13 +10,14 @@ from sqlalchemy.orm import Session
 
 from opportunity_platform.admin import service as admin
 from opportunity_platform.core.auth import current_uid
-from opportunity_platform.core.errors import APIError
 from opportunity_platform.db.models import IngestionRun, OpportunityVersion, Source, User
 from opportunity_platform.db.session import get_session
 from opportunity_platform.eligibility import service as eligibility
 from opportunity_platform.ingestion import service as ingestion
 from opportunity_platform.ingestion.adapters import ADAPTERS
+from opportunity_platform.planning import service as planning
 from opportunity_platform.profiles import service as profiles
+from opportunity_platform.subjects import service as subjects
 
 router = APIRouter(prefix="/v1")
 DB = Annotated[Session, Depends(get_session)]
@@ -42,10 +43,19 @@ def save_profile(data: profiles.ProfileWrite, session: DB, uid: UID):
 
 @router.get("/people/{identifier}", response_model=profiles.ProfileView)
 def get_person(identifier: uuid.UUID, session: DB, uid: UID):
-    profile = profiles.get_profile(session, uid)
-    if profile.id != identifier:
-        raise APIError(404, "profile_not_found", "This profile could not be found.")
-    return profile
+    result = subjects.view(session, uid, subjects.SubjectRef(kind="person", id=identifier))
+    return profiles.ProfileView(id=result.id, display_name=result.name, facts=result.facts)
+
+
+class EvaluationRequest(BaseModel):
+    subject: subjects.SubjectRef = subjects.SubjectRef()
+
+
+@router.post(
+    "/opportunities/{identifier}/evaluate-context", response_model=eligibility.EvaluationView
+)
+def evaluate_context(identifier: uuid.UUID, data: EvaluationRequest, session: DB, uid: UID):
+    return eligibility.check(session, uid, identifier, data.subject)
 
 
 @router.post("/opportunities/{identifier}/evaluate", response_model=eligibility.EvaluationView)
@@ -148,3 +158,53 @@ def runs(session: DB, actor: ADMIN, limit: Annotated[int, Query(ge=1, le=100)] =
             select(IngestionRun).order_by(IngestionRun.created_at.desc()).limit(limit)
         )
     ]
+
+
+@router.get("/workspaces", response_model=list[subjects.WorkspaceView])
+def workspaces(session: DB, uid: UID):
+    return subjects.list_workspaces(session, uid)
+
+
+@router.post("/households", response_model=subjects.WorkspaceView)
+def create_household(data: subjects.HouseholdWrite, session: DB, uid: UID):
+    return subjects.create_household(session, uid, data)
+
+
+@router.get("/households/{identifier}", response_model=subjects.WorkspaceView)
+def get_household(identifier: uuid.UUID, session: DB, uid: UID):
+    return subjects.view(session, uid, subjects.SubjectRef(kind="household", id=identifier))
+
+
+@router.post("/households/{identifier}/dependents", response_model=subjects.WorkspaceView)
+def add_dependent(identifier: uuid.UUID, data: subjects.DependentWrite, session: DB, uid: UID):
+    return subjects.add_dependent(session, uid, identifier, data)
+
+
+@router.put("/people/{identifier}", response_model=subjects.WorkspaceView)
+def update_person(identifier: uuid.UUID, data: profiles.ProfileWrite, session: DB, uid: UID):
+    return subjects.update_person(session, uid, identifier, data)
+
+
+@router.post("/businesses", response_model=subjects.WorkspaceView)
+def create_business(data: subjects.BusinessWrite, session: DB, uid: UID):
+    return subjects.save_business(session, uid, data)
+
+
+@router.get("/businesses/{identifier}", response_model=subjects.WorkspaceView)
+def get_business(identifier: uuid.UUID, session: DB, uid: UID):
+    return subjects.view(session, uid, subjects.SubjectRef(kind="business", id=identifier))
+
+
+@router.put("/businesses/{identifier}", response_model=subjects.WorkspaceView)
+def update_business(identifier: uuid.UUID, data: subjects.BusinessWrite, session: DB, uid: UID):
+    return subjects.save_business(session, uid, data, identifier)
+
+
+@router.post("/plan", response_model=planning.PlanView)
+def plan(data: planning.PlanRequest, session: DB, uid: UID):
+    return planning.build(session, uid, data.subject)
+
+
+@router.post("/plan/simulate", response_model=planning.PlanView)
+def simulate(data: planning.SimulationRequest, session: DB, uid: UID):
+    return planning.build(session, uid, data.subject, data.facts)

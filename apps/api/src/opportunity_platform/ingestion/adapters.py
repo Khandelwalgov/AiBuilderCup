@@ -2,7 +2,7 @@
 
 import io
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from urllib.parse import urlsplit
 from urllib.robotparser import RobotFileParser
 
@@ -51,6 +51,19 @@ ADAPTERS = {
         ),
     )
 }
+ADAPTERS["depwd-post-matric"] = replace(
+    ADAPTERS["depwd-pre-matric"],
+    key="depwd-post-matric",
+    name="DEPwD scholarship guidelines · post-matric section",
+    focus=(
+        "Extract ONLY Post-Matric Scholarship for Students with "
+        "Disabilities and applicable common conditions. "
+        "Use 2025 course recognition and employed/intern amendments. Do "
+        "not apply Pre-Matric full-time class IX/X "
+        "or Top Class distance-learning exclusions. Include Post-Matric renewal exceptions. "
+        "Preserve source uncertainties and require human review; no open round is inferred."
+    ),
+)
 ALLOWED_HOSTS = {"depwd.gov.in", "cdnbbsr.s3waas.gov.in"}
 
 

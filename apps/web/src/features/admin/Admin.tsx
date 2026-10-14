@@ -206,6 +206,15 @@ function CandidateEditor({ id }: { id: string }) {
       </section>
     );
   const candidate = query.data!;
+  let edited = candidate.candidate;
+  try {
+    edited = JSON.parse(text) as Review['candidate'];
+  } catch {
+    /* Advanced editor errors are reported on save. */
+  }
+  const patch = (values: Partial<Review['candidate']>) =>
+    setText(JSON.stringify({ ...edited, ...values }, null, 2));
+  const hi = document.documentElement.lang === 'hi';
   return (
     <section className="panel candidate-editor">
       <p>
@@ -222,6 +231,148 @@ function CandidateEditor({ id }: { id: string }) {
       <p>
         {t.snapshotHash}: <code>{candidate.content_hash}</code>
       </p>
+      <div className="review-summary-grid">
+        <div>
+          <span>{hi ? 'शर्तें' : 'Conditions'}</span>
+          <strong>{edited.requirements?.length ?? 0}</strong>
+        </div>
+        <div>
+          <span>{hi ? 'दस्तावेज़ प्रमाण' : 'Document citations'}</span>
+          <strong>
+            {edited.document_evidence?.length ?? 0} / {edited.required_documents?.length ?? 0}
+          </strong>
+        </div>
+        <div>
+          <span>{t.reviewFlags}</span>
+          <strong>{edited.review_flags?.length ?? 0}</strong>
+        </div>
+      </div>
+      <section className="panel structured-correction">
+        <h3>{hi ? 'स्रोत-आधारित सुधार' : 'Source-backed corrections'}</h3>
+        <p>
+          {hi
+            ? 'संशोधन मसौदे में सहेजें। उद्धरणों का मिलान सहेजते समय होता है।'
+            : 'Save corrections as a draft. Each evidence passage is checked against the captured page on save.'}
+        </p>
+        <label className="field">
+          {hi ? 'शीर्षक' : 'Title'}
+          <input
+            value={edited.title}
+            maxLength={300}
+            onChange={(e) => patch({ title: e.target.value })}
+          />
+        </label>
+        <label className="field">
+          {hi ? 'सारांश' : 'Summary'}
+          <textarea
+            value={edited.summary}
+            maxLength={3000}
+            onChange={(e) => patch({ summary: e.target.value })}
+          />
+        </label>
+        {(edited.requirements ?? []).map((req, i) => (
+          <details key={i}>
+            <summary>
+              {i + 1}. {req.description}
+              <small>
+                {' '}
+                · {req.kind ?? 'eligibility'} · {req.application_context ?? 'all'}
+              </small>
+            </summary>
+            <label className="field">
+              {hi ? 'शर्त का विवरण' : 'Condition description'}
+              <textarea
+                value={req.description}
+                onChange={(e) =>
+                  patch({
+                    requirements: edited.requirements!.map((r, j) =>
+                      j === i ? { ...r, description: e.target.value } : r,
+                    ),
+                  })
+                }
+              />
+            </label>
+            <div className="form-grid">
+              <label className="field">
+                {hi ? 'श्रेणी' : 'Policy category'}
+                <select
+                  value={req.kind ?? 'eligibility'}
+                  onChange={(e) =>
+                    patch({
+                      requirements: edited.requirements!.map((r, j) =>
+                        j === i ? { ...r, kind: e.target.value as typeof req.kind } : r,
+                      ),
+                    })
+                  }
+                >
+                  {[
+                    'eligibility',
+                    'document',
+                    'procedure',
+                    'renewal',
+                    'selection',
+                    'interpretation',
+                  ].map((v) => (
+                    <option key={v}>{v}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="field">
+                {hi ? 'आवेदन संदर्भ' : 'Application context'}
+                <select
+                  value={req.application_context ?? 'all'}
+                  onChange={(e) =>
+                    patch({
+                      requirements: edited.requirements!.map((r, j) =>
+                        j === i
+                          ? {
+                              ...r,
+                              application_context: e.target.value as typeof req.application_context,
+                            }
+                          : r,
+                      ),
+                    })
+                  }
+                >
+                  {['all', 'fresh', 'renewal'].map((v) => (
+                    <option key={v}>{v}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <label className="field">
+              {hi ? 'सटीक स्रोत अंश' : 'Exact source passage'}
+              <textarea
+                value={req.evidence.passage}
+                onChange={(e) =>
+                  patch({
+                    requirements: edited.requirements!.map((r, j) =>
+                      j === i ? { ...r, evidence: { ...r.evidence, passage: e.target.value } } : r,
+                    ),
+                  })
+                }
+              />
+            </label>
+            <a href={req.evidence.source_url} target="_blank" rel="noreferrer">
+              {t.originalDocument} · {t.page} {req.evidence.page}
+            </a>
+            <details>
+              <summary>{hi ? 'टाइप किया गया नियम' : 'Typed rule'}</summary>
+              <pre>{JSON.stringify(req.rule, null, 2)}</pre>
+            </details>
+          </details>
+        ))}
+        <h3>{hi ? 'दस्तावेज़-विशिष्ट प्रमाण' : 'Document-specific evidence'}</h3>
+        {edited.document_evidence?.map((d) => (
+          <details key={d.document}>
+            <summary>{d.document}</summary>
+            <blockquote>{d.evidence.passage}</blockquote>
+            <a href={d.evidence.source_url} target="_blank" rel="noreferrer">
+              {t.originalDocument} · {t.page} {d.evidence.page}
+            </a>
+          </details>
+        ))}
+      </section>
       <div className="review-columns">
         <div>
           <h3>{t.sourceEvidence}</h3>
@@ -269,18 +420,21 @@ function CandidateEditor({ id }: { id: string }) {
           ))}
         </div>
       </div>
-      <label className="field">
-        {t.correctCandidate}
-        <textarea
-          aria-label={t.correctCandidate}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          rows={18}
-          spellCheck={false}
-          disabled={candidate.publication_state !== 'draft'}
-        />
-      </label>
-      <p>{t.correctionHelp}</p>
+      <details className="advanced-editor">
+        <summary>{hi ? 'उन्नत JSON संपादक' : 'Advanced JSON correction editor'}</summary>
+        <label className="field">
+          {t.correctCandidate}
+          <textarea
+            aria-label={t.correctCandidate}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            rows={18}
+            spellCheck={false}
+            disabled={candidate.publication_state !== 'draft'}
+          />
+        </label>
+        <p>{t.correctionHelp}</p>
+      </details>
       <label className="field">
         {t.reviewNote}
         <textarea

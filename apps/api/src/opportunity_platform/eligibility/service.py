@@ -12,11 +12,11 @@ from opportunity_platform.db.models import (
     Requirement,
     RequirementEvidence,
 )
-from opportunity_platform.eligibility.engine import Result, evaluate
-from opportunity_platform.eligibility.rules import Rule
+from opportunity_platform.eligibility.engine import FactRecord, Result, evaluate
+from opportunity_platform.eligibility.rules import FactInput, Rule
 from opportunity_platform.opportunities.schemas import CitationView
 from opportunity_platform.opportunities.service import catalogue
-from opportunity_platform.profiles.service import account, facts_for, person
+from opportunity_platform.subjects.service import SubjectRef, resolve, subject_facts
 
 
 class RequirementResult(BaseModel):
@@ -41,10 +41,33 @@ class EvaluationView(BaseModel):
     disclaimer: str
 
 
-def check(session: Session, uid: str, opportunity_id: uuid.UUID) -> EvaluationView:
-    user = account(session, uid)
-    profile = person(session, user)
-    facts = facts_for(session, profile)
+def check(
+    session: Session,
+    uid: str,
+    opportunity_id: uuid.UUID,
+    subject: SubjectRef | None = None,
+    hypothetical: list[FactInput] | None = None,
+    commit: bool = True,
+) -> EvaluationView:
+    subject = subject or SubjectRef()
+    _user, profile, _role = resolve(session, uid, subject)
+    facts = subject_facts(session, subject.kind, profile.id)
+    if hypothetical is not None:
+        keys = {f.key for f in hypothetical}
+        facts = [f for f in facts if f.key not in keys] + [
+            FactRecord(
+                id="hypothetical",
+                key=f.key,
+                value=f.value,
+                context={
+                    "income_period": f.income_period,
+                    "income_definition": f.income_definition,
+                },
+                valid_from=f.valid_from,
+                valid_until=f.valid_until,
+            )
+            for f in hypothetical
+        ]
     row = session.execute(catalogue().where(Opportunity.id == opportunity_id)).first()
     if row is None:
         raise APIError(
@@ -60,7 +83,7 @@ def check(session: Session, uid: str, opportunity_id: uuid.UUID) -> EvaluationVi
         rule = Rule.model_validate(requirement.rule)
         result = (
             evaluate(rule, facts, date.today())
-            if requirement.subject_context == "person"
+            if requirement.subject_context == subject.kind
             else Result(
                 outcome="unknown",
                 reason="This condition needs a separately authorized household "
@@ -136,7 +159,7 @@ def check(session: Session, uid: str, opportunity_id: uuid.UUID) -> EvaluationVi
         status = "potential_match"
     now = datetime.now(timezone.utc)
     record = MatchEvaluation(
-        person_id=profile.id,
+        **{subject.kind + "_id": profile.id},
         version_id=version.id,
         status=status,
         fact_snapshot={
@@ -146,8 +169,14 @@ def check(session: Session, uid: str, opportunity_id: uuid.UUID) -> EvaluationVi
         },
         results=[r.model_dump(mode="json") for r in results],
     )
-    session.add(record)
-    session.commit()
+    if hypothetical is None:
+        session.add(record)
+        if commit:
+            session.commit()
+        else:
+            session.flush()
+    else:
+        record.id = uuid.uuid4()
     return EvaluationView(
         id=record.id,
         opportunity_id=opportunity.id,

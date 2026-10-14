@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Workspaces } from '../features/workspaces/Workspaces';
+import { Plan } from '../features/workspaces/Plan';
 import { Profile } from '../features/profiles/Profile';
 import { Admin } from '../features/admin/Admin';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
@@ -104,7 +106,7 @@ export function App() {
     { to: '/profile', label: t.profile, icon: UserRound },
     { to: '/family', label: t.family, icon: UsersRound },
     { to: '/businesses', label: t.businesses, icon: BriefcaseBusiness },
-    { to: '/my-opportunities', label: t.saved, icon: Layers3 },
+    { to: '/plan', label: language === 'hi' ? 'मेरी कार्ययोजना' : 'Unlock plan', icon: Layers3 },
   ];
   if (accountQuery.data?.is_admin)
     navigation.push({ to: '/admin', label: t.adminReview, icon: ShieldCheck });
@@ -146,7 +148,7 @@ export function App() {
             <div className="sidebar-note">
               <Leaf size={22} />
               <p>{t.footer}</p>
-              <span>INDIA FIRST · PHASE 02</span>
+              <span>INDIA FIRST · EVIDENCE FIRST</span>
             </div>
             <NavLink className="settings-link" to="/settings">
               <Settings2 size={18} />
@@ -221,10 +223,12 @@ export function App() {
               <Route path="/opportunities/:id" element={<Detail />} />
               <Route path="/dashboard" element={<Overview />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/people/:personId/edit" element={<Profile />} />
               <Route path="/admin" element={<Admin />} />
-              {['family', 'businesses', 'my-opportunities'].map((path) => (
-                <Route key={path} path={`/${path}`} element={<Future />} />
-              ))}
+              <Route path="/family" element={<Workspaces kind="household" />} />
+              <Route path="/businesses" element={<Workspaces kind="business" />} />
+              <Route path="/plan" element={<Plan />} />
+              <Route path="/my-opportunities" element={<Navigate to="/plan" replace />} />
               <Route
                 path="/settings"
                 element={
@@ -255,12 +259,49 @@ export function App() {
 function Overview() {
   const t = useStrings();
   const f = useFacets();
+  const hi = document.documentElement.lang === 'hi';
   return (
     <div className="page">
       <div className="page-heading">
         <span className="eyebrow">{t.foundation}</span>
         <h1>{t.welcome}</h1>
         <p>{t.welcomeText}</p>
+      </div>
+      <div className="dashboard-actions">
+        <Link className="dashboard-primary" to="/plan">
+          <span className="eyebrow">{hi ? 'अगला उपयोगी कदम' : 'YOUR NEXT USEFUL STEP'}</span>
+          <h2>{hi ? 'अपनी तैयारी की योजना देखें' : 'Turn missing information into a plan'}</h2>
+          <p>
+            {hi
+              ? 'समीक्षित अवसरों के लिए अपनी जानकारी जाँचें।'
+              : 'Understand what is known, what is missing, and which steps can help across opportunities.'}
+          </p>
+          <span className="button">
+            {hi ? 'मेरी योजना खोलें' : 'Open my unlock plan'} <ArrowRight size={16} />
+          </span>
+        </Link>
+        <div className="dashboard-secondary">
+          <Link className="panel" to="/profile">
+            <UserRound />
+            <h3>{hi ? 'आपके बारे में थोड़ा' : 'Start with what you know'}</h3>
+            <p>
+              {hi
+                ? 'केवल आवश्यक जानकारी दें।'
+                : 'Build a minimal profile. Leave uncertain answers unknown.'}
+            </p>
+            <ArrowRight size={16} />
+          </Link>
+          <Link className="panel" to="/family">
+            <UsersRound />
+            <h3>{hi ? 'परिवार के साथ तैयारी' : 'Bring your contexts together'}</h3>
+            <p>
+              {hi
+                ? 'अधिकृत आश्रित और व्यवसाय जोड़ें।'
+                : 'Manage authorized dependents and keep business facts separate.'}
+            </p>
+            <ArrowRight size={16} />
+          </Link>
+        </div>
       </div>
       <div className="stats">
         {[

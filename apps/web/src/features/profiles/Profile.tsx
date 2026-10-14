@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus, Trash2, UserRound } from 'lucide-react';
 import { useStrings } from '../../app/App';
@@ -25,15 +25,18 @@ const fields: { key: Fact['key']; kind: 'text' | 'number' | 'boolean' }[] = [
 ];
 export function Profile() {
   const t = useStrings();
+  const { personId } = useParams();
   const cache = useQueryClient();
   const [name, setName] = useState('');
   const [facts, setFacts] = useState<Fact[]>([]);
   const [saved, setSaved] = useState(false);
   const query = useQuery({
-    queryKey: ['personal-profile'],
+    queryKey: ['personal-profile', personId],
     retry: false,
     queryFn: async () => {
-      const { data, error } = await api.GET('/v1/profile/me');
+      const { data, error } = personId
+        ? await api.GET('/v1/people/{identifier}', { params: { path: { identifier: personId } } })
+        : await api.GET('/v1/profile/me');
       if (error?.error.code === 'profile_not_found') return null;
       return data ?? fail(error);
     },
@@ -57,13 +60,23 @@ export function Profile() {
   }, [query.data]);
   const save = useMutation({
     mutationFn: async () => {
+      if (personId) {
+        const { data, error } = await api.PUT('/v1/people/{identifier}', {
+          params: { path: { identifier: personId } },
+          body: { display_name: name, facts },
+        });
+        if (!data) return fail(error);
+        return { id: data.id, display_name: data.name, facts: data.facts };
+      }
       const { data, error } = await api.PUT('/v1/profile/me', {
         body: { display_name: name, facts },
       });
       return data ?? fail(error);
     },
     onSuccess: (data) => {
-      cache.setQueryData(['personal-profile'], data);
+      cache.setQueryData(['personal-profile', personId], data);
+      void cache.invalidateQueries({ queryKey: ['workspaces'] });
+      void cache.invalidateQueries({ queryKey: ['plan'] });
       setSaved(true);
     },
   });
@@ -103,6 +116,21 @@ export function Profile() {
           <span>{t.syntheticProfileNote}</span>
         </div>
       </div>
+      <section className="profile-guide">
+        <span className="step-dot">1</span>
+        <div>
+          <strong>
+            {document.documentElement.lang === 'hi'
+              ? 'जो जानते हैं, उससे शुरू करें'
+              : 'Start with what you know'}
+          </strong>
+          <p>
+            {document.documentElement.lang === 'hi'
+              ? 'जानकारी वैकल्पिक है। अज्ञात को खाली छोड़ें।'
+              : 'Answer only relevant questions. Leave uncertain information blank; you can return later.'}
+          </p>
+        </div>
+      </section>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -128,11 +156,64 @@ export function Profile() {
         <section className="panel">
           <h2>{t.profileFacts}</h2>
           <p>{t.factHelp}</p>
+          <div className="question-topics">
+            {[
+              {
+                label: document.documentElement.lang === 'hi' ? 'शिक्षा' : 'Education',
+                keys: ['education_level', 'student_status'],
+              },
+              {
+                label: document.documentElement.lang === 'hi' ? 'स्थान' : 'Where you live',
+                keys: [
+                  'domicile_state',
+                  'domicile_district',
+                  'residence_state',
+                  'residence_district',
+                ],
+              },
+              {
+                label: document.documentElement.lang === 'hi' ? 'रोजगार' : 'Employment',
+                keys: ['employment_status'],
+              },
+              {
+                label: document.documentElement.lang === 'hi' ? 'आय' : 'Relevant income',
+                keys: ['annual_parental_income', 'annual_personal_income'],
+              },
+              {
+                label: document.documentElement.lang === 'hi' ? 'दस्तावेज़' : 'Evidence gaps',
+                keys: [
+                  'has_income_certificate',
+                  'has_disability_certificate',
+                  'has_udid_certificate',
+                ],
+              },
+            ].map((topic) => (
+              <button
+                type="button"
+                key={topic.label}
+                className="topic-chip"
+                onClick={() =>
+                  setFacts((previous) => [
+                    ...previous,
+                    ...topic.keys
+                      .filter((key) => !previous.some((f) => f.key === key))
+                      .map((key) => ({ key: key as Fact['key'], value: null })),
+                  ])
+                }
+              >
+                {topic.label}
+                <Plus size={14} />
+              </button>
+            ))}
+          </div>
           {facts.map((fact, index) => {
             const kind = fields.find((f) => f.key === fact.key)?.kind || 'text';
             const income = fact.key.includes('income');
             return (
               <div className="fact-editor" key={index}>
+                <h3 className="question-label">
+                  {t.factNames[fact.key as keyof typeof t.factNames] || fact.key}
+                </h3>
                 <label className="field">
                   {t.factLabel}
                   <select

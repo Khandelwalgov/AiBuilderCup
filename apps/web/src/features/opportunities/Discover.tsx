@@ -8,12 +8,10 @@ import {
   BookOpen,
   BriefcaseBusiness,
   CalendarDays,
-  Check,
   ChevronDown,
   ExternalLink,
   HeartPulse,
   Info,
-  Leaf,
   MapPin,
   Search,
   ShieldCheck,
@@ -113,34 +111,13 @@ export function Discover() {
             <span>{t.foundation}</span>
           </div>
         </div>
-        <div className="hero-art" aria-hidden="true">
-          <div className="orbit orbit-one" />
-          <div className="orbit orbit-two" />
-          <div className="art-line line-one" />
-          <div className="art-line line-two" />
-          <div className="art-tile tile-book">
-            <BookOpen size={34} />
-            <span>LEARN</span>
-          </div>
-          <div className="art-tile tile-leaf">
-            <Leaf size={32} />
-          </div>
-          <div className="art-tile tile-business">
-            <BriefcaseBusiness size={30} />
-            <span>GROW</span>
-          </div>
-          <div className="art-center">
-            <span className="art-spark">✳</span>
-          </div>
-          <span className="art-dot dot-one" />
-          <span className="art-dot dot-two" />
-          <div className="art-tag">
-            <span>
-              <Check size={11} />
-            </span>{' '}
-            Possibility, connected.
-          </div>
-        </div>
+        <aside className="coverage-card">
+          <ShieldCheck size={24} />
+          <span className="eyebrow">{t.coverage}</span>
+          <strong>{facets.data?.total ?? '—'}</strong>
+          <p>{t.publishedCount}</p>
+          <small>{t.coverageText}</small>
+        </aside>
       </section>
       <div className="notice">
         <Info size={18} />

@@ -17,6 +17,9 @@ ID = UUID("9588fed8-1f25-423d-8b5f-890636e68695")
 
 def corrected(view):
     candidate = view.candidate.model_copy(deep=True)
+    if any(f.startswith("Nightfall correction:") for f in candidate.review_flags):
+        candidate.requirements = [r for r in candidate.requirements if not r.description.startswith("For a fresh application,")]
+        return candidate
     def cite(year, page, start=None, end=None):
         p = next(p for p in view.pages if f"/{year}/" in p.source_url and p.page == page)
         text = p.text
@@ -59,7 +62,9 @@ if __name__ == "__main__":
         actor=require_admin(session,args.actor_uid)
         view=read(session,ID)
         candidate=corrected(view)
-        Path("../../.live-validation/nightfall-original-draft.json").write_text(view.model_dump_json(indent=2))
+        original_path=Path("../../.live-validation/nightfall-original-draft.json")
+        if not original_path.exists():
+            original_path.write_text(view.model_dump_json(indent=2))
         Path("../../.live-validation/nightfall-corrected-draft.json").write_text(candidate.model_dump_json(indent=2))
         if args.apply:
             view=review(session,ID,actor,ReviewWrite(decision="correct",note="Source-backed Nightfall correction. Separate repeated-class, renewal and school conditions; document-specific citations. All unsupported interpretations remain unknown. No publication approval.",expected_hash=view.candidate_hash,candidate=candidate))
