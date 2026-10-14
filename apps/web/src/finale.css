@@ -2618,3 +2618,28 @@ html[lang='hi'] .hero h1 em {
     overflow-wrap: normal;
   }
 }
+/* Keep the next action dominant; context is a compact supporting strip. */
+.personal-pulse {
+  background: transparent;
+  color: #1b2929;
+  min-height: 0;
+  padding: 20px 0;
+  border-top: 1px solid #bccbb2;
+  border-bottom: 1px solid #bccbb2;
+  border-radius: 0;
+}
+.personal-pulse h2 {
+  font:
+    27px/1.35 Georgia,
+    serif;
+}
+.personal-pulse p,
+.personal-pulse .eyebrow {
+  color: #52694b;
+}
+.action-impact {
+  display: block;
+  color: #c3dea9;
+  font-size: 14px;
+  margin: 18px 0 0;
+}

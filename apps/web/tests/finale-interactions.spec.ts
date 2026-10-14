@@ -92,9 +92,66 @@ test('administrator reads actual 68-page public capture copy without any write (
     .selectOption({ label: '2025 amendment · page 2' });
   await expect(page.locator('.capture-text')).toContainText('UDID');
   await page.setViewportSize({ width: 1440, height: 960 });
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: '/Users/govind/Projects/AIBuildersCup/.live-validation/finale-after/admin-public-capture-copy-1440.png',
     fullPage: true,
   });
   expect(writes).toBe(0);
+});
+
+test('populated cockpit centers the actual API next-action contract (fictional component fixture)', async ({
+  page,
+}) => {
+  const { captureContract } = await import('./capture');
+  await page.route('**/v1/dashboard', (r) =>
+    r.fulfill({
+      json: {
+        profile_name: 'Fictional learner',
+        personal_pending_actions: 1,
+        assessed_current_opportunities: 2,
+        households: 1,
+        businesses: 1,
+        review_candidates: null,
+      },
+    }),
+  );
+  await page.route('**/v1/opportunity-facets*', (r) =>
+    r.fulfill({
+      json: {
+        total: 2,
+        verified: 2,
+        official_sources: 1,
+        categories: [],
+        states: [],
+        districts: [],
+        synthetic: 0,
+      },
+    }),
+  );
+  await page.route('**/v1/plan', (r) =>
+    r.fulfill({
+      json: {
+        subject: { kind: 'person' },
+        hypothetical: false,
+        evaluations: [],
+        known_blockers: [],
+        actions: [
+          {
+            title: 'Fictional shared certificate action',
+            kind: 'document',
+            opportunities: [{ id: 'fictional-1' }, { id: 'fictional-2' }],
+          },
+        ],
+      },
+    }),
+  );
+  await page.goto('/tests/cockpit.html');
+  await expect(
+    page.getByRole('heading', { name: 'Fictional shared certificate action', exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText('Fictional component contract · no Firebase acceptance'),
+  ).toBeVisible();
+  await captureContract(page, 'cockpit');
 });

@@ -30,7 +30,7 @@ import { auth, authConfigured, login, logout } from './auth';
 import { authErrorKey } from './auth-errors';
 import { api, fail } from '../lib/api/client';
 import { Discover, Detail } from '../features/opportunities/Discover';
-const Locale = createContext<Language>('en');
+export const Locale = createContext<Language>('en');
 export function useLanguage() {
   return useContext(Locale);
 }
@@ -297,7 +297,7 @@ export function App() {
 function Overview({ authenticated }: { authenticated: boolean }) {
   return authenticated ? <Cockpit /> : <Landing />;
 }
-function Cockpit() {
+export function Cockpit() {
   const authenticated = true;
   const t = useStrings();
   const f = useFacets();
@@ -383,6 +383,12 @@ function Cockpit() {
               ? 'समीक्षित अवसरों के लिए अपनी जानकारी जाँचें।'
               : 'Understand what is known, what is missing, and which steps can help across opportunities.'}
           </p>
+          {nextAction && (
+            <span className="action-impact">
+              {new Set(nextAction.opportunities.map((o) => o.id)).size}{' '}
+              {hi ? 'अवसरों से जुड़ा यह एक कदम' : 'opportunities connected to this one step'}
+            </span>
+          )}
           <span className="button">
             {overview.data?.profile_name
               ? hi
