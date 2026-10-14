@@ -30,6 +30,9 @@ import { authErrorKey } from './auth-errors';
 import { api, fail } from '../lib/api/client';
 import { Discover, Detail } from '../features/opportunities/Discover';
 const Locale = createContext<Language>('en');
+export function useLanguage() {
+  return useContext(Locale);
+}
 export function useStrings() {
   return strings[useContext(Locale)];
 }
@@ -86,12 +89,31 @@ export function App() {
   });
   useEffect(() => setMenu(false), [location.pathname]);
   useEffect(() => {
+    const navigation = document.getElementById('primary-navigation');
+    if (menu) navigation?.querySelector<HTMLAnchorElement>('a[href]')?.focus();
     const close = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMenu(false);
+      if (event.key === 'Escape' && menu) {
+        setMenu(false);
+        document.querySelector<HTMLButtonElement>('.mobile-menu')?.focus();
+      }
+      if (event.key === 'Tab' && menu && window.innerWidth <= 800) {
+        const items = Array.from(
+          navigation?.querySelectorAll<HTMLElement>('a[href],button:not([disabled]),select') ?? [],
+        ).filter((el) => el.offsetParent !== null);
+        const first = items[0],
+          last = items[items.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }
     };
     document.addEventListener('keydown', close);
     return () => document.removeEventListener('keydown', close);
-  }, []);
+  }, [menu]);
   async function signIn() {
     setAuthError('');
     try {
@@ -136,7 +158,15 @@ export function App() {
             {navigation.map(({ to, label, icon: Icon }, i) => (
               <div key={to}>
                 {i === 2 && <p className="nav-caption workspace-caption">{t.workspaceNav}</p>}
-                <NavLink to={to}>
+                <NavLink
+                  to={to}
+                  onClick={() => {
+                    if (menu) {
+                      setMenu(false);
+                      document.getElementById('main')?.focus();
+                    }
+                  }}
+                >
                   <Icon size={18} />
                   <span>{label}</span>
                   {to === '/discover' && <span className="nav-dot" />}
@@ -221,7 +251,7 @@ export function App() {
               <Route path="/" element={<Navigate to="/discover" replace />} />
               <Route path="/discover" element={<Discover />} />
               <Route path="/opportunities/:id" element={<Detail />} />
-              <Route path="/dashboard" element={<Overview />} />
+              <Route path="/dashboard" element={<Overview authenticated={!!user} />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/people/:personId/edit" element={<Profile />} />
               <Route path="/admin" element={<Admin />} />
@@ -256,17 +286,61 @@ export function App() {
     </Locale.Provider>
   );
 }
-function Overview() {
+function Overview({ authenticated }: { authenticated: boolean }) {
   const t = useStrings();
   const f = useFacets();
-  const hi = document.documentElement.lang === 'hi';
+  const overview = useQuery({
+    queryKey: ['dashboard-summary'],
+    enabled: authenticated,
+    retry: false,
+    queryFn: async () => {
+      const { data, error } = await api.GET('/v1/dashboard');
+      return data ?? fail(error);
+    },
+  });
+  const hi = useLanguage() === 'hi';
   return (
     <div className="page">
       <div className="page-heading">
         <span className="eyebrow">{t.foundation}</span>
-        <h1>{t.welcome}</h1>
+        <h1>
+          {overview.data?.profile_name
+            ? `${hi ? 'फिर स्वागत है' : 'Welcome back'}, ${overview.data.profile_name}.`
+            : t.welcome}
+        </h1>
         <p>{t.welcomeText}</p>
       </div>
+      {overview.isError && <p role="alert">{overview.error.message}</p>}
+      {overview.data && (
+        <section className="personal-pulse panel">
+          <div>
+            <span className="eyebrow">{hi ? 'आपकी तैयारी' : 'YOUR READINESS'}</span>
+            <h2>
+              {overview.data.profile_name
+                ? hi
+                  ? 'अगला कदम सामने है'
+                  : 'Your next steps, in one place'
+                : hi
+                  ? 'अपना न्यूनतम प्रोफ़ाइल बनाएं'
+                  : 'Create your minimal profile'}
+            </h2>
+            <p>
+              {overview.data.personal_pending_actions}{' '}
+              {hi ? 'व्यक्तिगत कदम' : 'personal pending actions'} ·{' '}
+              {overview.data.assessed_current_opportunities}{' '}
+              {hi ? 'वर्तमान अवसर जाँचे गए' : 'current opportunities assessed'} ·{' '}
+              {overview.data.households} {hi ? 'परिवार' : 'households'} · {overview.data.businesses}{' '}
+              {hi ? 'व्यवसाय' : 'businesses'}
+            </p>
+          </div>
+          {overview.data.review_candidates != null && (
+            <Link className="button secondary" to="/admin">
+              {overview.data.review_candidates} {hi ? 'मसौदे समीक्षा में' : 'drafts to review'}
+              <ArrowRight size={16} />
+            </Link>
+          )}
+        </section>
+      )}
       <div className="dashboard-actions">
         <Link className="dashboard-primary" to="/plan">
           <span className="eyebrow">{hi ? 'अगला उपयोगी कदम' : 'YOUR NEXT USEFUL STEP'}</span>

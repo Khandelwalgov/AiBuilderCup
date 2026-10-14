@@ -82,7 +82,12 @@ export const strings = {
     sourceWarning:
       'The source needs attention. The last published version is preserved; check freshness before relying on it.',
     publishedCount: 'Published opportunities',
-    outcomes: { satisfied: 'Satisfied', unsatisfied: 'Not satisfied', unknown: 'Unknown' },
+    outcomes: {
+      satisfied: 'Satisfied',
+      not_applicable: 'Not applicable',
+      unsatisfied: 'Not satisfied',
+      unknown: 'Unknown',
+    },
     assessmentStatuses: {
       potential_match: 'Potential match · preflight checks still required',
       possibly_eligible_missing_information:
@@ -98,6 +103,8 @@ export const strings = {
     factNames: {
       age: 'Age (years)',
       education_level: 'Education / class',
+      enrollment_mode: 'Study mode',
+      school_recognized_or_government: 'Government or government/board-recognized school',
       student_status: 'Currently a student',
       nationality: 'Nationality (source code, e.g. IN)',
       disability_percentage: 'Disability percentage',
@@ -285,7 +292,12 @@ export const strings = {
     sourceWarning:
       'स्रोत को ध्यान देने की आवश्यकता है। अंतिम प्रकाशित संस्करण सुरक्षित है; उपयोग से पहले नवीनता जाँचें।',
     publishedCount: 'प्रकाशित अवसर',
-    outcomes: { satisfied: 'पूरी हुई', unsatisfied: 'पूरी नहीं हुई', unknown: 'अज्ञात' },
+    outcomes: {
+      not_applicable: 'लागू नहीं',
+      satisfied: 'पूरी हुई',
+      unsatisfied: 'पूरी नहीं हुई',
+      unknown: 'अज्ञात',
+    },
     assessmentStatuses: {
       potential_match: 'संभावित मेल · आगे जाँच आवश्यक',
       possibly_eligible_missing_information: 'अभी तय नहीं · जानकारी या प्रमाण उपलब्ध नहीं',
@@ -300,6 +312,8 @@ export const strings = {
     factNames: {
       age: 'आयु (वर्ष)',
       education_level: 'शिक्षा / कक्षा',
+      enrollment_mode: 'पढ़ाई का प्रकार',
+      school_recognized_or_government: 'सरकारी या सरकार/बोर्ड से मान्यता प्राप्त स्कूल',
       student_status: 'वर्तमान में छात्र',
       nationality: 'राष्ट्रीयता (स्रोत कोड, जैसे IN)',
       disability_percentage: 'दिव्यांगता प्रतिशत',

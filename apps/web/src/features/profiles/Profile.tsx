@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus, Trash2, UserRound } from 'lucide-react';
-import { useStrings } from '../../app/App';
+import { useStrings, useLanguage } from '../../app/App';
 import { api, fail } from '../../lib/api/client';
 import type { components } from '../../lib/api/schema';
 type Fact = components['schemas']['FactInput'];
@@ -10,6 +10,8 @@ const fields: { key: Fact['key']; kind: 'text' | 'number' | 'boolean' }[] = [
   { key: 'age', kind: 'number' },
   { key: 'education_level', kind: 'text' },
   { key: 'student_status', kind: 'boolean' },
+  { key: 'enrollment_mode', kind: 'text' },
+  { key: 'school_recognized_or_government', kind: 'boolean' },
   { key: 'nationality', kind: 'text' },
   { key: 'disability_percentage', kind: 'number' },
   { key: 'annual_parental_income', kind: 'number' },
@@ -25,6 +27,7 @@ const fields: { key: Fact['key']; kind: 'text' | 'number' | 'boolean' }[] = [
 ];
 export function Profile() {
   const t = useStrings();
+  const hi = useLanguage() === 'hi';
   const { personId } = useParams();
   const cache = useQueryClient();
   const [name, setName] = useState('');
@@ -76,6 +79,7 @@ export function Profile() {
     onSuccess: (data) => {
       cache.setQueryData(['personal-profile', personId], data);
       void cache.invalidateQueries({ queryKey: ['workspaces'] });
+      void cache.invalidateQueries({ queryKey: ['dashboard-summary'] });
       void cache.invalidateQueries({ queryKey: ['plan'] });
       setSaved(true);
     },
@@ -119,13 +123,9 @@ export function Profile() {
       <section className="profile-guide">
         <span className="step-dot">1</span>
         <div>
-          <strong>
-            {document.documentElement.lang === 'hi'
-              ? 'जो जानते हैं, उससे शुरू करें'
-              : 'Start with what you know'}
-          </strong>
+          <strong>{hi ? 'जो जानते हैं, उससे शुरू करें' : 'Start with what you know'}</strong>
           <p>
-            {document.documentElement.lang === 'hi'
+            {hi
               ? 'जानकारी वैकल्पिक है। अज्ञात को खाली छोड़ें।'
               : 'Answer only relevant questions. Leave uncertain information blank; you can return later.'}
           </p>
@@ -159,11 +159,16 @@ export function Profile() {
           <div className="question-topics">
             {[
               {
-                label: document.documentElement.lang === 'hi' ? 'शिक्षा' : 'Education',
-                keys: ['education_level', 'student_status'],
+                label: hi ? 'शिक्षा' : 'Education',
+                keys: [
+                  'education_level',
+                  'student_status',
+                  'enrollment_mode',
+                  'school_recognized_or_government',
+                ],
               },
               {
-                label: document.documentElement.lang === 'hi' ? 'स्थान' : 'Where you live',
+                label: hi ? 'स्थान' : 'Where you live',
                 keys: [
                   'domicile_state',
                   'domicile_district',
@@ -172,15 +177,15 @@ export function Profile() {
                 ],
               },
               {
-                label: document.documentElement.lang === 'hi' ? 'रोजगार' : 'Employment',
+                label: hi ? 'रोजगार' : 'Employment',
                 keys: ['employment_status'],
               },
               {
-                label: document.documentElement.lang === 'hi' ? 'आय' : 'Relevant income',
+                label: hi ? 'आय' : 'Relevant income',
                 keys: ['annual_parental_income', 'annual_personal_income'],
               },
               {
-                label: document.documentElement.lang === 'hi' ? 'दस्तावेज़' : 'Evidence gaps',
+                label: hi ? 'दस्तावेज़' : 'Evidence gaps',
                 keys: [
                   'has_income_certificate',
                   'has_disability_certificate',
@@ -215,29 +220,33 @@ export function Profile() {
                   {t.factNames[fact.key as keyof typeof t.factNames] || fact.key}
                 </h3>
                 <label className="field">
-                  {t.factLabel}
-                  <select
-                    aria-label={`${t.factLabel} ${index + 1}`}
-                    value={fact.key}
-                    onChange={(e) =>
-                      update(index, {
-                        key: e.target.value as Fact['key'],
-                        value: null,
-                        income_period: null,
-                        income_definition: null,
-                      })
-                    }
-                  >
-                    {fields.map((f) => (
-                      <option key={f.key} value={f.key}>
-                        {t.factNames[f.key as keyof typeof t.factNames] || f.key}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="field">
-                  {t.value}
-                  {kind === 'boolean' ? (
+                  {hi ? 'आपका उत्तर' : 'Your answer'}
+                  {['enrollment_mode', 'education_level'].includes(fact.key) ? (
+                    <select
+                      aria-label={`${t.value} ${index + 1}`}
+                      value={fact.value == null ? '' : String(fact.value)}
+                      onChange={(e) => update(index, { value: e.target.value || null })}
+                    >
+                      <option value="">{t.unknown}</option>
+                      {(fact.key === 'enrollment_mode'
+                        ? ['full_time', 'part_time', 'distance']
+                        : ['IX', 'X', 'XI', 'XII', 'undergraduate', 'postgraduate', 'other']
+                      ).map((v) => (
+                        <option key={v} value={v}>
+                          {hi
+                            ? {
+                                full_time: 'नियमित पूर्णकालिक',
+                                part_time: 'अंशकालिक',
+                                distance: 'दूरस्थ',
+                                undergraduate: 'स्नातक',
+                                postgraduate: 'स्नातकोत्तर',
+                                other: 'अन्य',
+                              }[v] || v
+                            : v.replaceAll('_', ' ')}
+                        </option>
+                      ))}
+                    </select>
+                  ) : kind === 'boolean' ? (
                     <select
                       aria-label={`${t.value} ${index + 1}`}
                       value={fact.value === true ? 'true' : fact.value === false ? 'false' : ''}

@@ -22,7 +22,7 @@ from opportunity_platform.db.models import (
 )
 from opportunity_platform.eligibility.engine import FactRecord
 from opportunity_platform.eligibility.rules import FactInput
-from opportunity_platform.profiles.service import ProfileWrite, account, person
+from opportunity_platform.profiles.service import ProfileWrite, account, changed_fact_keys, person
 
 Kind = Literal["person", "household", "business"]
 
@@ -42,6 +42,7 @@ class WorkspaceView(BaseModel):
     legal_status: str | None = None
     facts: list[FactRecord] = []
     members: list[dict] = []
+    primary: bool = False
 
 
 class HouseholdWrite(BaseModel):
@@ -189,7 +190,14 @@ def view(session, uid, ref):
         ):
             try:
                 _, p, _ = resolve(session, uid, SubjectRef(kind="person", id=membership.person_id))
-                members.append({"id": str(p.id), "name": p.display_name, "access": "authorized"})
+                members.append(
+                    {
+                        "id": str(p.id),
+                        "name": p.display_name,
+                        "access": "authorized",
+                        "managed": p.user_id is None,
+                    }
+                )
             except APIError:
                 # No private identity or facts for unconnected adults.
                 members.append({"access": "restricted", "name": "Adult authorization required"})
@@ -202,6 +210,8 @@ def view(session, uid, ref):
         legal_status=getattr(obj, "legal_status", None),
         facts=subject_facts(session, ref.kind, obj.id),
         members=members,
+        primary=ref.kind == "household"
+        and user.notification_preferences.get("primary_household_id") == str(obj.id),
     )
 
 
@@ -274,9 +284,14 @@ def add_dependent(session, uid, identifier, data):
 
 def update_person(session, uid, identifier, data):
     user, p, _ = resolve(session, uid, SubjectRef(kind="person", id=identifier), True)
+    changed_keys = changed_fact_keys(subject_facts(session, "person", p.id), data.facts)
+    session.execute(select(Person).where(Person.id == p.id).with_for_update())
     p.display_name = data.display_name
     replace_facts(session, "person", p.id, data.facts)
     session.add(AuditEvent(actor_id=user.id, action="authorized_person_updated", object_id=p.id))
+    from opportunity_platform.eligibility.refresh import affected
+
+    affected(session, uid, "person", p.id, changed_keys)
     session.commit()
     return view(session, uid, SubjectRef(kind="person", id=p.id))
 
@@ -284,6 +299,7 @@ def update_person(session, uid, identifier, data):
 def save_business(session, uid, data, identifier=None):
     if identifier:
         user, b, _ = resolve(session, uid, SubjectRef(kind="business", id=identifier), True)
+        session.execute(select(Business).where(Business.id == b.id).with_for_update())
     else:
         user = account(session, uid)
         person(session, user)
@@ -291,8 +307,47 @@ def save_business(session, uid, data, identifier=None):
         session.add(b)
         session.flush()
         session.add(BusinessMembership(business_id=b.id, user_id=user.id, role="owner"))
+    changed_keys = changed_fact_keys(subject_facts(session, "business", b.id), data.facts)
     b.name, b.description, b.legal_status = data.name, data.description, data.legal_status
     replace_facts(session, "business", b.id, data.facts)
     session.add(AuditEvent(actor_id=user.id, action="business_saved", object_id=b.id))
+    from opportunity_platform.eligibility.refresh import affected
+
+    affected(session, uid, "business", b.id, changed_keys)
     session.commit()
     return view(session, uid, SubjectRef(kind="business", id=b.id))
+
+
+def update_household(session, uid, identifier, data):
+    user, h, _ = resolve(session, uid, SubjectRef(kind="household", id=identifier), True)
+    h.name = data.name
+    if data.primary:
+        user.notification_preferences = {
+            **user.notification_preferences,
+            "primary_household_id": str(h.id),
+        }
+    session.add(AuditEvent(actor_id=user.id, action="household_updated", object_id=h.id))
+    session.commit()
+    return view(session, uid, SubjectRef(kind="household", id=h.id))
+
+
+def revoke_guardian_access(session, uid, identifier):
+    user, p, _ = resolve(session, uid, SubjectRef(kind="person", id=identifier), True)
+    if p.user_id is not None:
+        raise APIError(
+            422,
+            "managed_dependent_required",
+            "Only a managed dependent has guardian access to revoke.",
+        )
+    for grant in session.scalars(
+        select(ConsentGrant).where(
+            ConsentGrant.person_id == p.id,
+            ConsentGrant.grantee_user_id == user.id,
+            ConsentGrant.scope == "guardian",
+            ConsentGrant.revoked_at.is_(None),
+        )
+    ):
+        grant.revoked_at = datetime.now(timezone.utc)
+    session.add(AuditEvent(actor_id=user.id, action="guardian_access_revoked", object_id=p.id))
+    session.commit()
+    return {"status": "guardian_access_revoked"}

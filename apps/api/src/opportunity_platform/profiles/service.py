@@ -86,6 +86,26 @@ def get_profile(session: Session, uid: str) -> ProfileView:
     )
 
 
+def changed_fact_keys(before, after):
+    def signature(f):
+        context = getattr(f, "context", {})
+        return (
+            f.value,
+            f.valid_from,
+            f.valid_until,
+            getattr(f, "income_period", context.get("income_period")),
+            getattr(f, "income_definition", context.get("income_definition")),
+        )
+
+    old = {
+        f.key: signature(f)
+        for f in before
+        if getattr(f, "origin", "user_supplied") in {"user_supplied", "unknown"}
+    }
+    new = {f.key: signature(f) for f in after}
+    return {key for key in old.keys() | new.keys() if old.get(key) != new.get(key)}
+
+
 def save_profile(session: Session, uid: str, data: ProfileWrite) -> ProfileView:
     user = account(session, uid)
     # Lock the identity row to serialize first-profile creation and replacements.
@@ -96,6 +116,7 @@ def save_profile(session: Session, uid: str, data: ProfileWrite) -> ProfileView:
         session.add(profile)
         session.flush()
     profile.display_name = data.display_name
+    changed_keys = changed_fact_keys(facts_for(session, profile), data.facts)
     # Replace only user-owned user-supplied facts. Never overwrite verified evidence.
     session.execute(
         delete(ProfileFact).where(
@@ -128,5 +149,9 @@ def save_profile(session: Session, uid: str, data: ProfileWrite) -> ProfileView:
             details={"fact_count": len(data.facts)},
         )
     )
+    session.flush()
+    from opportunity_platform.eligibility.refresh import affected
+
+    affected(session, uid, "person", profile.id, changed_keys)
     session.commit()
     return get_profile(session, uid)

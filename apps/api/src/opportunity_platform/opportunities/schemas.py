@@ -31,6 +31,8 @@ class RequirementView(BaseModel):
     description: str
     rule: dict
     subject_context: str
+    kind: str = "eligibility"
+    application_context: str = "all"
     citations: list[CitationView]
 
 

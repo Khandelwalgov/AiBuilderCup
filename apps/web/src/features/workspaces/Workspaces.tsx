@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowRight, BriefcaseBusiness, UsersRound, Plus, ShieldCheck } from 'lucide-react';
 import { api, fail } from '../../lib/api/client';
 import type { components } from '../../lib/api/schema';
-import { useStrings } from '../../app/App';
+import { useStrings, useLanguage } from '../../app/App';
 type Workspace = components['schemas']['WorkspaceView'];
 type Fact = components['schemas']['FactInput'];
 export function useWorkspaces() {
@@ -19,7 +19,7 @@ export function useWorkspaces() {
 }
 export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
   const t = useStrings();
-  const hi = document.documentElement.lang === 'hi';
+  const hi = useLanguage() === 'hi';
   const cache = useQueryClient();
   const query = useWorkspaces();
   const [selected, setSelected] = useState<string>('');
@@ -69,6 +69,7 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
     },
     onSuccess: async (data) => {
       await cache.invalidateQueries({ queryKey: ['workspaces'] });
+      void cache.invalidateQueries({ queryKey: ['dashboard-summary'] });
       setSelected(data.id);
     },
   });
@@ -91,6 +92,20 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
       setDependent('');
       setAge('');
       setResponsibility(false);
+    },
+  });
+  const revoke = useMutation({
+    mutationFn: async (identifier: string) => {
+      const { data, error } = await api.POST('/v1/people/{identifier}/guardian-access/revoke', {
+        params: { path: { identifier } },
+        body: { confirm_revocation: true },
+      });
+      return data ?? fail(error);
+    },
+    onSuccess: () => {
+      void cache.invalidateQueries({ queryKey: ['workspaces'] });
+      cache.removeQueries({ queryKey: ['plan'] });
+      cache.removeQueries({ queryKey: ['personal-profile'] });
     },
   });
   const title = kind === 'household' ? t.family : t.businesses;
@@ -175,6 +190,27 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
             <>
               <section className="panel">
                 <h2>{current.name}</h2>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    save.mutate();
+                  }}
+                >
+                  <label className="field">
+                    {hi ? 'परिवार का नाम' : 'Household name'}
+                    <input
+                      required
+                      maxLength={100}
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </label>
+                  <button className="text-button" disabled={save.isPending}>
+                    {hi ? 'सहेजें और मुख्य परिवार चुनें' : 'Save and make primary household'}
+                  </button>
+                  {current.primary && <small>{hi ? 'मुख्य परिवार' : 'Primary household'}</small>}
+                  {save.isError && <p role="alert">{save.error.message}</p>}
+                </form>
                 <p className="trust-line">
                   <ShieldCheck size={16} />
                   {hi ? 'केवल अधिकृत जानकारी' : 'Only authorized information'}
@@ -185,11 +221,30 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
                     <small>{String(m.access)}</small>
                     {m.id != null && (
                       <Link to={`/people/${String(m.id)}/edit`}>
-                        {hi ? 'तैयारी देखें' : 'View readiness'} <ArrowRight size={14} />
+                        {hi ? 'प्रोफ़ाइल संपादित करें' : 'Edit profile'} <ArrowRight size={14} />
                       </Link>
+                    )}
+                    {m.managed === true && (
+                      <button
+                        className="text-button"
+                        disabled={revoke.isPending}
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              hi
+                                ? 'इस आश्रित का प्रबंधन बंद करें? जानकारी और इतिहास सुरक्षित रहेंगे। पुनः पहुँच के लिए प्रशासक की सहायता आवश्यक होगी।'
+                                : 'Stop managing this dependent? Records and history remain preserved. Restoring access requires administrator assistance.',
+                            )
+                          )
+                            revoke.mutate(String(m.id));
+                        }}
+                      >
+                        {hi ? 'प्रबंधन बंद करें' : 'Stop managing'}
+                      </button>
                     )}
                   </div>
                 ))}
+                {revoke.isError && <p role="alert">{revoke.error.message}</p>}
                 <Link className="button" to={`/plan?kind=household&id=${current.id}`}>
                   {hi ? 'परिवार की योजना' : 'Household plan'}
                 </Link>
@@ -293,7 +348,15 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
                       {['unregistered', 'sole_proprietor', 'partnership', 'company', 'other'].map(
                         (v) => (
                           <option key={v} value={v}>
-                            {v.replace('_', ' ')}
+                            {hi
+                              ? {
+                                  unregistered: 'अपंजीकृत',
+                                  sole_proprietor: 'एकल स्वामित्व',
+                                  partnership: 'साझेदारी',
+                                  company: 'कंपनी',
+                                  other: 'अन्य',
+                                }[v] || v
+                              : v.replace('_', ' ')}
                           </option>
                         ),
                       )}

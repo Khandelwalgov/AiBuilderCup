@@ -1,16 +1,17 @@
+import { Assistant } from '../assistant/Assistant';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { ArrowRight, GitBranch, RefreshCw, FlaskConical } from 'lucide-react';
 import { api, fail } from '../../lib/api/client';
 import type { components } from '../../lib/api/schema';
-import { useStrings } from '../../app/App';
+import { useStrings, useLanguage } from '../../app/App';
 import { useWorkspaces } from './Workspaces';
 type Ref = components['schemas']['SubjectRef'];
 type Action = components['schemas']['ActionView'];
 export function Plan() {
   const t = useStrings();
-  const hi = document.documentElement.lang === 'hi';
+  const hi = useLanguage() === 'hi';
   const [params, setParams] = useSearchParams();
   const workspaces = useWorkspaces();
   const kind = (params.get('kind') || 'person') as Ref['kind'];
@@ -21,10 +22,12 @@ export function Plan() {
   };
   const [selected, setSelected] = useState<Action | null>(null);
   const [age, setAge] = useState('');
+  const [explanationId, setExplanationId] = useState('');
   const query = useQuery({
     queryKey: ['plan', subject],
     retry: false,
-    staleTime: Infinity,
+    staleTime: 0,
+    refetchOnMount: 'always',
     refetchOnWindowFocus: false,
     queryFn: async () => {
       const { data, error } = await api.POST('/v1/plan', { body: { subject } });
@@ -39,7 +42,34 @@ export function Plan() {
       return data ?? fail(error);
     },
   });
-  const data = simulation.data ?? query.data;
+  const progress = useMutation({
+    mutationFn: async (action: Action) => {
+      const { data, error } = await api.PATCH('/v1/actions/{identifier}', {
+        params: { path: { identifier: action.id } },
+        body: { status: action.status === 'in_progress' ? 'pending' : 'in_progress' },
+      });
+      return data ?? fail(error);
+    },
+    onSuccess: () => {
+      setSelected(null);
+      void query.refetch();
+    },
+  });
+  const data = query.isError ? undefined : (simulation.data ?? query.data);
+  function actionTitle(action: Action) {
+    if (!action.fact) return action.title;
+    const name =
+      t.factNames[action.fact as keyof typeof t.factNames] || action.fact.replaceAll('_', ' ');
+    return (
+      (action.kind === 'document'
+        ? hi
+          ? 'प्रमाण सत्यापित करें: '
+          : 'Verify evidence: '
+        : hi
+          ? 'जानकारी दें: '
+          : 'Provide: ') + name
+    );
+  }
   const options = [
     { value: 'person:', name: hi ? 'मेरा व्यक्तिगत प्रोफ़ाइल' : 'My personal profile' },
     ...(workspaces.data ?? []).flatMap((w) => [
@@ -198,7 +228,7 @@ export function Plan() {
                           {a.kind} · {new Set(a.opportunities.map((o) => o.id)).size}{' '}
                           {hi ? 'अवसर' : 'opportunities'}
                         </small>
-                        <strong>{a.title}</strong>
+                        <strong>{actionTitle(a)}</strong>
                       </button>
                     ))}
                   </div>
@@ -212,8 +242,17 @@ export function Plan() {
                         <small>
                           {hi ? 'समीक्षित संस्करण' : 'Reviewed version'} {ev.version}
                         </small>
-                        <strong>{ev.requirements[0]?.requirement ?? t.discover}</strong>
-                        <span>{ev.status.replaceAll('_', ' ')}</span>
+                        <strong>{ev.opportunity_title || t.discover}</strong>
+                        <span>
+                          {t.assessmentStatuses[ev.status as keyof typeof t.assessmentStatuses] ||
+                            ev.status}
+                        </span>
+                        {ev.previous_status && (
+                          <small>
+                            {hi ? 'पहले' : 'Previously'}: v{ev.previous_version} ·{' '}
+                            {ev.previous_status.replaceAll('_', ' ')}
+                          </small>
+                        )}
                       </Link>
                     ))}
                   </div>
@@ -226,7 +265,7 @@ export function Plan() {
                     <button className="action-row" key={a.identity} onClick={() => setSelected(a)}>
                       <span className="action-number">{String(i + 1).padStart(2, '0')}</span>
                       <span>
-                        <strong>{a.title}</strong>
+                        <strong>{actionTitle(a)}</strong>
                         <small>
                           {new Set(a.opportunities.map((o) => o.id)).size}{' '}
                           {hi ? 'अवसरों से जुड़ा' : 'linked opportunities'} · {a.status}
@@ -251,6 +290,37 @@ export function Plan() {
                   {selected ? (
                     <>
                       <p>{selected.explanation}</p>
+                      <p>
+                        {hi ? 'कार्य स्थिति' : 'Task status'}:{' '}
+                        {selected.status === 'in_progress'
+                          ? hi
+                            ? 'जारी है'
+                            : 'In progress'
+                          : hi
+                            ? 'शुरू नहीं हुआ'
+                            : 'Pending'}
+                      </p>
+                      {!data.hypothetical && (
+                        <button
+                          className="button secondary"
+                          disabled={progress.isPending}
+                          onClick={() => progress.mutate(selected)}
+                        >
+                          {selected.status === 'in_progress'
+                            ? hi
+                              ? 'लंबित पर लौटाएं'
+                              : 'Return to pending'
+                            : hi
+                              ? 'मैंने यह कदम शुरू किया है'
+                              : 'Mark in progress'}
+                        </button>
+                      )}
+                      <small className="muted">
+                        {hi
+                          ? 'कार्य स्थिति बदलने से प्रमाण सत्यापित नहीं होता।'
+                          : 'Task progress does not verify evidence or change eligibility.'}
+                      </small>
+                      {progress.isError && <p role="alert">{progress.error.message}</p>}
                       {selected.opportunities.map((o, i) => (
                         <div className="evidence-card" key={i}>
                           <p>{String(o.requirement)}</p>
@@ -278,6 +348,41 @@ export function Plan() {
                   )}
                 </section>
               </div>
+              {!data.hypothetical && (
+                <section className="plan-assistant">
+                  <label className="field">
+                    {hi
+                      ? 'किस अवसर के बारे में पूछना है?'
+                      : 'Which opportunity would you like to understand?'}
+                    <select
+                      value={
+                        data.evaluations.some((e) => e.id === explanationId)
+                          ? explanationId
+                          : data.evaluations[0].id
+                      }
+                      onChange={(e) => setExplanationId(e.target.value)}
+                    >
+                      {data.evaluations.map((ev) => (
+                        <option key={ev.id} value={ev.id}>
+                          {ev.opportunity_title || ev.opportunity_id}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <Assistant
+                    key={
+                      data.evaluations.some((e) => e.id === explanationId)
+                        ? explanationId
+                        : data.evaluations[0].id
+                    }
+                    evaluationId={
+                      data.evaluations.some((e) => e.id === explanationId)
+                        ? explanationId
+                        : data.evaluations[0].id
+                    }
+                  />
+                </section>
+              )}
               {data.known_blockers.length > 0 && (
                 <section className="panel">
                   <h2>

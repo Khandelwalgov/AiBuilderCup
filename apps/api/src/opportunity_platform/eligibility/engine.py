@@ -20,7 +20,7 @@ class FactRecord(BaseModel):
 
 
 class Result(BaseModel):
-    outcome: Literal["satisfied", "unsatisfied", "unknown"]
+    outcome: Literal["satisfied", "unsatisfied", "unknown", "not_applicable"]
     reason: str
     facts: list[FactRecord] = []
     missing: list[str] = []

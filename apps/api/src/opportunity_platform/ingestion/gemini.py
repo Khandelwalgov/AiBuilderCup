@@ -23,6 +23,7 @@ Cite every nonempty metadata field (including summary/category/geography) in fie
 Never infer deadlines from publication dates or recurring dates. An application URL must occur
 verbatim in the supplied text. Income requires the precise definition and period, never a
 generic household sum. Unknown or unrepresentable conditions use op=unknown and a review flag.
+For each required document, include its name and exact supporting quote in document_evidence.
 Include every applicable substantive condition and required document; all/any semantics must
 reflect the source. Flags must include uncertainty about comprehensiveness, selection,
 effective dates and unresolved clauses. This is preliminary extraction, not legal or

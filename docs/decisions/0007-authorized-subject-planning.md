@@ -1,0 +1,13 @@
+# Explicit subjects, scoped contexts and reusable plans
+
+Households have an explicit owner. Existing ownerless rows are preserved and not silently granted access. Multiple households are allowed; a primary context is stored as a preference using the existing account JSON. This preference does not grant access or encode a lifelong membership constraint. Rename/primary selection is owner-only.
+
+A managed dependent requires a guardian assertion, dated relationship and independently revocable guardian grant. Both grant and active relationship are checked; kinship alone does not authorize access. Full invited adult connections and consent UI remain P1. Business memberships enforce owner/admin/editor/viewer roles, including server-side read and edit isolation. Unregistered enterprises do not need registration identifiers.
+
+The existing evaluator resolves a single explicit person/household/business subject. Facts are not pooled across people. Fresh/renewal is an explicit per-opportunity evaluation input, not a reusable global person fact. Different-context requirements return not_applicable; unspecified context stays unknown. School class/study mode/recognition have conservative typed support. Unsupported policy logic remains unknown.
+
+Planner actions persist against the subject and current requirement IDs. Information/evidence normalization ignores rule-tree shape but preserves fact, income period/definition, date and subject context. Uninterpreted conditions retain distinct requirement identity, preventing all unknown rules from collapsing. Known disqualifiers never become repairable tasks. Prioritization uses count of affected opportunities, without invented scores/deadlines. Old links are removed when rebuilding a current plan; evaluations remain immutable snapshots. User fact edits re-evaluate only previously assessed opportunities with affected rule keys. Publication is explicit; users refresh plans to assess a newly reviewed version.
+
+What-if age correction uses unverified hypothetical facts and saves neither evaluations, facts nor actions. It does not manufacture documentary verification. The accessible checklist and interactive map share the same API data.
+
+The local bilingual assistant uses deterministic cited messages. Optional Gemini receives only whitelisted generic question concepts, no raw question or profile. It classifies intent only; rule outcomes and explanation text remain deterministic. Live calls are disabled unless an operator explicitly enables them. This is a limited grounded-question feature, not unrestricted natural-language legal reasoning.

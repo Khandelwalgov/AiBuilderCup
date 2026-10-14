@@ -19,6 +19,13 @@ def corrected(view):
     candidate = view.candidate.model_copy(deep=True)
     if any(f.startswith("Nightfall correction:") for f in candidate.review_flags):
         candidate.requirements = [r for r in candidate.requirements if not r.description.startswith("For a fresh application,")]
+        for req in candidate.requirements:
+            if req.description == "The student must study in class IX or X.":
+                req.rule = Rule(op="condition",condition=Condition(op="in",fact="education_level",value=["IX","X"]))
+            elif req.description == "The student must be a regular, full-time student.":
+                req.rule = Rule(op="all",children=[Rule(op="condition",condition=Condition(op="eq",fact="student_status",value=True)),Rule(op="condition",condition=Condition(op="eq",fact="enrollment_mode",value="full_time"))])
+            elif req.description.startswith("The school must be a Government"):
+                req.rule = Rule(op="condition",condition=Condition(op="eq",fact="school_recognized_or_government",value=True))
         return candidate
     def cite(year, page, start=None, end=None):
         p = next(p for p in view.pages if f"/{year}/" in p.source_url and p.page == page)

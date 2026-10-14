@@ -236,17 +236,70 @@ def create(session, actor):
         select(Opportunity).where(Opportunity.source_id == source.id, Opportunity.source_key == key)
     )
     if existing:
-        return session.scalar(
+        version = session.scalar(
             select(OpportunityVersion)
             .where(OpportunityVersion.opportunity_id == existing.id)
             .order_by(OpportunityVersion.version.desc())
         )
+        if version.snapshot_id == snapshot.id and version.publication_state == "draft":
+            copied = SourceSnapshot(
+                source_id=source.id,
+                content_hash=snapshot.content_hash,
+                media_type=snapshot.media_type,
+                source_url=snapshot.source_url,
+                pages=snapshot.pages,
+                byte_count=snapshot.byte_count,
+                response_metadata={
+                    **snapshot.response_metadata,
+                    "reused_capture_id": str(snapshot.id),
+                    "original_capture_created_at": snapshot.created_at.isoformat(),
+                },
+            )
+            session.add(copied)
+            session.flush()
+            version.snapshot_id = copied.id
+            for run in session.scalars(
+                select(IngestionRun).where(
+                    IngestionRun.source_id == source.id, IngestionRun.snapshot_id == snapshot.id
+                )
+            ):
+                run.snapshot_id = copied.id
+            session.add(
+                AuditEvent(
+                    actor_id=actor.id,
+                    action="draft_snapshot_association_corrected",
+                    object_id=version.id,
+                    details={
+                        "original_snapshot_id": str(snapshot.id),
+                        "snapshot_id": str(copied.id),
+                        "source_hash": snapshot.content_hash,
+                    },
+                )
+            )
+            session.commit()
+        return version
     c = candidate_from(snapshot.pages)
     source.status = "needs_review"
     # Reuse original retrieval dates; do not claim a new successful fetch.
     oldsource = session.get(Source, snapshot.source_id)
     source.last_checked_at = oldsource.last_checked_at
     source.last_successful_check_at = oldsource.last_successful_check_at
+    copied = SourceSnapshot(
+        source_id=source.id,
+        content_hash=snapshot.content_hash,
+        media_type=snapshot.media_type,
+        source_url=snapshot.source_url,
+        pages=snapshot.pages,
+        byte_count=snapshot.byte_count,
+        response_metadata={
+            **snapshot.response_metadata,
+            "reused_capture_id": str(snapshot.id),
+            "original_capture_created_at": snapshot.created_at.isoformat(),
+        },
+    )
+    session.add(copied)
+    session.flush()
+    snapshot = copied
     opp = Opportunity(source_id=source.id, source_key=key, category=c.category, is_synthetic=False)
     session.add(opp)
     session.flush()

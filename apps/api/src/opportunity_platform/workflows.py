@@ -1,7 +1,7 @@
 """HTTP adapter only; all persistence and evaluation stay in domain services."""
 
 import uuid
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel
@@ -9,6 +9,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from opportunity_platform.admin import service as admin
+from opportunity_platform.assistant import service as assistant
 from opportunity_platform.core.auth import current_uid
 from opportunity_platform.db.models import IngestionRun, OpportunityVersion, Source, User
 from opportunity_platform.db.session import get_session
@@ -16,6 +17,7 @@ from opportunity_platform.eligibility import service as eligibility
 from opportunity_platform.ingestion import service as ingestion
 from opportunity_platform.ingestion.adapters import ADAPTERS
 from opportunity_platform.planning import service as planning
+from opportunity_platform.profiles import dashboard
 from opportunity_platform.profiles import service as profiles
 from opportunity_platform.subjects import service as subjects
 
@@ -49,18 +51,27 @@ def get_person(identifier: uuid.UUID, session: DB, uid: UID):
 
 class EvaluationRequest(BaseModel):
     subject: subjects.SubjectRef = subjects.SubjectRef()
+    application_type: Literal["fresh", "renewal"] | None = None
 
 
 @router.post(
     "/opportunities/{identifier}/evaluate-context", response_model=eligibility.EvaluationView
 )
 def evaluate_context(identifier: uuid.UUID, data: EvaluationRequest, session: DB, uid: UID):
-    return eligibility.check(session, uid, identifier, data.subject)
+    return eligibility.check(
+        session, uid, identifier, data.subject, application_type=data.application_type
+    )
 
 
 @router.post("/opportunities/{identifier}/evaluate", response_model=eligibility.EvaluationView)
-def evaluate(identifier: uuid.UUID, session: DB, uid: UID):
-    return eligibility.check(session, uid, identifier)
+def evaluate(identifier: uuid.UUID, session: DB, uid: UID, data: EvaluationRequest | None = None):
+    return eligibility.check(
+        session,
+        uid,
+        identifier,
+        data.subject if data else None,
+        application_type=data.application_type if data else None,
+    )
 
 
 @router.get("/admin/reviews", response_model=list[admin.ReviewSummary])
@@ -208,3 +219,58 @@ def plan(data: planning.PlanRequest, session: DB, uid: UID):
 @router.post("/plan/simulate", response_model=planning.PlanView)
 def simulate(data: planning.SimulationRequest, session: DB, uid: UID):
     return planning.build(session, uid, data.subject, data.facts)
+
+
+@router.post("/assistant/explain", response_model=assistant.ExplanationView)
+def explain(data: assistant.ExplanationRequest, session: DB, uid: UID):
+    return assistant.explain(session, uid, data)
+
+
+@router.put("/households/{identifier}", response_model=subjects.WorkspaceView)
+def update_household(identifier: uuid.UUID, data: subjects.HouseholdWrite, session: DB, uid: UID):
+    return subjects.update_household(session, uid, identifier, data)
+
+
+class AssistantCapabilities(BaseModel):
+    local_cited_explanation: bool
+    gemini_intent_enabled: bool
+
+
+@router.get("/assistant/capabilities", response_model=AssistantCapabilities)
+def assistant_capabilities(uid: UID):
+    from opportunity_platform.core.config import settings
+
+    config = settings()
+    return {
+        "local_cited_explanation": True,
+        "gemini_intent_enabled": bool(
+            config.ai_assistant_live_enabled
+            and config.gemini_api_key
+            and not config.gemini_api_key.startswith("sk-")
+        ),
+    }
+
+
+class RevokeGuardianRequest(BaseModel):
+    confirm_revocation: Literal[True]
+
+
+class RevocationView(BaseModel):
+    status: str
+
+
+@router.post("/people/{identifier}/guardian-access/revoke", response_model=RevocationView)
+def revoke_guardian(identifier: uuid.UUID, data: RevokeGuardianRequest, session: DB, uid: UID):
+    return subjects.revoke_guardian_access(session, uid, identifier)
+
+
+@router.get("/dashboard", response_model=dashboard.DashboardView)
+def dashboard_summary(session: DB, uid: UID):
+    return dashboard.summary(session, uid)
+
+
+@router.patch("/actions/{identifier}", response_model=planning.ActionProgressView)
+def action_progress(
+    identifier: uuid.UUID, data: planning.ActionProgressWrite, session: DB, uid: UID
+):
+    return planning.progress(session, uid, identifier, data)

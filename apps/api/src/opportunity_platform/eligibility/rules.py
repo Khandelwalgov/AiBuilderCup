@@ -16,6 +16,8 @@ FactKey = Literal[
     "residence_state",
     "residence_district",
     "education_level",
+    "enrollment_mode",
+    "school_recognized_or_government",
     "student_status",
     "employment_status",
     "has_bank_account",
@@ -126,6 +128,13 @@ class FactInput(BaseModel):
     def valid(self):
         if self.valid_from and self.valid_until and self.valid_until < self.valid_from:
             raise ValueError("Invalid validity interval")
+        if self.key == "enrollment_mode" and self.value not in {
+            None,
+            "full_time",
+            "part_time",
+            "distance",
+        }:
+            raise ValueError("Enrollment mode must be full_time, part_time, distance or unknown")
         if self.value is not None:
             if self.key in {
                 "age",
@@ -142,6 +151,7 @@ class FactInput(BaseModel):
                     raise ValueError("Percentage must be at most 100")
             elif self.key.startswith("has_") or self.key in {
                 "student_status",
+                "school_recognized_or_government",
                 "auto_debit_consent",
                 "business_registered",
             }:

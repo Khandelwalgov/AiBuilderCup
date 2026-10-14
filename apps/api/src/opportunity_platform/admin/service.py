@@ -233,6 +233,7 @@ def review(session: Session, identifier: uuid.UUID, actor: User, data: ReviewWri
             record = Requirement(
                 version_id=version.id,
                 description="Required document: " + document,
+                kind="document",
                 rule={"op": "condition", "condition": {"op": "unknown"}, "children": []},
                 subject_context="person",
             )

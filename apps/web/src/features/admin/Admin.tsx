@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { useStrings } from '../../app/App';
+import { useStrings, useLanguage } from '../../app/App';
 import { api, fail } from '../../lib/api/client';
 import type { components } from '../../lib/api/schema';
 type Review = components['schemas']['ReviewView'];
@@ -148,6 +148,7 @@ export function Admin() {
 }
 function CandidateEditor({ id }: { id: string }) {
   const t = useStrings();
+  const hi = useLanguage() === 'hi';
   const cache = useQueryClient();
   const [text, setText] = useState('');
   const [note, setNote] = useState('');
@@ -214,7 +215,7 @@ function CandidateEditor({ id }: { id: string }) {
   }
   const patch = (values: Partial<Review['candidate']>) =>
     setText(JSON.stringify({ ...edited, ...values }, null, 2));
-  const hi = document.documentElement.lang === 'hi';
+
   return (
     <section className="panel candidate-editor">
       <p>

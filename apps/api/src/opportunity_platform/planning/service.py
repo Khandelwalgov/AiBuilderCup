@@ -3,11 +3,21 @@
 import hashlib
 import json
 import uuid
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import delete, select
 
-from opportunity_platform.db.models import ActionDependency, ActionItem, Opportunity, User
+from opportunity_platform.core.errors import APIError
+from opportunity_platform.db.models import (
+    ActionDependency,
+    ActionItem,
+    AuditEvent,
+    MatchEvaluation,
+    Opportunity,
+    Requirement,
+    User,
+)
 from opportunity_platform.eligibility import service as eligibility
 from opportunity_platform.eligibility.rules import FactInput
 from opportunity_platform.opportunities.service import catalogue
@@ -29,6 +39,7 @@ class ActionView(BaseModel):
     status: str
     identity: str
     kind: str
+    fact: str | None = None
     opportunities: list[dict]
     explanation: str
 
@@ -75,6 +86,19 @@ def identities(requirement):
     return result
 
 
+def application_context(session, kind, identifier, version_id):
+    previous = session.scalar(
+        select(MatchEvaluation)
+        .where(
+            MatchEvaluation.version_id == version_id,
+            getattr(MatchEvaluation, kind + "_id") == identifier,
+        )
+        .order_by(MatchEvaluation.created_at.desc(), MatchEvaluation.id)
+        .limit(1)
+    )
+    return previous.fact_snapshot.get("application_type") if previous else None
+
+
 def build(session, uid, subject, hypothetical=None):
     user, obj, _ = resolve(session, uid, subject)
     subject = SubjectRef(kind=subject.kind, id=obj.id)
@@ -82,7 +106,15 @@ def build(session, uid, subject, hypothetical=None):
     session.execute(select(User).where(User.id == user.id).with_for_update())
     rows = list(session.execute(catalogue().order_by(Opportunity.id).limit(100)))
     evaluations = [
-        eligibility.check(session, uid, row[0].id, subject, hypothetical, commit=False)
+        eligibility.check(
+            session,
+            uid,
+            row[0].id,
+            subject,
+            hypothetical,
+            commit=False,
+            application_type=application_context(session, subject.kind, obj.id, row[1].id),
+        )
         for row in rows
     ]
     grouped = {}
@@ -116,11 +148,22 @@ def build(session, uid, subject, hypothetical=None):
                         )
                         + label,
                         "kind": payload["kind"],
+                        "fact": payload.get("fact"),
                         "opportunities": [],
                     },
                 )
                 if link not in entry["opportunities"]:
                     entry["opportunities"].append(link)
+    evaluations.sort(
+        key=lambda ev: (
+            {
+                "potential_match": 0,
+                "possibly_eligible_missing_information": 1,
+                "not_eligible_on_known_facts": 2,
+            }.get(ev.status, 3),
+            ev.opportunity_title,
+        )
+    )
     actions = []
     existing = {
         a.identity: a
@@ -137,7 +180,8 @@ def build(session, uid, subject, hypothetical=None):
                 )
                 session.add(record)
                 session.flush()
-            record.status = "pending"
+            if record.status not in {"pending", "in_progress"}:
+                record.status = "pending"
             record.details = entry
             session.execute(delete(ActionDependency).where(ActionDependency.action_id == record.id))
             for requirement_id in {link["requirement_id"] for link in entry["opportunities"]}:
@@ -148,7 +192,7 @@ def build(session, uid, subject, hypothetical=None):
             ActionView(
                 id=record.id if record else uuid.uuid4(),
                 identity=identity,
-                status="hypothetical" if hypothetical is not None else "pending",
+                status="hypothetical" if hypothetical is not None else record.status,
                 explanation=(
                     "Prioritized by the number of current published opportunities affected. "
                     "Completing a task does not verify evidence "
@@ -174,3 +218,46 @@ def build(session, uid, subject, hypothetical=None):
         ),
         known_blockers=blockers,
     )
+
+
+class ActionProgressWrite(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    status: Literal["pending", "in_progress"]
+
+
+class ActionProgressView(BaseModel):
+    status: str
+
+
+def progress(session, uid, identifier, data):
+    record = session.get(ActionItem, identifier)
+    if record is None:
+        raise APIError(404, "action_not_found", "This action is not available.")
+    kind = next(
+        k for k in ["person", "household", "business"] if getattr(record, k + "_id") is not None
+    )
+    user, _, _ = resolve(
+        session, uid, SubjectRef(kind=kind, id=getattr(record, kind + "_id")), True
+    )
+    current = session.scalar(
+        select(ActionDependency.id)
+        .join(Requirement, Requirement.id == ActionDependency.requirement_id)
+        .join(Opportunity, Opportunity.published_version_id == Requirement.version_id)
+        .where(ActionDependency.action_id == record.id, Opportunity.is_synthetic.is_(False))
+        .limit(1)
+    )
+    if current is None or record.status not in {"pending", "in_progress"}:
+        raise APIError(
+            409, "action_outdated", "Refresh the current plan before updating an action."
+        )
+    record.status = data.status
+    session.add(
+        AuditEvent(
+            actor_id=user.id,
+            action="action_progress_updated",
+            object_id=record.id,
+            details={"status": data.status, "changes_evidence_verification": False},
+        )
+    )
+    session.commit()
+    return ActionProgressView(status=record.status)

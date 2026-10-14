@@ -323,3 +323,11 @@ Do not loop paid attempts. If another 503 occurs, retain diagnostics and check [
 Final formatting/type check: `cd apps/web && pnpm exec prettier --check src/app/App.tsx src/app/auth-errors.ts src/i18n/strings.ts tests/auth-errors.spec.ts && pnpm typecheck` passed. Ignored secret files were preserved and no credentials entered source control.
 
 **Phase 3 readiness:** not yet. The audit fixed a real configured-Firebase runtime bug and verified infrastructure access, but successful model extraction, human-reviewed publication and real authenticated eligibility are still required before the Unlock Graph milestone.
+
+## Nightfall — 14 October 2026
+
+The original real Pre-Matric candidate remains draft, with original provider/model/hash/token metadata intact. Audited corrections now contain 17 distinct requirement groups and nine document citations. Class IX/X, full-time student and school recognition use conservative typed rules; unsupported income/household/renewal interpretations remain unknown. Fresh/renewal is a per-opportunity evaluation input. The earlier report of 18 groups was an intermediate state before removing a duplicated cross-state procedure.
+
+Post-Matric candidate `db51eb5b-5972-4d5a-8b13-85144f2f62d5` is a separate, unpublished manual-curation draft (20 conditions/eight document citations) derived from the same genuine captured official pages. No new fetch or model generation was used. Adapter-specific snapshot association was audited/corrected without deleting the original snapshot. Both candidates' exact citations were revalidated against their actual saved pages; publication count remains zero.
+
+Nightfall made **zero live AI calls** and no cloud changes. Existing Firebase administrator identity was checked only to use the already authorized audited correction workflow. No new admin was created. New subject/planner/private explanation services are validated with isolated PostgreSQL schemas and explicit browser contracts; authenticated real-Firebase full-product acceptance remains pending. The clean local Docker build now succeeds using normal TLS and locked dependencies. See final Nightfall report for final check counts and limitations.

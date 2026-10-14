@@ -2442,3 +2442,44 @@ summary {
     font-size: 10px;
   }
 }
+.personal-pulse {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.personal-pulse .eyebrow {
+  margin-bottom: 8px;
+}
+.personal-pulse h2 {
+  margin-bottom: 8px;
+}
+.personal-pulse p {
+  margin-bottom: 0;
+}
+@media (max-width: 760px) {
+  .personal-pulse {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+.fact-editor {
+  grid-template-columns: minmax(0, 1fr) 40px;
+}
+.fact-editor > .question-label {
+  grid-column: 1;
+}
+.fact-editor > .field {
+  grid-column: 1;
+}
+.fact-editor > .remove-fact {
+  grid-column: 2;
+  grid-row: 1/3;
+}
+.fact-editor .fact-dates {
+  font-size: 12px;
+}
+.fact-editor .fact-origin {
+  font-size: 11px;
+}

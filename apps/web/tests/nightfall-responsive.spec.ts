@@ -33,3 +33,19 @@ for (const width of [1440, 1024, 390, 320]) {
     expect(errors).toEqual([]);
   });
 }
+
+test('keyboard skip link and mobile navigation return focus safely', async ({ page }) => {
+  await page.goto('/discover');
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#main')).toBeFocused();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.getByRole('button', { name: 'Open navigation' }).click();
+  await expect(page.locator('.brand')).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  await expect(page.locator('.settings-link')).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button', { name: 'Open navigation' })).toBeFocused();
+  await expect(page.locator('#primary-navigation')).not.toBeVisible();
+});

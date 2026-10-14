@@ -9,6 +9,7 @@ from opportunity_platform.core.errors import APIError
 from opportunity_platform.db.models import (
     MatchEvaluation,
     Opportunity,
+    OpportunityVersion,
     Requirement,
     RequirementEvidence,
 )
@@ -39,6 +40,9 @@ class EvaluationView(BaseModel):
     status: str
     requirements: list[RequirementResult]
     disclaimer: str
+    opportunity_title: str = ""
+    previous_status: str | None = None
+    previous_version: int | None = None
 
 
 def check(
@@ -48,7 +52,10 @@ def check(
     subject: SubjectRef | None = None,
     hypothetical: list[FactInput] | None = None,
     commit: bool = True,
+    application_type: str | None = None,
 ) -> EvaluationView:
+    if application_type not in {None, "fresh", "renewal"}:
+        raise APIError(422, "invalid_application_context", "Choose fresh, renewal or unknown.")
     subject = subject or SubjectRef()
     _user, profile, _role = resolve(session, uid, subject)
     facts = subject_facts(session, subject.kind, profile.id)
@@ -91,19 +98,30 @@ def check(
                 blockers=["subject:" + requirement.subject_context],
             )
         )
-        if requirement.application_context != "all" or requirement.kind in {
-            "procedure",
-            "selection",
-            "interpretation",
-        }:
+        if requirement.kind in {"procedure", "selection", "interpretation"}:
             result = Result(
                 outcome="unknown",
                 reason=(
-                    "Application context or source interpretation requires clarification; "
-                    "this is not a universal eligibility restriction."
+                    "This is an administrative, selection or interpretation "
+                    "condition requiring clarification."
                 ),
                 blockers=["clarification:" + str(requirement.id)],
             )
+        if requirement.application_context != "all":
+            if application_type and application_type != requirement.application_context:
+                result = Result(
+                    outcome="not_applicable",
+                    reason="This condition applies only to "
+                    + requirement.application_context
+                    + " applications.",
+                )
+            elif not application_type:
+                result = Result(
+                    outcome="unknown",
+                    reason="Clarify whether this opportunity application is fresh or renewal.",
+                    missing=["application_type"],
+                    blockers=["context:" + str(requirement.id)],
+                )
         citations = [
             CitationView(source_url=e.source_url, passage=e.passage, page=e.page)
             for e in session.scalars(
@@ -157,6 +175,19 @@ def check(
     else:
         # Satisfied self-reported conditions never imply document-verified readiness.
         status = "potential_match"
+    previous = session.scalar(
+        select(MatchEvaluation)
+        .join(OpportunityVersion, OpportunityVersion.id == MatchEvaluation.version_id)
+        .where(
+            OpportunityVersion.opportunity_id == opportunity.id,
+            getattr(MatchEvaluation, subject.kind + "_id") == profile.id,
+        )
+        .order_by(MatchEvaluation.created_at.desc(), MatchEvaluation.id)
+        .limit(1)
+    )
+    previous_version = (
+        session.get(OpportunityVersion, previous.version_id).version if previous else None
+    )
     now = datetime.now(timezone.utc)
     record = MatchEvaluation(
         **{subject.kind + "_id": profile.id},
@@ -165,7 +196,8 @@ def check(
         fact_snapshot={
             "facts": [f.model_dump(mode="json") for f in facts],
             "evaluation_date": now.date().isoformat(),
-            "engine_version": "1",
+            "engine_version": "2",
+            "application_type": application_type,
         },
         results=[r.model_dump(mode="json") for r in results],
     )
@@ -182,6 +214,9 @@ def check(
         opportunity_id=opportunity.id,
         version_id=version.id,
         version=version.version,
+        opportunity_title=version.title,
+        previous_status=previous.status if previous else None,
+        previous_version=previous_version,
         evaluated_at=now,
         status=status,
         requirements=results,

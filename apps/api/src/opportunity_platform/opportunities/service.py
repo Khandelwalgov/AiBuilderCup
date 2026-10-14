@@ -82,6 +82,8 @@ def view(row, session: Session) -> OpportunityView:
             description=req.description,
             rule=req.rule,
             subject_context=req.subject_context,
+            kind=req.kind,
+            application_context=req.application_context,
             citations=[
                 CitationView(source_url=e.source_url, passage=e.passage, page=e.page)
                 for e in session.scalars(
