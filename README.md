@@ -140,3 +140,9 @@ Plans use only current real publications. With no approved records, the plan cor
 English/Hindi cited explanations are local and deterministic. Gemini can optionally classify generic question concepts when `AI_ASSISTANT_LIVE_ENABLED=true` and a valid Gemini key is configured; no raw question/profile is sent. This flag defaults false and no new live AI call was made overnight. OpenAI remains an explicit extraction-only development provider, with no automatic fallback.
 
 Two real draft candidates remain private in `/admin`. The Post-Matric candidate is **manual curation of an existing capture**, not a fresh fetch/AI extraction; its provider metadata says so. Review every requirement and amendment before publication. The admin UI now offers structured corrections and document-specific evidence; advanced JSON is optional. See [Nightfall progress](docs/overnight-progress.md), [draft correction report](docs/nightfall-draft-corrections.md) and [subject/planner decision](docs/decisions/0007-authorized-subject-planning.md). No cloud deployment occurred.
+
+## Finale local release candidate
+
+See [Finale report](docs/finale-final-report.md), [visual direction](docs/finale-visual-direction.md) and [acceptance checklist](docs/finale-acceptance.md). The Atlas redesign and shared-document/evaluation correctness changes are local; neither genuine draft has been published and no new AI call or cloud deployment occurred.
+
+`make finale-demo` prints a plan. `make finale-demo ARGS=--run-isolated` executes public-source-copy and fictional amendment scenarios inside disposable PostgreSQL schemas; it never populates the application schema. `make release-local` runs configuration, contracts, backend/frontend and browser gates. Start local services with the existing `make db`, `make migrate`, `make api` and `make web` commands. Browser regressions own separate5174/8001listeners and leave normal5173/8000services untouched.

@@ -18,3 +18,5 @@ Deployment approval checklist:
 A plan-only illustrative check was executed using `.live-validation/nightfall-deploy-plan-config.json`; public placeholders are not validated cloud resources. Plan output is `.live-validation/nightfall-deploy-plan.txt`. No cloud command executed. The clean local Docker build succeeds with locked dependencies and TLS intact.
 
 Use `docs/demo-script.md` for three minutes and `docs/architecture-overview.md` for the architecture. See `docs/overnight-final-report.md` for exact executed validation and remaining gaps.
+
+Finale checkpoint: Intelligence Atlas UI and canonical shared documentary actions are implemented; unchanged assessments now reuse records, concurrent requests serialize, current-version action links and meaningful differences are tested. See `docs/finale-final-report.md`. Neither real candidate was modified or published. Browser tests own separate5174/8001ports; regular5173/8000services remain intact. The clean local release image is `opportunity-api:finale`; cloud authorization and genuine interactive acceptance remain outstanding.
