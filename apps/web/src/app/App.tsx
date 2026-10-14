@@ -1,6 +1,7 @@
+import { Landing } from '../components/Atlas';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import { Workspaces } from '../features/workspaces/Workspaces';
+import { Workspaces, useWorkspaces } from '../features/workspaces/Workspaces';
 import { Plan } from '../features/workspaces/Plan';
 import { Profile } from '../features/profiles/Profile';
 import { Admin } from '../features/admin/Admin';
@@ -139,7 +140,7 @@ export function App() {
       </a>
       <div className="layout">
         <aside id="primary-navigation" className={`sidebar ${menu ? 'open' : ''}`}>
-          <Link to="/discover" className="brand">
+          <Link to="/" className="brand">
             <span className="brand-icon">
               <ArrowDownLeft size={22} />
             </span>
@@ -215,6 +216,7 @@ export function App() {
                   : navigation.find((n) => location.pathname.startsWith(n.to))?.label || t.settings}
             </span>
             <div className="top-actions">
+              {user && <SubjectSwitcher />}
               <label className="language">
                 <Globe2 size={16} />
                 <select
@@ -227,9 +229,13 @@ export function App() {
                 </select>
               </label>
               {user ? (
-                <button className="button small" onClick={() => void logout()}>
-                  {t.signOut}
-                </button>
+                <details className="account-menu">
+                  <summary>{user.displayName || t.account}</summary>
+                  <div>
+                    <Link to="/settings">{t.account}</Link>
+                    <button onClick={() => void logout()}>{t.signOut}</button>
+                  </div>
+                </details>
               ) : (
                 <button
                   className="button small"
@@ -250,7 +256,7 @@ export function App() {
           )}
           <main key={user?.uid || 'public'} id="main" tabIndex={-1}>
             <Routes>
-              <Route path="/" element={<Navigate to="/discover" replace />} />
+              <Route path="/" element={user ? <Overview authenticated /> : <Landing />} />
               <Route path="/discover" element={<Discover />} />
               <Route path="/opportunities/:id" element={<Detail />} />
               <Route path="/dashboard" element={<Overview authenticated={!!user} />} />
@@ -289,6 +295,10 @@ export function App() {
   );
 }
 function Overview({ authenticated }: { authenticated: boolean }) {
+  return authenticated ? <Cockpit /> : <Landing />;
+}
+function Cockpit() {
+  const authenticated = true;
   const t = useStrings();
   const f = useFacets();
   const overview = useQuery({
@@ -301,6 +311,17 @@ function Overview({ authenticated }: { authenticated: boolean }) {
     },
   });
   const hi = useLanguage() === 'hi';
+  const plan = useQuery({
+    queryKey: ['plan', { kind: 'person', id: null }],
+    enabled: !!overview.data?.profile_name,
+    retry: false,
+    refetchOnWindowFocus: false,
+    queryFn: async () => {
+      const { data, error } = await api.POST('/v1/plan', { body: { subject: { kind: 'person' } } });
+      return data ?? fail(error);
+    },
+  });
+  const nextAction = plan.data?.actions[0];
   return (
     <div className="page">
       <div className="page-heading">
@@ -343,17 +364,34 @@ function Overview({ authenticated }: { authenticated: boolean }) {
           )}
         </section>
       )}
+      {plan.isError && <p role="alert">{plan.error.message}</p>}
       <div className="dashboard-actions">
-        <Link className="dashboard-primary" to="/plan">
+        <Link className="dashboard-primary" to={overview.data?.profile_name ? '/plan' : '/profile'}>
           <span className="eyebrow">{hi ? 'अगला उपयोगी कदम' : 'YOUR NEXT USEFUL STEP'}</span>
-          <h2>{hi ? 'अपनी तैयारी की योजना देखें' : 'Turn missing information into a plan'}</h2>
+          <h2>
+            {nextAction?.title ??
+              (overview.data?.profile_name
+                ? hi
+                  ? 'अपनी तैयारी की योजना देखें'
+                  : 'Turn missing information into a plan'
+                : hi
+                  ? 'आपसे शुरू होता है रास्ता'
+                  : 'The path starts with you')}
+          </h2>
           <p>
             {hi
               ? 'समीक्षित अवसरों के लिए अपनी जानकारी जाँचें।'
               : 'Understand what is known, what is missing, and which steps can help across opportunities.'}
           </p>
           <span className="button">
-            {hi ? 'मेरी योजना खोलें' : 'Open my unlock plan'} <ArrowRight size={16} />
+            {overview.data?.profile_name
+              ? hi
+                ? 'मेरी योजना खोलें'
+                : 'Open my unlock plan'
+              : hi
+                ? 'प्रोफ़ाइल बनाएँ'
+                : 'Create your profile'}{' '}
+            <ArrowRight size={16} />
           </span>
         </Link>
         <div className="dashboard-secondary">
@@ -486,5 +524,37 @@ function Settings({
         <p>{t.coverageText}</p>
       </section>
     </div>
+  );
+}
+
+function SubjectSwitcher() {
+  const workspaces = useWorkspaces();
+  const hi = useLanguage() === 'hi';
+  return (
+    <label className="shell-context">
+      <span>{hi ? 'संदर्भ' : 'Context'}</span>
+      <select
+        aria-label={hi ? 'कार्य संदर्भ चुनें' : 'Switch subject context'}
+        value=""
+        onChange={(e) => {
+          if (e.target.value) window.location.assign(e.target.value);
+        }}
+      >
+        <option value="">{hi ? 'कार्य संदर्भ चुनें' : 'Switch workspace'}</option>
+        <option value="/plan">{hi ? 'मेरा प्रोफ़ाइल' : 'My personal profile'}</option>
+        {workspaces.data?.flatMap((w) => [
+          <option key={w.id} value={`/plan?kind=${w.kind}&id=${w.id}`}>
+            {w.name}
+          </option>,
+          ...w.members
+            .filter((m) => m.id)
+            .map((m) => (
+              <option key={String(m.id)} value={`/plan?kind=person&id=${String(m.id)}`}>
+                {String(m.name)}
+              </option>
+            )),
+        ])}
+      </select>
+    </label>
   );
 }

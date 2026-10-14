@@ -1,3 +1,5 @@
+import { IntelligenceMap } from '../../components/IntelligenceMap';
+import { AssessmentLedger } from '../../components/Atlas';
 import { Assistant } from '../assistant/Assistant';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -57,7 +59,13 @@ export function Plan() {
   });
   const data = query.isError ? undefined : (simulation.data ?? query.data);
   function actionTitle(action: Action) {
-    if (!action.fact) return action.title;
+    if (!action.fact)
+      return hi
+        ? action.title
+            .replace(/^Verify evidence: /, 'प्रमाण सत्यापित करें: ')
+            .replace(/^Clarify: /, 'स्पष्टीकरण लें: ')
+            .replace(/^Provide: /, 'जानकारी दें: ')
+        : action.title;
     const name =
       t.factNames[action.fact as keyof typeof t.factNames] || action.fact.replaceAll('_', ' ');
     return (
@@ -185,79 +193,61 @@ export function Plan() {
                   <span>{hi ? 'वास्तविक प्रतिबंध' : 'Known restrictions'}</span>
                 </div>
               </div>
-              <section className="panel unlock-map">
-                <div className="section-heading">
-                  <h2>{hi ? 'जुड़े हुए कदम' : 'See how your actions connect'}</h2>
-                  <small>
-                    {hi ? 'विवरण के लिए कदम चुनें' : 'Select an action to inspect its evidence'}
-                  </small>
-                </div>
-                <div
-                  className="graph-canvas"
-                  role="group"
-                  aria-label={hi ? 'अवसर और साझा कदम' : 'Opportunities and shared actions'}
-                >
-                  <svg
-                    className="graph-lines"
-                    viewBox={`0 0 800 ${Math.max(data.actions.length, data.evaluations.length) * 100 + 40}`}
-                    preserveAspectRatio="none"
-                    aria-hidden="true"
-                  >
-                    {data.actions.flatMap((a, i) =>
-                      a.opportunities.map((o, j) => {
-                        const target = data.evaluations.findIndex(
-                          (ev) => ev.opportunity_id === o.id,
-                        );
-                        return (
-                          <path
-                            key={`${a.id}-${j}`}
-                            d={`M 310 ${i * 100 + 45} C 430 ${i * 100 + 45}, 430 ${target * 100 + 45}, 490 ${target * 100 + 45}`}
-                          />
-                        );
-                      }),
-                    )}
-                  </svg>
-                  <div className="graph-column">
-                    {data.actions.map((a) => (
-                      <button
-                        className={`graph-node ${selected?.id === a.id ? 'selected' : ''}`}
-                        key={a.identity}
-                        onClick={() => setSelected(a)}
-                      >
-                        <small>
-                          {a.kind} · {new Set(a.opportunities.map((o) => o.id)).size}{' '}
-                          {hi ? 'अवसर' : 'opportunities'}
-                        </small>
-                        <strong>{actionTitle(a)}</strong>
-                      </button>
+              <IntelligenceMap
+                plan={data}
+                selected={selected}
+                onSelect={setSelected}
+                title={actionTitle}
+              />
+              {data.hypothetical && query.data && (
+                <section className="simulation-comparison panel">
+                  <h2>{hi ? 'वास्तविक और काल्पनिक तुलना' : 'Actual vs hypothetical'}</h2>
+                  {data.evaluations.map((ev) => (
+                    <div key={ev.id}>
+                      <h3>{ev.opportunity_title}</h3>
+                      <p>
+                        {hi ? 'वास्तविक' : 'Actual'}:{' '}
+                        {
+                          t.assessmentStatuses[
+                            query.data!.evaluations.find(
+                              (old) => old.opportunity_id === ev.opportunity_id,
+                            )?.status as keyof typeof t.assessmentStatuses
+                          ]
+                        }
+                      </p>
+                      <p>
+                        {hi ? 'पूर्वावलोकन' : 'Preview'}:{' '}
+                        {t.assessmentStatuses[ev.status as keyof typeof t.assessmentStatuses]}
+                      </p>
+                      <AssessmentLedger evaluation={ev} />
+                    </div>
+                  ))}
+                  <p>
+                    {hi
+                      ? 'कोई तथ्य, प्रमाण या आकलन सहेजा नहीं गया।'
+                      : 'No facts, evidence or assessments saved. Unrelated conditions remain in force.'}
+                  </p>
+                </section>
+              )}
+              {data.evaluations.some((ev) => ev.changes?.length) && (
+                <section className="panel assessment-changes">
+                  <span className="eyebrow">{hi ? 'क्या बदला' : 'WHAT CHANGED'}</span>
+                  {data.evaluations
+                    .filter((ev) => ev.changes?.length)
+                    .map((ev) => (
+                      <div key={ev.id}>
+                        <h3>{ev.opportunity_title}</h3>
+                        {ev.changes.map((change, i) => (
+                          <p key={i}>
+                            {String(change.requirement)} ·{' '}
+                            {String(change.before).replaceAll('_', ' ')} →{' '}
+                            {String(change.after).replaceAll('_', ' ')}
+                          </p>
+                        ))}
+                      </div>
                     ))}
-                  </div>
-                  <div className="graph-column">
-                    {data.evaluations.map((ev) => (
-                      <Link
-                        className="graph-node opportunity-node"
-                        key={ev.id}
-                        to={`/opportunities/${ev.opportunity_id}`}
-                      >
-                        <small>
-                          {hi ? 'समीक्षित संस्करण' : 'Reviewed version'} {ev.version}
-                        </small>
-                        <strong>{ev.opportunity_title || t.discover}</strong>
-                        <span>
-                          {t.assessmentStatuses[ev.status as keyof typeof t.assessmentStatuses] ||
-                            ev.status}
-                        </span>
-                        {ev.previous_status && (
-                          <small>
-                            {hi ? 'पहले' : 'Previously'}: v{ev.previous_version} ·{' '}
-                            {ev.previous_status.replaceAll('_', ' ')}
-                          </small>
-                        )}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </section>
+                </section>
+              )}
               <div className="workspace-grid">
                 <section className="panel">
                   <h2>{hi ? 'आपकी कार्यसूची' : 'Your action checklist'}</h2>
@@ -290,6 +280,17 @@ export function Plan() {
                   {selected ? (
                     <>
                       <p>{selected.explanation}</p>
+                      {selected.kind === 'information' &&
+                        selected.fact &&
+                        subject.kind === 'person' && (
+                          <Link
+                            className="field-followup"
+                            to={`${identifier ? `/people/${identifier}/edit` : '/profile'}?field=${selected.fact}`}
+                          >
+                            {hi ? 'यह जानकारी दें' : 'Provide this missing information'}
+                            <ArrowRight size={16} />
+                          </Link>
+                        )}
                       <p>
                         {hi ? 'कार्य स्थिति' : 'Task status'}:{' '}
                         {selected.status === 'in_progress'

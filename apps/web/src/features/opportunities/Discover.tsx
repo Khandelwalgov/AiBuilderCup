@@ -19,7 +19,7 @@ import {
   Sprout,
   Wrench,
 } from 'lucide-react';
-import { useFacets, useStrings } from '../../app/App';
+import { useFacets, useStrings, useLanguage } from '../../app/App';
 import { api, fail } from '../../lib/api/client';
 import type { components } from '../../lib/api/schema';
 type Opportunity = components['schemas']['OpportunityView'];
@@ -33,7 +33,11 @@ const categories: Record<string, { label: string; icon: typeof BookOpen; tone: s
 };
 export function Discover() {
   const t = useStrings();
+  const hi = useLanguage() === 'hi';
   const [params, setParams] = useSearchParams();
+  const nationalParam = params.get('national');
+  const [includeNational, setIncludeNational] = useState(nationalParam !== 'false');
+  useEffect(() => setIncludeNational(nationalParam !== 'false'), [nationalParam]);
   const development = params.get('development') === 'true';
   const facets = useFacets(development);
   const q = params.get('q') || '';
@@ -50,7 +54,7 @@ export function Discover() {
     setParams(next);
   }
   const query = useInfiniteQuery({
-    queryKey: ['opportunities', q, category, state, district, development],
+    queryKey: ['opportunities', q, category, state, district, development, includeNational],
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {
       const { data, error } = await api.GET('/v1/opportunities', {
@@ -63,6 +67,7 @@ export function Discover() {
             cursor: pageParam,
             limit: 6,
             development,
+            include_national: includeNational,
           },
         },
       });
@@ -81,9 +86,7 @@ export function Discover() {
             {t.eyebrow}
           </span>
           <h1>
-            {t.title}
-            <br />
-            <em>{t.titleAccent}</em>
+            {t.title} <em>{t.titleAccent}</em>
           </h1>
           <p>{t.subtitle}</p>
           <form
@@ -133,6 +136,26 @@ export function Discover() {
           )}
         </div>
       </div>
+      {(state || district) && (
+        <div className="geography-note">
+          <label className="checkbox-field">
+            <input
+              type="checkbox"
+              checked={includeNational}
+              onChange={(e) => {
+                setIncludeNational(e.target.checked);
+                filter('national', e.target.checked ? 'true' : 'false');
+              }}
+            />
+            {hi ? 'राष्ट्रीय अवसर भी दिखाएँ' : 'Include nationally applicable opportunities'}
+          </label>
+          <p>
+            {hi
+              ? 'यह केवल खोज का फ़िल्टर है। निवास, मूल निवास और अध्ययन स्थान की पात्रता अलग शर्तें हैं।'
+              : 'This is a browsing filter. Residence, domicile and place of study are separate eligibility conditions.'}
+          </p>
+        </div>
+      )}
       <div className="catalogue-heading">
         <div>
           <h2>{t.browseHeading}</h2>

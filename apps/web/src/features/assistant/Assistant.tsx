@@ -1,5 +1,6 @@
 import { useLanguage } from '../../app/App';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { MessageCircle, ArrowUpRight } from 'lucide-react';
 import { api, fail } from '../../lib/api/client';
@@ -118,6 +119,12 @@ export function Assistant({ evaluationId }: { evaluationId: string }) {
             <details key={item.requirement_id} open>
               <summary>{item.condition}</summary>
               <p>{item.explanation}</p>
+              <a className="field-followup" href={`#requirement-${item.requirement_id}`}>
+                {hi ? 'आकलन में शर्त देखें' : 'Locate condition in assessment'}
+              </a>
+              <Link className="field-followup" to="/plan">
+                {hi ? 'संबंधित कदम देखें' : 'See related readiness actions'}
+              </Link>
               {item.citations.map((c, i) => (
                 <blockquote key={i}>
                   {String(c.passage)}

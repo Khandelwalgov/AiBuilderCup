@@ -1,7 +1,16 @@
 import createClient from 'openapi-fetch';
 import type { paths } from './schema';
 import { auth } from '../../app/auth';
-export const api = createClient<paths>({ baseUrl: import.meta.env.VITE_API_BASE_URL || '' });
+export const api = createClient<paths>({
+  baseUrl: import.meta.env.VITE_API_BASE_URL || '',
+  fetch: (request) =>
+    fetch(request, {
+      signal: AbortSignal.any([
+        request.signal,
+        AbortSignal.timeout(new URL(request.url).pathname.endsWith('/ingest') ? 150_000 : 30_000),
+      ]),
+    }),
+});
 api.use({
   async onRequest({ request }) {
     if (

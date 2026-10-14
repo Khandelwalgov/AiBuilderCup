@@ -1,3 +1,4 @@
+import { captureContract } from './capture';
 import { expect, test } from '@playwright/test';
 import type { components } from '../src/lib/api/schema';
 const id = '11111111-1111-4111-8111-111111111111';
@@ -20,6 +21,15 @@ test('household and unregistered business creation controls (mocked API)', async
     };
     workspaces = [household];
     await route.fulfill({ json: household });
+  });
+  await page.route(`**/v1/households/${id}`, async (route) => {
+    expect(route.request().method()).toBe('PUT');
+    expect(route.request().postDataJSON()).toEqual({
+      name: 'Fictional household revised',
+      primary: true,
+    });
+    workspaces[0].name = 'Fictional household revised';
+    await route.fulfill({ json: workspaces[0] });
   });
   await page.route(`**/v1/households/${id}/dependents`, async (route) => {
     expect(route.request().postDataJSON().guardian_responsibility_confirmed).toBe(true);
@@ -64,6 +74,13 @@ test('household and unregistered business creation controls (mocked API)', async
   await expect(
     page.getByRole('heading', { name: 'Fictional household', exact: true }),
   ).toBeVisible();
+  await page
+    .getByRole('textbox', { name: 'Household name', exact: true })
+    .fill('Fictional household revised');
+  await page.getByRole('button', { name: 'Save and make primary household' }).click();
+  await expect(
+    page.getByRole('heading', { name: 'Fictional household revised', exact: true }),
+  ).toBeVisible();
   await page.getByRole('textbox', { name: 'Profile name' }).fill('Fictional dependent');
   await page.getByRole('checkbox').check();
   await page.getByRole('button', { name: 'Add dependent', exact: true }).click();
@@ -73,6 +90,7 @@ test('household and unregistered business creation controls (mocked API)', async
     path: `${artifacts}/family-populated-contract-1440.png`,
     fullPage: true,
   });
+  await captureContract(page, 'family');
   page.once('dialog', (dialog) => dialog.accept());
   await page.getByRole('button', { name: 'Stop managing', exact: true }).click();
   await expect(page.getByText('Adult authorization required')).toBeVisible();
@@ -86,6 +104,7 @@ test('household and unregistered business creation controls (mocked API)', async
     path: `${artifacts}/business-populated-contract-1440.png`,
     fullPage: true,
   });
+  await captureContract(page, 'business');
 });
 
 test('shared graph action, evidence panel and non-saving simulation (mocked API)', async ({
@@ -149,18 +168,30 @@ test('shared graph action, evidence panel and non-saving simulation (mocked API)
     });
   });
   await page.goto('/plan');
-  await page.locator('.graph-node').filter({ hasText: 'fictional income certificate' }).click();
+  await page
+    .locator('.atlas-node.action')
+    .filter({ hasText: 'fictional income certificate' })
+    .click();
   await expect(page.locator('.evidence-card')).toHaveCount(2);
+  await expect(page.locator('.atlas-edges > path.illuminated')).toHaveCount(3);
+  await page.getByRole('button', { name: 'Zoom out', exact: true }).click();
+  await expect(page.getByLabel('Graph zoom')).toHaveText('85%');
+  await page.getByRole('button', { name: 'Fit graph to view' }).click();
+  await expect(page.getByLabel('Graph zoom')).toHaveText('100%');
   await expect(page.locator('.evidence-card blockquote').first()).toContainText(citation.passage);
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({ path: `${artifacts}/graph-populated-contract-1440.png`, fullPage: true });
+  await captureContract(page, 'graph');
   await page.getByRole('button', { name: 'Mark in progress', exact: true }).click();
   await expect(
     page
       .getByRole('button', { name: 'Verify evidence: fictional income certificate', exact: false })
       .first(),
   ).toBeVisible();
-  await page.locator('.graph-node').filter({ hasText: 'fictional income certificate' }).click();
+  await page
+    .locator('.atlas-node.action')
+    .filter({ hasText: 'fictional income certificate' })
+    .click();
   await expect(page.getByText('Task status: In progress')).toBeVisible();
   await page.getByRole('spinbutton', { name: 'Hypothetical age' }).fill('12');
   await page.getByRole('button', { name: 'Preview assessment', exact: true }).click();

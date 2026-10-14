@@ -1,3 +1,4 @@
+import { CapturedReader } from '../../components/CapturedReader';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
@@ -150,6 +151,8 @@ function CandidateEditor({ id }: { id: string }) {
   const t = useStrings();
   const hi = useLanguage() === 'hi';
   const cache = useQueryClient();
+  const [sourcePage, setSourcePage] = useState(0);
+  const [conditionIndex, setConditionIndex] = useState(0);
   const [text, setText] = useState('');
   const [note, setNote] = useState('');
   const [flags, setFlags] = useState(false);
@@ -192,6 +195,8 @@ function CandidateEditor({ id }: { id: string }) {
       void cache.invalidateQueries({ queryKey: ['admin-reviews'] });
       void cache.invalidateQueries({ queryKey: ['opportunities'] });
       void cache.invalidateQueries({ queryKey: ['facets'] });
+      void cache.invalidateQueries({ queryKey: ['plan'] });
+      void cache.invalidateQueries({ queryKey: ['dashboard-summary'] });
     },
   });
   if (query.isPending)
@@ -248,147 +253,202 @@ function CandidateEditor({ id }: { id: string }) {
           <strong>{edited.review_flags?.length ?? 0}</strong>
         </div>
       </div>
-      <section className="panel structured-correction">
-        <h3>{hi ? 'स्रोत-आधारित सुधार' : 'Source-backed corrections'}</h3>
-        <p>
-          {hi
-            ? 'संशोधन मसौदे में सहेजें। उद्धरणों का मिलान सहेजते समय होता है।'
-            : 'Save corrections as a draft. Each evidence passage is checked against the captured page on save.'}
-        </p>
-        <label className="field">
-          {hi ? 'शीर्षक' : 'Title'}
-          <input
-            value={edited.title}
-            maxLength={300}
-            onChange={(e) => patch({ title: e.target.value })}
-          />
-        </label>
-        <label className="field">
-          {hi ? 'सारांश' : 'Summary'}
-          <textarea
-            value={edited.summary}
-            maxLength={3000}
-            onChange={(e) => patch({ summary: e.target.value })}
-          />
-        </label>
-        {(edited.requirements ?? []).map((req, i) => (
-          <details key={i}>
-            <summary>
-              {i + 1}. {req.description}
-              <small>
-                {' '}
-                · {req.kind ?? 'eligibility'} · {req.application_context ?? 'all'}
-              </small>
-            </summary>
-            <label className="field">
-              {hi ? 'शर्त का विवरण' : 'Condition description'}
-              <textarea
-                value={req.description}
-                onChange={(e) =>
-                  patch({
-                    requirements: edited.requirements!.map((r, j) =>
-                      j === i ? { ...r, description: e.target.value } : r,
-                    ),
-                  })
-                }
-              />
-            </label>
-            <div className="form-grid">
-              <label className="field">
-                {hi ? 'श्रेणी' : 'Policy category'}
-                <select
-                  value={req.kind ?? 'eligibility'}
-                  onChange={(e) =>
-                    patch({
-                      requirements: edited.requirements!.map((r, j) =>
-                        j === i ? { ...r, kind: e.target.value as typeof req.kind } : r,
+      <div className="review-workbench">
+        <section className="panel structured-correction">
+          <h3>{hi ? 'स्रोत-आधारित सुधार' : 'Source-backed corrections'}</h3>
+          <p>
+            {hi
+              ? 'संशोधन मसौदे में सहेजें। उद्धरणों का मिलान सहेजते समय होता है।'
+              : 'Save corrections as a draft. Each evidence passage is checked against the captured page on save.'}
+          </p>
+          <label className="field">
+            {hi ? 'शीर्षक' : 'Title'}
+            <input
+              value={edited.title}
+              maxLength={300}
+              onChange={(e) => patch({ title: e.target.value })}
+            />
+          </label>
+          <label className="field">
+            {hi ? 'सारांश' : 'Summary'}
+            <textarea
+              value={edited.summary}
+              maxLength={3000}
+              onChange={(e) => patch({ summary: e.target.value })}
+            />
+          </label>
+          <label className="field condition-picker">
+            {hi ? 'समीक्षा के लिए शर्त चुनें' : 'Choose a condition to review'}
+            <select
+              value={conditionIndex}
+              onChange={(e) => {
+                const index = Number(e.target.value);
+                setConditionIndex(index);
+                const citation = edited.requirements?.[index]?.evidence;
+                if (citation)
+                  setSourcePage(
+                    Math.max(
+                      0,
+                      candidate.pages.findIndex(
+                        (p) => p.source_url === citation.source_url && p.page === citation.page,
                       ),
-                    })
+                    ),
+                  );
+              }}
+            >
+              {edited.requirements?.map((req, i) => (
+                <option key={i} value={i}>
+                  {i + 1}. {req.description}
+                </option>
+              ))}
+            </select>
+          </label>
+          {(edited.requirements ?? [])
+            .map((req, i) => ({ req, i }))
+            .filter(({ i }) => i === conditionIndex)
+            .map(({ req, i }) => (
+              <details key={i} open>
+                <summary>
+                  {i + 1}. {req.description}
+                  <small>
+                    {' '}
+                    · {req.kind ?? 'eligibility'} · {req.application_context ?? 'all'}
+                  </small>
+                </summary>
+                <label className="field">
+                  {hi ? 'शर्त का विवरण' : 'Condition description'}
+                  <textarea
+                    value={req.description}
+                    onChange={(e) =>
+                      patch({
+                        requirements: edited.requirements!.map((r, j) =>
+                          j === i ? { ...r, description: e.target.value } : r,
+                        ),
+                      })
+                    }
+                  />
+                </label>
+                <div className="form-grid">
+                  <label className="field">
+                    {hi ? 'श्रेणी' : 'Policy category'}
+                    <select
+                      value={req.kind ?? 'eligibility'}
+                      onChange={(e) =>
+                        patch({
+                          requirements: edited.requirements!.map((r, j) =>
+                            j === i ? { ...r, kind: e.target.value as typeof req.kind } : r,
+                          ),
+                        })
+                      }
+                    >
+                      {[
+                        'eligibility',
+                        'document',
+                        'procedure',
+                        'renewal',
+                        'selection',
+                        'interpretation',
+                      ].map((v) => (
+                        <option key={v}>{v}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="field">
+                    {hi ? 'आवेदन संदर्भ' : 'Application context'}
+                    <select
+                      value={req.application_context ?? 'all'}
+                      onChange={(e) =>
+                        patch({
+                          requirements: edited.requirements!.map((r, j) =>
+                            j === i
+                              ? {
+                                  ...r,
+                                  application_context: e.target
+                                    .value as typeof req.application_context,
+                                }
+                              : r,
+                          ),
+                        })
+                      }
+                    >
+                      {['all', 'fresh', 'renewal'].map((v) => (
+                        <option key={v}>{v}</option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+                <label className="field">
+                  {hi ? 'सटीक स्रोत अंश' : 'Exact source passage'}
+                  <textarea
+                    value={req.evidence.passage}
+                    onChange={(e) =>
+                      patch({
+                        requirements: edited.requirements!.map((r, j) =>
+                          j === i
+                            ? { ...r, evidence: { ...r.evidence, passage: e.target.value } }
+                            : r,
+                        ),
+                      })
+                    }
+                  />
+                </label>
+                <button
+                  type="button"
+                  className="field-followup"
+                  onClick={() =>
+                    setSourcePage(
+                      Math.max(
+                        0,
+                        candidate.pages.findIndex(
+                          (p) =>
+                            p.source_url === req.evidence.source_url &&
+                            p.page === req.evidence.page,
+                        ),
+                      ),
+                    )
                   }
                 >
-                  {[
-                    'eligibility',
-                    'document',
-                    'procedure',
-                    'renewal',
-                    'selection',
-                    'interpretation',
-                  ].map((v) => (
-                    <option key={v}>{v}</option>
-                  ))}
-                </select>
-              </label>
-              <label className="field">
-                {hi ? 'आवेदन संदर्भ' : 'Application context'}
-                <select
-                  value={req.application_context ?? 'all'}
-                  onChange={(e) =>
-                    patch({
-                      requirements: edited.requirements!.map((r, j) =>
-                        j === i
-                          ? {
-                              ...r,
-                              application_context: e.target.value as typeof req.application_context,
-                            }
-                          : r,
-                      ),
-                    })
-                  }
-                >
-                  {['all', 'fresh', 'renewal'].map((v) => (
-                    <option key={v}>{v}</option>
-                  ))}
-                </select>
-              </label>
-            </div>
-            <label className="field">
-              {hi ? 'सटीक स्रोत अंश' : 'Exact source passage'}
-              <textarea
-                value={req.evidence.passage}
-                onChange={(e) =>
-                  patch({
-                    requirements: edited.requirements!.map((r, j) =>
-                      j === i ? { ...r, evidence: { ...r.evidence, passage: e.target.value } } : r,
-                    ),
-                  })
-                }
-              />
-            </label>
-            <a href={req.evidence.source_url} target="_blank" rel="noreferrer">
-              {t.originalDocument} · {t.page} {req.evidence.page}
-            </a>
-            <details>
-              <summary>{hi ? 'टाइप किया गया नियम' : 'Typed rule'}</summary>
-              <pre>{JSON.stringify(req.rule, null, 2)}</pre>
-            </details>
-          </details>
-        ))}
-        <h3>{hi ? 'दस्तावेज़-विशिष्ट प्रमाण' : 'Document-specific evidence'}</h3>
-        {edited.document_evidence?.map((d) => (
-          <details key={d.document}>
-            <summary>{d.document}</summary>
-            <blockquote>{d.evidence.passage}</blockquote>
-            <a href={d.evidence.source_url} target="_blank" rel="noreferrer">
-              {t.originalDocument} · {t.page} {d.evidence.page}
-            </a>
-          </details>
-        ))}
-      </section>
-      <div className="review-columns">
-        <div>
-          <h3>{t.sourceEvidence}</h3>
-          {candidate.pages.map((page, i) => (
-            <details key={i}>
-              <summary>
-                {t.page} {page.page} ·{' '}
-                <a href={page.source_url} target="_blank" rel="noreferrer">
-                  {t.originalDocument}
+                  {hi ? 'कैप्चर पृष्ठ देखें' : 'Inspect captured page'} {req.evidence.page}
+                </button>
+                <a href={req.evidence.source_url} target="_blank" rel="noreferrer">
+                  {t.originalDocument} · {t.page} {req.evidence.page}
                 </a>
-              </summary>
-              <pre>{page.text}</pre>
+                <details>
+                  <summary>{hi ? 'टाइप किया गया नियम' : 'Typed rule'}</summary>
+                  <pre>{JSON.stringify(req.rule, null, 2)}</pre>
+                </details>
+              </details>
+            ))}
+          <h3>{hi ? 'दस्तावेज़-विशिष्ट प्रमाण' : 'Document-specific evidence'}</h3>
+          {edited.document_evidence?.map((d) => (
+            <details key={d.document}>
+              <summary>{d.document}</summary>
+              <blockquote>{d.evidence.passage}</blockquote>
+              <button
+                type="button"
+                className="field-followup"
+                onClick={() =>
+                  setSourcePage(
+                    Math.max(
+                      0,
+                      candidate.pages.findIndex(
+                        (p) => p.source_url === d.evidence.source_url && p.page === d.evidence.page,
+                      ),
+                    ),
+                  )
+                }
+              >
+                {hi ? 'कैप्चर पृष्ठ देखें' : 'Inspect captured page'} {d.evidence.page}
+              </button>
+              <a href={d.evidence.source_url} target="_blank" rel="noreferrer">
+                {t.originalDocument} · {t.page} {d.evidence.page}
+              </a>
             </details>
           ))}
-        </div>
+        </section>
+        <CapturedReader pages={candidate.pages} selected={sourcePage} onSelect={setSourcePage} />
+      </div>
+      <div className="review-columns">
         <div>
           <h3>{t.versionDiff}</h3>
           <p>{candidate.changes.join(', ') || t.noChanges}</p>
@@ -406,19 +466,6 @@ function CandidateEditor({ id }: { id: string }) {
           </ul>
           <h3>{t.missingFields}</h3>
           <p>{(candidate.candidate.missing_fields ?? []).join(', ') || t.noneReported}</p>
-          <h3>{t.extractedConditions}</h3>
-          {(candidate.candidate.requirements ?? []).map((req, i) => (
-            <details key={i}>
-              <summary>{req.description}</summary>
-              <pre>{JSON.stringify(req.rule, null, 2)}</pre>
-              <blockquote>
-                {req.evidence.passage}
-                <p>
-                  {req.evidence.basis} · {req.evidence.language} · {t.page} {req.evidence.page}
-                </p>
-              </blockquote>
-            </details>
-          ))}
         </div>
       </div>
       <details className="advanced-editor">

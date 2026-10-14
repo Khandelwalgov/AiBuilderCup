@@ -1,5 +1,6 @@
+import { ReadinessJourney } from '../../components/Atlas';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus, Trash2, UserRound } from 'lucide-react';
 import { useStrings, useLanguage } from '../../app/App';
@@ -29,6 +30,8 @@ export function Profile() {
   const t = useStrings();
   const hi = useLanguage() === 'hi';
   const { personId } = useParams();
+  const [params] = useSearchParams();
+  const requestedField = fields.find((f) => f.key === params.get('field'))?.key;
   const cache = useQueryClient();
   const [name, setName] = useState('');
   const [facts, setFacts] = useState<Fact[]>([]);
@@ -61,6 +64,22 @@ export function Profile() {
       );
     }
   }, [query.data]);
+  useEffect(() => {
+    if (!query.isPending && !query.isError && requestedField) {
+      setFacts((previous) =>
+        previous.some((f) => f.key === requestedField)
+          ? previous
+          : [...previous, { key: requestedField, value: null }],
+      );
+      window.setTimeout(
+        () =>
+          document
+            .getElementById(`fact-${requestedField}`)
+            ?.scrollIntoView({ block: 'center', behavior: 'smooth' }),
+        150,
+      );
+    }
+  }, [requestedField, query.isPending, query.isError]);
   const save = useMutation({
     mutationFn: async () => {
       if (personId) {
@@ -120,6 +139,14 @@ export function Profile() {
           <span>{t.syntheticProfileNote}</span>
         </div>
       </div>
+      <ReadinessJourney
+        steps={
+          hi
+            ? ['अपनी पहचान', 'ज़रूरी जानकारी', 'सहेजें और जाँचें']
+            : ['Your context', 'Relevant questions', 'Save and assess']
+        }
+        active={saved ? 2 : facts.length ? 1 : 0}
+      />
       <section className="profile-guide">
         <span className="step-dot">1</span>
         <div>
@@ -215,7 +242,7 @@ export function Profile() {
             const kind = fields.find((f) => f.key === fact.key)?.kind || 'text';
             const income = fact.key.includes('income');
             return (
-              <div className="fact-editor" key={index}>
+              <div id={`fact-${fact.key}`} className="fact-editor" key={fact.key}>
                 <h3 className="question-label">
                   {t.factNames[fact.key as keyof typeof t.factNames] || fact.key}
                 </h3>
@@ -378,7 +405,17 @@ export function Profile() {
           <button className="button" disabled={save.isPending}>
             {save.isPending ? t.saving : t.saveProfile}
           </button>
-          {saved && <p role="status">{t.profileSaved}</p>}
+          {saved && (
+            <div role="status">
+              <p>{t.profileSaved}</p>
+              <Link
+                className="field-followup"
+                to={personId ? `/plan?kind=person&id=${personId}` : '/plan'}
+              >
+                {hi ? 'अद्यतन कार्ययोजना देखें' : 'See your updated plan'}
+              </Link>
+            </div>
+          )}
           {save.isError && <p role="alert">{save.error.message}</p>}
         </div>
       </form>

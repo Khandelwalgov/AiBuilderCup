@@ -1,3 +1,4 @@
+import { captureContract } from './capture';
 import { expect, test } from '@playwright/test';
 import type { components } from '../src/lib/api/schema';
 
@@ -151,6 +152,7 @@ test('profile → published opportunity → cited eligibility results (mocked au
     path: '/Users/govind/Projects/AIBuildersCup/.live-validation/ui/profile-populated-contract-1440.png',
     fullPage: true,
   });
+  await captureContract(page, 'profile');
   await page.goto(`/opportunities/${id}`);
   await page.getByRole('button', { name: 'Check my eligibility', exact: true }).click();
   await expect(page.locator('.requirement-result.satisfied')).toContainText(
@@ -168,6 +170,7 @@ test('profile → published opportunity → cited eligibility results (mocked au
     path: '/Users/govind/Projects/AIBuildersCup/.live-validation/ui/eligibility-populated-contract-1440.png',
     fullPage: true,
   });
+  await captureContract(page, 'detail');
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
@@ -245,8 +248,10 @@ test('admin inspects evidence and publishes through the review API (mocked contr
   });
   await page.goto('/admin');
   await page.getByRole('button', { name: /Synthetic browser test policy/ }).click();
-  await page.getByText('Page 1 ·', { exact: false }).click();
-  await expect(page.locator('.review-columns pre').first()).toContainText(citation.passage);
+  await page.getByRole('combobox', { name: 'Captured page', exact: true }).selectOption('0');
+  await expect(page.locator('.capture-text')).toContainText(citation.passage);
+  await page.getByRole('textbox', { name: 'Search all captured pages' }).fill('eighteen');
+  await expect(page.locator('.source-search-results')).toContainText('1 matching pages');
   await page.getByRole('textbox', { name: 'Review note' }).fill('Checked synthetic test evidence.');
   const checkboxes = page.locator('.candidate-editor input[type=checkbox]');
   await checkboxes.nth(0).check();
@@ -256,6 +261,7 @@ test('admin inspects evidence and publishes through the review API (mocked contr
     path: '/Users/govind/Projects/AIBuildersCup/.live-validation/ui/admin-populated-contract-1440.png',
     fullPage: true,
   });
+  await captureContract(page, 'admin');
   await page.getByRole('button', { name: 'Approve & publish', exact: true }).click();
-  await expect(page.locator('.candidate-editor [role=status]')).toContainText('published');
+  await expect(page.locator('.candidate-editor p[role=status]')).toContainText('published');
 });

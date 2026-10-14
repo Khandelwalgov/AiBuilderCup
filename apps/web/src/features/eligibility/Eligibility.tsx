@@ -1,3 +1,4 @@
+import { AssessmentLedger } from '../../components/Atlas';
 import { Assistant } from '../assistant/Assistant';
 import { useState } from 'react';
 import { useLanguage } from '../../app/App';
@@ -28,7 +29,10 @@ export function Eligibility({ id }: { id: string }) {
         {hi ? 'इस अवसर का आवेदन संदर्भ' : 'Application context for this opportunity'}
         <select
           value={applicationType}
-          onChange={(e) => setApplicationType(e.target.value as typeof applicationType)}
+          onChange={(e) => {
+            setApplicationType(e.target.value as typeof applicationType);
+            query.reset();
+          }}
         >
           <option value="">{t.unknown}</option>
           <option value="fresh">{hi ? 'नया आवेदन' : 'Fresh application'}</option>
@@ -51,8 +55,9 @@ export function Eligibility({ id }: { id: string }) {
           </div>
         </div>
       )}
-      {query.data && (
+      {query.data && !query.isError && (
         <div aria-live="polite">
+          <AssessmentLedger evaluation={query.data} />
           <p className="assessment-status">
             {t.assessmentStatuses[query.data.status as keyof typeof t.assessmentStatuses] ||
               query.data.status}
@@ -70,7 +75,11 @@ export function Eligibility({ id }: { id: string }) {
                   ? XCircle
                   : CircleHelp;
             return (
-              <article className={`requirement-result ${outcome}`} key={req.requirement_id}>
+              <article
+                id={`requirement-${req.requirement_id}`}
+                className={`requirement-result ${outcome}`}
+                key={req.requirement_id}
+              >
                 <div className="requirement-title">
                   <Icon size={20} />
                   <h3>{req.requirement}</h3>

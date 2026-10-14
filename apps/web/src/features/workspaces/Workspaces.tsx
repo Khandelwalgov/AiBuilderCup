@@ -49,8 +49,13 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
   const save = useMutation({
     mutationFn: async () => {
       if (kind === 'household') {
-        const { data, error } = await api.POST('/v1/households', { body: { name, primary: true } });
-        return data ?? fail(error);
+        const response = selected
+          ? await api.PUT('/v1/households/{identifier}', {
+              params: { path: { identifier: selected } },
+              body: { name, primary: true },
+            })
+          : await api.POST('/v1/households', { body: { name, primary: true } });
+        return response.data ?? fail(response.error);
       }
       const facts: Fact[] = [
         { key: 'business_registered', value: registered === '' ? null : registered === 'true' },
@@ -70,6 +75,7 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
     onSuccess: async (data) => {
       await cache.invalidateQueries({ queryKey: ['workspaces'] });
       void cache.invalidateQueries({ queryKey: ['dashboard-summary'] });
+      void cache.invalidateQueries({ queryKey: ['plan'] });
       setSelected(data.id);
     },
   });
@@ -145,7 +151,46 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
               : 'A clear starting point for every business, including unregistered enterprises.'}
         </p>
       </div>
-      <div className="workspace-grid">
+      <section className="context-identity">
+        <div className="context-monogram">
+          {kind === 'household' ? <UsersRound size={32} /> : <BriefcaseBusiness size={32} />}
+        </div>
+        <div>
+          <span className="eyebrow">
+            {kind === 'household'
+              ? hi
+                ? 'अनुमति के साथ तैयारी'
+                : 'PREPARE TOGETHER, WITH PERMISSION'
+              : hi
+                ? 'अलग व्यवसाय संदर्भ'
+                : 'YOUR INDEPENDENT BUSINESS CONTEXT'}
+          </span>
+          <h2>
+            {current?.name ??
+              (kind === 'household'
+                ? hi
+                  ? 'हर व्यक्ति का अपना रास्ता'
+                  : 'Every person has their own path'
+                : hi
+                  ? 'हर उद्यम का एक आरंभ'
+                  : 'Every enterprise starts somewhere')}
+          </h2>
+          <p>
+            {current
+              ? kind === 'household'
+                ? `${current.members.length} ${hi ? 'दिखाई देने वाली सदस्य प्रविष्टियाँ · तथ्यों का मिश्रण नहीं' : 'visible member entries · facts stay separate'}`
+                : `${current.role} · ${current.legal_status ?? (hi ? 'स्वरूप अज्ञात' : 'structure unknown')}`
+              : hi
+                ? 'सिर्फ आवश्यक जानकारी से शुरू करें।'
+                : 'Start small. Add only the information a relevant opportunity needs.'}
+          </p>
+        </div>
+        <span className="context-boundary">
+          <ShieldCheck size={17} />
+          {hi ? 'पहुँच सर्वर पर जाँची जाती है' : 'Access checked on the server'}
+        </span>
+      </section>
+      <div className="workspace-grid context-workbench">
         <section className="panel context-list">
           <h2>{hi ? 'कार्यस्थल चुनें' : 'Your contexts'}</h2>
           {list.map((w) => (
@@ -189,7 +234,7 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
           {kind === 'household' && current ? (
             <>
               <section className="panel">
-                <h2>{current.name}</h2>
+                <h2>{hi ? 'परिवार का प्रबंधन' : 'Manage household'}</h2>
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -217,11 +262,20 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
                 </p>
                 {current.members.map((m, i) => (
                   <div className="member-row" key={i}>
+                    <span className="member-initial" aria-hidden="true">
+                      {m.id ? String(m.name).slice(0, 1) : '—'}
+                    </span>
                     <strong>{String(m.name)}</strong>
                     <small>{String(m.access)}</small>
                     {m.id != null && (
                       <Link to={`/people/${String(m.id)}/edit`}>
                         {hi ? 'प्रोफ़ाइल संपादित करें' : 'Edit profile'} <ArrowRight size={14} />
+                      </Link>
+                    )}
+                    {m.id != null && (
+                      <Link className="member-plan" to={`/plan?kind=person&id=${String(m.id)}`}>
+                        {hi ? 'इस व्यक्ति की योजना' : 'This person’s plan'}
+                        <ArrowRight size={14} />
                       </Link>
                     )}
                     {m.managed === true && (

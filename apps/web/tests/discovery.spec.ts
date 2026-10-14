@@ -22,6 +22,9 @@ test('public catalogue searches, filters, and opens database-backed detail', asy
   await expect(page.getByRole('article')).toHaveCount(6);
   await page.getByRole('combobox', { name: 'All states / national' }).selectOption('Rajasthan');
   await page.getByRole('combobox', { name: 'All districts' }).selectOption('Dausa');
+  await page
+    .getByRole('checkbox', { name: 'Include nationally applicable opportunities' })
+    .uncheck();
   await expect(page.getByRole('article')).toHaveCount(1);
   await expect(page.getByRole('article')).toContainText('Community skills fellowship');
 });
@@ -35,9 +38,11 @@ test('mobile navigation, Hindi preference, and truthful coverage', async ({ page
   );
   await page.getByRole('button', { name: 'Open navigation' }).click();
   await page.getByRole('link', { name: 'Overview', exact: true }).click();
-  await expect(page.getByText('Verified official sources', { exact: true })).toBeVisible();
+  await expect(
+    page.getByText('Evidence first. Uncertainty, made visible.', { exact: true }),
+  ).toBeVisible();
   await page.getByRole('combobox', { name: 'Interface language' }).selectOption('hi');
-  await expect(page.getByRole('heading', { name: 'संभावनाओं का स्पष्ट रास्ता।' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /अवसर खोजें/ }).first()).toBeVisible();
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('lang', 'hi');
 });
