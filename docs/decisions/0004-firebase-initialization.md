@@ -1,0 +1,3 @@
+# 0004 — Preserve queries on initial Firebase state resolution
+
+Phase 2.6 exposed a race once real Firebase configuration existed: the first signed-out auth callback cleared active React Query observers and left discovery/admin pages pending. Cache clearing now occurs only when the UID changes. The existing main workspace subtree remains keyed by UID/guest so actual account changes remount profile/editor component state alongside clearing cached private responses. The initial null callback preserves public requests. No browser auth override, custom token or server authorization change is introduced. Existing browser regressions with configured Firebase initialization verify the loading fix; real signed-in account switching still requires interactive acceptance.

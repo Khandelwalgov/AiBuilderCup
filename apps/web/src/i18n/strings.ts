@@ -174,6 +174,16 @@ export const strings = {
     account: 'Account & preferences',
     firebaseMissing:
       'Sign-in is not configured. Public browsing is available. Set the four VITE_FIREBASE_* values and the backend FIREBASE_PROJECT_ID to enable Google sign-in.',
+    authProviderDisabled:
+      'Google sign-in is unavailable. Ask the project administrator to enable it.',
+    authDomainBlocked:
+      'This address is not authorized for sign-in. Ask the administrator to authorize it.',
+    authPopupBlocked: 'Allow the Google sign-in popup in your browser, then try again.',
+    authPopupClosed: 'The sign-in window was closed. Try again when you are ready.',
+    authNetworkFailed: 'Unable to reach Google sign-in. Check your connection and try again.',
+    authFailed: 'Sign-in could not be completed. Please try again.',
+    extractionProvider: 'Extraction provider',
+    tokenUsage: 'Recorded token usage',
     signedIn: 'Signed in securely',
     language: 'Interface language',
     languageNote:
@@ -366,6 +376,14 @@ export const strings = {
     account: 'खाता और प्राथमिकताएँ',
     firebaseMissing:
       'साइन इन कॉन्फ़िगर नहीं है। सार्वजनिक खोज उपलब्ध है। Google साइन इन के लिए चार VITE_FIREBASE_* मान और बैकएंड FIREBASE_PROJECT_ID सेट करें।',
+    authProviderDisabled: 'Google साइन इन उपलब्ध नहीं है। व्यवस्थापक से इसे चालू करने को कहें।',
+    authDomainBlocked: 'इस पते से साइन इन की अनुमति नहीं है। व्यवस्थापक से अनुमति लेने को कहें।',
+    authPopupBlocked: 'ब्राउज़र में Google साइन इन पॉपअप की अनुमति दें और फिर प्रयास करें।',
+    authPopupClosed: 'साइन इन विंडो बंद हुई। तैयार होने पर फिर प्रयास करें।',
+    authNetworkFailed: 'Google साइन इन से संपर्क नहीं हुआ। इंटरनेट जाँचें और फिर प्रयास करें।',
+    authFailed: 'साइन इन पूरा नहीं हुआ। फिर प्रयास करें।',
+    extractionProvider: 'निष्कर्षण प्रदाता',
+    tokenUsage: 'दर्ज टोकन उपयोग',
     signedIn: 'सुरक्षित रूप से साइन इन हुआ',
     language: 'इंटरफ़ेस की भाषा',
     languageNote:

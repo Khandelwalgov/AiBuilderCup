@@ -1,0 +1,5 @@
+# 0005 — Scope source ingestion locks to the storage namespace
+
+Phase 2.7 parallel verification exposed PostgreSQL advisory-lock contention between independent test schemas and potentially the application schema: stable source identities alone produced identical locks. The transaction advisory-lock key now hashes the current schema plus adapter key. Runs against the same source registry still serialize; separate registries do not block one another. PostgreSQL already scopes advisory locks to the database. No table migration, permissions change or production auth exception is introduced.
+
+A real two-session PostgreSQL test verifies same-schema `source_busy` and lock acquisition for an independent non-application namespace. Both the full suite and the concurrent isolated live-source check pass after this change. Existing data is preserved. All workers must use the new code together when eventually releasing this lock-key change; mixed old/new workers could use different keys. Local uvicorn reload replaced the old task-owned worker; no deployment was performed.

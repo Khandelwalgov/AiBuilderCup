@@ -1,0 +1,11 @@
+# DEPwD draft correction — 14 October 2026
+
+Existing candidate `9588fed8-1f25-423d-8b5f-890636e68695` was corrected through `admin.service.review(decision="correct")` using the existing Google-linked administrator. It remains **draft**. Original extraction is preserved in CandidateReview.before and ignored `.live-validation/nightfall-original-draft.json`; current correction in `.live-validation/nightfall-corrected-draft.json`. Source snapshot, hash, model/provider and token usage are unchanged. No new AI call.
+
+18 separately understandable requirement groups and nine named document citations now exist. Class IX/X, regular full-time study and recognized school are separated (2024 PDF page 7). Repeated-class exclusion has its own citation (page 5). Renewal conduct, attendance, progression, exceptional illness proof and promotion with a junior examination pending are distinct (page 11). The Post-Matric first-failure exception is excluded. Fresh/renewal cross-state procedures cite the 2025 amendment page 3. Unsupported conditions remain unknown. The original parental-income ceiling is retained without inventing a financial year or definition.
+
+UDID/Aadhaar document citations reference amendment page 2. Photograph, age, disability/income certificates, fees receipt and academic qualification reference the application-upload clause at 2024 page 10. The open-ended “other requisite documents” remains reviewable and unknown; it is not a new named official requirement.
+
+Publication now requires one explicitly named citation for each listed document. Legacy drafts stay readable/correctable but must acquire document evidence before approval. Citation validation verifies exact whitespace-normalized quotations in the captured URL/page, including document-specific citations. This proves quotation fidelity, not complete legal interpretation. Human review of amendments, missing newer notices, benefit amounts and every substantive rule remains required.
+
+Requirement categories/application contexts are additive columns with defaults preserving old records. Fresh/renewal-specific conditions currently return unknown until an application context can safely be resolved. Administrative/selection/interpretation conditions are never evaluated as universal restrictions.

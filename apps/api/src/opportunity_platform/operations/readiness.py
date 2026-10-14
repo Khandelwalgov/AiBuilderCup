@@ -19,18 +19,23 @@ def configuration_report(web_file: Path) -> dict:
         "VITE_FIREBASE_PROJECT_ID",
         "VITE_FIREBASE_APP_ID",
     ]
+    provider = config.ai_extraction_provider
+    key = config.openai_api_key if provider == "openai" else config.gemini_api_key
+    model = config.openai_model if provider == "openai" else config.gemini_model
     checks = {
         "firebase_backend_project": bool(config.firebase_project_id),
         "firebase_web_configuration": all(web.get(key) for key in required),
         "firebase_projects_match": bool(config.firebase_project_id)
         and web.get("VITE_FIREBASE_PROJECT_ID") == config.firebase_project_id,
-        "gemini_server_key": bool(config.gemini_api_key),
-        "gemini_model_selected": bool(config.gemini_model),
+        "extraction_server_key": bool(key),
+        "extraction_model_selected": bool(model),
+        "provider_key_consistent": provider != "gemini" or not key.startswith("sk-"),
         "no_private_keys_in_frontend": not any(
             web.get(key)
             for key in [
                 "VITE_GEMINI_API_KEY",
                 "VITE_GOOGLE_API_KEY",
+                "VITE_OPENAI_API_KEY",
                 "VITE_DATABASE_URL",
                 "VITE_GOOGLE_APPLICATION_CREDENTIALS",
             ]
@@ -49,14 +54,21 @@ def configuration_report(web_file: Path) -> dict:
         "adc_note": (
             "File presence is not proof of usable permissions. Cloud Run uses its service account."
         ),
-        "model": config.gemini_model,
+        "provider": provider,
+        "model": model,
         "database": "configured (value withheld)",
         "frontend_api_origin": "configured" if web.get("VITE_API_BASE_URL") else "local Vite proxy",
         "token_limits": {
-            "input": config.gemini_max_input_tokens,
-            "output": config.gemini_max_output_tokens,
+            "input": config.openai_max_input_tokens
+            if provider == "openai"
+            else config.gemini_max_input_tokens,
+            "output": config.openai_max_output_tokens
+            if provider == "openai"
+            else config.gemini_max_output_tokens,
         },
-        "timeout_seconds_per_model_request": config.gemini_timeout_seconds,
+        "timeout_seconds_per_model_request": config.openai_timeout_seconds
+        if provider == "openai"
+        else config.gemini_timeout_seconds,
     }
 
 

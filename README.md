@@ -117,3 +117,16 @@ Data export/deletion and verified-document correction flows are not implemented.
 **Next milestone:** configure Firebase/Gemini, measure extraction on these real documents and complete a live reviewed-publication demo. Then add secure synthetic-document verification and one shared-blocker action that updates several version-aware evaluations. Preserve the existing architecture and truthful coverage boundaries. [Phase 2 decisions](docs/decisions/0002-reviewed-intelligence.md) supersede Phase 1 publication behavior.
 
 Phase 2.5 adds bounded model requests, sanitized failure codes, evidence preservation, production configuration guards and a plan-first deployment runner. See [live integration validation](docs/phase-2.5-validation.md) and [deployment procedure](infra/README.md). Run `make preflight` before attempting live acceptance; configuration readiness does not prove Firebase permissions or Gemini access.
+
+Phase 2.6: [live integration audit](docs/live-integration-audit.md) records selected-project configuration/IAM checks, real Gemini failures, the Firebase initial-state query fix, regression results and exact user actions. A passing configuration preflight does not establish working Google sign-in or a generated/published opportunity.
+
+Phase 2.7 confirms existing Google/admin configuration and adds `make gemini-smoke` for one bounded real generation probe. The latest [audit update](docs/live-integration-audit.md) records the continuing provider 503, schema-scoped ingestion locks, regression results and pending genuine draft. A smoke failure must stop full extraction; no source data is fabricated.
+
+
+## Explicit extraction providers
+
+Gemini remains the default (`AI_EXTRACTION_PROVIDER=gemini`), using `GEMINI_API_KEY` / `GEMINI_MODEL`. For authorized development only, explicitly set `AI_EXTRACTION_PROVIDER=openai`, `OPENAI_API_KEY` and `OPENAI_MODEL=gpt-5.6-terra` in ignored `apps/api/.env`. Restart the API after configuration changes. Neither provider falls back to the other. Keys are backend-only; never use `VITE_OPENAI_API_KEY` or place an OpenAI key in the Gemini slot. `make preflight` checks the selected provider's configuration; `make extraction-smoke` makes one small real request and exits nonzero on failure.
+
+OpenAI uses a strict transport schema while original Pydantic/citation validation still decides whether a draft can be created. Source hashes, provider/model/extractor identity and token usage are persisted on runs/versions; failed public-source output is explicitly unvalidated privileged diagnostics, never a publishable version. Repeated identity/snapshot processing is idempotent and cannot move the publication pointer. See [provider decision](docs/decisions/0006-explicit-extraction-providers.md).
+
+**Current validation:** one genuine DEPwD draft exists in `/admin`, unpublished and requiring substantive human review. Gemini's free-tier alternative was documented but not live-tested because the replaced Google key is unavailable. See the current [integration audit](docs/live-integration-audit.md) for measured calls, costs, tests and identified review gaps.

@@ -31,15 +31,24 @@ eligibility advice.
 
 
 class ExtractionFailure(Exception):
-    def __init__(self, code):
+    def __init__(self, code, *, stage=None, http_status=None, input_tokens=None):
         self.code = code
+        self.stage = stage
+        self.http_status = http_status
+        self.input_tokens = input_tokens
+        self.usage = {}
 
 
-def extract(pages: list[dict], focus: str):
+def extract(pages: list[dict], focus: str, *, usage_sink=None):
     config = settings()
+    if config.gemini_api_key.startswith("sk-"):
+        raise ExtractionFailure("gemini_provider_key_mismatch")
     if not config.gemini_api_key:
         raise ExtractionFailure("gemini_not_configured")
     contents = json.dumps({"task": focus, "untrusted_source_pages": pages}, ensure_ascii=False)
+    stage = "count_tokens"
+    measured_input_tokens = None
+    usage_details = {}
     try:
         # One attempt per API call bounds cost and avoids hidden SDK retries.
         # No user facts, external tools, sampling overrides or automatic function calls.
@@ -56,10 +65,23 @@ def extract(pages: list[dict], focus: str):
                 # Include instructions/schema as text and reserve request framing overhead.
                 contents=[SYSTEM, json.dumps(Extraction.model_json_schema()), contents],
             )
+            measured_input_tokens = counted.total_tokens
             if counted.total_tokens is None:
                 raise ExtractionFailure("gemini_token_count_unavailable")
             if counted.total_tokens + 1024 > config.gemini_max_input_tokens:
                 raise ExtractionFailure("gemini_input_budget_exceeded")
+            logger.info(
+                json.dumps(
+                    {
+                        "event": "gemini_input_checked",
+                        "model": config.gemini_model,
+                        "input_tokens": counted.total_tokens,
+                        "input_budget": config.gemini_max_input_tokens,
+                        "output_budget": config.gemini_max_output_tokens,
+                    }
+                )
+            )
+            stage = "generate_content"
             result = client.models.generate_content(
                 model=config.gemini_model,
                 contents=contents,
@@ -72,6 +94,17 @@ def extract(pages: list[dict], focus: str):
                     automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
                 ),
             )
+        stage = "validate_response"
+        usage = getattr(result, "usage_metadata", None)
+        usage_details = {
+            "input_tokens": getattr(usage, "prompt_token_count", None),
+            "output_tokens": getattr(usage, "candidates_token_count", None),
+            "thinking_tokens": getattr(usage, "thoughts_token_count", None),
+            "total_tokens": getattr(usage, "total_token_count", None),
+            "counted_input_tokens": counted.total_tokens,
+        }
+        if usage_sink is not None:
+            usage_sink.update(usage_details)
         candidates = result.candidates or []
         if not candidates:
             raise ExtractionFailure("gemini_no_candidate")
@@ -90,7 +123,6 @@ def extract(pages: list[dict], focus: str):
             validate_evidence(candidate, pages)
         except ValueError:
             raise ExtractionFailure("gemini_evidence_invalid") from None
-        usage = result.usage_metadata
         logger.info(
             json.dumps(
                 {
@@ -104,7 +136,15 @@ def extract(pages: list[dict], focus: str):
             )
         )
         return candidate
-    except ExtractionFailure:
+    except ExtractionFailure as error:
+        error.stage = error.stage or stage
+        error.input_tokens = measured_input_tokens
+        error.usage = usage_details
+        logger.warning(
+            json.dumps(
+                {"event": "gemini_extraction_failed", "code": error.code, "stage": error.stage}
+            )
+        )
         raise
     except errors.APIError as error:
         codes = {
@@ -114,11 +154,24 @@ def extract(pages: list[dict], focus: str):
             404: "gemini_model_unavailable",
             429: "gemini_rate_limited",
         }
-        raise ExtractionFailure(codes.get(error.code, "gemini_service_error")) from None
+        code = codes.get(error.code, "gemini_service_error")
+        logger.warning(
+            json.dumps(
+                {
+                    "event": "gemini_extraction_failed",
+                    "code": code,
+                    "stage": stage,
+                    "http_status": error.code,
+                }
+            )
+        )
+        raise ExtractionFailure(
+            code, stage=stage, http_status=error.code, input_tokens=measured_input_tokens
+        ) from None
     except (httpx.TimeoutException, TimeoutError):
-        raise ExtractionFailure("gemini_timeout") from None
+        raise ExtractionFailure("gemini_timeout", stage=stage) from None
     except httpx.HTTPError:
-        raise ExtractionFailure("gemini_network_error") from None
+        raise ExtractionFailure("gemini_network_error", stage=stage) from None
     except Exception:
         # Never persist SDK exception strings, prompts, or API keys in diagnostics.
-        raise ExtractionFailure("gemini_integration_error") from None
+        raise ExtractionFailure("gemini_integration_error", stage=stage) from None

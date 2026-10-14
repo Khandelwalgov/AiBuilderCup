@@ -39,6 +39,10 @@ class ReviewSummary(BaseModel):
 
 class ReviewView(ReviewSummary):
     candidate: CandidateData
+    extraction_provider: str | None
+    extraction_model: str | None
+    extractor_version: str | None
+    extraction_usage: dict | None
     published: CandidateData | None
     pages: list[SnapshotPage]
     content_hash: str
@@ -84,6 +88,10 @@ def read(session: Session, identifier: uuid.UUID) -> ReviewView:
     return ReviewView(
         **summary(version).model_dump(),
         candidate=CandidateData.model_validate(version.extraction),
+        extraction_provider=version.extraction_provider,
+        extraction_model=version.extraction_model,
+        extractor_version=version.extractor_version,
+        extraction_usage=version.extraction_usage,
         published=CandidateData.model_validate(previous) if previous else None,
         pages=snapshot.pages,
         content_hash=snapshot.content_hash,
@@ -157,6 +165,12 @@ def review(session: Session, identifier: uuid.UUID, actor: User, data: ReviewWri
                 "candidate_incomplete",
                 "Review the issuing authority, geography and requirements before publishing.",
             )
+        if set(candidate.required_documents) != {d.document for d in candidate.document_evidence}:
+            raise APIError(
+                422,
+                "document_evidence_required",
+                "Each required document needs its own reviewed source citation before publication.",
+            )
         published = (
             session.get(OpportunityVersion, opportunity.published_version_id)
             if opportunity.published_version_id
@@ -198,8 +212,10 @@ def review(session: Session, identifier: uuid.UUID, actor: User, data: ReviewWri
             record = Requirement(
                 version_id=version.id,
                 description=requirement.description,
-                rule=requirement.rule.model_dump(mode="json"),
+                rule={**requirement.rule.model_dump(mode="json")},
                 subject_context=requirement.subject_context,
+                kind=requirement.kind,
+                application_context=requirement.application_context,
             )
             session.add(record)
             session.flush()
@@ -211,10 +227,9 @@ def review(session: Session, identifier: uuid.UUID, actor: User, data: ReviewWri
                     page=str(requirement.evidence.page),
                 )
             )
-        for document in candidate.required_documents:
-            citation = next(
-                f.citation for f in candidate.field_evidence if f.field == "required_documents"
-            )
+        for item in candidate.document_evidence:
+            document = item.document
+            citation = item.evidence
             record = Requirement(
                 version_id=version.id,
                 description="Required document: " + document,

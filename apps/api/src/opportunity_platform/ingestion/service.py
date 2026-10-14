@@ -16,7 +16,8 @@ from opportunity_platform.db.models import (
     User,
 )
 from opportunity_platform.ingestion.adapters import ADAPTERS, FetchFailure, fetch
-from opportunity_platform.ingestion.gemini import EXTRACTOR_VERSION, ExtractionFailure, extract
+from opportunity_platform.ingestion.gemini import ExtractionFailure
+from opportunity_platform.ingestion.providers import extract, identity
 from opportunity_platform.ingestion.schemas import CandidateData, validate_evidence
 
 NAMESPACE = uuid.UUID("ae887c25-9253-4cde-abaf-fd2ca622d69d")
@@ -39,6 +40,16 @@ def register(session: Session):
     session.flush()
 
 
+def source_lock_key(session: Session, key: str) -> int:
+    # Isolated schemas contain independent source registries, even in the same database.
+    namespace = session.scalar(text("SELECT current_schema()"))
+    if not namespace:
+        raise APIError(503, "source_schema_unavailable", "Source storage is unavailable.")
+    return int.from_bytes(
+        hashlib.sha256(f"{namespace}:{key}".encode()).digest()[:8], "big", signed=True
+    )
+
+
 def ingest(session: Session, key: str, actor: User) -> IngestionRun:
     if not actor.is_admin:
         raise APIError(403, "admin_required", "Administrator access is required.")
@@ -47,7 +58,7 @@ def ingest(session: Session, key: str, actor: User) -> IngestionRun:
         raise APIError(404, "source_not_found", "Choose a registered source adapter.")
     source_id = uuid.uuid5(NAMESPACE, key)
     # Cross-process advisory lock covers fetch/extraction and serializes identical runs.
-    lock = int.from_bytes(hashlib.sha256(key.encode()).digest()[:8], "big", signed=True)
+    lock = source_lock_key(session, key)
     acquired = session.scalar(text("SELECT pg_try_advisory_xact_lock(:key)"), {"key": lock})
     if not acquired:
         raise APIError(409, "source_busy", "An ingestion run is already using this source.")
@@ -61,12 +72,14 @@ def ingest(session: Session, key: str, actor: User) -> IngestionRun:
     ):
         raise APIError(429, "source_rate_limited", "Wait before checking this source again.")
     source.last_checked_at = now
+    provider, model, extractor_version = identity()
     run = IngestionRun(
         source_id=source.id,
         actor_id=actor.id,
         status="running",
-        model=settings().gemini_model,
-        extractor_version=EXTRACTOR_VERSION,
+        provider=provider,
+        model=model,
+        extractor_version=extractor_version,
     )
     session.add(run)
     session.flush()
@@ -75,6 +88,7 @@ def ingest(session: Session, key: str, actor: User) -> IngestionRun:
         source.last_successful_check_at = datetime.now(timezone.utc)
         source.status = "parsed"
         digest = hashlib.sha256(fetched.raw).hexdigest()
+        run.source_hash = digest
         snapshot = session.scalar(
             select(SourceSnapshot).where(
                 SourceSnapshot.source_id == source.id, SourceSnapshot.content_hash == digest
@@ -118,6 +132,10 @@ def ingest(session: Session, key: str, actor: User) -> IngestionRun:
                 select(OpportunityVersion)
                 .where(
                     OpportunityVersion.opportunity_id == opportunity.id,
+                    OpportunityVersion.snapshot_id == snapshot.id,
+                    OpportunityVersion.extraction_provider == provider,
+                    OpportunityVersion.extraction_model == model,
+                    OpportunityVersion.extractor_version == extractor_version,
                 )
                 .order_by(OpportunityVersion.version.desc())
                 .limit(1)
@@ -125,11 +143,13 @@ def ingest(session: Session, key: str, actor: User) -> IngestionRun:
             if opportunity
             else None
         )
-        if existing and existing.snapshot_id == snapshot.id:
+        if existing and not run.changed:
             run.status = "unchanged"
         else:
             with session.begin_nested():
-                candidate = CandidateData.model_validate(extract(snapshot.pages, adapter.focus))
+                result = extract(snapshot.pages, adapter.focus)
+                run.usage = result.usage
+                candidate = CandidateData.model_validate(result.candidate)
                 try:
                     validate_evidence(candidate, snapshot.pages)
                 except ValueError:
@@ -173,6 +193,10 @@ def ingest(session: Session, key: str, actor: User) -> IngestionRun:
                         content_hash=digest,
                         snapshot_id=snapshot.id,
                         extraction=data,
+                        extraction_provider=provider,
+                        extraction_model=model,
+                        extractor_version=extractor_version,
+                        extraction_usage=result.usage,
                         publication_state="draft",
                         status="needs_review",
                     )
@@ -190,9 +214,21 @@ def ingest(session: Session, key: str, actor: User) -> IngestionRun:
         run.http_status = error.status
     except ExtractionFailure as error:
         run.status = (
-            "extraction_blocked" if error.code == "gemini_not_configured" else "extraction_failed"
+            "extraction_blocked" if error.code.endswith("_not_configured") else "extraction_failed"
         )
         run.diagnostic_code = error.code
+        run.usage = getattr(error, "usage", None) or (
+            {"counted_input_tokens": error.input_tokens} if error.input_tokens else None
+        )
+        run.diagnostics = {
+            "stage": error.stage,
+            "provider_http_status": error.http_status,
+            "validation_issues": getattr(error, "issues", []),
+        }
+        # Public-source model output only, privileged and explicitly unvalidated.
+        # It is never a candidate version and cannot be approved through review routes.
+        if getattr(error, "output", None) is not None:
+            run.diagnostics["unvalidated_candidate"] = error.output
         source.status = "needs_review"
     except Exception:
         # The candidate savepoint rolls back while retaining public source evidence.

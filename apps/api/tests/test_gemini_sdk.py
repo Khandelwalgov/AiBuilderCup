@@ -46,14 +46,22 @@ def sdk(monkeypatch):
     real_client = genai.Client
     monkeypatch.setattr(settings(), "gemini_api_key", "synthetic-test-key")
     requests = []
-    state = {"finish": "STOP", "tokens": 1000, "payload": payload(), "error": None}
+    state = {
+        "finish": "STOP",
+        "tokens": 1000,
+        "payload": payload(),
+        "error": None,
+        "error_stage": None,
+    }
 
     def transport(request):
         body = json.loads(request.content)
         requests.append((request.url.path, body))
         if state["error"] == "timeout":
             raise httpx.ReadTimeout("synthetic-test-key must not escape", request=request)
-        if state["error"]:
+        if state["error"] and (
+            state["error_stage"] is None or request.url.path.endswith(":generateContent")
+        ):
             return httpx.Response(
                 state["error"],
                 json={
@@ -168,3 +176,27 @@ def test_invalid_schema_and_forged_quotes_are_distinct(sdk, invalid, code):
     with pytest.raises(ExtractionFailure) as caught:
         run()
     assert caught.value.code == code
+
+
+def test_generation_service_failure_reports_stage_without_exposing_provider_message(sdk, caplog):
+    state, requests = sdk
+    state["error"] = 503
+    state["error_stage"] = "generate_content"
+    with pytest.raises(ExtractionFailure) as caught:
+        run()
+    assert caught.value.code == "gemini_service_error"
+    assert caught.value.stage == "generate_content"
+    assert caught.value.http_status == 503
+    assert caught.value.input_tokens == 1000
+    assert len(requests) == 2  # count succeeds; generation fails once without retry.
+    assert "synthetic-test-key" not in caplog.text
+    assert '"stage": "generate_content"' in caplog.text
+
+
+def test_invalid_candidate_retains_measured_response_usage(sdk):
+    state, _ = sdk
+    state["payload"] = {"is_admin": True}
+    with pytest.raises(ExtractionFailure) as caught:
+        run()
+    assert caught.value.code == "gemini_schema_invalid"
+    assert caught.value.usage["total_tokens"] == 1500

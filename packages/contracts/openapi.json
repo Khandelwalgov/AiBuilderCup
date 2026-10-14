@@ -1897,6 +1897,14 @@
             "maxItems": 50,
             "title": "Required Documents"
           },
+          "document_evidence": {
+            "items": {
+              "$ref": "#/components/schemas/DocumentEvidence"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "title": "Document Evidence"
+          },
           "opens_on": {
             "anyOf": [
               {
@@ -2065,6 +2073,14 @@
             "maxItems": 50,
             "title": "Required Documents"
           },
+          "document_evidence": {
+            "items": {
+              "$ref": "#/components/schemas/DocumentEvidence"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "title": "Document Evidence"
+          },
           "opens_on": {
             "anyOf": [
               {
@@ -2150,6 +2166,29 @@
             "minLength": 5,
             "title": "Description"
           },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "eligibility",
+              "document",
+              "procedure",
+              "renewal",
+              "selection",
+              "interpretation"
+            ],
+            "title": "Kind",
+            "default": "eligibility"
+          },
+          "application_context": {
+            "type": "string",
+            "enum": [
+              "all",
+              "fresh",
+              "renewal"
+            ],
+            "title": "Application Context",
+            "default": "all"
+          },
           "rule": {
             "$ref": "#/components/schemas/Rule-Input"
           },
@@ -2183,6 +2222,29 @@
             "maxLength": 2000,
             "minLength": 5,
             "title": "Description"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "eligibility",
+              "document",
+              "procedure",
+              "renewal",
+              "selection",
+              "interpretation"
+            ],
+            "title": "Kind",
+            "default": "eligibility"
+          },
+          "application_context": {
+            "type": "string",
+            "enum": [
+              "all",
+              "fresh",
+              "renewal"
+            ],
+            "title": "Application Context",
+            "default": "all"
           },
           "rule": {
             "$ref": "#/components/schemas/Rule-Output"
@@ -2410,6 +2472,26 @@
           "op"
         ],
         "title": "Condition"
+      },
+      "DocumentEvidence": {
+        "properties": {
+          "document": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Document"
+          },
+          "evidence": {
+            "$ref": "#/components/schemas/Citation"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "document",
+          "evidence"
+        ],
+        "title": "DocumentEvidence"
       },
       "ErrorBody": {
         "properties": {
@@ -3115,6 +3197,16 @@
           "rule": {
             "$ref": "#/components/schemas/Rule-Output"
           },
+          "kind": {
+            "type": "string",
+            "title": "Kind",
+            "default": "eligibility"
+          },
+          "application_context": {
+            "type": "string",
+            "title": "Application Context",
+            "default": "all"
+          },
           "result": {
             "$ref": "#/components/schemas/Result"
           },
@@ -3331,6 +3423,51 @@
           "candidate": {
             "$ref": "#/components/schemas/CandidateData-Output"
           },
+          "extraction_provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extraction Provider"
+          },
+          "extraction_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extraction Model"
+          },
+          "extractor_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extractor Version"
+          },
+          "extraction_usage": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extraction Usage"
+          },
           "published": {
             "anyOf": [
               {
@@ -3381,6 +3518,10 @@
           "source_url",
           "created_at",
           "candidate",
+          "extraction_provider",
+          "extraction_model",
+          "extractor_version",
+          "extraction_usage",
           "published",
           "pages",
           "content_hash",
@@ -3568,6 +3709,63 @@
             ],
             "title": "Model"
           },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider"
+          },
+          "source_hash": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Hash"
+          },
+          "extractor_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extractor Version"
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Usage"
+          },
+          "diagnostics": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Diagnostics"
+          },
           "changed": {
             "anyOf": [
               {
@@ -3614,6 +3812,11 @@
           "status",
           "diagnostic_code",
           "model",
+          "provider",
+          "source_hash",
+          "extractor_version",
+          "usage",
+          "diagnostics",
           "changed",
           "created_at",
           "finished_at",

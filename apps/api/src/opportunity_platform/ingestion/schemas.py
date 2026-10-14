@@ -20,9 +20,19 @@ class FieldCitation(BaseModel):
     citation: Citation
 
 
+class DocumentEvidence(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    document: str = Field(min_length=1, max_length=1000)
+    evidence: Citation
+
+
 class CandidateRequirement(BaseModel):
     model_config = ConfigDict(extra="forbid")
     description: str = Field(min_length=5, max_length=2000)
+    kind: Literal[
+        "eligibility", "document", "procedure", "renewal", "selection", "interpretation"
+    ] = "eligibility"
+    application_context: Literal["all", "fresh", "renewal"] = "all"
     rule: Rule
     evidence: Citation
     subject_context: Literal["person", "business", "household"] = "person"
@@ -40,6 +50,7 @@ class CandidateData(BaseModel):
     benefits: str | None = None
     restrictions: list[str] = Field(default_factory=list, max_length=50)
     required_documents: list[str] = Field(default_factory=list, max_length=50)
+    document_evidence: list[DocumentEvidence] = Field(default_factory=list, max_length=50)
     opens_on: date | None = None
     closes_on: date | None = None
     apply_url: str | None = None
@@ -86,9 +97,14 @@ def validate_evidence(candidate: CandidateData, pages: list[dict]):
     from urllib.parse import urlparse
 
     # Exact whitespace-normalized evidence matching; the model cannot forge a passage.
-    evidence = [f.citation for f in candidate.field_evidence] + [
-        r.evidence for r in candidate.requirements
-    ]
+    evidence = (
+        [f.citation for f in candidate.field_evidence]
+        + [r.evidence for r in candidate.requirements]
+        + [d.evidence for d in candidate.document_evidence]
+    )
+    names = [d.document for d in candidate.document_evidence]
+    if len(names) != len(set(names)) or any(n not in candidate.required_documents for n in names):
+        raise ValueError("Document evidence must uniquely name a required document")
     for citation in evidence:
         page = next(
             (

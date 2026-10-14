@@ -23,6 +23,8 @@ class RequirementResult(BaseModel):
     requirement_id: uuid.UUID
     requirement: str
     rule: Rule
+    kind: str = "eligibility"
+    application_context: str = "all"
     result: Result
     citations: list[CitationView]
     next_steps: list[str]
@@ -66,6 +68,19 @@ def check(session: Session, uid: str, opportunity_id: uuid.UUID) -> EvaluationVi
                 blockers=["subject:" + requirement.subject_context],
             )
         )
+        if requirement.application_context != "all" or requirement.kind in {
+            "procedure",
+            "selection",
+            "interpretation",
+        }:
+            result = Result(
+                outcome="unknown",
+                reason=(
+                    "Application context or source interpretation requires clarification; "
+                    "this is not a universal eligibility restriction."
+                ),
+                blockers=["clarification:" + str(requirement.id)],
+            )
         citations = [
             CitationView(source_url=e.source_url, passage=e.passage, page=e.page)
             for e in session.scalars(
@@ -105,6 +120,8 @@ def check(session: Session, uid: str, opportunity_id: uuid.UUID) -> EvaluationVi
                 requirement_id=requirement.id,
                 requirement=requirement.description,
                 rule=rule,
+                kind=requirement.kind,
+                application_context=requirement.application_context,
                 result=result,
                 citations=citations,
                 next_steps=next_steps,

@@ -13,6 +13,12 @@ class Settings(BaseSettings):
     )
     cors_origins: list[str] = ["http://localhost:5173", "http://127.0.0.1:5173"]
     firebase_project_id: str = ""
+    ai_extraction_provider: Literal["gemini", "openai"] = "gemini"
+    openai_api_key: str = ""
+    openai_model: str = "gpt-5.6-terra"
+    openai_timeout_seconds: int = Field(default=180, ge=10, le=300)
+    openai_max_input_tokens: int = Field(default=160000, ge=1024, le=1000000)
+    openai_max_output_tokens: int = Field(default=16384, ge=256, le=65536)
     gemini_api_key: str = ""
     gemini_model: str = "gemini-3.8-flash"
     gemini_timeout_seconds: int = Field(default=120, ge=30, le=180)

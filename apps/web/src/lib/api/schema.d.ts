@@ -277,6 +277,8 @@ export interface components {
             restrictions?: string[];
             /** Required Documents */
             required_documents?: string[];
+            /** Document Evidence */
+            document_evidence?: components["schemas"]["DocumentEvidence"][];
             /** Opens On */
             opens_on?: string | null;
             /** Closes On */
@@ -314,6 +316,8 @@ export interface components {
             restrictions?: string[];
             /** Required Documents */
             required_documents?: string[];
+            /** Document Evidence */
+            document_evidence?: components["schemas"]["DocumentEvidence"][];
             /** Opens On */
             opens_on?: string | null;
             /** Closes On */
@@ -333,6 +337,18 @@ export interface components {
         "CandidateRequirement-Input": {
             /** Description */
             description: string;
+            /**
+             * Kind
+             * @default eligibility
+             * @enum {string}
+             */
+            kind: "eligibility" | "document" | "procedure" | "renewal" | "selection" | "interpretation";
+            /**
+             * Application Context
+             * @default all
+             * @enum {string}
+             */
+            application_context: "all" | "fresh" | "renewal";
             rule: components["schemas"]["Rule-Input"];
             evidence: components["schemas"]["Citation"];
             /**
@@ -346,6 +362,18 @@ export interface components {
         "CandidateRequirement-Output": {
             /** Description */
             description: string;
+            /**
+             * Kind
+             * @default eligibility
+             * @enum {string}
+             */
+            kind: "eligibility" | "document" | "procedure" | "renewal" | "selection" | "interpretation";
+            /**
+             * Application Context
+             * @default all
+             * @enum {string}
+             */
+            application_context: "all" | "fresh" | "renewal";
             rule: components["schemas"]["Rule-Output"];
             evidence: components["schemas"]["Citation"];
             /**
@@ -397,6 +425,12 @@ export interface components {
             income_definition?: string | null;
             /** As Of */
             as_of?: string | null;
+        };
+        /** DocumentEvidence */
+        DocumentEvidence: {
+            /** Document */
+            document: string;
+            evidence: components["schemas"]["Citation"];
         };
         /** ErrorBody */
         ErrorBody: {
@@ -625,6 +659,16 @@ export interface components {
             /** Requirement */
             requirement: string;
             rule: components["schemas"]["Rule-Output"];
+            /**
+             * Kind
+             * @default eligibility
+             */
+            kind: string;
+            /**
+             * Application Context
+             * @default all
+             */
+            application_context: string;
             result: components["schemas"]["Result"];
             /** Citations */
             citations: components["schemas"]["CitationView"][];
@@ -727,6 +771,16 @@ export interface components {
              */
             created_at: string;
             candidate: components["schemas"]["CandidateData-Output"];
+            /** Extraction Provider */
+            extraction_provider: string | null;
+            /** Extraction Model */
+            extraction_model: string | null;
+            /** Extractor Version */
+            extractor_version: string | null;
+            /** Extraction Usage */
+            extraction_usage: {
+                [key: string]: unknown;
+            } | null;
             published: components["schemas"]["CandidateData-Output"] | null;
             /** Pages */
             pages: components["schemas"]["SnapshotPage"][];
@@ -806,6 +860,20 @@ export interface components {
             diagnostic_code: string | null;
             /** Model */
             model: string | null;
+            /** Provider */
+            provider: string | null;
+            /** Source Hash */
+            source_hash: string | null;
+            /** Extractor Version */
+            extractor_version: string | null;
+            /** Usage */
+            usage: {
+                [key: string]: unknown;
+            } | null;
+            /** Diagnostics */
+            diagnostics: {
+                [key: string]: unknown;
+            } | null;
             /** Changed */
             changed: boolean | null;
             /** Created At */

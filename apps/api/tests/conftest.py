@@ -44,3 +44,10 @@ def client(db, monkeypatch):
     with TestClient(app) as client:
         yield client
     app.dependency_overrides.clear()
+
+
+@pytest.fixture(autouse=True)
+def isolated_provider_configuration(monkeypatch):
+    from opportunity_platform.core.config import settings
+
+    monkeypatch.setattr(settings(), "ai_extraction_provider", "gemini")

@@ -97,3 +97,8 @@ Cloud Run allows public HTTP invocation for the catalogue, while every private/a
 If release fails, stop and inspect logs locally; runner error output is sanitized. Database migrations run before API traffic and must remain backwards-compatible; restore/rollback requires a deliberate operator decision. Retention, deletion/export, GCS uploads and scheduled ingestion are not implemented by this milestone.
 
 References: [Cloud SQL create flags](https://cloud.google.com/sdk/gcloud/reference/sql/instances/create), [Cloud Build account selection](https://cloud.google.com/build/docs/cloud-build-service-account-updates), [Cloud Run secrets](https://cloud.google.com/run/docs/configuring/services/secrets), [Cloud SQL with Cloud Run](https://cloud.google.com/sql/docs/postgres/connect-run), [health checks](https://cloud.google.com/run/docs/configuring/healthchecks), [Hosting configuration](https://firebase.google.com/docs/hosting/full-config), [Google sign-in](https://firebase.google.com/docs/auth/web/google-signin).
+
+
+## Explicit development provider selection
+
+The backend now defaults to `AI_EXTRACTION_PROVIDER=gemini`; OpenAI is an explicit development option via backend-only `OPENAI_API_KEY` and `OPENAI_MODEL`. There is no automatic fallback. The existing deployment runner still prepares the primary Gemini path; it does not deploy OpenAI keys or infer provider choice from errors. Any later authorized OpenAI deployment must explicitly inject its own Secret Manager reference and provider setting. Apply the additive provenance migration `a70d81ea2f20` before running updated code. No deployment occurred during this provider integration.

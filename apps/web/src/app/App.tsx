@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { Profile } from '../features/profiles/Profile';
 import { Admin } from '../features/admin/Admin';
@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { strings, type Language } from '../i18n/strings';
 import { auth, authConfigured, login, logout } from './auth';
+import { authErrorKey } from './auth-errors';
 import { api, fail } from '../lib/api/client';
 import { Discover, Detail } from '../features/opportunities/Discover';
 const Locale = createContext<Language>('en');
@@ -48,6 +49,7 @@ export function App() {
     localStorage.getItem('language') === 'hi' ? 'hi' : 'en',
   );
   const [user, setUser] = useState<User | null>(null);
+  const previousUid = useRef<string | null>(null);
   const [authError, setAuthError] = useState('');
   const [menu, setMenu] = useState(false);
   const location = useLocation();
@@ -61,7 +63,11 @@ export function App() {
     () =>
       auth
         ? onAuthStateChanged(auth, (next) => {
-            cache.clear();
+            const nextUid = next?.uid ?? null;
+            // The initial signed-out callback must not cancel active public queries.
+            // Actual account changes clear private cache and remount workspace state.
+            if (previousUid.current !== nextUid) cache.clear();
+            previousUid.current = nextUid;
             setUser(next);
           })
         : undefined,
@@ -88,12 +94,8 @@ export function App() {
     setAuthError('');
     try {
       await login();
-    } catch {
-      setAuthError(
-        language === 'en'
-          ? 'Sign-in could not be completed. Please try again.'
-          : 'साइन इन पूरा नहीं हुआ। फिर प्रयास करें।',
-      );
+    } catch (error) {
+      setAuthError(t[authErrorKey(error)]);
     }
   }
   const navigation = [

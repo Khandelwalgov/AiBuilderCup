@@ -43,6 +43,7 @@ class Person(Entity):
 
 class Household(Entity):
     __tablename__ = "households"
+    owner_user_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), index=True)
     name: Mapped[str]
 
 
@@ -79,6 +80,7 @@ class Business(Entity):
     __tablename__ = "businesses"
     name: Mapped[str]
     legal_status: Mapped[str | None]
+    description: Mapped[str | None]
 
 
 class BusinessMembership(Entity):
@@ -171,6 +173,10 @@ class OpportunityVersion(Entity):
         ForeignKey("source_snapshots.id", name="fk_version_snapshot")
     )
     extraction: Mapped[dict | None] = mapped_column(JSON)
+    extraction_provider: Mapped[str | None]
+    extraction_model: Mapped[str | None]
+    extractor_version: Mapped[str | None]
+    extraction_usage: Mapped[dict | None] = mapped_column(JSON)
     title: Mapped[str]
     summary: Mapped[str]
     issuer: Mapped[str | None]
@@ -224,6 +230,8 @@ class Requirement(Entity):
     description: Mapped[str]
     rule: Mapped[dict] = mapped_column(JSON)
     subject_context: Mapped[str]
+    kind: Mapped[str] = mapped_column(default="eligibility", server_default="eligibility")
+    application_context: Mapped[str] = mapped_column(default="all", server_default="all")
 
 
 class RequirementEvidence(Entity):
@@ -253,6 +261,8 @@ class MatchEvaluation(SubjectEntity):
 
 class ActionItem(SubjectEntity):
     __tablename__ = "action_items"
+    identity: Mapped[str | None] = mapped_column(index=True)
+    details: Mapped[dict] = mapped_column(JSON, default=dict, server_default="{}")
     title: Mapped[str]
     status: Mapped[str] = mapped_column(default="pending")
     __table_args__ = (CheckConstraint(SUBJECT_CHECK),)
@@ -286,6 +296,10 @@ class IngestionRun(Entity):
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     status: Mapped[str]
     diagnostic_code: Mapped[str | None]
+    provider: Mapped[str | None]
+    source_hash: Mapped[str | None]
+    usage: Mapped[dict | None] = mapped_column(JSON)
+    diagnostics: Mapped[dict | None] = mapped_column(JSON)
     model: Mapped[str | None]
     extractor_version: Mapped[str | None]
     changed: Mapped[bool | None]

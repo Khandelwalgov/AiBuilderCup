@@ -1,4 +1,4 @@
-.PHONY: setup db migrate seed api web contracts check test-e2e preflight
+.PHONY: setup db migrate seed api web contracts check test-e2e preflight gemini-smoke extraction-smoke
 setup:
 	cd apps/api && uv sync --locked
 	cd apps/web && pnpm install --frozen-lockfile
@@ -23,3 +23,10 @@ test-e2e:
 
 preflight:
 	cd apps/api && uv run python -m opportunity_platform.operations.readiness
+
+# One bounded paid-model probe; does not fetch sources or publish anything.
+gemini-smoke:
+	cd apps/api && uv run python -m opportunity_platform.operations.gemini_smoke
+
+extraction-smoke:
+	cd apps/api && uv run python -m opportunity_platform.operations.extraction_smoke

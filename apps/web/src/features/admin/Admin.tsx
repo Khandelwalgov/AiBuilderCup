@@ -136,7 +136,7 @@ export function Admin() {
                 <strong>{run.status}</strong>
                 <span>{run.diagnostic_code || t.noDiagnostic}</span>
                 <small>
-                  {new Date(run.created_at).toLocaleString()} · {run.model}
+                  {new Date(run.created_at).toLocaleString()} · {run.provider} · {run.model}
                 </small>
               </div>
             ))}
@@ -208,6 +208,13 @@ function CandidateEditor({ id }: { id: string }) {
   const candidate = query.data!;
   return (
     <section className="panel candidate-editor">
+      <p>
+        {t.extractionProvider}: {candidate.extraction_provider ?? t.unknown} ·{' '}
+        {candidate.extraction_model ?? t.unknown} · {candidate.extractor_version ?? t.unknown}
+      </p>
+      <p>
+        {t.tokenUsage}: {JSON.stringify(candidate.extraction_usage ?? {})}
+      </p>
       <span className="eyebrow">
         {candidate.publication_state} · v{candidate.version}
       </span>

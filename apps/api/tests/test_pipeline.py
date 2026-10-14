@@ -30,6 +30,7 @@ from opportunity_platform.ingestion.adapters import (
     fetch,
 )
 from opportunity_platform.ingestion.gemini import SYSTEM, ExtractionFailure, extract
+from opportunity_platform.ingestion.providers import ExtractionResult
 from opportunity_platform.ingestion.schemas import (
     CandidateData,
     CandidateRequirement,
@@ -95,7 +96,7 @@ def pipeline(db, monkeypatch):
             {"http_status": 200},
         ),
     )
-    monkeypatch.setattr(ingestion, "extract", lambda pages, focus: candidate())
+    monkeypatch.setattr(ingestion, "extract", lambda pages, focus: ExtractionResult(candidate()))
     return actor, other
 
 
@@ -298,7 +299,7 @@ def test_missing_gemini_persists_snapshot_and_allows_retry(db, pipeline, monkeyp
     monkeypatch.setattr(ingestion, "extract", blocked)
     run = ingestion.ingest(db, "depwd-pre-matric", actor)
     assert run.status == "extraction_blocked" and run.snapshot_id is not None
-    monkeypatch.setattr(ingestion, "extract", lambda pages, focus: candidate())
+    monkeypatch.setattr(ingestion, "extract", lambda pages, focus: ExtractionResult(candidate()))
     assert ingestion.ingest(db, "depwd-pre-matric", actor).status == "candidate_created"
     assert db.scalar(select(func.count()).select_from(SourceSnapshot)) == 1
 
@@ -355,6 +356,7 @@ def test_prompt_injection_has_no_tools_or_automatic_publication(monkeypatch):
     reason="Opt-in official network capture; no Gemini call",
 )
 def test_live_official_source_capture(db, monkeypatch):
+    monkeypatch.setattr(settings(), "ai_extraction_provider", "gemini")
     actor = User(firebase_uid="synthetic-live-capture-test", is_admin=True)
     db.add(actor)
     db.commit()
@@ -516,7 +518,9 @@ def test_national_state_and_district_rules_share_the_authorized_profile(
             if fact_key == "residence_district":
                 data.district = "Dausa"
                 data.field_evidence.append(FieldCitation(field="district", citation=quote))
-        monkeypatch.setattr(ingestion, "extract", lambda pages, focus, data=data: data)
+        monkeypatch.setattr(
+            ingestion, "extract", lambda pages, focus, data=data: ExtractionResult(data)
+        )
         assert ingestion.ingest(db, key, actor).status == "candidate_created"
         opportunity = db.scalar(select(Opportunity).where(Opportunity.source_key == key))
         v = db.scalar(
@@ -601,3 +605,86 @@ def test_unexpected_extractor_failure_preserves_public_evidence(db, pipeline, mo
     run = ingestion.ingest(db, "depwd-pre-matric", actor)
     assert run.status == "extraction_failed" and run.diagnostic_code == "ingestion_internal_error"
     assert db.get(SourceSnapshot, run.snapshot_id) is not None
+
+
+def test_source_lock_rejects_same_schema_but_does_not_block_independent_schema(db, pipeline):
+    from sqlalchemy import text
+    from sqlalchemy.orm import Session
+
+    from opportunity_platform.core.errors import APIError
+
+    actor, _ = pipeline
+    key = ingestion.source_lock_key(db, "depwd-pre-matric")
+    assert db.scalar(text("SELECT pg_try_advisory_xact_lock(:key)"), {"key": key})
+    with Session(db.get_bind()) as concurrent:
+        with pytest.raises(APIError) as caught:
+            ingestion.ingest(concurrent, "depwd-pre-matric", actor)
+        assert caught.value.code == "source_busy"
+        concurrent.rollback()
+        concurrent.execute(text("SET LOCAL search_path TO pg_catalog"))
+        independent = ingestion.source_lock_key(concurrent, "depwd-pre-matric")
+        assert independent != key
+        assert concurrent.scalar(
+            text("SELECT pg_try_advisory_xact_lock(:key)"), {"key": independent}
+        )
+
+
+def test_same_snapshot_provider_identity_is_idempotent_and_publication_stays_reviewed(
+    db, pipeline, monkeypatch
+):
+    actor, _ = pipeline
+    first = ingestion.ingest(db, "depwd-pre-matric", actor)
+    first_version = version(db)
+    assert first.provider == "gemini" and first_version.extraction_provider == "gemini"
+    approve(db, actor, first_version)
+    monkeypatch.setattr(settings(), "ai_extraction_provider", "openai")
+    monkeypatch.setattr(
+        ingestion,
+        "extract",
+        lambda pages, focus: ExtractionResult(
+            candidate(), {"input_tokens": 10, "output_tokens": 20, "total_tokens": 30}
+        ),
+    )
+    second = ingestion.ingest(db, "depwd-pre-matric", actor)
+    assert second.status == "candidate_created" and second.provider == "openai"
+    assert second.source_hash == first.source_hash and second.snapshot_id == first.snapshot_id
+    assert second.usage["total_tokens"] == 30
+    assert ingestion.ingest(db, "depwd-pre-matric", actor).status == "unchanged"
+    monkeypatch.setattr(settings(), "ai_extraction_provider", "gemini")
+    assert ingestion.ingest(db, "depwd-pre-matric", actor).status == "unchanged"
+    versions = list(
+        db.scalars(
+            select(OpportunityVersion)
+            .where(OpportunityVersion.extraction.is_not(None))
+            .order_by(OpportunityVersion.version)
+        )
+    )
+    assert len(versions) == 2
+    assert versions[0].publication_state == "published"
+    assert versions[1].publication_state == "draft"
+    assert versions[1].extraction_usage["total_tokens"] == 30
+
+
+def test_failed_provider_output_is_privileged_diagnostic_not_publishable_candidate(
+    db, pipeline, monkeypatch
+):
+    from opportunity_platform.ingestion.openai import ProviderFailure
+
+    actor, _ = pipeline
+    monkeypatch.setattr(settings(), "ai_extraction_provider", "openai")
+
+    def fail(pages, focus):
+        raise ProviderFailure(
+            "openai_schema_invalid",
+            stage="validate_response",
+            usage={"total_tokens": 30},
+            output={"unvalidated": True},
+            issues=[{"path": ["requirements", 0], "type": "value_error"}],
+        )
+
+    monkeypatch.setattr(ingestion, "extract", fail)
+    run = ingestion.ingest(db, "depwd-pre-matric", actor)
+    assert run.status == "extraction_failed" and run.provider == "openai"
+    assert run.usage["total_tokens"] == 30 and run.snapshot_id
+    assert run.diagnostics["unvalidated_candidate"] == {"unvalidated": True}
+    assert version(db) is None

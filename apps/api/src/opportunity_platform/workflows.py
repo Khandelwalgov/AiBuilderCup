@@ -115,6 +115,11 @@ class RunView(BaseModel):
     status: str
     diagnostic_code: str | None
     model: str | None
+    provider: str | None
+    source_hash: str | None
+    extractor_version: str | None
+    usage: dict | None
+    diagnostics: dict | None
     changed: bool | None
     created_at: str
     finished_at: str | None
