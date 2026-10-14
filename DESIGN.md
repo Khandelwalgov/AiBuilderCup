@@ -9,3 +9,5 @@ Dashboard emphasizes the next useful action. Discovery prioritizes search and re
 Admin review leads with structured corrections, policy categories, application contexts and individual document citations. Full JSON remains an optional advanced editor. Source evidence, review history, flag acknowledgment and explicit completeness confirmation remain available. No design change grants publication authority.
 
 Visual QA: `.live-validation/ui/` contains actual local public/protected empty-state captures at 1440/1024/390/320px in EN/HI. Dashboard desktop and Hindi 320px discovery were visually inspected; further authenticated populated-state review remains required.
+
+Final QA adds populated profile/admin/eligibility screenshots at explicit 1440px, progressive topic-based questions, actual-account dashboard counts, scoped action progress and keyboard focus containment/restoration in the mobile menu. Captures scroll to top before full-page screenshots. Original clauses remain in their authoritative source language.

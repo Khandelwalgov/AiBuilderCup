@@ -208,9 +208,11 @@ export function App() {
             </button>
             <span className="breadcrumb">
               {brand} <span>/</span>{' '}
-              {location.pathname.startsWith('/opportunities/')
-                ? t.discover
-                : navigation.find((n) => location.pathname.startsWith(n.to))?.label || t.settings}
+              {location.pathname.startsWith('/admin')
+                ? t.adminReview
+                : location.pathname.startsWith('/opportunities/')
+                  ? t.discover
+                  : navigation.find((n) => location.pathname.startsWith(n.to))?.label || t.settings}
             </span>
             <div className="top-actions">
               <label className="language">

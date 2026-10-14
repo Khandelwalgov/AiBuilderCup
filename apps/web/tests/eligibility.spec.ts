@@ -62,6 +62,7 @@ const opportunity: components['schemas']['OpportunityView'] = {
 test('profile → published opportunity → cited eligibility results (mocked auth/API contract)', async ({
   page,
 }) => {
+  await page.setViewportSize({ width: 1440, height: 960 });
   let profile: components['schemas']['ProfileView'] | null = null;
   await page.route('**/v1/profile/me', async (route) => {
     if (route.request().method() === 'PUT') {
@@ -145,7 +146,11 @@ test('profile → published opportunity → cited eligibility results (mocked au
   await expect(
     page.getByText('Profile saved. You can now check a published opportunity.'),
   ).toBeVisible();
-  await page.screenshot({ path: '/tmp/opportunity-profile.png', fullPage: true });
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.screenshot({
+    path: '/Users/govind/Projects/AIBuildersCup/.live-validation/ui/profile-populated-contract-1440.png',
+    fullPage: true,
+  });
   await page.goto(`/opportunities/${id}`);
   await page.getByRole('button', { name: 'Check my eligibility', exact: true }).click();
   await expect(page.locator('.requirement-result.satisfied')).toContainText(
@@ -158,7 +163,11 @@ test('profile → published opportunity → cited eligibility results (mocked au
     'href',
     citation.source_url,
   );
-  await page.screenshot({ path: '/tmp/opportunity-eligibility.png', fullPage: true });
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.screenshot({
+    path: '/Users/govind/Projects/AIBuildersCup/.live-validation/ui/eligibility-populated-contract-1440.png',
+    fullPage: true,
+  });
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
@@ -179,6 +188,7 @@ test('normal catalogue keeps synthetic fixtures out and profile requires authent
 test('admin inspects evidence and publishes through the review API (mocked contract)', async ({
   page,
 }) => {
+  await page.setViewportSize({ width: 1440, height: 960 });
   const candidate: components['schemas']['CandidateData'] = {
     title: opportunity.title,
     summary: opportunity.summary,
@@ -241,7 +251,11 @@ test('admin inspects evidence and publishes through the review API (mocked contr
   const checkboxes = page.locator('.candidate-editor input[type=checkbox]');
   await checkboxes.nth(0).check();
   await checkboxes.nth(1).check();
-  await page.screenshot({ path: '/tmp/opportunity-admin.png', fullPage: true });
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.screenshot({
+    path: '/Users/govind/Projects/AIBuildersCup/.live-validation/ui/admin-populated-contract-1440.png',
+    fullPage: true,
+  });
   await page.getByRole('button', { name: 'Approve & publish', exact: true }).click();
   await expect(page.locator('.candidate-editor [role=status]')).toContainText('published');
 });

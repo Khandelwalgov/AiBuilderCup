@@ -61,6 +61,11 @@ class CandidateData(BaseModel):
 
 
 class ExtractedRequirement(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    kind: Literal[
+        "eligibility", "document", "procedure", "renewal", "selection", "interpretation"
+    ] = "eligibility"
+    application_context: Literal["all", "fresh", "renewal"] = "all"
     description: str
     combine: Literal["all", "any"]
     conditions: list[Condition] = Field(min_length=1, max_length=30)
@@ -77,6 +82,8 @@ class Extraction(CandidateData):
         data["requirements"] = [
             CandidateRequirement(
                 description=req.description,
+                kind=req.kind,
+                application_context=req.application_context,
                 rule=Rule(
                     op=req.combine,
                     children=[Rule(op="condition", condition=c) for c in req.conditions],

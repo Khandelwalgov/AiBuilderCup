@@ -51,3 +51,23 @@ def test_legacy_document_draft_readable_but_not_publishable(db, pipeline):  # no
     )
     with pytest.raises(ValueError):
         validate_evidence(data, [{"page": 1, "source_url": URL, "text": TEXT}])
+
+
+def test_shallow_extraction_preserves_policy_category_and_application_context():
+    from opportunity_platform.ingestion.schemas import Extraction
+
+    data = candidate().model_dump(mode="json", exclude={"requirements"})
+    data["requirements"] = [
+        {
+            "description": "Fictional renewal-only procedure",
+            "kind": "procedure",
+            "application_context": "renewal",
+            "combine": "all",
+            "conditions": [{"op": "unknown"}],
+            "subject_context": "person",
+            "evidence": candidate().requirements[0].evidence.model_dump(mode="json"),
+        }
+    ]
+    result = Extraction.model_validate(data).candidate()
+    assert result.requirements[0].kind == "procedure"
+    assert result.requirements[0].application_context == "renewal"

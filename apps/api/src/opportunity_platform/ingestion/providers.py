@@ -28,7 +28,7 @@ class GeminiProvider:
 def identity() -> tuple[str, str, str]:
     config = settings()
     if config.ai_extraction_provider == "openai":
-        return "openai", config.openai_model, "pre-matric-openai-v1"
+        return "openai", config.openai_model, "policy-candidate-openai-v2"
     return "gemini", config.gemini_model, gemini.EXTRACTOR_VERSION
 
 

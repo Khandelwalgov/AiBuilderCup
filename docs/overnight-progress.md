@@ -27,3 +27,20 @@ Local bilingual cited assistant works from authorized current evaluations. Optio
 Docker build `opportunity-api:nightfall` succeeded with locked dependencies and normal TLS. No TLS bypass, new dependency, cloud provisioning or deployment. Populated household/business and graph browser contracts passed (2 tests, fictional mocked API); graph desktop/Hindi narrow mobile and family screenshots visually inspected. Screenshot capture refined to scroll to top for fixed navigation.
 
 Additional safety: fresh/renewal context now resolves per opportunity; mismatched contexts are not_applicable and unspecified contexts stay unknown. Conservative school facts are typed. Latest backend checkpoint: 95 passed/1 skipped; frontend capability-schema typing issue found and fixed by adding an explicit response model, after which lint/types/build passed. Final checks still pending after last hardening changes.
+
+## Final checkpoint — 15 October 2026
+
+| Milestone | Final status | Evidence / remaining boundary |
+|---|---|---|
+| A | COMPLETE for corrective implementation | 17 Pre-Matric groups/nine document citations; audited corrections, original preserved; human review/publication pending |
+| B | PARTIAL | Cohesive redesign, progressive questions, structured admin, 63 local screenshots and keyboard checks; genuine authenticated populated acceptance pending |
+| C | PARTIAL | Household/primary/dependent editing and guardian revocation implemented/tested; scheme-specific household logic stays unknown, adult invitations unavailable |
+| D | PARTIAL | Business management/roles/context implemented; real reviewed business coverage and actual Firebase acceptance absent |
+| E | COMPLETE for minimal local slice | Shared actions, current-version links, progress, graph/checklist and non-saving age simulation tested; real multi-opportunity acceptance needs publication |
+| F | COMPLETE for draft preparation | Separate Post-Matric adapter/manual-curation draft; no new fetch/model call, no publication |
+| G | PARTIAL | Typed subject-aware engine, school facts, per-opportunity fresh/renewal, affected fact refresh; unsupported interpretations remain unknown |
+| H | PARTIAL / live AI BLOCKED | Local EN/HI cited explanations and Gemini intent integration tested with mocks; no successful live Gemini acceptance or unrestricted generative assistant |
+| I | PARTIAL / deployment BLOCKED | Locked image builds, native/container smoke and plan-first procedure pass; no deployment/cost authorization |
+| J | PARTIAL | 99 backend tests pass/one optional live test skipped; 14 browser checks pass plus five focused post-refinement checks; real authenticated/hosted acceptance pending |
+
+Final extractor audit fixed loss of category/application context during shallow conversion and added a regression. Future schema versions are `policy-candidate-v3` / `policy-candidate-openai-v2`; historical metadata unchanged. No draft regenerated and zero new live AI calls. The final image is refreshed after this fix. API/Vite restored for local inspection; smoke containers removed. Full report: `docs/overnight-final-report.md`.
