@@ -5,8 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Cockpit, Locale } from '../src/app/App';
 import type { Language } from '../src/i18n/strings';
-import '../src/styles.css';
-import '../src/finale.css';
+import '../src/styles/index.css';
 const cache = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 function Fixture() {
   const [language, setLanguage] = useState<Language>('en');

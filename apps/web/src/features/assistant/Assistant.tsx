@@ -1,10 +1,34 @@
 import { useLanguage } from '../../app/App';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { ContextLink as Link, useSubject } from '../../app/subject-context';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { MessageCircle, ArrowUpRight } from 'lucide-react';
 import { api, fail } from '../../lib/api/client';
-export function Assistant({ evaluationId }: { evaluationId: string }) {
+export function Assistant({
+  evaluationId,
+  opportunityId,
+}: {
+  evaluationId: string;
+  opportunityId: string;
+}) {
+  const context = useSubject();
+  const language = useLanguage();
+  return (
+    <AssessmentAssistant
+      key={`${evaluationId}:${opportunityId}:${context.key}:${language}`}
+      evaluationId={evaluationId}
+      opportunityId={opportunityId}
+    />
+  );
+}
+function AssessmentAssistant({
+  evaluationId,
+  opportunityId,
+}: {
+  evaluationId: string;
+  opportunityId: string;
+}) {
+  const context = useSubject();
   const hi = useLanguage() === 'hi';
   const [question, setQuestion] = useState('');
   const [useAi, setUseAi] = useState(false);
@@ -109,7 +133,7 @@ export function Assistant({ evaluationId }: { evaluationId: string }) {
         <div aria-live="polite" className="assistant-answer">
           <span className="eyebrow">
             {query.data.model
-              ? `${query.data.model} · intent only`
+              ? `${query.data.model} · ${hi ? 'केवल प्रश्न का आशय' : 'intent only'}`
               : hi
                 ? 'स्थानीय, स्रोत-आधारित व्याख्या'
                 : 'Local cited explanation · no AI call'}
@@ -119,9 +143,14 @@ export function Assistant({ evaluationId }: { evaluationId: string }) {
             <details key={item.requirement_id} open>
               <summary>{item.condition}</summary>
               <p>{item.explanation}</p>
-              <a className="field-followup" href={`#requirement-${item.requirement_id}`}>
+              <Link
+                className="field-followup"
+                to={context.href(
+                  `/opportunities/${opportunityId}#source-requirement-${item.requirement_id}`,
+                )}
+              >
                 {hi ? 'आकलन में शर्त देखें' : 'Locate condition in assessment'}
-              </a>
+              </Link>
               <Link className="field-followup" to="/plan">
                 {hi ? 'संबंधित कदम देखें' : 'See related readiness actions'}
               </Link>

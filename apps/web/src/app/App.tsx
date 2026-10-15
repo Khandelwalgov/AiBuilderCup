@@ -1,33 +1,32 @@
+import { DirtyFormsProvider, useDiscardGuard } from './dirty-forms';
+import { ContextLink as Link } from './subject-context';
+import { ContextNavLink as NavLink, SubjectProvider, useSubject } from './subject-context';
 import { Landing } from '../components/Atlas';
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import { Workspaces, useWorkspaces } from '../features/workspaces/Workspaces';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Workspaces } from '../features/workspaces/Workspaces';
 import { Plan } from '../features/workspaces/Plan';
 import { Profile } from '../features/profiles/Profile';
 import { Admin } from '../features/admin/Admin';
-import { useQueryClient, useQuery } from '@tanstack/react-query';
-import { onAuthStateChanged, type User } from 'firebase/auth';
+import { useQuery } from '@tanstack/react-query';
+import { metadataFor, routeMetadata, routeTitle } from './routes';
+import { useFirebaseSession, type SessionState } from './session';
 import {
   ArrowDownLeft,
   ArrowRight,
   Blocks,
-  BriefcaseBusiness,
   Compass,
   Globe2,
-  House,
-  Layers3,
   Leaf,
   Menu,
   Settings2,
   ShieldCheck,
-  Sparkles,
   UserRound,
   UsersRound,
   X,
 } from 'lucide-react';
 import { strings, type Language } from '../i18n/strings';
-import { auth, authConfigured, login, logout } from './auth';
-import { authErrorKey } from './auth-errors';
+import { authConfigured } from './auth';
 import { api, fail } from '../lib/api/client';
 import { Discover, Detail } from '../features/opportunities/Discover';
 export const Locale = createContext<Language>('en');
@@ -50,13 +49,15 @@ export function useFacets(development = false) {
   });
 }
 export function App() {
-  const cache = useQueryClient();
+  const session = useFirebaseSession();
+  return <ApplicationFrame session={session} />;
+}
+export function ApplicationFrame({ session }: { session: SessionState }) {
+  const navigate = useNavigate();
+  const { user, ready, busy, errorKey, signIn, signOut } = session;
   const [language, setLanguage] = useState<Language>(() =>
     localStorage.getItem('language') === 'hi' ? 'hi' : 'en',
   );
-  const [user, setUser] = useState<User | null>(null);
-  const previousUid = useRef<string | null>(null);
-  const [authError, setAuthError] = useState('');
   const [menu, setMenu] = useState(false);
   const location = useLocation();
   const t = strings[language];
@@ -65,20 +66,6 @@ export function App() {
     localStorage.setItem('language', language);
     document.title = `${brand} · Opportunity Intelligence`;
   }, [language]);
-  useEffect(
-    () =>
-      auth
-        ? onAuthStateChanged(auth, (next) => {
-            const nextUid = next?.uid ?? null;
-            // The initial signed-out callback must not cancel active public queries.
-            // Actual account changes clear private cache and remount workspace state.
-            if (previousUid.current !== nextUid) cache.clear();
-            previousUid.current = nextUid;
-            setUser(next);
-          })
-        : undefined,
-    [cache],
-  );
   const accountQuery = useQuery({
     queryKey: ['account', user?.uid],
     enabled: !!user,
@@ -115,189 +102,243 @@ export function App() {
     document.addEventListener('keydown', close);
     return () => document.removeEventListener('keydown', close);
   }, [menu]);
-  async function signIn() {
-    setAuthError('');
-    try {
-      await login();
-    } catch (error) {
-      setAuthError(t[authErrorKey(error)]);
-    }
-  }
-  const navigation = [
-    { to: '/dashboard', label: t.dashboard, icon: House },
-    { to: '/discover', label: t.discover, icon: Compass },
-    { to: '/profile', label: t.profile, icon: UserRound },
-    { to: '/family', label: t.family, icon: UsersRound },
-    { to: '/businesses', label: t.businesses, icon: BriefcaseBusiness },
-    { to: '/plan', label: language === 'hi' ? 'मेरी कार्ययोजना' : 'Unlock plan', icon: Layers3 },
-  ];
-  if (accountQuery.data?.is_admin)
-    navigation.push({ to: '/admin', label: t.adminReview, icon: ShieldCheck });
+  const meta = metadataFor(location.pathname);
+  const hi = language === 'hi';
+  const navigation = routeMetadata
+    .filter(
+      (r) =>
+        'icon' in r && r.id !== 'settings' && (r.access !== 'admin' || accountQuery.data?.is_admin),
+    )
+    .map((r) => ({
+      to: r.path,
+      label: routeTitle(r, t, hi, !!user),
+      icon: 'icon' in r ? r.icon : Compass,
+      id: r.id,
+    }));
+  useEffect(() => {
+    document.title = `${routeTitle(meta, t, hi, !!user)} · ${brand}`;
+  }, [meta, t, hi, user]);
+  if (!ready)
+    return (
+      <Locale.Provider value={language}>
+        <div className="auth-loading" role="status">
+          <span className="loading-ring" />
+          {hi ? 'सुरक्षित सत्र जाँचा जा रहा है…' : 'Restoring your secure session…'}
+        </div>
+      </Locale.Provider>
+    );
   return (
     <Locale.Provider value={language}>
-      <a className="skip" href="#main">
-        {t.accessibility}
-      </a>
-      <div className="layout">
-        <aside id="primary-navigation" className={`sidebar ${menu ? 'open' : ''}`}>
-          <Link to="/" className="brand">
-            <span className="brand-icon">
-              <ArrowDownLeft size={22} />
-            </span>
-            {brand}
-            <span className="brand-dot">.</span>
-          </Link>
-          <button
-            className="mobile-close icon-button"
-            onClick={() => setMenu(false)}
-            aria-label="Close navigation"
+      <DirtyFormsProvider key={user?.uid ?? 'guest'} hi={hi}>
+        <SubjectProvider key={user?.uid ?? 'guest'} enabled={!!user} hi={hi}>
+          <a className="skip" href="#main">
+            {t.accessibility}
+          </a>
+          <div
+            className={`layout ${user ? 'app-site' : 'public-site'} ${meta?.access === 'admin' ? 'admin-console' : ''} ${menu ? 'menu-open' : ''}`}
           >
-            <X />
-          </button>
-          <p className="nav-caption">{t.discoverNav}</p>
-          <nav aria-label="Main navigation">
-            {navigation.map(({ to, label, icon: Icon }, i) => (
-              <div key={to}>
-                {i === 2 && <p className="nav-caption workspace-caption">{t.workspaceNav}</p>}
-                <NavLink
-                  to={to}
-                  onClick={() => {
-                    if (menu) {
-                      setMenu(false);
-                      document.getElementById('main')?.focus();
-                    }
-                  }}
+            {(user || menu) && (
+              <aside id="primary-navigation" className={`sidebar ${menu ? 'open' : ''}`}>
+                <Logo />
+                <button
+                  className="mobile-close icon-button"
+                  onClick={() => setMenu(false)}
+                  aria-label="Close navigation"
                 >
-                  <Icon size={18} />
-                  <span>{label}</span>
-                  {to === '/discover' && <span className="nav-dot" />}
-                </NavLink>
-              </div>
-            ))}
-          </nav>
-          <div className="sidebar-bottom">
-            <div className="sidebar-note">
-              <Leaf size={22} />
-              <p>{t.footer}</p>
-              <span>INDIA FIRST · EVIDENCE FIRST</span>
-            </div>
-            <NavLink className="settings-link" to="/settings">
-              <Settings2 size={18} />
-              {t.settings}
-            </NavLink>
-            <div className="guest">
-              <span className="avatar">
-                <UserRound size={18} />
-              </span>
-              <div>
-                <strong>{user?.displayName || t.guest}</strong>
-                <small>{t.foundation}</small>
-              </div>
+                  <X />
+                </button>
+                <p className="nav-caption">{t.discoverNav}</p>
+                <nav aria-label="Main navigation">
+                  {navigation.map(({ to, label, icon: Icon, id }, i) => (
+                    <div key={to}>
+                      {i === 2 && <p className="nav-caption workspace-caption">{t.workspaceNav}</p>}
+                      <NavLink
+                        to={to}
+                        end={to === '/'}
+                        className={meta?.nav === id ? 'active' : ''}
+                        onClick={() => {
+                          if (menu) {
+                            setMenu(false);
+                            document.getElementById('main')?.focus();
+                          }
+                        }}
+                      >
+                        <Icon size={18} />
+                        <span>{label}</span>
+                        {to === '/discover' && <span className="nav-dot" />}
+                      </NavLink>
+                    </div>
+                  ))}
+                </nav>
+                <div className="sidebar-bottom">
+                  <div className="sidebar-note">
+                    <Leaf size={22} />
+                    <p>{t.footer}</p>
+                    <span>INDIA FIRST · EVIDENCE FIRST</span>
+                  </div>
+                  <NavLink className="settings-link" to="/settings">
+                    <Settings2 size={18} />
+                    {t.settings}
+                  </NavLink>
+                  <div className="guest">
+                    <span className="avatar">
+                      <UserRound size={18} />
+                    </span>
+                    <div>
+                      <strong>{user?.displayName || t.guest}</strong>
+                      <small>{t.foundation}</small>
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            )}
+            <div className="workspace">
+              <header className="topbar">
+                {!user && !menu && <Logo />}
+                {!user && (
+                  <nav
+                    className="public-links"
+                    aria-label={hi ? 'सार्वजनिक नेविगेशन' : 'Public navigation'}
+                  >
+                    <NavLink to="/" end>
+                      {hi ? 'होम' : 'Home'}
+                    </NavLink>
+                    <NavLink to="/discover">{t.discover}</NavLink>
+                    <Link to="/#how-it-works">{hi ? 'कैसे काम करता है' : 'How it works'}</Link>
+                  </nav>
+                )}
+                <button
+                  className="mobile-menu icon-button"
+                  aria-label="Open navigation"
+                  aria-expanded={menu}
+                  aria-controls="primary-navigation"
+                  onClick={() => setMenu(!menu)}
+                >
+                  <Menu />
+                </button>
+                <span className="breadcrumb">
+                  {brand} <span>/</span>{' '}
+                  {'parent' in (meta ?? {}) ? (
+                    <>
+                      <Link
+                        to={
+                          routeMetadata.find(
+                            (r) => r.id === ('parent' in meta! ? meta!.parent : ''),
+                          )?.path ?? '/'
+                        }
+                      >
+                        {routeTitle(
+                          routeMetadata.find(
+                            (r) => r.id === ('parent' in meta! ? meta!.parent : ''),
+                          ),
+                          t,
+                          hi,
+                          !!user,
+                        )}
+                      </Link>
+                      <span>/</span>
+                    </>
+                  ) : null}
+                  <strong>{routeTitle(meta, t, hi, !!user)}</strong>
+                </span>
+                <div className="top-actions">
+                  {user && <SubjectSwitcher />}
+                  <label className="language">
+                    <Globe2 size={16} />
+                    <select
+                      aria-label={t.language}
+                      value={language}
+                      onChange={(e) => setLanguage(e.target.value as Language)}
+                    >
+                      <option value="en">English</option>
+                      <option value="hi">हिन्दी</option>
+                    </select>
+                  </label>
+                  {user ? (
+                    <AccountMenu user={user} busy={busy} signOut={signOut} />
+                  ) : (
+                    <button
+                      className="button small"
+                      disabled={busy}
+                      onClick={() => (authConfigured ? void signIn() : navigate('/settings'))}
+                    >
+                      {t.signIn}
+                      <ArrowRight size={14} />
+                    </button>
+                  )}
+                </div>
+              </header>
+              {errorKey && (
+                <div role="alert" className="notice">
+                  {t[errorKey]}
+                </div>
+              )}
+              <main key={user?.uid || 'public'} id="main" tabIndex={-1}>
+                <Routes>
+                  {routeMetadata.map((route) => (
+                    <Route
+                      key={route.id}
+                      path={route.path}
+                      element={
+                        <RouteAccess
+                          access={route.access}
+                          title={routeTitle(route, t, hi, !!user)}
+                          signedIn={!!user}
+                        >
+                          {
+                            {
+                              home: user ? <Cockpit /> : <Landing />,
+                              discover: <Discover />,
+                              detail: <Detail />,
+                              profile: <Profile />,
+                              dependent: <Profile />,
+                              family: <Workspaces kind="household" />,
+                              businesses: <Workspaces kind="business" />,
+                              plan: <Plan />,
+                              admin: <Admin />,
+                              candidate: <Admin />,
+                              settings: (
+                                <Settings
+                                  user={user}
+                                  language={language}
+                                  setLanguage={setLanguage}
+                                  signIn={signIn}
+                                />
+                              ),
+                            }[route.id]
+                          }
+                        </RouteAccess>
+                      }
+                    />
+                  ))}
+                  <Route
+                    path="/dashboard"
+                    element={<Navigate to={`/${location.search}`} replace />}
+                  />
+                  <Route
+                    path="/my-opportunities"
+                    element={<Navigate to={`/plan${location.search}`} replace />}
+                  />
+                  <Route path="*" element={<Future />} />
+                </Routes>
+              </main>
+              <footer className="page-footer">
+                <span>
+                  {brand} · {t.foundation}
+                </span>
+                <span>
+                  <ShieldCheck size={13} /> {t.coverage}
+                </span>
+              </footer>
             </div>
           </div>
-        </aside>
-        <div className="workspace">
-          <header className="topbar">
-            <button
-              className="mobile-menu icon-button"
-              aria-label="Open navigation"
-              aria-expanded={menu}
-              aria-controls="primary-navigation"
-              onClick={() => setMenu(!menu)}
-            >
-              <Menu />
-            </button>
-            <span className="breadcrumb">
-              {brand} <span>/</span>{' '}
-              {location.pathname.startsWith('/admin')
-                ? t.adminReview
-                : location.pathname.startsWith('/opportunities/')
-                  ? t.discover
-                  : navigation.find((n) => location.pathname.startsWith(n.to))?.label || t.settings}
-            </span>
-            <div className="top-actions">
-              {user && <SubjectSwitcher />}
-              <label className="language">
-                <Globe2 size={16} />
-                <select
-                  aria-label={t.language}
-                  value={language}
-                  onChange={(e) => setLanguage(e.target.value as Language)}
-                >
-                  <option value="en">English</option>
-                  <option value="hi">हिन्दी</option>
-                </select>
-              </label>
-              {user ? (
-                <details className="account-menu">
-                  <summary>{user.displayName || t.account}</summary>
-                  <div>
-                    <Link to="/settings">{t.account}</Link>
-                    <button onClick={() => void logout()}>{t.signOut}</button>
-                  </div>
-                </details>
-              ) : (
-                <button
-                  className="button small"
-                  onClick={() =>
-                    authConfigured ? void signIn() : window.location.assign('/settings')
-                  }
-                >
-                  {t.signIn}
-                  <ArrowRight size={14} />
-                </button>
-              )}
-            </div>
-          </header>
-          {authError && (
-            <div role="alert" className="notice">
-              {authError}
-            </div>
-          )}
-          <main key={user?.uid || 'public'} id="main" tabIndex={-1}>
-            <Routes>
-              <Route path="/" element={user ? <Overview authenticated /> : <Landing />} />
-              <Route path="/discover" element={<Discover />} />
-              <Route path="/opportunities/:id" element={<Detail />} />
-              <Route path="/dashboard" element={<Overview authenticated={!!user} />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/people/:personId/edit" element={<Profile />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/family" element={<Workspaces kind="household" />} />
-              <Route path="/businesses" element={<Workspaces kind="business" />} />
-              <Route path="/plan" element={<Plan />} />
-              <Route path="/my-opportunities" element={<Navigate to="/plan" replace />} />
-              <Route
-                path="/settings"
-                element={
-                  <Settings
-                    user={user}
-                    language={language}
-                    setLanguage={setLanguage}
-                    signIn={signIn}
-                  />
-                }
-              />
-              <Route path="*" element={<Future />} />
-            </Routes>
-          </main>
-          <footer className="page-footer">
-            <span>
-              {brand} · {t.foundation}
-            </span>
-            <span>
-              <ShieldCheck size={13} /> {t.coverage}
-            </span>
-          </footer>
-        </div>
-      </div>
+        </SubjectProvider>
+      </DirtyFormsProvider>
     </Locale.Provider>
   );
 }
-function Overview({ authenticated }: { authenticated: boolean }) {
-  return authenticated ? <Cockpit /> : <Landing />;
-}
 export function Cockpit() {
+  const context = useSubject();
   const authenticated = true;
   const t = useStrings();
   const f = useFacets();
@@ -312,12 +353,12 @@ export function Cockpit() {
   });
   const hi = useLanguage() === 'hi';
   const plan = useQuery({
-    queryKey: ['plan', { kind: 'person', id: null }],
-    enabled: !!overview.data?.profile_name,
+    queryKey: ['plan', context.subject],
+    enabled: !!overview.data?.profile_name && context.available && !context.pending,
     retry: false,
     refetchOnWindowFocus: false,
     queryFn: async () => {
-      const { data, error } = await api.POST('/v1/plan', { body: { subject: { kind: 'person' } } });
+      const { data, error } = await api.POST('/v1/plan', { body: { subject: context.subject } });
       return data ?? fail(error);
     },
   });
@@ -347,14 +388,19 @@ export function Cockpit() {
                   ? 'अपना न्यूनतम प्रोफ़ाइल बनाएं'
                   : 'Create your minimal profile'}
             </h2>
-            <p>
-              {overview.data.personal_pending_actions}{' '}
-              {hi ? 'व्यक्तिगत कदम' : 'personal pending actions'} ·{' '}
-              {overview.data.assessed_current_opportunities}{' '}
-              {hi ? 'वर्तमान अवसर जाँचे गए' : 'current opportunities assessed'} ·{' '}
-              {overview.data.households} {hi ? 'परिवार' : 'households'} · {overview.data.businesses}{' '}
-              {hi ? 'व्यवसाय' : 'businesses'}
-            </p>
+            {(overview.data.personal_pending_actions > 0 ||
+              overview.data.assessed_current_opportunities > 0 ||
+              overview.data.households > 0 ||
+              overview.data.businesses > 0) && (
+              <p>
+                {overview.data.personal_pending_actions}{' '}
+                {hi ? 'व्यक्तिगत कदम' : 'personal pending actions'} ·{' '}
+                {overview.data.assessed_current_opportunities}{' '}
+                {hi ? 'वर्तमान अवसर जाँचे गए' : 'current opportunities assessed'} ·{' '}
+                {overview.data.households} {hi ? 'परिवार' : 'households'} ·{' '}
+                {overview.data.businesses} {hi ? 'व्यवसाय' : 'businesses'}
+              </p>
+            )}
           </div>
           {overview.data.review_candidates != null && (
             <Link className="button secondary" to="/admin">
@@ -367,7 +413,9 @@ export function Cockpit() {
       {plan.isError && <p role="alert">{plan.error.message}</p>}
       <div className="dashboard-actions">
         <Link className="dashboard-primary" to={overview.data?.profile_name ? '/plan' : '/profile'}>
-          <span className="eyebrow">{hi ? 'अगला उपयोगी कदम' : 'YOUR NEXT USEFUL STEP'}</span>
+          <span className="eyebrow">
+            {context.label} · {hi ? 'अगला उपयोगी कदम' : 'YOUR NEXT USEFUL STEP'}
+          </span>
           <h2>
             {nextAction?.title ??
               (overview.data?.profile_name
@@ -423,18 +471,20 @@ export function Cockpit() {
           </Link>
         </div>
       </div>
-      <div className="stats">
-        {[
-          [t.publishedCount, f.data?.total],
-          [t.verified, f.data?.verified],
-          [t.sources, f.data?.official_sources],
-        ].map(([label, value]) => (
-          <div className="stat" key={label}>
-            <strong>{value ?? '—'}</strong>
-            <span>{label}</span>
-          </div>
-        ))}
-      </div>
+      {(f.data?.total ?? 0) > 0 && (
+        <div className="stats">
+          {[
+            [t.publishedCount, f.data?.total],
+            [t.verified, f.data?.verified],
+            [t.sources, f.data?.official_sources],
+          ].map(([label, value]) => (
+            <div className="stat" key={label}>
+              <strong>{value ?? '—'}</strong>
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
+      )}
       <section className="panel">
         <Compass className="section-icon" />
         <h2>{t.coverage}</h2>
@@ -456,8 +506,12 @@ function Future() {
           <Blocks size={30} />
         </span>
         <span className="eyebrow">{t.foundation}</span>
-        <h1>{t.future}</h1>
-        <p>{t.futureText}</p>
+        <h1>{useLanguage() === 'hi' ? 'पृष्ठ नहीं मिला' : 'Page not found'}</h1>
+        <p>
+          {useLanguage() === 'hi'
+            ? 'यह पता उपलब्ध नहीं है।'
+            : 'This address does not exist. Return home or explore published opportunities.'}
+        </p>
         <Link className="button" to="/discover">
           {t.browse}
           <ArrowRight size={16} />
@@ -472,7 +526,7 @@ function Settings({
   setLanguage,
   signIn,
 }: {
-  user: User | null;
+  user: SessionState['user'];
   language: Language;
   setLanguage: (v: Language) => void;
   signIn: () => Promise<void>;
@@ -494,14 +548,20 @@ function Settings({
       </div>
       <section className="panel">
         <ShieldCheck className="section-icon" />
-        <h2>{user ? t.signedIn : t.signIn}</h2>
+        <h2>{user ? t.account : t.signIn}</h2>
         {!authConfigured ? (
           <p>{t.firebaseMissing}</p>
         ) : user ? (
           <>
             <p>{user.displayName}</p>
             <p role="status">
-              {account.isError ? account.error.message : account.data ? t.signedIn : t.loading}
+              {account.isError
+                ? account.error.message
+                : account.data
+                  ? language === 'hi'
+                    ? 'बैकएंड ने आपकी पहचान की पुष्टि की है।'
+                    : 'Your identity is confirmed by the backend.'
+                  : t.loading}
             </p>
           </>
         ) : (
@@ -525,42 +585,139 @@ function Settings({
         </select>
       </section>
       <section className="panel">
-        <Sparkles className="section-icon" />
-        <h2>{t.coverage}</h2>
-        <p>{t.coverageText}</p>
+        <ShieldCheck className="section-icon" />
+        <h2>{language === 'hi' ? 'आपके डेटा का नियंत्रण' : 'Your data, your control'}</h2>
+        <p>
+          {language === 'hi'
+            ? 'इस प्रोटोटाइप में केवल काल्पनिक जानकारी प्रयोग करें। वयस्कों का निमंत्रण, दस्तावेज़ सत्यापन और खाता हटाने की सुविधा अभी उपलब्ध नहीं है।'
+            : 'Use fictional information in this prototype. Adult invitations, document verification and account deletion are not yet available.'}
+        </p>
       </section>
     </div>
   );
 }
 
 function SubjectSwitcher() {
-  const workspaces = useWorkspaces();
+  const context = useSubject();
   const hi = useLanguage() === 'hi';
   return (
     <label className="shell-context">
       <span>{hi ? 'संदर्भ' : 'Context'}</span>
       <select
         aria-label={hi ? 'कार्य संदर्भ चुनें' : 'Switch subject context'}
-        value=""
-        onChange={(e) => {
-          if (e.target.value) window.location.assign(e.target.value);
-        }}
+        value={context.key}
+        onChange={(e) => context.select(e.target.value)}
+        disabled={context.pending}
       >
-        <option value="">{hi ? 'कार्य संदर्भ चुनें' : 'Switch workspace'}</option>
-        <option value="/plan">{hi ? 'मेरा प्रोफ़ाइल' : 'My personal profile'}</option>
-        {workspaces.data?.flatMap((w) => [
-          <option key={w.id} value={`/plan?kind=${w.kind}&id=${w.id}`}>
-            {w.name}
-          </option>,
-          ...w.members
-            .filter((m) => m.id)
-            .map((m) => (
-              <option key={String(m.id)} value={`/plan?kind=person&id=${String(m.id)}`}>
-                {String(m.name)}
-              </option>
-            )),
-        ])}
+        {!context.available && <option value={context.key}>{context.label}</option>}
+        {context.options.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
+        ))}
       </select>
     </label>
   );
+}
+
+function AccountMenu({
+  user,
+  busy,
+  signOut,
+}: {
+  user: NonNullable<SessionState['user']>;
+  busy: boolean;
+  signOut: () => Promise<void>;
+}) {
+  const guard = useDiscardGuard();
+  const t = useStrings();
+  const hi = useLanguage() === 'hi';
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      className="account-menu"
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') {
+          setOpen(false);
+          e.currentTarget.querySelector('button')?.focus();
+        }
+      }}
+    >
+      <button
+        className="account-trigger"
+        aria-label={hi ? 'खाता मेनू' : 'Account menu'}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        onClick={() => setOpen((v) => !v)}
+      >
+        {user.displayName || t.account}
+        <UserRound size={17} />
+      </button>
+      {open && (
+        <div role="menu">
+          <Link role="menuitem" to="/settings" onClick={() => setOpen(false)}>
+            {t.account}
+          </Link>
+          <button
+            role="menuitem"
+            disabled={busy}
+            onClick={() => {
+              if (guard.confirmLeave()) void signOut();
+            }}
+          >
+            {t.signOut}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Logo() {
+  return (
+    <Link to="/" className="brand" aria-label={`${brand}.`}>
+      <span className="brand-icon">
+        <ArrowDownLeft size={22} />
+      </span>
+      <span className="brand-name">
+        {brand}
+        <span className="brand-dot">.</span>
+      </span>
+    </Link>
+  );
+}
+function RouteAccess({
+  access,
+  title,
+  signedIn,
+  children,
+}: {
+  access: string;
+  title: string;
+  signedIn: boolean;
+  children: React.ReactNode;
+}) {
+  const t = useStrings();
+  const hi = useLanguage() === 'hi';
+  if (!signedIn && (access === 'authenticated' || access === 'admin'))
+    return (
+      <div className="page auth-required">
+        <span className="eyebrow">{hi ? 'आपका निजी कार्यक्षेत्र' : 'YOUR PRIVATE WORKSPACE'}</span>
+        <h1>{title}</h1>
+        <section className="auth-entry" role="alert">
+          <ShieldCheck size={32} />
+          <h2>{hi ? 'अपना सुरक्षित कार्यक्षेत्र खोलें' : 'Open your secure workspace'}</h2>
+          <p>
+            {hi
+              ? 'व्यक्तिगत, परिवार और व्यवसाय की जानकारी आपके अधिकृत खाते में अलग रहती है।'
+              : 'Your personal, family and business information stays separate and permission-controlled.'}
+          </p>
+          <Link className="button" to="/settings">
+            {t.signIn}
+            <ArrowRight size={17} />
+          </Link>
+        </section>
+      </div>
+    );
+  return children;
 }

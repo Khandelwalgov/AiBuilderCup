@@ -1,70 +1,18 @@
+import { sessionFixture } from './session-fixture';
 import { captureContract } from './capture';
 import { expect, test } from '@playwright/test';
 import type { components } from '../src/lib/api/schema';
 
 // Browser contract test only. Firebase and Gemini are NOT bypassed in application code.
 // These fictional policy responses never enter the application database or public catalogue.
-const id = '11111111-1111-4111-8111-111111111111';
-const time = '2026-10-12T00:00:00Z';
-const citation = {
-  source_url: 'https://example.invalid/synthetic-test-policy',
-  passage: 'Synthetic test clause: applicants must be at least eighteen.',
-  page: '1',
-};
-const rule = {
-  op: 'condition' as const,
-  condition: { op: 'gte' as const, fact: 'age' as const, value: 18 },
-};
-const opportunity: components['schemas']['OpportunityView'] = {
-  id,
-  version: 1,
-  publication_state: 'published',
-  is_synthetic: false,
-  title: 'Synthetic browser test policy',
-  summary: 'Fictional policy for testing the browser contract only.',
-  category: 'education',
-  issuer: 'Synthetic test authority',
-  status: 'verified',
-  country: 'India',
-  state: null,
-  district: null,
-  applicability: [],
-  benefits: null,
-  restrictions: [],
-  required_documents: [],
-  opens_on: null,
-  closes_on: null,
-  apply_url: null,
-  source_url: citation.source_url,
-  first_seen_at: time,
-  last_verified_at: time,
-  source: {
-    name: 'Synthetic test source',
-    authority: 'Test only',
-    url: citation.source_url,
-    status: 'verified',
-    last_checked_at: time,
-    last_successful_check_at: time,
-  },
-  requirements: [
-    {
-      id,
-      description: 'Synthetic minimum age',
-      rule,
-      subject_context: 'person',
-      citations: [citation],
-    },
-  ],
-  field_evidence: [],
-  review_flags: [],
-  missing_fields: [],
-};
+import { id, time, citation, rule, opportunity } from './opportunity-fixture';
 
 test('profile → published opportunity → cited eligibility results (mocked auth/API contract)', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 960 });
   let profile: components['schemas']['ProfileView'] | null = null;
+  await sessionFixture(page);
   await page.route('**/v1/profile/me', async (route) => {
     if (route.request().method() === 'PUT') {
       const input = route.request().postDataJSON() as components['schemas']['ProfileWrite'];
@@ -141,8 +89,10 @@ test('profile → published opportunity → cited eligibility results (mocked au
   });
   await page.goto('/profile');
   await page.getByRole('textbox', { name: 'Profile name' }).fill('Synthetic learner');
+  await page.getByRole('button', { name: 'Choose relevant questions' }).click();
   await page.getByRole('button', { name: 'Add a relevant fact' }).click();
   await page.getByRole('spinbutton', { name: 'Value 1', exact: true }).fill('20');
+  await page.getByRole('button', { name: 'Review your answers' }).click();
   await page.getByRole('button', { name: 'Save profile' }).click();
   await expect(
     page.getByText('Profile saved. You can now check a published opportunity.'),
@@ -171,6 +121,33 @@ test('profile → published opportunity → cited eligibility results (mocked au
     fullPage: true,
   });
   await captureContract(page, 'detail');
+  await page.route('**/v1/assistant/capabilities', (r) =>
+    r.fulfill({ json: { gemini_intent_enabled: false } }),
+  );
+  await page.route('**/v1/assistant/explain', (r) =>
+    r.fulfill({
+      json: {
+        mode: 'local',
+        model: null,
+        intent: 'why',
+        answer: 'Fictional cited explanation',
+        disclaimer: 'Test only',
+        items: [
+          {
+            requirement_id: id,
+            condition: 'Synthetic minimum age',
+            outcome: 'satisfied',
+            explanation: 'Supplied age',
+            citations: [citation],
+          },
+        ],
+      },
+    }),
+  );
+  await page.getByRole('button', { name: 'Why is this condition unknown?' }).click();
+  await page.getByRole('link', { name: 'Locate condition in assessment' }).click();
+  await expect(page).toHaveURL(new RegExp(`#source-requirement-${id}$`));
+  await expect(page.locator(`#source-requirement-${id}`)).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
@@ -191,6 +168,7 @@ test('normal catalogue keeps synthetic fixtures out and profile requires authent
 test('admin inspects evidence and publishes through the review API (mocked contract)', async ({
   page,
 }) => {
+  await sessionFixture(page);
   await page.setViewportSize({ width: 1440, height: 960 });
   const candidate: components['schemas']['CandidateData'] = {
     title: opportunity.title,
@@ -252,6 +230,7 @@ test('admin inspects evidence and publishes through the review API (mocked contr
   await expect(page.locator('.capture-text')).toContainText(citation.passage);
   await page.getByRole('textbox', { name: 'Search all captured pages' }).fill('eighteen');
   await expect(page.locator('.source-search-results')).toContainText('1 matching pages');
+  await page.getByRole('textbox', { name: 'Exact source passage' }).fill(citation.passage);
   await page.getByRole('textbox', { name: 'Review note' }).fill('Checked synthetic test evidence.');
   const checkboxes = page.locator('.candidate-editor input[type=checkbox]');
   await checkboxes.nth(0).check();
@@ -263,5 +242,9 @@ test('admin inspects evidence and publishes through the review API (mocked contr
   });
   await captureContract(page, 'admin');
   await page.getByRole('button', { name: 'Approve & publish', exact: true }).click();
+  await page
+    .getByRole('dialog')
+    .getByRole('button', { name: 'Approve & publish', exact: true })
+    .click();
   await expect(page.locator('.candidate-editor p[role=status]')).toContainText('published');
 });

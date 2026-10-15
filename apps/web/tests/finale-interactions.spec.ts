@@ -1,9 +1,10 @@
+import { sessionFixture } from './session-fixture';
 import { test, expect } from '@playwright/test';
 
 test('Atlas landing stays illustrative and links to genuine discovery', async ({ page }) => {
   await page.goto('/');
   await expect(
-    page.getByRole('heading', { name: 'Possibility, with a path forward.' }),
+    page.getByRole('heading', { name: 'Good opportunities. Clear next steps.' }),
   ).toBeVisible();
   await expect(page.getByText('ILLUSTRATIVE · NOT A MATCH')).toBeVisible();
   await page.getByRole('link', { name: 'Explore opportunities', exact: true }).click();
@@ -18,6 +19,7 @@ test('Atlas landing stays illustrative and links to genuine discovery', async ({
 test('missing-fact deep link adds only the supported question, without saving (fictional API)', async ({
   page,
 }) => {
+  await sessionFixture(page);
   let writes = 0;
   await page.route('**/v1/profile/me', (route) => {
     if (route.request().method() !== 'GET') writes++;
@@ -66,6 +68,7 @@ test('administrator reads actual 68-page public capture copy without any write (
     changes: [],
     history: [],
   };
+  await sessionFixture(page);
   let writes = 0;
   await page.route('**/v1/me', (r) =>
     r.fulfill({ json: { uid: 'fictional-admin-contract', is_admin: true } }),
@@ -94,7 +97,7 @@ test('administrator reads actual 68-page public capture copy without any write (
   await page.setViewportSize({ width: 1440, height: 960 });
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
-    path: '/Users/govind/Projects/AIBuildersCup/.live-validation/finale-after/admin-public-capture-copy-1440.png',
+    path: '/Users/govind/Projects/AIBuildersCup/.live-validation/reimagine-after/admin-public-capture-copy-1440.png',
     fullPage: true,
   });
   expect(writes).toBe(0);

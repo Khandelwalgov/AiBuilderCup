@@ -1,3 +1,4 @@
+import { sessionFixture } from './session-fixture';
 import { captureContract } from './capture';
 import { expect, test } from '@playwright/test';
 import type { components } from '../src/lib/api/schema';
@@ -6,6 +7,7 @@ const second = '22222222-2222-4222-8222-222222222222';
 const artifacts = '/Users/govind/Projects/AIBuildersCup/.live-validation/ui';
 // All identities and policy data in these UI contracts are fictional. No auth bypass is shipped.
 test('household and unregistered business creation controls (mocked API)', async ({ page }) => {
+  await sessionFixture(page);
   await page.setViewportSize({ width: 1440, height: 960 });
   let workspaces: components['schemas']['WorkspaceView'][] = [];
   await page.route('**/v1/workspaces', (route) => route.fulfill({ json: workspaces }));
@@ -110,6 +112,7 @@ test('household and unregistered business creation controls (mocked API)', async
 test('shared graph action, evidence panel and non-saving simulation (mocked API)', async ({
   page,
 }) => {
+  await sessionFixture(page);
   await page.setViewportSize({ width: 1440, height: 960 });
   const citation = {
     source_url: 'https://example.invalid/fictional-policy',
@@ -173,11 +176,20 @@ test('shared graph action, evidence panel and non-saving simulation (mocked API)
     .filter({ hasText: 'fictional income certificate' })
     .click();
   await expect(page.locator('.evidence-card')).toHaveCount(2);
+  await page.locator('.atlas-node.destination').first().click();
+  await expect(page.locator('.graph-inspector')).toContainText('Connected steps');
+  await expect(page.locator('.graph-inspector a')).toHaveAttribute('href', /\/opportunities\//);
+  const graph = page.getByRole('region', { name: 'Graph; use arrow keys to pan' });
+  const transform = await page.locator('.map-stage').getAttribute('style');
+  await graph.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(page.locator('.map-stage')).not.toHaveAttribute('style', transform!);
   await expect(page.locator('.atlas-edges > path.illuminated')).toHaveCount(3);
+  const initialZoom = await page.getByLabel('Graph zoom').textContent();
   await page.getByRole('button', { name: 'Zoom out', exact: true }).click();
-  await expect(page.getByLabel('Graph zoom')).toHaveText('85%');
+  await expect(page.getByLabel('Graph zoom')).not.toHaveText(initialZoom!);
   await page.getByRole('button', { name: 'Fit graph to view' }).click();
-  await expect(page.getByLabel('Graph zoom')).toHaveText('100%');
+  await expect(page.getByLabel('Graph zoom')).toHaveText(initialZoom!);
   await expect(page.locator('.evidence-card blockquote').first()).toContainText(citation.passage);
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({ path: `${artifacts}/graph-populated-contract-1440.png`, fullPage: true });

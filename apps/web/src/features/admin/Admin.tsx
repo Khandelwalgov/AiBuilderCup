@@ -1,7 +1,12 @@
+import { displayLabel, displayDate } from '../../i18n/format';
+import { ConfirmDialog } from '../../components/ConfirmDialog';
+import { useDirtyForm } from '../../app/dirty-forms';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ContextLink as Link } from '../../app/subject-context';
 import { CapturedReader } from '../../components/CapturedReader';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+
 import { useStrings, useLanguage } from '../../app/App';
 import { api, fail } from '../../lib/api/client';
 import type { components } from '../../lib/api/schema';
@@ -9,8 +14,14 @@ type Review = components['schemas']['ReviewView'];
 type Decision = components['schemas']['ReviewWrite']['decision'];
 export function Admin() {
   const t = useStrings();
+  const hi = useLanguage() === 'hi';
+  const [pendingSource, setPendingSource] = useState<components['schemas']['SourceItem'] | null>(
+    null,
+  );
   const cache = useQueryClient();
-  const [selected, setSelected] = useState<string | null>(null);
+  const { candidateId } = useParams();
+  const navigate = useNavigate();
+  const selected = candidateId ?? null;
   const account = useQuery({
     queryKey: ['admin-account'],
     retry: false,
@@ -44,14 +55,29 @@ export function Admin() {
       return data ?? fail(error);
     },
   });
+  const permission = useQuery({
+    queryKey: ['ingestion-settings'],
+    enabled,
+    retry: false,
+    queryFn: async () => {
+      const { data, error } = await api.GET('/v1/admin/ingestion-settings');
+      return data ?? fail(error);
+    },
+  });
   const ingest = useMutation({
     mutationFn: async (key: string) => {
       const { data, error } = await api.POST('/v1/admin/sources/{key}/ingest', {
         params: { path: { key } },
+        body: {
+          expected_provider: permission.data!.provider as 'gemini' | 'openai',
+          expected_model: permission.data!.model,
+          confirm_potential_paid_use: true,
+        },
       });
       return data ?? fail(error);
     },
     onSuccess: () => {
+      setPendingSource(null);
       void cache.invalidateQueries({ queryKey: ['admin-reviews'] });
       void cache.invalidateQueries({ queryKey: ['admin-runs'] });
       void cache.invalidateQueries({ queryKey: ['admin-sources'] });
@@ -59,6 +85,59 @@ export function Admin() {
   });
   return (
     <div className="page">
+      {pendingSource && (
+        <ConfirmDialog
+          title={hi ? 'स्रोत जाँच शुरू करें?' : 'Start source ingestion?'}
+          cancel={hi ? 'रद्द करें' : 'Cancel'}
+          confirm={hi ? 'स्रोत जाँच की पुष्टि करें' : 'Confirm source ingestion'}
+          busy={ingest.isPending}
+          disabled={!permission.data?.live_enabled}
+          onCancel={() => setPendingSource(null)}
+          onConfirm={() => ingest.mutate(pendingSource.key)}
+        >
+          <h3>{pendingSource.name}</h3>
+          <dl>
+            <dt>{hi ? 'प्रदाता / मॉडल' : 'Provider / model'}</dt>
+            <dd>
+              {permission.data
+                ? `${permission.data.provider} / ${permission.data.model}`
+                : t.loading}
+            </dd>
+            <dt>{hi ? 'मौजूदा मसौदे' : 'Existing drafts'}</dt>
+            <dd>{pendingSource.draft_count ?? (hi ? 'अज्ञात' : 'Unknown')}</dd>
+            <dt>{hi ? 'ऑपरेटर अनुमति' : 'Operator permission'}</dt>
+            <dd>
+              {permission.data?.live_enabled
+                ? hi
+                  ? 'सक्षम'
+                  : 'Enabled'
+                : hi
+                  ? 'अक्षम — कोई कॉल नहीं होगी'
+                  : 'Disabled — no call will be made'}
+            </dd>
+            <dt>{hi ? 'कॉन्फ़िगर किया परीक्षण बजट' : 'Configured test budget'}</dt>
+            <dd>
+              {permission.data?.test_budget_usd == null
+                ? hi
+                  ? 'निर्धारित नहीं'
+                  : 'Not configured'
+                : `US$${permission.data.test_budget_usd}`}
+            </dd>
+          </dl>
+          <p>
+            {hi
+              ? 'मॉडल कॉल का शुल्क लग सकता है। विश्वसनीय खर्च अनुमान उपलब्ध नहीं है। कॉन्फ़िगर बजट स्वचालित खर्च सीमा नहीं है।'
+              : 'Model calls may incur charges. No reliable cost estimate is available. A configured budget is not an automatic spending cap.'}
+          </p>
+          <p>
+            {hi
+              ? 'अधिकतम एक मॉडल प्रयास। परिणाम केवल समीक्षा योग्य मसौदा होगा। त्रुटि पर स्वचालित प्रदाता बदलाव या इस संवाद से पुनः प्रयास नहीं होगा।'
+              : 'At most one model attempt. Output is a reviewable draft only. Errors do not switch providers or automatically resubmit this dialog.'}
+          </p>
+          {permission.isError && <p role="alert">{permission.error.message}</p>}
+          {ingest.isError && <p role="alert">{ingest.error.message}</p>}
+        </ConfirmDialog>
+      )}
       <div className="page-heading">
         <span className="eyebrow">{t.adminOnly}</span>
         <h1>{t.adminReview}</h1>
@@ -75,73 +154,99 @@ export function Admin() {
         </section>
       ) : (
         <>
-          <section className="panel">
-            <h2>{t.officialSources}</h2>
-            {sources.isError && <p role="alert">{sources.error.message}</p>}
-            {sources.data?.map((source) => (
-              <div key={source.key} className="source-row">
-                <div>
-                  <strong>{source.name}</strong>
+          <div className="review-console">
+            <aside className="review-queue">
+              {' '}
+              <section className="panel">
+                <h2>{t.reviewQueue}</h2>
+                {reviews.isError && <p role="alert">{reviews.error.message}</p>}
+                {reviews.isPending ? (
+                  <p>{t.loading}</p>
+                ) : reviews.data?.length === 0 ? (
+                  <p>{t.noCandidates}</p>
+                ) : (
+                  reviews.data?.map((candidate) => (
+                    <button
+                      className="review-row"
+                      key={candidate.id}
+                      onClick={() => navigate(`/admin/reviews/${candidate.id}`)}
+                    >
+                      <span>{candidate.title}</span>
+                      <small>
+                        v{candidate.version} · {displayLabel(candidate.publication_state, hi)}
+                      </small>
+                    </button>
+                  ))
+                )}
+              </section>
+            </aside>
+            <div className="review-main">
+              {selected ? (
+                <CandidateEditor key={selected} id={selected} />
+              ) : (
+                <section className="empty-state">
+                  <h2>{hi ? 'समीक्षा के लिए मसौदा चुनें' : 'Choose a candidate to review'}</h2>
                   <p>
-                    <a href={source.context_url} target="_blank" rel="noreferrer">
-                      {t.officialIndex}
-                    </a>{' '}
-                    · {source.status}
+                    {hi
+                      ? 'मूल स्रोत और मानव निर्णय के बीच एक स्पष्ट कार्यक्षेत्र।'
+                      : 'A focused workspace between source evidence and a human decision.'}
                   </p>
-                  <small>{source.last_checked_at || t.notChecked}</small>
+                </section>
+              )}
+            </div>
+          </div>
+          <details className="admin-tools">
+            <summary>
+              {hi ? 'स्रोत संचालन और रन इतिहास' : 'Source operations and run history'}
+            </summary>{' '}
+            <section className="panel">
+              <h2>{t.officialSources}</h2>
+              {sources.isError && <p role="alert">{sources.error.message}</p>}
+              {sources.data?.map((source) => (
+                <div key={source.key} className="source-row">
+                  <div>
+                    <strong>{source.name}</strong>
+                    <p>
+                      <a href={source.context_url} target="_blank" rel="noreferrer">
+                        {t.officialIndex}
+                      </a>{' '}
+                      · {source.status}
+                    </p>
+                    <small>{source.last_checked_at || t.notChecked}</small>
+                  </div>
+                  <button
+                    className="button"
+                    disabled={ingest.isPending}
+                    onClick={() => {
+                      ingest.reset();
+                      setPendingSource(source);
+                    }}
+                  >
+                    {ingest.isPending ? t.ingesting : t.ingestSource}
+                  </button>
                 </div>
-                <button
-                  className="button"
-                  disabled={ingest.isPending}
-                  onClick={() => ingest.mutate(source.key)}
-                >
-                  {ingest.isPending ? t.ingesting : t.ingestSource}
-                </button>
-              </div>
-            ))}
-            {ingest.isError && <p role="alert">{ingest.error.message}</p>}
-            {ingest.data && (
-              <p role="status">
-                {ingest.data.status} · {ingest.data.diagnostic_code || t.noDiagnostic}
-              </p>
-            )}
-          </section>
-          <section className="panel">
-            <h2>{t.reviewQueue}</h2>
-            {reviews.isError && <p role="alert">{reviews.error.message}</p>}
-            {reviews.isPending ? (
-              <p>{t.loading}</p>
-            ) : reviews.data?.length === 0 ? (
-              <p>{t.noCandidates}</p>
-            ) : (
-              reviews.data?.map((candidate) => (
-                <button
-                  className="review-row"
-                  key={candidate.id}
-                  onClick={() => setSelected(candidate.id)}
-                >
-                  <span>{candidate.title}</span>
+              ))}
+              {ingest.isError && <p role="alert">{ingest.error.message}</p>}
+              {ingest.data && (
+                <p role="status">
+                  {ingest.data.status} · {ingest.data.diagnostic_code || t.noDiagnostic}
+                </p>
+              )}
+            </section>
+            <section className="panel">
+              <h2>{t.ingestionHistory}</h2>
+              {runs.isError && <p role="alert">{runs.error.message}</p>}
+              {runs.data?.map((run) => (
+                <div className="run-row" key={run.id}>
+                  <strong>{displayLabel(run.status, hi)}</strong>
+                  <span>{run.diagnostic_code || t.noDiagnostic}</span>
                   <small>
-                    v{candidate.version} · {candidate.publication_state}
+                    {displayDate(run.created_at, hi, t.unknown)} · {run.provider} · {run.model}
                   </small>
-                </button>
-              ))
-            )}
-          </section>
-          {selected && <CandidateEditor key={selected} id={selected} />}
-          <section className="panel">
-            <h2>{t.ingestionHistory}</h2>
-            {runs.isError && <p role="alert">{runs.error.message}</p>}
-            {runs.data?.map((run) => (
-              <div className="run-row" key={run.id}>
-                <strong>{run.status}</strong>
-                <span>{run.diagnostic_code || t.noDiagnostic}</span>
-                <small>
-                  {new Date(run.created_at).toLocaleString()} · {run.provider} · {run.model}
-                </small>
-              </div>
-            ))}
-          </section>
+                </div>
+              ))}
+            </section>
+          </details>
         </>
       )}
     </div>
@@ -153,10 +258,17 @@ function CandidateEditor({ id }: { id: string }) {
   const cache = useQueryClient();
   const [sourcePage, setSourcePage] = useState(0);
   const [conditionIndex, setConditionIndex] = useState(0);
+  const [decisionConfirmation, setDecisionConfirmation] = useState<Decision | null>(null);
+  const editorRef = useRef<HTMLElement>(null);
   const [text, setText] = useState('');
   const [note, setNote] = useState('');
   const [flags, setFlags] = useState(false);
   const [complete, setComplete] = useState(false);
+  const baseline = useRef<string | null>(null);
+  const baselineHash = useRef('');
+  const signature = JSON.stringify({ text, note, flags, complete });
+  const dirty = baseline.current !== null && signature !== baseline.current;
+  useDirtyForm(dirty);
   const query = useQuery({
     queryKey: ['admin-review', id],
     queryFn: async () => {
@@ -167,13 +279,20 @@ function CandidateEditor({ id }: { id: string }) {
     },
   });
   useEffect(() => {
-    if (query.data) {
+    if (query.data && !dirty) {
+      baselineHash.current = query.data.candidate_hash;
+      baseline.current = JSON.stringify({
+        text: JSON.stringify(query.data.candidate, null, 2),
+        note: '',
+        flags: false,
+        complete: false,
+      });
       setText(JSON.stringify(query.data.candidate, null, 2));
       setFlags(false);
       setComplete(false);
       setNote('');
     }
-  }, [query.data]);
+  }, [query.data, dirty]);
   const mutate = useMutation({
     mutationFn: async (decision: Decision) => {
       const candidate = JSON.parse(text) as Review['candidate'];
@@ -183,7 +302,7 @@ function CandidateEditor({ id }: { id: string }) {
           decision,
           candidate,
           note,
-          expected_hash: query.data!.candidate_hash,
+          expected_hash: baselineHash.current,
           acknowledge_flags: flags,
           source_completeness_confirmed: complete,
         },
@@ -191,6 +310,7 @@ function CandidateEditor({ id }: { id: string }) {
       return data ?? fail(error);
     },
     onSuccess: (data) => {
+      baseline.current = null;
       cache.setQueryData(['admin-review', id], data);
       void cache.invalidateQueries({ queryKey: ['admin-reviews'] });
       void cache.invalidateQueries({ queryKey: ['opportunities'] });
@@ -199,6 +319,9 @@ function CandidateEditor({ id }: { id: string }) {
       void cache.invalidateQueries({ queryKey: ['dashboard-summary'] });
     },
   });
+  useEffect(() => {
+    if (query.isSuccess) editorRef.current?.scrollIntoView({ block: 'start' });
+  }, [id, query.isSuccess]);
   if (query.isPending)
     return (
       <section className="panel" role="status">
@@ -221,8 +344,48 @@ function CandidateEditor({ id }: { id: string }) {
   const patch = (values: Partial<Review['candidate']>) =>
     setText(JSON.stringify({ ...edited, ...values }, null, 2));
 
+  const locate = (citation: { source_url: string; page: number }) =>
+    setSourcePage(
+      candidate.pages.findIndex(
+        (p) => p.source_url === citation.source_url && p.page === citation.page,
+      ),
+    );
   return (
-    <section className="panel candidate-editor">
+    <section ref={editorRef} className="panel candidate-editor">
+      {decisionConfirmation && (
+        <ConfirmDialog
+          title={
+            decisionConfirmation === 'approve'
+              ? hi
+                ? 'समीक्षित नीति प्रकाशित करें?'
+                : 'Publish the reviewed policy?'
+              : hi
+                ? 'यह मसौदा अस्वीकार करें?'
+                : 'Reject this draft?'
+          }
+          confirm={t.decisions[decisionConfirmation]}
+          cancel={hi ? 'रद्द करें' : 'Cancel'}
+          busy={mutate.isPending}
+          onCancel={() => setDecisionConfirmation(null)}
+          onConfirm={() => {
+            mutate.mutate(decisionConfirmation, { onSuccess: () => setDecisionConfirmation(null) });
+          }}
+        >
+          <h3>{candidate.title}</h3>
+          <p>
+            {decisionConfirmation === 'approve'
+              ? hi
+                ? 'आप स्रोत की पूर्णता, संशोधनों और प्रत्येक नियम की जिम्मेदार मानव समीक्षा की पुष्टि कर रहे हैं। AI ने इसे मंजूरी नहीं दी है।'
+                : 'You are confirming substantive human review of source completeness, amendments and every requirement. AI has not approved this policy.'
+              : hi
+                ? 'यह अस्वीकृति समीक्षा इतिहास में दर्ज होगी।'
+                : 'This rejection will be recorded in review history.'}{' '}
+            {hi ? 'संस्करण' : 'Version'} {candidate.version}
+          </p>
+          <p>{note}</p>
+          {mutate.isError && <p role="alert">{mutate.error.message}</p>}
+        </ConfirmDialog>
+      )}
       <p>
         {t.extractionProvider}: {candidate.extraction_provider ?? t.unknown} ·{' '}
         {candidate.extraction_model ?? t.unknown} · {candidate.extractor_version ?? t.unknown}
@@ -231,7 +394,7 @@ function CandidateEditor({ id }: { id: string }) {
         {t.tokenUsage}: {JSON.stringify(candidate.extraction_usage ?? {})}
       </p>
       <span className="eyebrow">
-        {candidate.publication_state} · v{candidate.version}
+        {displayLabel(candidate.publication_state, hi)} · v{candidate.version}
       </span>
       <h2>{candidate.title}</h2>
       <p>
@@ -285,15 +448,7 @@ function CandidateEditor({ id }: { id: string }) {
                 const index = Number(e.target.value);
                 setConditionIndex(index);
                 const citation = edited.requirements?.[index]?.evidence;
-                if (citation)
-                  setSourcePage(
-                    Math.max(
-                      0,
-                      candidate.pages.findIndex(
-                        (p) => p.source_url === citation.source_url && p.page === citation.page,
-                      ),
-                    ),
-                  );
+                if (citation) locate(citation);
               }}
             >
               {edited.requirements?.map((req, i) => (
@@ -395,18 +550,7 @@ function CandidateEditor({ id }: { id: string }) {
                 <button
                   type="button"
                   className="field-followup"
-                  onClick={() =>
-                    setSourcePage(
-                      Math.max(
-                        0,
-                        candidate.pages.findIndex(
-                          (p) =>
-                            p.source_url === req.evidence.source_url &&
-                            p.page === req.evidence.page,
-                        ),
-                      ),
-                    )
-                  }
+                  onClick={() => locate(req.evidence)}
                 >
                   {hi ? 'कैप्चर पृष्ठ देखें' : 'Inspect captured page'} {req.evidence.page}
                 </button>
@@ -424,20 +568,7 @@ function CandidateEditor({ id }: { id: string }) {
             <details key={d.document}>
               <summary>{d.document}</summary>
               <blockquote>{d.evidence.passage}</blockquote>
-              <button
-                type="button"
-                className="field-followup"
-                onClick={() =>
-                  setSourcePage(
-                    Math.max(
-                      0,
-                      candidate.pages.findIndex(
-                        (p) => p.source_url === d.evidence.source_url && p.page === d.evidence.page,
-                      ),
-                    ),
-                  )
-                }
-              >
+              <button type="button" className="field-followup" onClick={() => locate(d.evidence)}>
                 {hi ? 'कैप्चर पृष्ठ देखें' : 'Inspect captured page'} {d.evidence.page}
               </button>
               <a href={d.evidence.source_url} target="_blank" rel="noreferrer">
@@ -512,7 +643,11 @@ function CandidateEditor({ id }: { id: string }) {
               (action === 'approve' &&
                 (!complete || ((candidate.candidate.review_flags ?? []).length > 0 && !flags)))
             }
-            onClick={() => mutate.mutate(action)}
+            onClick={() =>
+              action === 'approve' || action === 'reject'
+                ? setDecisionConfirmation(action)
+                : mutate.mutate(action)
+            }
           >
             {t.decisions[action]}
           </button>
@@ -521,7 +656,7 @@ function CandidateEditor({ id }: { id: string }) {
       {mutate.isError && <p role="alert">{mutate.error.message}</p>}
       {mutate.isSuccess && (
         <p role="status">
-          {t.reviewSaved} · {mutate.data.publication_state}
+          {t.reviewSaved} · {displayLabel(mutate.data.publication_state, hi)}
         </p>
       )}
       <details>

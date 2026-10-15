@@ -1,6 +1,8 @@
+import { useDirtyForm } from '../../app/dirty-forms';
+import { useSubject, ContextLink as Link } from '../../app/subject-context';
 import { ReadinessJourney } from '../../components/Atlas';
-import { useEffect, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus, Trash2, UserRound } from 'lucide-react';
 import { useStrings, useLanguage } from '../../app/App';
@@ -27,15 +29,50 @@ const fields: { key: Fact['key']; kind: 'text' | 'number' | 'boolean' }[] = [
   { key: 'has_udid_certificate', kind: 'boolean' },
 ];
 export function Profile() {
+  const context = useSubject();
+  const hi = useLanguage() === 'hi';
+  if (context.pending)
+    return (
+      <div className="page" role="status">
+        {hi ? 'लोड हो रहा है…' : 'Loading…'}
+      </div>
+    );
+  if (!context.available || context.subject.kind !== 'person')
+    return (
+      <div className="page panel">
+        <h1>{hi ? 'व्यक्तिगत प्रोफ़ाइल' : 'Person profile'}</h1>
+        <p>
+          {hi
+            ? 'व्यक्ति चुनें या संबंधित कार्यस्थल संपादित करें।'
+            : 'Select a person to edit their profile, or open the selected household or business workspace.'}
+        </p>
+        <Link to={context.subject.kind === 'business' ? '/businesses' : '/family'}>
+          {hi ? 'कार्यस्थल खोलें' : 'Open workspace'}
+        </Link>
+      </div>
+    );
+  return <PersonProfile key={context.key} />;
+}
+function PersonProfile() {
   const t = useStrings();
   const hi = useLanguage() === 'hi';
-  const { personId } = useParams();
+  const { personId: routePersonId } = useParams();
+  const context = useSubject();
+  const personId = routePersonId ?? context.subject.id ?? undefined;
   const [params] = useSearchParams();
   const requestedField = fields.find((f) => f.key === params.get('field'))?.key;
   const cache = useQueryClient();
   const [name, setName] = useState('');
   const [facts, setFacts] = useState<Fact[]>([]);
   const [saved, setSaved] = useState(false);
+  const [stage, setStage] = useState(0);
+  const initialized = useRef(false);
+  const [topic, setTopic] = useState<string[] | null>(null);
+  const baseline = useRef<string | null>(null);
+  const submitted = useRef('');
+  const signature = JSON.stringify({ name, facts });
+  const dirty = baseline.current !== null && baseline.current !== signature;
+  useDirtyForm(dirty);
   const query = useQuery({
     queryKey: ['personal-profile', personId],
     retry: false,
@@ -48,7 +85,11 @@ export function Profile() {
     },
   });
   useEffect(() => {
-    if (query.data) {
+    if (query.data && !dirty) {
+      if (!initialized.current) {
+        setStage(1);
+        initialized.current = true;
+      }
       setName(query.data.display_name);
       setFacts(
         query.data.facts
@@ -62,10 +103,27 @@ export function Profile() {
             income_definition: (f.context?.income_definition as string) ?? null,
           })),
       );
+      baseline.current = JSON.stringify({
+        name: query.data.display_name,
+        facts: query.data.facts
+          .filter((f) => f.origin === 'user_supplied' || f.origin === 'unknown')
+          .map((f) => ({
+            key: f.key,
+            value: f.value,
+            valid_from: f.valid_from,
+            valid_until: f.valid_until,
+            income_period: (f.context?.income_period as string) ?? null,
+            income_definition: (f.context?.income_definition as string) ?? null,
+          })),
+      });
+    } else if (!query.isPending && !query.isError && !query.data && baseline.current === null) {
+      baseline.current = signature;
     }
-  }, [query.data]);
+  }, [query.data, query.isPending, query.isError, dirty, signature]);
   useEffect(() => {
     if (!query.isPending && !query.isError && requestedField) {
+      setStage(1);
+      setTopic([requestedField]);
       setFacts((previous) =>
         previous.some((f) => f.key === requestedField)
           ? previous
@@ -100,7 +158,8 @@ export function Profile() {
       void cache.invalidateQueries({ queryKey: ['workspaces'] });
       void cache.invalidateQueries({ queryKey: ['dashboard-summary'] });
       void cache.invalidateQueries({ queryKey: ['plan'] });
-      setSaved(true);
+      baseline.current = submitted.current;
+      setSaved(signature === submitted.current);
     },
   });
   function update(index: number, patch: Partial<Fact>) {
@@ -145,7 +204,7 @@ export function Profile() {
             ? ['अपनी पहचान', 'ज़रूरी जानकारी', 'सहेजें और जाँचें']
             : ['Your context', 'Relevant questions', 'Save and assess']
         }
-        active={saved ? 2 : facts.length ? 1 : 0}
+        active={stage}
       />
       <section className="profile-guide">
         <span className="step-dot">1</span>
@@ -162,10 +221,15 @@ export function Profile() {
         onSubmit={(e) => {
           e.preventDefault();
           setSaved(false);
+          if (stage < 2) {
+            setStage(stage + 1);
+            return;
+          }
+          submitted.current = signature;
           save.mutate();
         }}
       >
-        <section className="panel">
+        <section className="panel" hidden={stage !== 0}>
           <label className="field">
             {t.displayName}
             <input
@@ -180,7 +244,7 @@ export function Profile() {
             />
           </label>
         </section>
-        <section className="panel">
+        <section className="panel" hidden={stage !== 1}>
           <h2>{t.profileFacts}</h2>
           <p>{t.factHelp}</p>
           <div className="question-topics">
@@ -224,23 +288,31 @@ export function Profile() {
                 type="button"
                 key={topic.label}
                 className="topic-chip"
-                onClick={() =>
+                onClick={() => {
+                  setSaved(false);
+                  setTopic(topic.keys);
                   setFacts((previous) => [
                     ...previous,
                     ...topic.keys
                       .filter((key) => !previous.some((f) => f.key === key))
                       .map((key) => ({ key: key as Fact['key'], value: null })),
-                  ])
-                }
+                  ]);
+                }}
               >
                 {topic.label}
                 <Plus size={14} />
               </button>
             ))}
           </div>
+          {topic && (
+            <button type="button" className="text-button" onClick={() => setTopic(null)}>
+              {hi ? 'सभी जोड़े गए सवाल देखें' : 'Show all added questions'}
+            </button>
+          )}
           {facts.map((fact, index) => {
             const kind = fields.find((f) => f.key === fact.key)?.kind || 'text';
             const income = fact.key.includes('income');
+            if (topic && !topic.includes(fact.key)) return null;
             return (
               <div id={`fact-${fact.key}`} className="fact-editor" key={fact.key}>
                 <h3 className="question-label">
@@ -376,6 +448,7 @@ export function Profile() {
             className="text-button add-fact"
             type="button"
             onClick={() => {
+              setTopic(null);
               setFacts((prev) => [
                 ...prev,
                 {
@@ -401,8 +474,53 @@ export function Profile() {
               </p>
             </section>
           ))}
+        {stage === 2 && (
+          <section className="panel profile-review">
+            <span className="eyebrow">
+              {hi ? 'सहेजने से पहले समीक्षा' : 'REVIEW BEFORE SAVING'}
+            </span>
+            <h2>{hi ? 'आपकी साझा जानकारी' : 'What you choose to share'}</h2>
+            <h3>{name}</h3>
+            <dl>
+              {facts.map((f) => (
+                <div key={f.key}>
+                  <dt>{t.factNames[f.key as keyof typeof t.factNames] ?? f.key}</dt>
+                  <dd>
+                    {f.value === null ? t.unknown : String(f.value)} <small>{t.userSupplied}</small>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <p>
+              {hi
+                ? 'यह स्वयं दी गई जानकारी है। दस्तावेज़ सत्यापित नहीं हुए हैं।'
+                : 'These facts are self-reported. No document has been verified.'}
+            </p>
+          </section>
+        )}
         <div className="form-actions">
-          <button className="button" disabled={save.isPending}>
+          {stage > 0 && (
+            <button type="button" className="button secondary" onClick={() => setStage(stage - 1)}>
+              {hi ? 'पीछे' : 'Back'}
+            </button>
+          )}
+          {stage < 2 && (
+            <button
+              type="button"
+              className="button"
+              disabled={!name.trim()}
+              onClick={() => setStage(stage + 1)}
+            >
+              {stage === 0
+                ? hi
+                  ? 'ज़रूरी सवाल चुनें'
+                  : 'Choose relevant questions'
+                : hi
+                  ? 'समीक्षा करें'
+                  : 'Review your answers'}
+            </button>
+          )}
+          <button className="button" hidden={stage !== 2} disabled={save.isPending}>
             {save.isPending ? t.saving : t.saveProfile}
           </button>
           {saved && (

@@ -36,6 +36,7 @@ for (const width of [1440, 1024, 390, 320]) {
 
 test('keyboard skip link and mobile navigation return focus safely', async ({ page }) => {
   await page.goto('/discover');
+  await expect(page.locator('h1').first()).toBeVisible();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused();
   await page.keyboard.press('Enter');

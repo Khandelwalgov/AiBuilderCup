@@ -14,13 +14,34 @@ export function CapturedReader({
 }) {
   const hi = useLanguage() === 'hi';
   const [search, setSearch] = useState('');
-  const page = pages[selected] ?? pages[0];
+  const page = pages[selected];
   const matches = search.trim()
     ? pages
         .map((p, i) => ({ p, i }))
         .filter(({ p }) => p.text.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()))
     : [];
-  if (!page) return null;
+  if (!page)
+    return (
+      <section className="captured-reader" role="alert">
+        <h2>{hi ? 'उद्धृत पृष्ठ नहीं मिला' : 'Cited source page not found'}</h2>
+        <p>
+          {hi
+            ? 'स्रोत URL और पृष्ठ की जाँच करें। पृष्ठ एक अपने आप नहीं चुना गया।'
+            : 'Check the citation URL and page. Page one was not selected automatically.'}
+        </p>
+        <label className="field">
+          {hi ? 'सहेजा पृष्ठ चुनें' : 'Choose a captured page'}
+          <select value="" onChange={(e) => onSelect(Number(e.target.value))}>
+            <option value="">—</option>
+            {pages.map((p, i) => (
+              <option key={i} value={i}>
+                {p.source_url} · {p.page}
+              </option>
+            ))}
+          </select>
+        </label>
+      </section>
+    );
   const year = page.source_url.includes('/2025/')
     ? '2025'
     : page.source_url.includes('/2024/')

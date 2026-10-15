@@ -1,5 +1,6 @@
+import { useSubject, ContextLink as Link } from '../app/subject-context';
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+
 import { Focus, Minus, Plus, Fingerprint, GitBranch, FileCheck2, ArrowUpRight } from 'lucide-react';
 import { useLanguage, useStrings } from '../app/App';
 import type { components } from '../lib/api/schema';
@@ -17,6 +18,8 @@ export function IntelligenceMap({
   title: (action: Action) => string;
 }) {
   const hi = useLanguage() === 'hi';
+  const context = useSubject();
+  const [opportunity, setOpportunity] = useState<string | null>(null);
   const t = useStrings();
   const [zoom, setZoom] = useState(1);
   const viewport = useRef<HTMLDivElement>(null);
@@ -24,7 +27,10 @@ export function IntelligenceMap({
   useEffect(() => {
     const el = viewport.current;
     if (!el) return;
+    let previousWidth = -1;
     const observer = new ResizeObserver(([entry]) => {
+      if (entry.contentRect.width === previousWidth) return;
+      previousWidth = entry.contentRect.width;
       fit.current = Math.min(1, (entry.contentRect.width - 30) / 1100);
       setZoom(Math.max(0.4, fit.current));
       setOffset({ x: 0, y: 0 });
@@ -37,13 +43,13 @@ export function IntelligenceMap({
   const drag = useRef<{ x: number; y: number; ox: number; oy: number } | null>(null);
   const actions = plan.actions.slice(0, 6);
   const evaluations = plan.evaluations.slice(0, 6);
-  const height = Math.max(510, actions.length * 136 + 70, evaluations.length * 180 + 70);
+  const height = Math.max(390, actions.length * 136 + 70, evaluations.length * 180 + 70);
   const active = hover ?? selected?.id;
   return (
     <section className="intelligence-map">
       <header className="map-header">
         <div>
-          <span className="eyebrow">{hi ? 'आपका इंटेलिजेंस एटलस' : 'YOUR INTELLIGENCE ATLAS'}</span>
+          <span className="eyebrow">{hi ? 'आपके साझा कदम' : 'YOUR CONNECTED ACTIONS'}</span>
           <h2>{hi ? 'एक कदम। जुड़े अवसर।' : 'One step. Connected possibilities.'}</h2>
         </div>
         <span className="map-live">
@@ -80,6 +86,23 @@ export function IntelligenceMap({
         ref={viewport}
         style={{ height: Math.min(760, Math.max(320, height * zoom + 30)) }}
         className="map-viewport"
+        tabIndex={0}
+        role="region"
+        aria-label={hi ? 'ग्राफ़; तीर कुंजियों से खिसकाएँ' : 'Graph; use arrow keys to pan'}
+        onKeyDown={(event) => {
+          if (event.target !== event.currentTarget) return;
+          const movement: Record<string, [number, number]> = {
+            ArrowLeft: [40, 0],
+            ArrowRight: [-40, 0],
+            ArrowUp: [0, 40],
+            ArrowDown: [0, -40],
+          };
+          if (movement[event.key]) {
+            event.preventDefault();
+            const [x, y] = movement[event.key];
+            setOffset((old) => ({ x: old.x + x, y: old.y + y }));
+          }
+        }}
         onPointerDown={(e) => {
           if ((e.target as HTMLElement).closest('button,a')) return;
           drag.current = { x: e.clientX, y: e.clientY, ox: offset.x, oy: offset.y };
@@ -142,7 +165,7 @@ export function IntelligenceMap({
           </svg>
           <div className="map-subject" style={{ top: height / 2 - 65 }}>
             <Fingerprint size={30} />
-            <strong>{hi ? 'चुना गया संदर्भ' : 'Selected context'}</strong>
+            <strong>{context.label}</strong>
             <span>
               {plan.subject.kind === 'person'
                 ? hi
@@ -186,9 +209,10 @@ export function IntelligenceMap({
             </button>
           ))}
           {evaluations.map((e, i) => (
-            <Link
+            <button
               key={e.id}
-              to={`/opportunities/${e.opportunity_id}`}
+              aria-pressed={opportunity === e.opportunity_id}
+              onClick={() => setOpportunity(e.opportunity_id)}
               className={`atlas-node destination ${active && actions.find((a) => a.id === active)?.opportunities.some((o) => o.id === e.opportunity_id) ? 'connected' : ''}`}
               style={{ left: 790, top: i * 180 + 55 }}
             >
@@ -201,10 +225,25 @@ export function IntelligenceMap({
               >
                 {t.assessmentStatuses[e.status as keyof typeof t.assessmentStatuses] || e.status}
               </span>
-            </Link>
+            </button>
           ))}
         </div>
       </div>
+      {opportunity && (
+        <section className="panel graph-inspector" aria-live="polite">
+          <h3>{evaluations.find((e) => e.opportunity_id === opportunity)?.opportunity_title}</h3>
+          <p>
+            {hi ? 'जुड़े कदम' : 'Connected steps'}:{' '}
+            {actions
+              .filter((a) => a.opportunities.some((o) => o.id === opportunity))
+              .map(title)
+              .join(' · ') || (hi ? 'कोई नहीं' : 'None')}
+          </p>
+          <Link className="button secondary" to={`/opportunities/${opportunity}`}>
+            {hi ? 'शर्तें और प्रमाण देखें' : 'Inspect requirements and evidence'}
+          </Link>
+        </section>
+      )}
       <footer className="map-footer">
         <p>
           {hi
@@ -212,17 +251,23 @@ export function IntelligenceMap({
             : 'Up to 6 priority steps and 6 opportunities shown. Full checklist below.'}
         </p>
         <div className="map-controls">
-          <button aria-label="Zoom out" onClick={() => setZoom((v) => Math.max(0.4, v - 0.15))}>
+          <button
+            aria-label={hi ? 'छोटा करें' : 'Zoom out'}
+            onClick={() => setZoom((v) => Math.max(0.4, v - 0.15))}
+          >
             <Minus size={17} />
           </button>
           <output aria-label="Graph zoom">{Math.round(zoom * 100)}%</output>
-          <button aria-label="Zoom in" onClick={() => setZoom((v) => Math.min(1.7, v + 0.15))}>
+          <button
+            aria-label={hi ? 'बड़ा करें' : 'Zoom in'}
+            onClick={() => setZoom((v) => Math.min(1.7, v + 0.15))}
+          >
             <Plus size={17} />
           </button>
           <button
-            aria-label="Fit graph to view"
+            aria-label={hi ? 'पूरा ग्राफ़ दिखाएँ' : 'Fit graph to view'}
             onClick={() => {
-              setZoom(0.75);
+              setZoom(Math.max(0.4, fit.current));
               setOffset({ x: 0, y: 0 });
             }}
           >

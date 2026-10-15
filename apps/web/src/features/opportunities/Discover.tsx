@@ -1,6 +1,8 @@
+import { displayLabel, displayDate } from '../../i18n/format';
+import { ContextLink as Link } from '../../app/subject-context';
 import { Eligibility } from '../eligibility/Eligibility';
 import { useEffect, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import {
   ArrowLeft,
@@ -79,49 +81,40 @@ export function Discover() {
   const total = query.data?.pages[0]?.total;
   return (
     <div className="page discovery">
-      <section className="hero">
-        <div className="hero-copy">
-          <span className="eyebrow">
-            <span className="tiny-spark">✳</span>
-            {t.eyebrow}
-          </span>
-          <h1>
-            {t.title} <em>{t.titleAccent}</em>
-          </h1>
-          <p>{t.subtitle}</p>
-          <form
-            className="search-box"
-            onSubmit={(e) => {
-              e.preventDefault();
-              filter('q', search);
-            }}
-          >
-            <Search size={20} />
-            <input
-              aria-label={t.search}
-              placeholder={t.search}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <button type="submit" aria-label={t.search}>
-              <ArrowRight size={19} />
-            </button>
-          </form>
-          <div className="hero-note">
-            <ShieldCheck size={14} />
-            <span>{t.coverage}</span>
-            <span className="separator">·</span>
-            <span>{t.foundation}</span>
-          </div>
+      <header className="research-header">
+        <div>
+          <span className="eyebrow">{hi ? 'स्रोत-आधारित शोध' : 'SOURCE-BACKED RESEARCH'}</span>
+          <h1>{hi ? 'अवसर खोजें' : 'Discover opportunities'}</h1>
+          <p>
+            {hi
+              ? 'वर्तमान प्रकाशित रिकॉर्ड खोजें। आवेदन की स्थिति अस्पष्ट हो तो उसे अज्ञात ही रखें।'
+              : 'Search the reviewed records we actually cover. An unknown application round stays unknown.'}
+          </p>
         </div>
-        <aside className="coverage-card">
-          <ShieldCheck size={24} />
-          <span className="eyebrow">{t.coverage}</span>
-          <strong>{facets.data?.total ?? '—'}</strong>
-          <p>{t.publishedCount}</p>
-          <small>{t.coverageText}</small>
-        </aside>
-      </section>
+        <span className="catalogue-state">
+          <ShieldCheck size={17} />
+          {development ? t.synthetic : t.publishedCatalogue}
+        </span>
+      </header>
+      <form
+        className="research-search search-box"
+        onSubmit={(e) => {
+          e.preventDefault();
+          filter('q', search);
+        }}
+      >
+        <Search size={22} />
+        <input
+          aria-label={t.search}
+          placeholder={t.search}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <button type="submit" aria-label={t.search}>
+          {hi ? 'खोजें' : 'Search'}
+          <ArrowRight size={17} />
+        </button>
+      </form>
       <div className="notice">
         <Info size={18} />
         <div>
@@ -173,7 +166,7 @@ export function Discover() {
             <option value="">{t.category}</option>
             {facets.data?.categories.map((c) => (
               <option key={c} value={c}>
-                {categories[c]?.label || c}
+                {displayLabel(c, hi)}
               </option>
             ))}
           </select>
@@ -247,13 +240,16 @@ export function Discover() {
               disabled={query.isFetchingNextPage}
               onClick={() => void query.fetchNextPage()}
             >
-              {query.isFetchingNextPage ? t.loading : 'Load more'}
+              {query.isFetchingNextPage ? t.loading : hi ? 'और देखें' : 'Load more'}
               <ArrowRight size={16} />
             </button>
           )}
         </>
       )}
       <div className="catalogue-footnote">
+        <span>
+          {facets.data?.total ?? '—'} {t.publishedCount}
+        </span>
         <ShieldCheck size={16} />
         <p>{t.coverageText}</p>
       </div>
@@ -261,6 +257,7 @@ export function Discover() {
   );
 }
 function Card({ item, development }: { item: Opportunity; development: boolean }) {
+  const hi = useLanguage() === 'hi';
   const t = useStrings();
   const category = categories[item.category] ?? {
     label: item.category,
@@ -278,7 +275,7 @@ function Card({ item, development }: { item: Opportunity; development: boolean }
           {item.is_synthetic ? t.synthetic : item.status.replaceAll('_', ' ')}
         </span>
       </div>
-      <span className="category-name">{category.label}</span>
+      <span className="category-name">{displayLabel(item.category, hi)}</span>
       <h3>
         <Link to={`/opportunities/${item.id}${development ? '?development=true' : ''}`}>
           {item.title}
@@ -330,6 +327,7 @@ function safeUrl(value: string | null) {
   }
 }
 export function Detail() {
+  const hi = useLanguage() === 'hi';
   const { id } = useParams();
   const [params] = useSearchParams();
   const development = params.get('development') === 'true';
@@ -471,7 +469,11 @@ export function Detail() {
                     <p>{t.notEstablished}</p>
                   ) : (
                     item.requirements.map((req) => (
-                      <div className="source-requirement" key={req.id}>
+                      <div
+                        className="source-requirement"
+                        id={`source-requirement-${req.id}`}
+                        key={req.id}
+                      >
                         <h3>{req.description}</h3>
                         {req.citations.map((citation, i) => (
                           <blockquote key={i}>
@@ -503,7 +505,7 @@ export function Detail() {
                 <dl>
                   <dt>{t.version}</dt>
                   <dd>
-                    v{item.version} · {item.status.replaceAll('_', ' ')}
+                    v{item.version} · {displayLabel(item.status, hi)}
                   </dd>
                   <dt>{t.firstSeen}</dt>
                   <dd>
@@ -513,9 +515,9 @@ export function Detail() {
                     )}
                   </dd>
                   <dt>{t.lastCheck}</dt>
-                  <dd>{item.source.last_successful_check_at || t.notChecked}</dd>
+                  <dd>{displayDate(item.source.last_successful_check_at, hi, t.notChecked)}</dd>
                   <dt>{t.lastReview}</dt>
-                  <dd>{item.last_verified_at || t.notVerified}</dd>
+                  <dd>{displayDate(item.last_verified_at, hi, t.notVerified)}</dd>
                 </dl>
               </aside>
             </div>

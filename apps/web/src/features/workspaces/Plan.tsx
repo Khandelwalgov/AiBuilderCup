@@ -1,32 +1,32 @@
+import { ContextLink as Link } from '../../app/subject-context';
 import { IntelligenceMap } from '../../components/IntelligenceMap';
 import { AssessmentLedger } from '../../components/Atlas';
 import { Assistant } from '../assistant/Assistant';
 import { useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { ArrowRight, GitBranch, RefreshCw, FlaskConical } from 'lucide-react';
 import { api, fail } from '../../lib/api/client';
 import type { components } from '../../lib/api/schema';
 import { useStrings, useLanguage } from '../../app/App';
-import { useWorkspaces } from './Workspaces';
-type Ref = components['schemas']['SubjectRef'];
+import { useSubject } from '../../app/subject-context';
 type Action = components['schemas']['ActionView'];
 export function Plan() {
+  const context = useSubject();
+  return <SubjectPlan key={context.key} />;
+}
+function SubjectPlan() {
   const t = useStrings();
   const hi = useLanguage() === 'hi';
-  const [params, setParams] = useSearchParams();
-  const workspaces = useWorkspaces();
-  const kind = (params.get('kind') || 'person') as Ref['kind'];
-  const identifier = params.get('id');
-  const subject: Ref = {
-    kind: ['person', 'household', 'business'].includes(kind) ? kind : 'person',
-    id: identifier,
-  };
+  const context = useSubject();
+  const subject = context.subject;
+  const identifier = subject.id;
   const [selected, setSelected] = useState<Action | null>(null);
   const [age, setAge] = useState('');
   const [explanationId, setExplanationId] = useState('');
   const query = useQuery({
     queryKey: ['plan', subject],
+    enabled: context.available && !context.pending,
     retry: false,
     staleTime: 0,
     refetchOnMount: 'always',
@@ -78,15 +78,6 @@ export function Plan() {
           : 'Provide: ') + name
     );
   }
-  const options = [
-    { value: 'person:', name: hi ? 'मेरा व्यक्तिगत प्रोफ़ाइल' : 'My personal profile' },
-    ...(workspaces.data ?? []).flatMap((w) => [
-      { value: `${w.kind}:${w.id}`, name: w.name },
-      ...w.members
-        .filter((m) => m.id)
-        .map((m) => ({ value: `person:${String(m.id)}`, name: String(m.name) })),
-    ]),
-  ];
   return (
     <div className="page">
       <div className="page-heading plan-heading">
@@ -105,24 +96,23 @@ export function Plan() {
         <label className="field">
           {hi ? 'किसके लिए योजना?' : 'Whose plan?'}
           <select
-            value={`${subject.kind}:${identifier ?? ''}`}
+            value={context.key}
             onChange={(e) => {
-              const [k, id] = e.target.value.split(':');
-              setParams({ kind: k, ...(id ? { id } : {}) });
+              context.select(e.target.value);
               simulation.reset();
               setSelected(null);
             }}
           >
-            {options.map((o) => (
+            {context.options.map((o) => (
               <option key={o.value} value={o.value}>
-                {o.name}
+                {o.label}
               </option>
             ))}
           </select>
         </label>
         <button
           className="button secondary"
-          disabled={query.isFetching}
+          disabled={query.isFetching || !context.available || context.pending}
           onClick={() => {
             simulation.reset();
             void query.refetch();
@@ -133,7 +123,8 @@ export function Plan() {
           {hi ? 'फिर जाँचें' : 'Refresh assessment'}
         </button>
       </div>
-      {query.isPending && (
+      {!context.available && <p role="alert">{context.label}</p>}
+      {context.available && query.isPending && (
         <div className="panel" role="status">
           {t.loading}
         </div>
@@ -371,6 +362,10 @@ export function Plan() {
                     </select>
                   </label>
                   <Assistant
+                    opportunityId={
+                      (data.evaluations.find((e) => e.id === explanationId) ?? data.evaluations[0])
+                        .opportunity_id
+                    }
                     key={
                       data.evaluations.some((e) => e.id === explanationId)
                         ? explanationId

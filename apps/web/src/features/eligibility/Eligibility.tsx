@@ -1,13 +1,21 @@
+import { displayDate } from '../../i18n/format';
+import { ContextLink as Link } from '../../app/subject-context';
 import { AssessmentLedger } from '../../components/Atlas';
 import { Assistant } from '../assistant/Assistant';
 import { useState } from 'react';
+import { useSubject } from '../../app/subject-context';
 import { useLanguage } from '../../app/App';
 import { useMutation } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+
 import { CheckCircle2, CircleHelp, XCircle } from 'lucide-react';
 import { useStrings } from '../../app/App';
 import { api, fail } from '../../lib/api/client';
 export function Eligibility({ id }: { id: string }) {
+  const context = useSubject();
+  return <Assessment key={`${id}:${context.key}`} id={id} />;
+}
+function Assessment({ id }: { id: string }) {
+  const context = useSubject();
   const t = useStrings();
   const hi = useLanguage() === 'hi';
   const [applicationType, setApplicationType] = useState<'fresh' | 'renewal' | ''>('');
@@ -15,7 +23,7 @@ export function Eligibility({ id }: { id: string }) {
     mutationFn: async () => {
       const { data, error } = await api.POST('/v1/opportunities/{identifier}/evaluate', {
         params: { path: { identifier: id } },
-        body: { subject: { kind: 'person' }, application_type: applicationType || null },
+        body: { subject: context.subject, application_type: applicationType || null },
       });
       return data ?? fail(error);
     },
@@ -25,6 +33,9 @@ export function Eligibility({ id }: { id: string }) {
       <span className="eyebrow">{t.preliminary}</span>
       <h2>{t.checkEligibility}</h2>
       <p>{t.evaluationIntro}</p>
+      <p className="selected-subject">
+        <strong>{hi ? 'आकलन किसके लिए' : 'Assessing'}:</strong> {context.label}
+      </p>
       <label className="field">
         {hi ? 'इस अवसर का आवेदन संदर्भ' : 'Application context for this opportunity'}
         <select
@@ -40,7 +51,11 @@ export function Eligibility({ id }: { id: string }) {
         </select>
       </label>
       <div className="evaluation-actions">
-        <button className="button" onClick={() => query.mutate()} disabled={query.isPending}>
+        <button
+          className="button"
+          onClick={() => query.mutate()}
+          disabled={query.isPending || !context.available || context.pending}
+        >
           {query.isPending ? t.evaluating : t.checkEligibility}
         </button>
         <Link className="text-button" to="/profile">
@@ -128,9 +143,9 @@ export function Eligibility({ id }: { id: string }) {
               </article>
             );
           })}
-          <Assistant evaluationId={query.data.id} />
+          <Assistant evaluationId={query.data.id} opportunityId={id} />
           <small>
-            {t.version} {query.data.version} · {new Date(query.data.evaluated_at).toLocaleString()}{' '}
+            {t.version} {query.data.version} · {displayDate(query.data.evaluated_at, hi, t.unknown)}{' '}
             · {t.preliminary}
           </small>
         </div>

@@ -1,5 +1,9 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { displayLabel } from '../../i18n/format';
+import { useDirtyForm } from '../../app/dirty-forms';
+import { useSubject } from '../../app/subject-context';
+import { ContextLink as Link } from '../../app/subject-context';
+import { useEffect, useRef, useState } from 'react';
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowRight, BriefcaseBusiness, UsersRound, Plus, ShieldCheck } from 'lucide-react';
 import { api, fail } from '../../lib/api/client';
@@ -18,11 +22,18 @@ export function useWorkspaces() {
   });
 }
 export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
+  const context = useSubject();
+  return <WorkspaceEditor key={context.key + kind} kind={kind} />;
+}
+function WorkspaceEditor({ kind }: { kind: 'household' | 'business' }) {
+  const context = useSubject();
   const t = useStrings();
   const hi = useLanguage() === 'hi';
   const cache = useQueryClient();
   const query = useWorkspaces();
-  const [selected, setSelected] = useState<string>('');
+  const [selected, setSelected] = useState<string>(
+    context.subject.kind === kind ? (context.subject.id ?? '') : '',
+  );
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [legal, setLegal] =
@@ -34,9 +45,26 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
   const [dependent, setDependent] = useState('');
   const [age, setAge] = useState('');
   const [responsibility, setResponsibility] = useState(false);
+  const signature = JSON.stringify({
+    name,
+    description,
+    legal,
+    registered,
+    state,
+    district,
+    turnover,
+    dependent,
+    age,
+    responsibility,
+  });
+  const baseline = useRef<string | null>(null);
+  const submitted = useRef('');
+  const dirty = baseline.current !== null && signature !== baseline.current;
+  const guard = useDirtyForm(dirty);
   const list = query.data?.filter((w) => w.kind === kind) ?? [];
   const current = list.find((w) => w.id === selected);
   useEffect(() => {
+    if (dirty) return;
     setName(current?.name ?? '');
     setDescription(current?.description ?? '');
     setLegal((current?.legal_status as typeof legal) ?? 'unregistered');
@@ -45,7 +73,19 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
     setState(value('residence_state'));
     setDistrict(value('residence_district'));
     setTurnover(value('business_turnover'));
-  }, [current]);
+    baseline.current = JSON.stringify({
+      name: current?.name ?? '',
+      description: current?.description ?? '',
+      legal: current?.legal_status ?? 'unregistered',
+      registered: value('business_registered'),
+      state: value('residence_state'),
+      district: value('residence_district'),
+      turnover: value('business_turnover'),
+      dependent,
+      age,
+      responsibility,
+    });
+  }, [current, dirty, dependent, age, responsibility]);
   const save = useMutation({
     mutationFn: async () => {
       if (kind === 'household') {
@@ -73,6 +113,7 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
       return response.data ?? fail(response.error);
     },
     onSuccess: async (data) => {
+      baseline.current = submitted.current;
       await cache.invalidateQueries({ queryKey: ['workspaces'] });
       void cache.invalidateQueries({ queryKey: ['dashboard-summary'] });
       void cache.invalidateQueries({ queryKey: ['plan'] });
@@ -179,7 +220,7 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
             {current
               ? kind === 'household'
                 ? `${current.members.length} ${hi ? 'दिखाई देने वाली सदस्य प्रविष्टियाँ · तथ्यों का मिश्रण नहीं' : 'visible member entries · facts stay separate'}`
-                : `${current.role} · ${current.legal_status ?? (hi ? 'स्वरूप अज्ञात' : 'structure unknown')}`
+                : `${displayLabel(current.role, hi)} · ${current.legal_status ?? (hi ? 'स्वरूप अज्ञात' : 'structure unknown')}`
               : hi
                 ? 'सिर्फ आवश्यक जानकारी से शुरू करें।'
                 : 'Start small. Add only the information a relevant opportunity needs.'}
@@ -197,13 +238,22 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
             <button
               className={`context-card ${selected === w.id ? 'selected' : ''}`}
               key={w.id}
-              onClick={() => setSelected(w.id)}
+              onClick={() => {
+                if (context.key !== `${kind}:${w.id}`) {
+                  context.select(`${kind}:${w.id}`);
+                  return;
+                }
+                if (guard.confirmLeave()) {
+                  baseline.current = null;
+                  setSelected(w.id);
+                }
+              }}
             >
               {kind === 'household' ? <UsersRound /> : <BriefcaseBusiness />}
               <span>
                 <strong>{w.name}</strong>
                 <small>
-                  {w.role} ·{' '}
+                  {displayLabel(w.role, hi)} ·{' '}
                   {w.kind === 'household'
                     ? `${w.members.length} ${hi ? 'सदस्य' : 'members'}`
                     : w.legal_status}
@@ -215,8 +265,19 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
           <button
             className="text-button"
             onClick={() => {
+              if (!guard.confirmLeave()) return;
+              baseline.current = null;
               setSelected('');
               setName('');
+              setDescription('');
+              setLegal('unregistered');
+              setRegistered('');
+              setState('');
+              setDistrict('');
+              setTurnover('');
+              setDependent('');
+              setAge('');
+              setResponsibility(false);
             }}
           >
             <Plus size={16} />
@@ -238,6 +299,7 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
+                    submitted.current = signature;
                     save.mutate();
                   }}
                 >
@@ -266,7 +328,7 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
                       {m.id ? String(m.name).slice(0, 1) : '—'}
                     </span>
                     <strong>{String(m.name)}</strong>
-                    <small>{String(m.access)}</small>
+                    <small>{displayLabel(String(m.access), hi)}</small>
                     {m.id != null && (
                       <Link to={`/people/${String(m.id)}/edit`}>
                         {hi ? 'प्रोफ़ाइल संपादित करें' : 'Edit profile'} <ArrowRight size={14} />
@@ -362,6 +424,7 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
               className="panel"
               onSubmit={(e) => {
                 e.preventDefault();
+                submitted.current = signature;
                 save.mutate();
               }}
             >
@@ -454,7 +517,7 @@ export function Workspaces({ kind }: { kind: 'household' | 'business' }) {
                 {save.isPending ? t.saving : hi ? 'सहेजें' : 'Save context'}
               </button>
               {save.isError && <p role="alert">{save.error.message}</p>}
-              {save.isSuccess && <p role="status">{hi ? 'सहेजा गया' : 'Saved'}</p>}
+              {save.isSuccess && !dirty && <p role="status">{hi ? 'सहेजा गया' : 'Saved'}</p>}
               {current && (
                 <Link className="text-button" to={`/plan?kind=business&id=${current.id}`}>
                   {hi ? 'व्यवसाय की योजना देखें' : 'Open business plan'} <ArrowRight size={16} />

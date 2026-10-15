@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { ContextLink as Link } from '../app/subject-context';
+
 import { ArrowRight, Fingerprint, ScanLine, ShieldCheck } from 'lucide-react';
 import { useLanguage } from '../app/App';
 import type { components } from '../lib/api/schema';
@@ -54,115 +56,141 @@ export function ReadinessJourney({ steps, active = 0 }: { steps: string[]; activ
 
 export function Landing() {
   const hi = useLanguage() === 'hi';
+  const [context, setContext] = useState(0);
+  const [selected, setSelected] = useState(false);
+  const contexts = hi ? ['व्यक्ति', 'परिवार', 'व्यवसाय'] : ['Personal', 'Family', 'Business'];
   return (
-    <div className="page atlas-landing">
-      <section className="atlas-hero">
-        <div className="atlas-hero-copy">
-          <span className="eyebrow">
-            <span className="signal-dot" />
-            {hi ? 'अवसरों तक एक स्पष्ट रास्ता' : 'THE OPPORTUNITY INTELLIGENCE ATLAS'}
-          </span>
-          <h1>
-            {hi ? (
-              <>
-                अवसर खोजें।
-                <br />
-                अपना रास्ता
-                <br />
-                <em>समझें।</em>
-              </>
-            ) : (
-              <>
-                Possibility,
-                <br />
-                with a path
-                <br />
-                <em>forward.</em>
-              </>
-            )}
-          </h1>
-          <p>
-            {hi
-              ? 'अपने लिए अवसर खोजें। जानें क्या बाकी है। अगला कदम साफ़ देखें।'
-              : 'Find opportunities that apply to you. Understand what’s missing. Know what to do next.'}
-          </p>
-          <Link className="button atlas-cta" to="/discover">
-            {hi ? 'अवसर खोजें' : 'Explore opportunities'}
-            <ArrowRight size={19} />
-          </Link>
-          <Link className="atlas-secondary" to="/profile">
-            {hi ? 'अपना प्रोफ़ाइल बनाएँ' : 'Start with your profile'} <ArrowRight size={16} />
-          </Link>
+    <div className="page landing-page">
+      <section className="landing-intro">
+        <div className="launch-label">
+          <span className="signal-dot" />
+          {hi ? 'प्रमाण के साथ अवसरों की समझ' : 'OPPORTUNITY INTELLIGENCE, WITH EVIDENCE'}
         </div>
-        <div className="atlas-specimen">
-          <div className="specimen-caption">
-            <span>01 / {hi ? 'जुड़ी तैयारी' : 'CONNECTED READINESS'}</span>
-            <span>{hi ? 'केवल उदाहरण' : 'ILLUSTRATIVE · NOT A MATCH'}</span>
-          </div>
-          <div
-            className="specimen-network"
-            aria-label={
-              hi
-                ? 'उदाहरण: एक साझा कदम दो अवसरों से जुड़ता है'
-                : 'Illustration: one shared action connects two opportunities'
-            }
-          >
-            <svg viewBox="0 0 500 450" aria-hidden="true">
-              <path d="M80 215 C150 215 145 215 215 215 M290 215 C365 215 330 100 395 100 M290 215 C365 215 330 330 395 330" />
-              <circle cx="290" cy="215" r="6" />
-              <circle cx="215" cy="215" r="6" />
-            </svg>
-            <div className="specimen-person">
-              <Fingerprint size={28} />
-              <strong>{hi ? 'आपका संदर्भ' : 'Your context'}</strong>
-              <small>{hi ? 'अनुमति के साथ तथ्य' : 'Facts, with permission'}</small>
-            </div>
-            <div className="specimen-action">
-              <span className="specimen-tag">{hi ? 'साझा कदम' : 'ONE SHARED ACTION'}</span>
-              <ScanLine size={26} />
-              <strong>
-                {hi ? 'एक प्रमाण।\nकई संभावनाएँ।' : 'One piece of evidence.\nMore possibilities.'}
-              </strong>
-              <small>{hi ? 'सत्यापन अभी बाकी' : 'Verification still required'}</small>
-            </div>
-            <div className="specimen-opportunity first">
-              <span>01</span>
-              <strong>{hi ? 'अवसर' : 'Opportunity'}</strong>
-              <small>{hi ? 'स्रोत-आधारित शर्तें' : 'Source-backed conditions'}</small>
-            </div>
-            <div className="specimen-opportunity second">
-              <span>02</span>
-              <strong>{hi ? 'दूसरा अवसर' : 'Another opportunity'}</strong>
-              <small>{hi ? 'वही तैयारी का कदम' : 'The same readiness step'}</small>
-            </div>
-          </div>
-          <p className="specimen-foot">
-            {hi
-              ? 'सिर्फ सूची नहीं। अवसरों और उनकी तैयारी के बीच संबंध।'
-              : 'Beyond a list. See the connections between opportunities and the steps that unlock readiness.'}
-          </p>
+        <h1>
+          {hi ? (
+            <>
+              अवसर समझें।
+              <br />
+              <span>अगला कदम पहचानें।</span>
+            </>
+          ) : (
+            <>
+              Good opportunities.
+              <br />
+              <span>Clear next steps.</span>
+            </>
+          )}
+        </h1>
+        <p>
+          {hi
+            ? 'अपने संदर्भ से ज़रूरी शर्तें जोड़ें। जानें कौनसी जानकारी बाकी है और एक कदम कहाँ-कहाँ मदद करता है।'
+            : 'Connect your context to the conditions that matter. See what’s missing—and where one step can help more than once.'}
+        </p>
+        <div className="landing-actions">
+          <Link className="button" to="/discover">
+            {hi ? 'अवसर खोजें' : 'Explore opportunities'}
+            <ArrowRight size={18} />
+          </Link>
+          <Link className="button secondary" to="/profile">
+            {hi ? 'अपना संदर्भ बनाएँ' : 'Build your context'}
+            <ArrowRight size={18} />
+          </Link>
         </div>
       </section>
-      <div className="atlas-trust">
-        <ShieldCheck size={23} />
-        <strong>
-          {hi ? 'प्रमाण पहले। अनिश्चितता स्पष्ट।' : 'Evidence first. Uncertainty, made visible.'}
-        </strong>
-        <span>
-          {hi
-            ? 'आधिकारिक स्रोत · मानव समीक्षा · अंतिम निर्णय प्राधिकरण का'
-            : 'Official sources · Human review · Authorities make final decisions'}
-        </span>
-      </div>
-      <section className="atlas-method">
+      <section
+        className={`product-preview ${selected ? 'is-connected' : ''}`}
+        aria-label={hi ? 'उदाहरण वाला इंटरैक्टिव पूर्वावलोकन' : 'Interactive illustrative preview'}
+      >
+        <header>
+          <span className="preview-label">
+            {hi ? 'उदाहरण, वास्तविक मिलान नहीं' : 'ILLUSTRATIVE · NOT A MATCH'}
+          </span>
+          <div
+            className="preview-tabs"
+            role="group"
+            aria-label={hi ? 'उदाहरण का संदर्भ' : 'Illustrative context'}
+          >
+            {contexts.map((label, i) => (
+              <button key={label} aria-pressed={context === i} onClick={() => setContext(i)}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </header>
+        <div className="preview-flow">
+          <div className="preview-context">
+            <Fingerprint size={26} />
+            <small>{hi ? 'चुना गया उदाहरण' : 'ILLUSTRATIVE CONTEXT'}</small>
+            <h3>{contexts[context]}</h3>
+            <p>{hi ? 'अधिकृत तथ्य अलग रहते हैं' : 'Authorized facts stay separate'}</p>
+          </div>
+          <div className="preview-connector" aria-hidden="true">
+            →
+          </div>
+          <button
+            className="preview-junction"
+            aria-pressed={selected}
+            onClick={() => setSelected((v) => !v)}
+          >
+            <ScanLine size={26} />
+            <small>{hi ? 'एक साझा ज़रूरी कदम' : 'ONE SHARED PREREQUISITE'}</small>
+            <strong>{hi ? 'एक कदम के संबंध देखें' : 'See what one step connects'}</strong>
+            <span>
+              {selected
+                ? hi
+                  ? 'संबंध दिखाई दे रहे हैं'
+                  : 'Connections highlighted'
+                : hi
+                  ? 'संबंध देखने के लिए चुनें'
+                  : 'Select to reveal connections'}{' '}
+              <ArrowRight size={16} />
+            </span>
+          </button>
+          <div className="preview-connector branching" aria-hidden="true">
+            ↗<br />↘
+          </div>
+          <div className="preview-pathways">
+            {[0, 1].map((i) => (
+              <div key={i}>
+                <span>{i ? 'B' : 'A'}</span>
+                <div>
+                  <strong>
+                    {hi ? 'अवसर का रास्ता' : 'Opportunity pathway'} {i ? 'B' : 'A'}
+                  </strong>
+                  <p>{hi ? 'स्रोत-आधारित शर्तें' : 'Source-backed conditions'}</p>
+                </div>
+                <ArrowRight size={16} />
+              </div>
+            ))}
+          </div>
+        </div>
+        <footer role="status">
+          {selected
+            ? hi
+              ? 'उदाहरण: एक प्रमाण की ज़रूरत कई अवसरों से जुड़ सकती है। इससे पात्रता या सत्यापन की गारंटी नहीं मिलती।'
+              : 'Illustration: one evidence requirement can connect several opportunities. It does not guarantee eligibility or verification.'
+            : hi
+              ? 'साझा कदम चुनें। यहाँ दिख रहे रास्ते केवल उत्पाद का उदाहरण हैं।'
+              : 'Select the shared step. These pathways illustrate the product, not actual personalized results.'}
+        </footer>
+      </section>
+      <section id="how-it-works" className="landing-method">
         <div>
-          <span className="eyebrow">{hi ? 'कैसे काम करता है' : 'A CLEARER WAY THROUGH'}</span>
-          <h2>{hi ? 'खोज से\nअगले कदम तक।' : 'From discovery\nto a doable next step.'}</h2>
+          <span className="eyebrow">
+            {hi ? 'जटिल जानकारी से उपयोगी कदम तक' : 'FROM COMPLEXITY TO A USEFUL NEXT MOVE'}
+          </span>
+          <h2>
+            {hi
+              ? `सिर्फ खोज नहीं।
+समझ और तैयारी।`
+              : `More than discovery.
+A way through.`}
+          </h2>
         </div>
         <ReadinessJourney
           steps={
             hi
-              ? ['अपना संदर्भ चुनें', 'प्रमाण सहित शर्तें समझें', 'साझा तैयारी के कदम देखें']
+              ? ['ज़रूरी संदर्भ दें', 'मूल शर्तों को समझें', 'साझा तैयारी के कदम देखें']
               : [
                   'Choose your context',
                   'Understand cited conditions',
@@ -171,36 +199,22 @@ export function Landing() {
           }
         />
       </section>
-      <section className="atlas-contexts">
-        {(hi
-          ? [
-              ['01', 'व्यक्ति', 'केवल ज़रूरी सवाल। आपके तथ्य, आपके नियंत्रण में।', '/profile'],
-              ['02', 'परिवार', 'आश्रित की अलग पहचान और स्पष्ट अभिभावक अनुमति।', '/family'],
-              ['03', 'व्यवसाय', 'अपंजीकृत उद्यम से कंपनी तक। अपनी अलग कार्ययोजना।', '/businesses'],
-            ]
-          : [
-              ['01', 'For you', 'Relevant questions. Your facts, under your control.', '/profile'],
-              [
-                '02',
-                'For your family',
-                'Independent profiles. Explicit guardian permissions.',
-                '/family',
-              ],
-              [
-                '03',
-                'For your business',
-                'From an unregistered enterprise to a company. A separate workspace.',
-                '/businesses',
-              ],
-            ]
-        ).map(([n, title, text, url]) => (
-          <Link key={n} to={url}>
-            <span>{n}</span>
-            <h3>{title}</h3>
-            <p>{text}</p>
-            <ArrowRight size={22} />
-          </Link>
-        ))}
+      <section className="trust-banner">
+        <ShieldCheck size={26} />
+        <div>
+          <h3>
+            {hi ? 'प्रमाण पहले। अंतिम निर्णय प्राधिकरण का।' : 'Evidence first. Authorities decide.'}
+          </h3>
+          <p>
+            {hi
+              ? 'आधिकारिक स्रोत, मानव समीक्षा और स्पष्ट अनिश्चितता। कोई स्वचालित स्वीकृति नहीं।'
+              : 'Official sources, human review and visible uncertainty. No automatic approvals.'}
+          </p>
+        </div>
+        <Link to="/discover">
+          {hi ? 'समीक्षित संग्रह देखें' : 'See reviewed coverage'}
+          <ArrowRight size={17} />
+        </Link>
       </section>
     </div>
   );

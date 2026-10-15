@@ -37,12 +37,12 @@ test('mobile navigation, Hindi preference, and truthful coverage', async ({ page
     true,
   );
   await page.getByRole('button', { name: 'Open navigation' }).click();
-  await page.getByRole('link', { name: 'Overview', exact: true }).click();
+  await page.getByRole('link', { name: 'Home', exact: true }).click();
   await expect(
-    page.getByText('Evidence first. Uncertainty, made visible.', { exact: true }),
+    page.getByRole('heading', { name: 'Good opportunities. Clear next steps.' }),
   ).toBeVisible();
   await page.getByRole('combobox', { name: 'Interface language' }).selectOption('hi');
-  await expect(page.getByRole('heading', { name: /अवसर खोजें/ }).first()).toBeVisible();
+  await expect(page.getByRole('heading', { name: /अवसर समझें/ }).first()).toBeVisible();
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('lang', 'hi');
 });
