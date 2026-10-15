@@ -146,3 +146,13 @@ Two real draft candidates remain private in `/admin`. The Post-Matric candidate 
 See [Finale report](docs/finale-final-report.md), [visual direction](docs/finale-visual-direction.md) and [acceptance checklist](docs/finale-acceptance.md). The Atlas redesign and shared-document/evaluation correctness changes are local; neither genuine draft has been published and no new AI call or cloud deployment occurred.
 
 `make finale-demo` prints a plan. `make finale-demo ARGS=--run-isolated` executes public-source-copy and fictional amendment scenarios inside disposable PostgreSQL schemas; it never populates the application schema. `make release-local` runs configuration, contracts, backend/frontend and browser gates. Start local services with the existing `make db`, `make migrate`, `make api` and `make web` commands. Browser regressions own separate5174/8001listeners and leave normal5173/8000services untouched.
+
+### Administrator ingestion permission
+
+Source ingestion from the web requires a backend operator to explicitly set
+`AI_INGESTION_LIVE_ENABLED=true`; it defaults to false. The confirmation dialog
+shows the configured provider/model, existing draft count and optional
+`AI_INGESTION_TEST_BUDGET_USD`. The budget is informational, not an automatic
+spending cap. The API rejects stale provider/model confirmations. Draft correction
+and human review remain available with ingestion disabled. Do not enable the flag
+merely to inspect source evidence. See [Reimagine acceptance](docs/reimagine-acceptance.md).

@@ -1,0 +1,842 @@
+{
+  "reimagine-before": [
+    {
+      "path": ".live-validation/reimagine-before/admin-en-1024.png",
+      "sha256": "b723d78e7215c12bb8c1a6425ad69d073288a692b9b3bc12ee9972d944b5c06d"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-en-1440.png",
+      "sha256": "6e577b0aa2545203463b4621b9769846932680a1a2d7ca4133913cc680a76334"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-en-320.png",
+      "sha256": "87c7ebf7c044daa528353d3d599caeecad81ccc007307677ac93d22eafd9cdc4"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-en-390.png",
+      "sha256": "f2e80de0f273852daa091ed54b9682c19f4360e3e227f8cb9e09e0a379953302"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-fictional-en-1024.png",
+      "sha256": "c1bf3979f4752371786a215463c0b6f555dfcb4e7eca928121d48a61b202e008"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-fictional-en-1440.png",
+      "sha256": "b12384421d58be1e8f0d2db159ea32938835eb9610c270f3e3aadeeb51ffe9f4"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-fictional-en-320.png",
+      "sha256": "fd00a5dd50b812f0bc71e95823efaaaac873d7d1954d641e7ee67cdc1f17383f"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-fictional-en-390.png",
+      "sha256": "828eb8d368cd4195a58a3d8d0ddeca707936174491dfe43266b0d1716b6c4bee"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-fictional-hi-1024.png",
+      "sha256": "373b24bc522f2f4ec7f867cb48c8c7721629e59ad5622d8d0f863dbc14cd1e48"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-fictional-hi-1440.png",
+      "sha256": "b508baee174e6b75f0ebb9ed8352dfa4d70c71b38153c0546b1500ffbbc228d1"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-fictional-hi-320.png",
+      "sha256": "9bba62fbc445b5a04d4efde038e4b14bef09a3fd920107ff4c51e7912c71685e"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-fictional-hi-390.png",
+      "sha256": "7f7428029220cdd9bfeba11c01a211137a9c28ac341db128c4f90673597a804e"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-hi-1024.png",
+      "sha256": "fa4c40975a83981906558bd44c7c0426fc55e3557efac9fc3e8982ae5f5e8091"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-hi-1440.png",
+      "sha256": "9b0bdff497076f28b981c4847d9015656b9f437bafab905fc0c6fb989b4d17c1"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-hi-320.png",
+      "sha256": "01866b589feb335b4357984eebbe4e3307b381a9bbd41aecf8a086f05d33286e"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-hi-390.png",
+      "sha256": "e87268f9d97473fffe8e9a11753402cdae76a41139318258a8d68a5644e694f3"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-populated-contract-1440.png",
+      "sha256": "70ff21fa3d058453f10c3a2b3aa6946a056722280a33c053ae2c31cd4316527d"
+    },
+    {
+      "path": ".live-validation/reimagine-before/admin-public-capture-copy-1440.png",
+      "sha256": "d737c83eb903bad7526f7194651dd1ada7ae8b40c1dff8d6643848f140a73ba3"
+    },
+    {
+      "path": ".live-validation/reimagine-before/business-fictional-en-1024.png",
+      "sha256": "f15d996588cdbd225206034a6a91328646d6314ec5eb633b42d1e4825060d21e"
+    },
+    {
+      "path": ".live-validation/reimagine-before/business-fictional-en-1440.png",
+      "sha256": "f83e49af0870ae394d5607b7a1f9e38e4954f685c5e618f4494e9ba7cdca6d16"
+    },
+    {
+      "path": ".live-validation/reimagine-before/business-fictional-en-320.png",
+      "sha256": "8ae76aa13d4b6a608ae76551741b765d1b366826a11dbc147b718e25b695ece4"
+    },
+    {
+      "path": ".live-validation/reimagine-before/business-fictional-en-390.png",
+      "sha256": "15ce6ca19dae74b28fc88c354655ca001564cd1806b37e8ef0d18b68db0f27db"
+    },
+    {
+      "path": ".live-validation/reimagine-before/business-fictional-hi-1024.png",
+      "sha256": "b8b4d99983d4af3d54a4ca50fb9387669e45f3794238fb823fe8fe077a618acc"
+    },
+    {
+      "path": ".live-validation/reimagine-before/business-fictional-hi-1440.png",
+      "sha256": "a3f824b7fbfb2509c4ba9eac002bd9b0b4988804193f4f988acc429152ba3e81"
+    },
+    {
+      "path": ".live-validation/reimagine-before/business-fictional-hi-320.png",
+      "sha256": "c3c77754822b33a9936155ece329431f65a76e8cc9812b5cf91f5f9e41abf54b"
+    },
+    {
+      "path": ".live-validation/reimagine-before/business-fictional-hi-390.png",
+      "sha256": "4c674bee5bca479725878643623434be8e506600880730d77b4e6c486568bd7f"
+    },
+    {
+      "path": ".live-validation/reimagine-before/business-populated-contract-1440.png",
+      "sha256": "cffe89aea25e04b4f9eea4734ba88ffff1467129009e7731dabc5d20667eb764"
+    },
+    {
+      "path": ".live-validation/reimagine-before/businesses-en-1024.png",
+      "sha256": "41c14c0a0f864418c2feb13fde8a397d8167c3e4818d29df50c655c626151f89"
+    },
+    {
+      "path": ".live-validation/reimagine-before/businesses-en-1440.png",
+      "sha256": "2c53a8ac5bfd9768da1e4512052eb3dfd3cfdf883419e3f9ea672931a2cc9cc2"
+    },
+    {
+      "path": ".live-validation/reimagine-before/businesses-en-320.png",
+      "sha256": "153c042f4a64f042e60f0ebe6ebf042c137bf888c12252d3484ede82117be7fa"
+    },
+    {
+      "path": ".live-validation/reimagine-before/businesses-en-390.png",
+      "sha256": "0e78702427d5d0122d1a056e0acee05335c95c4e441c3592557475ef204ceb19"
+    },
+    {
+      "path": ".live-validation/reimagine-before/businesses-hi-1024.png",
+      "sha256": "56c29665c8c4214f54c61e334eec7aeaf78398ae0bd77fd12b8f8a2f81db86e2"
+    },
+    {
+      "path": ".live-validation/reimagine-before/businesses-hi-1440.png",
+      "sha256": "f40b1ed9ec7829caa31a3f5d0ff5e2af073737719ad067410c8789f6a6e19f02"
+    },
+    {
+      "path": ".live-validation/reimagine-before/businesses-hi-320.png",
+      "sha256": "f2c817d980bb42c1fac632134a9b72c07dc17ac78bccb1d8d546b61042cb49dd"
+    },
+    {
+      "path": ".live-validation/reimagine-before/businesses-hi-390.png",
+      "sha256": "0746170cd2a27a37082dcb0aa59ae8f214d954128f032c40289d70e13da0cae7"
+    },
+    {
+      "path": ".live-validation/reimagine-before/cockpit-fictional-en-1024.png",
+      "sha256": "cfe99c3874386f1946d6e55e4c5b9835a2e68b1810eeb368b236925c2f606b4d"
+    },
+    {
+      "path": ".live-validation/reimagine-before/cockpit-fictional-en-1440.png",
+      "sha256": "ac841795c670638d416f1cbb13f7fe2e7abca4e01eb825da2073d2068c3615e2"
+    },
+    {
+      "path": ".live-validation/reimagine-before/cockpit-fictional-en-320.png",
+      "sha256": "0304eca4c2ab2b0007455e27a0c9438107c52353d4b1576dc00dab1aa77e2f4c"
+    },
+    {
+      "path": ".live-validation/reimagine-before/cockpit-fictional-en-390.png",
+      "sha256": "6f52065c8ce7d6f375253d1dd64216808d0150514beb198a5bc0bbc9eeddddaf"
+    },
+    {
+      "path": ".live-validation/reimagine-before/cockpit-fictional-hi-1024.png",
+      "sha256": "a722d4bbf7f81d2a5964c81adf34f17d7b5d4b0e52b7962539d638f5f877eabc"
+    },
+    {
+      "path": ".live-validation/reimagine-before/cockpit-fictional-hi-1440.png",
+      "sha256": "44fd88f0cbedfa95e1e4b89b14df7d73c87f33807768dd6fe98c5fd05895a5d5"
+    },
+    {
+      "path": ".live-validation/reimagine-before/cockpit-fictional-hi-320.png",
+      "sha256": "54ee5ccb26abf4fcd3fabd95ba52c1ff6bc992cb0818e989f56d861e3fedec25"
+    },
+    {
+      "path": ".live-validation/reimagine-before/cockpit-fictional-hi-390.png",
+      "sha256": "2410305916466254d1f8ca72f4ba7c1f0db27b4f5d060441533616111a30109d"
+    },
+    {
+      "path": ".live-validation/reimagine-before/dashboard-en-1024.png",
+      "sha256": "65db67cce017fa850a110b88f503b6949169a30ffb0fd32d1e0d0da307f4ef10"
+    },
+    {
+      "path": ".live-validation/reimagine-before/dashboard-en-1440.png",
+      "sha256": "643aa93d5be25c25418f3004077fd086a45cd78431539229ba0d3467acaaa01b"
+    },
+    {
+      "path": ".live-validation/reimagine-before/dashboard-en-320.png",
+      "sha256": "460eeb97e225865fc2a72837a4e6d8ead167829a71e679beb4a378d700658f0a"
+    },
+    {
+      "path": ".live-validation/reimagine-before/dashboard-en-390.png",
+      "sha256": "986fd0529e973d74f470d3a11e5e898278ce5af517d254c467412c67d5ca1f60"
+    },
+    {
+      "path": ".live-validation/reimagine-before/dashboard-hi-1024.png",
+      "sha256": "9a1530b097d6fd5575f602b77d77faca33dc1263c106956440a5f63968fa80bd"
+    },
+    {
+      "path": ".live-validation/reimagine-before/dashboard-hi-1440.png",
+      "sha256": "921e94f8da74a3db9d0cd2458b7fd85e0600d39dddb376d9e58d7ab57cba48b7"
+    },
+    {
+      "path": ".live-validation/reimagine-before/dashboard-hi-320.png",
+      "sha256": "c74c29c8b87033a3f70d4d230fe3386dfb01bb97da1ccac1caf924147087620c"
+    },
+    {
+      "path": ".live-validation/reimagine-before/dashboard-hi-390.png",
+      "sha256": "7eebc4a85240713b7e0eed667945d8a76f5f4c2fd2842ff233d09c498d3a6501"
+    },
+    {
+      "path": ".live-validation/reimagine-before/detail-fictional-en-1024.png",
+      "sha256": "cca0576c54c1361604886b0ba0581b29d943631e948ecbe58f40bd533165663a"
+    },
+    {
+      "path": ".live-validation/reimagine-before/detail-fictional-en-1440.png",
+      "sha256": "9cbef8ebd64b8683c2dd4b7d8dc140fbdd89dbb7b0b2963ede3fd6da1efd5920"
+    },
+    {
+      "path": ".live-validation/reimagine-before/detail-fictional-en-320.png",
+      "sha256": "576b89c84b5689d3f4ecdec90d3303d41a83f14af6e625d3f5a4c94abdae5459"
+    },
+    {
+      "path": ".live-validation/reimagine-before/detail-fictional-en-390.png",
+      "sha256": "a54cc02890a9de72fd1326c4cf4da92e76a69248d3121b286263c71cb2e7efd3"
+    },
+    {
+      "path": ".live-validation/reimagine-before/detail-fictional-hi-1024.png",
+      "sha256": "927edb022c2daea216511e28d32533fb0c2bae6993d5b93bd3a561cf43617644"
+    },
+    {
+      "path": ".live-validation/reimagine-before/detail-fictional-hi-1440.png",
+      "sha256": "13dd25057a0a018c2266c96c7cade02fcd19442aca093f9c043c28ecbeb5cfa1"
+    },
+    {
+      "path": ".live-validation/reimagine-before/detail-fictional-hi-320.png",
+      "sha256": "1a7ce483d2f368b714366c3e5ca30ab583a6beb5f9a3376cc2f9f20d97a16748"
+    },
+    {
+      "path": ".live-validation/reimagine-before/detail-fictional-hi-390.png",
+      "sha256": "03deb8a971a5b3c38f5d5015f9fc558121647df93b55c7f9a1a6cbb75061ae31"
+    },
+    {
+      "path": ".live-validation/reimagine-before/discover-en-1024.png",
+      "sha256": "9e0f005eb2127a04cab3c86f390e8b7b091173bb3cf51d12c7aa6e228e096649"
+    },
+    {
+      "path": ".live-validation/reimagine-before/discover-en-1440.png",
+      "sha256": "9b347480f4735c666c0053a7809bb1fa60bd2e2a470dd553ab28c95cf32ddc0b"
+    },
+    {
+      "path": ".live-validation/reimagine-before/discover-en-320.png",
+      "sha256": "2b3e699225fddb5f4e7227ccdb829658efb3c164fd656c8680152735e3f7b668"
+    },
+    {
+      "path": ".live-validation/reimagine-before/discover-en-390.png",
+      "sha256": "15729aa16a927df6f4a2c3ae765c3dc429badc5b147b4cbea59ba16e0dd0224f"
+    },
+    {
+      "path": ".live-validation/reimagine-before/discover-hi-1024.png",
+      "sha256": "774417ef4aafbf6965101f781b3505249086755da1951dbf508d1c6cc57385db"
+    },
+    {
+      "path": ".live-validation/reimagine-before/discover-hi-1440.png",
+      "sha256": "9cce7fec3c5a01945e79b4f8fb919dd66a3c32c7911c8c4ed85dd9ebf8aa4297"
+    },
+    {
+      "path": ".live-validation/reimagine-before/discover-hi-320.png",
+      "sha256": "4deaaba7c0b6e5d0bcdf6676b0cf3f4a530ca60570a2596f2d2f846f935587fd"
+    },
+    {
+      "path": ".live-validation/reimagine-before/discover-hi-390.png",
+      "sha256": "0511681671a3a42857b1dc5f239e407092fe70f8a614e6a773a2d6fde8526984"
+    },
+    {
+      "path": ".live-validation/reimagine-before/eligibility-populated-contract-1440.png",
+      "sha256": "7b79e5c2ea12161187ddf5c099a6536a35465afac1987d12e0717841aa53918c"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-en-1024.png",
+      "sha256": "7e7cd3c649443cecb170f44a42c2d8448cd9da189061343ca518098f1245fc52"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-en-1440.png",
+      "sha256": "80c287170b40d84dc88f0d5e8fac338ab483b05fbcb75116fbdffc4618abb176"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-en-320.png",
+      "sha256": "ccc298472a7fc25b946426e6a071f6b0c97ef3aee4f275a4bc711fd5684cb3d1"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-en-390.png",
+      "sha256": "e456e2783343235c00f9ba27709fc50cbe0fa9983c0d8474c2af30fb86c96081"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-fictional-en-1024.png",
+      "sha256": "3fc937b3412da0e3c8d7a1a176d3576bc6ff56b77d122fb10c6def50eed784b4"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-fictional-en-1440.png",
+      "sha256": "27dd7c2eab071d5de9572d41480f6660b9177a294032e8d4a9be8992a78a0391"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-fictional-en-320.png",
+      "sha256": "1d62284c2bec8420465e78dc7f4a87ea16a8c420f54dee15bbac79d9d4f64621"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-fictional-en-390.png",
+      "sha256": "b471facb4971c7090de8b8a52e8f88a97914222e2b15f533f28db28b7744166d"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-fictional-hi-1024.png",
+      "sha256": "2e547e619461f1e17374911ba4d6e8407c9a116b966930d0efe48ad705be997d"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-fictional-hi-1440.png",
+      "sha256": "02c0475079cead040672126ef77479eb552af0e7709fddc6fb6f69bfc9c3938d"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-fictional-hi-320.png",
+      "sha256": "7add804ba19dfc86a0861316f6eb522999556fdc29ee0df57dfd2f05327c1b5c"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-fictional-hi-390.png",
+      "sha256": "92cd1f919605fde199b1df796ccbdf19b4006cdfb59d3ebfe6cc9bd5866eeed8"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-hi-1024.png",
+      "sha256": "11c0e83d10f492fc7dbc287b738e1f41417999d161e1f7f9d21f98f566068ea9"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-hi-1440.png",
+      "sha256": "4371f5c8b064d73eb30e5cf21eae25e4145e09aebae1ae31f4efaed264a7f899"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-hi-320.png",
+      "sha256": "93ffa5ded30d06ff72382c92da14a5aec91da2526ab400b7692da3bf883c2f89"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-hi-390.png",
+      "sha256": "e6be853ab7676d3fe94f8fcd6fb3201339a915bbc01dd81a947fb89311f2cf52"
+    },
+    {
+      "path": ".live-validation/reimagine-before/family-populated-contract-1440.png",
+      "sha256": "27dd7c2eab071d5de9572d41480f6660b9177a294032e8d4a9be8992a78a0391"
+    },
+    {
+      "path": ".live-validation/reimagine-before/graph-fictional-en-1024.png",
+      "sha256": "4e7be103d80c4bab0699d9cb7f0bbf017bf3101e60b4dd207a06067863462da5"
+    },
+    {
+      "path": ".live-validation/reimagine-before/graph-fictional-en-1440.png",
+      "sha256": "9212f5bd15f29d49991f9de954ce29af78d303c18c6e20c33d9c43c17e336a2b"
+    },
+    {
+      "path": ".live-validation/reimagine-before/graph-fictional-en-320.png",
+      "sha256": "42e88c45671c85e3f3278162669b67bef825a5356963c09d62a0c9098752a20d"
+    },
+    {
+      "path": ".live-validation/reimagine-before/graph-fictional-en-390.png",
+      "sha256": "a8723d51903061c39633ede8b81259ceeed4a60fb5f550f443259d8ade17a55d"
+    },
+    {
+      "path": ".live-validation/reimagine-before/graph-fictional-hi-1024.png",
+      "sha256": "c38c45fb2109d1db43e66cd37ca2336e119ceaa791280809a1e689095244b381"
+    },
+    {
+      "path": ".live-validation/reimagine-before/graph-fictional-hi-1440.png",
+      "sha256": "5c8208644730b0cfd65a5e7f64900dc4c20bfc685c00187bad2e7879daec7fcf"
+    },
+    {
+      "path": ".live-validation/reimagine-before/graph-fictional-hi-320.png",
+      "sha256": "4723466c1d1255d4e8a2e44f23e2a52059f2114291e528876f7c7a2e0e7343fb"
+    },
+    {
+      "path": ".live-validation/reimagine-before/graph-fictional-hi-390.png",
+      "sha256": "e48b5785a1fce5170d39b2dafa47dafa58cbbb5c5caa6cfec0d5d3c19d4588f0"
+    },
+    {
+      "path": ".live-validation/reimagine-before/graph-populated-contract-1440.png",
+      "sha256": "9212f5bd15f29d49991f9de954ce29af78d303c18c6e20c33d9c43c17e336a2b"
+    },
+    {
+      "path": ".live-validation/reimagine-before/graph-populated-contract-hi-320.png",
+      "sha256": "39a181259b4363014234705bc26fbd88272d4877d4af9ec6d079d3b4fb1c7204"
+    },
+    {
+      "path": ".live-validation/reimagine-before/plan-en-1024.png",
+      "sha256": "51bc45df0fce5d64465e9ae158f155927127081265952644cbd7e91c1edca1dc"
+    },
+    {
+      "path": ".live-validation/reimagine-before/plan-en-1440.png",
+      "sha256": "f929e15bf1d641f139a2a7f4f94ce091fcfe782c67a2ed3d3d816c50f3d43d91"
+    },
+    {
+      "path": ".live-validation/reimagine-before/plan-en-320.png",
+      "sha256": "d8901c052ba0bf3667210395e34afc1d0eba1ec25af70e10aee79fba2ca3aaa6"
+    },
+    {
+      "path": ".live-validation/reimagine-before/plan-en-390.png",
+      "sha256": "cead7e38ff7f8a8678648766350ae0826e7e189243bac9ad2e59fd29622f45d1"
+    },
+    {
+      "path": ".live-validation/reimagine-before/plan-hi-1024.png",
+      "sha256": "0965965c17d2052362ea042aed8a6fc3547ce125d4b644f9d2043eaf5be1c2e6"
+    },
+    {
+      "path": ".live-validation/reimagine-before/plan-hi-1440.png",
+      "sha256": "c32a783917766e82bd405a411e76937a94364255d7f04a2cbef808666ece8e71"
+    },
+    {
+      "path": ".live-validation/reimagine-before/plan-hi-320.png",
+      "sha256": "324017899a59404d2378c79d69120c761b5e0797b3898e3918c0987577e6c716"
+    },
+    {
+      "path": ".live-validation/reimagine-before/plan-hi-390.png",
+      "sha256": "0ff9124126fc4fffb0a3ced36903087771915b34f262eade9a88cc0cc5b212a6"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-en-1024.png",
+      "sha256": "bdd80ec6dd68fc7ab5c023c97a8a5bbbacb35dc92aa19e0a30d6dee839de171e"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-en-1440.png",
+      "sha256": "714cc3d8875f474814533f3dc32ab159616fe0a63f10a4dc23910d962db803f6"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-en-320.png",
+      "sha256": "406d57755696484be9e969ae1ad54ec8aad135349c4354eba9f7edc45c53427b"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-en-390.png",
+      "sha256": "c186b51b16963cbaf3bffc229ce817f12d02094e3eaafef1fb906e542821cda9"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-fictional-en-1024.png",
+      "sha256": "91401d122cc10f3c426a83524c42b9b766cd8a4651869114ac7d0abbedcc8942"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-fictional-en-1440.png",
+      "sha256": "c9aabcd46a4e93af0a61a68e2d256cb8a48d3732483c8d7045e00f84c3454933"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-fictional-en-320.png",
+      "sha256": "0925a31ff67b3a76738a00301a1836335731d5208b2cba78482fc46042c8a0c8"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-fictional-en-390.png",
+      "sha256": "f9897e807dbc6c89b926da0f1f82c26cc216a5a5a337dc30ea2a24df00b3c24f"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-fictional-hi-1024.png",
+      "sha256": "906c77e0b5df87b228477a28bbf1170bcdfe4fadce108b879fe6e80de2cdaf80"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-fictional-hi-1440.png",
+      "sha256": "dcdbc6232f8f3eb347ad25d83c0306dde8661c85daffbf390f3a72a85a14c4b4"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-fictional-hi-320.png",
+      "sha256": "dd9ffd1ad0edc73a7a8c557bd2ae23e53da5a1d01bdba59183c7e6f2ba3ab91a"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-fictional-hi-390.png",
+      "sha256": "9754e0978cd17e80e53cffccc8657ba390a0327dbb32cc208821823faa8c6bb3"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-hi-1024.png",
+      "sha256": "55ad52037e3bb302fb205e688657742365023aa2494c7c829f1c26a30042c5af"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-hi-1440.png",
+      "sha256": "f130ffd64d67c32b9b1d7537e4f20068a175d0646a94da3ea23532e286dcdd2b"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-hi-320.png",
+      "sha256": "3817cb1b88047140f737551793e8d74d7a3b69734a72b3d6154a71ae50d7cac0"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-hi-390.png",
+      "sha256": "76f8b0421d53ffa8ed678b27860ea89056aaabfb2690c99e9c7185f68c96c6cf"
+    },
+    {
+      "path": ".live-validation/reimagine-before/profile-populated-contract-1440.png",
+      "sha256": "2635aff66f2b8adc6da13ced0f4b952d6e4b0b6273f75d2a8227823d0b1dac52"
+    }
+  ],
+  "reimagine-after": [
+    {
+      "path": ".live-validation/reimagine-after/admin-fictional-en-1024.png",
+      "sha256": "2191714fcda8646a75c555ef7c2fd4ca0eea8351fb9396371d999b942dd1e19c"
+    },
+    {
+      "path": ".live-validation/reimagine-after/admin-fictional-en-1440.png",
+      "sha256": "14da95b43deb46e106fee60969034831f24fad6344e599413ae78fea0321da7d"
+    },
+    {
+      "path": ".live-validation/reimagine-after/admin-fictional-en-320.png",
+      "sha256": "87b2e102b2cf4423d02c78f9d98f0b937ac4cbdfb699c5ddd6cce6c1a860130d"
+    },
+    {
+      "path": ".live-validation/reimagine-after/admin-fictional-en-390.png",
+      "sha256": "d9dc77900482297ea556c6dcbdad77b94d9a5d6097e3ce8ba41f4d9411b8ad13"
+    },
+    {
+      "path": ".live-validation/reimagine-after/admin-fictional-hi-1024.png",
+      "sha256": "07689ed3e7b1e9e18141fa485c47dde2147e713c189c38f4e99df6cbfcba4eb8"
+    },
+    {
+      "path": ".live-validation/reimagine-after/admin-fictional-hi-1440.png",
+      "sha256": "5751bb99e804bbde484c538543ab42b68cfe88e93b1c2edb20288b61344f4425"
+    },
+    {
+      "path": ".live-validation/reimagine-after/admin-fictional-hi-320.png",
+      "sha256": "d6838568e0743e95fa2675500e22b253a3745067be45ac9482172d034fbf8044"
+    },
+    {
+      "path": ".live-validation/reimagine-after/admin-fictional-hi-390.png",
+      "sha256": "f1ec384a7500fa2ed22e397d9029c536a74710c6e6d8e1596ae8ef34a85f7a4a"
+    },
+    {
+      "path": ".live-validation/reimagine-after/admin-public-capture-copy-1440.png",
+      "sha256": "172c73bbc7476eba5ee95cf374ae0bf5110e161b9e91a19d815a0fd5a6dfaec3"
+    },
+    {
+      "path": ".live-validation/reimagine-after/business-fictional-en-1024.png",
+      "sha256": "b409e52ddccbe926cc1d0a2e52e0fa2913bc51e3ba86da46c80138e4243a7199"
+    },
+    {
+      "path": ".live-validation/reimagine-after/business-fictional-en-1440.png",
+      "sha256": "32d9d2488f59affffb8d84e9be7a76b38395caa3a6ab69c911500e2ff2cdd80c"
+    },
+    {
+      "path": ".live-validation/reimagine-after/business-fictional-en-320.png",
+      "sha256": "91b655d393d54d9ce19face7156efe8326e0996a34ee1cdb94e51914ddaab49d"
+    },
+    {
+      "path": ".live-validation/reimagine-after/business-fictional-en-390.png",
+      "sha256": "4af876221dbd77f8d2016b4f582df097000b577b4ce1d9496a8c70f0d4ff5884"
+    },
+    {
+      "path": ".live-validation/reimagine-after/business-fictional-hi-1024.png",
+      "sha256": "52f6d863283bd657d97935d7298dda5c5c361170b22f364b1ff2e4f1994784d0"
+    },
+    {
+      "path": ".live-validation/reimagine-after/business-fictional-hi-1440.png",
+      "sha256": "bef5f7d246d74be8498c5e2910b11f06dd7be82e2f91a7aa57160494ccfa520d"
+    },
+    {
+      "path": ".live-validation/reimagine-after/business-fictional-hi-320.png",
+      "sha256": "bdec3ce347dc0c556fd950c04238447a1f0779414a3f873b1e4e207d3a832238"
+    },
+    {
+      "path": ".live-validation/reimagine-after/business-fictional-hi-390.png",
+      "sha256": "592f6c40ce4f4ae71524a831bccea8e933a0536080e7bfe64a5972949534ffa1"
+    },
+    {
+      "path": ".live-validation/reimagine-after/cockpit-fictional-en-1024.png",
+      "sha256": "d7fac8562181165597b92a4a440aa0053d6cb9c63519b82633f874d6544fe8ee"
+    },
+    {
+      "path": ".live-validation/reimagine-after/cockpit-fictional-en-1440.png",
+      "sha256": "82c990ef622ae92444e952ca00ab7cd27b7e9e83cc88cfc2f4f8522565433208"
+    },
+    {
+      "path": ".live-validation/reimagine-after/cockpit-fictional-en-320.png",
+      "sha256": "cdeccf8ecd4f5189902ca43bb01f3eb088cf8a4f98adbaaa773e35c8cba52ec9"
+    },
+    {
+      "path": ".live-validation/reimagine-after/cockpit-fictional-en-390.png",
+      "sha256": "3a2e480507620988493a156ad5eb4b972cfa57ad14c3241296df4826f856d039"
+    },
+    {
+      "path": ".live-validation/reimagine-after/cockpit-fictional-hi-1024.png",
+      "sha256": "d33b14f66845f8f9442c7683acd07b097d1bde11d10bea195d60fe32a7eb89c8"
+    },
+    {
+      "path": ".live-validation/reimagine-after/cockpit-fictional-hi-1440.png",
+      "sha256": "e73e13c7f097ca19f942d82df24b646546fa4a17d9bf25239dac11bcd840f82e"
+    },
+    {
+      "path": ".live-validation/reimagine-after/cockpit-fictional-hi-320.png",
+      "sha256": "bf46f65ece2925b65f8352932d8eae94fd3c141dc08e122654bcb283fb3dca31"
+    },
+    {
+      "path": ".live-validation/reimagine-after/cockpit-fictional-hi-390.png",
+      "sha256": "0ddcbe8f616fd04bcf5d4fd0e98f4f1a5d6d1af56661e709839ef9783b387acc"
+    },
+    {
+      "path": ".live-validation/reimagine-after/detail-fictional-en-1024.png",
+      "sha256": "b535a05e09b1f6beb97aad1f18e7d8ecefb90897ef628469102b2b17080a2668"
+    },
+    {
+      "path": ".live-validation/reimagine-after/detail-fictional-en-1440.png",
+      "sha256": "5ac4ed7f38fad22ff9b417dc4f30a0b27ea1c0423574d911bcff54934d5d15a1"
+    },
+    {
+      "path": ".live-validation/reimagine-after/detail-fictional-en-320.png",
+      "sha256": "7b877bc06b3bc35cf37682ac4567055a71afc51cfcd45c61f5be3ce72b9e6a64"
+    },
+    {
+      "path": ".live-validation/reimagine-after/detail-fictional-en-390.png",
+      "sha256": "e775aee0bf780578f2c087adb88564cb9988b643620bff509ff1a232b4610ce0"
+    },
+    {
+      "path": ".live-validation/reimagine-after/detail-fictional-hi-1024.png",
+      "sha256": "bfdbd6f55b903b4472452e2765e6f98026752f71bd230ef7733494e82bfef7a6"
+    },
+    {
+      "path": ".live-validation/reimagine-after/detail-fictional-hi-1440.png",
+      "sha256": "a64da6e467f8839925420961de5537116f34a1d1bbcc6921cb12b273eb7a99e1"
+    },
+    {
+      "path": ".live-validation/reimagine-after/detail-fictional-hi-320.png",
+      "sha256": "b2fbc5a805444e25c21edab6885645b38049f2ab114aa3ef8cdb40f0e94611bc"
+    },
+    {
+      "path": ".live-validation/reimagine-after/detail-fictional-hi-390.png",
+      "sha256": "e612b6cdc842b4d9a2b1a9b82b995262bbb330f6e6c49679684c2151dd35b9b5"
+    },
+    {
+      "path": ".live-validation/reimagine-after/discover-fictional-en-1024.png",
+      "sha256": "a79b24e439545fbed6f59bfb4fdddabe627513c1aa981bce122bd48154afdd8f"
+    },
+    {
+      "path": ".live-validation/reimagine-after/discover-fictional-en-1440.png",
+      "sha256": "2a1374b7536d7eaaf9d11520865405af3cc0f04351f577a2d270b22d543c9cda"
+    },
+    {
+      "path": ".live-validation/reimagine-after/discover-fictional-en-320.png",
+      "sha256": "9b6a99125603c84fa800e925aa1ad1ff840cb3494b78eed38b6e5b9e098f4122"
+    },
+    {
+      "path": ".live-validation/reimagine-after/discover-fictional-en-390.png",
+      "sha256": "384a039ba3fd6ff00deeff5afd6120a1cbca090689ba2a374c69e2853d1e01a7"
+    },
+    {
+      "path": ".live-validation/reimagine-after/discover-fictional-hi-1024.png",
+      "sha256": "d448d1953ef429aa4a3856c594d97106eec0924598116109bf2f736a377cf597"
+    },
+    {
+      "path": ".live-validation/reimagine-after/discover-fictional-hi-1440.png",
+      "sha256": "85ac1f1f1dfef4b58996ef4707b7d63327f2f862190ae1fe9684a83014fa748d"
+    },
+    {
+      "path": ".live-validation/reimagine-after/discover-fictional-hi-320.png",
+      "sha256": "babece5f99bc28dc03904c49362b66d6d87c38abae01249c383a00dd5a41d0d4"
+    },
+    {
+      "path": ".live-validation/reimagine-after/discover-fictional-hi-390.png",
+      "sha256": "fc81f0f24ed064eed6b71d95b2d3ec167439cc49a0d1bf763bb9ff7c75e0e7e3"
+    },
+    {
+      "path": ".live-validation/reimagine-after/family-fictional-en-1024.png",
+      "sha256": "0580d76c380bb197c08759811a13a9ec000f5452154a0e61fa0523a52f2735af"
+    },
+    {
+      "path": ".live-validation/reimagine-after/family-fictional-en-1440.png",
+      "sha256": "e673749f2136c41cd35f6c5a50f4df78c8e7f3206b0ca95ca2a3ced38dc7e3fa"
+    },
+    {
+      "path": ".live-validation/reimagine-after/family-fictional-en-320.png",
+      "sha256": "639292398d531389205975a409d77f9f89580f0010069a39bfb7e0fa3fec7f76"
+    },
+    {
+      "path": ".live-validation/reimagine-after/family-fictional-en-390.png",
+      "sha256": "c313f3b3d76200ea27544df2283cfc00d9996dc379771c38c03e925f42ae72ba"
+    },
+    {
+      "path": ".live-validation/reimagine-after/family-fictional-hi-1024.png",
+      "sha256": "6f6fee4bc96299548b83317a29a1e1be17904089e5df0a3e0133ea9e320b114d"
+    },
+    {
+      "path": ".live-validation/reimagine-after/family-fictional-hi-1440.png",
+      "sha256": "651fef2f82e2f86060bbc008c9050fb2440dda853ed92d54f353f6df6f49ff89"
+    },
+    {
+      "path": ".live-validation/reimagine-after/family-fictional-hi-320.png",
+      "sha256": "aed181cb2588e8fd79eada3bcb93a67061d8a3a4322e0065ea90c6e8bece611a"
+    },
+    {
+      "path": ".live-validation/reimagine-after/family-fictional-hi-390.png",
+      "sha256": "8cba3516ffff22904b0fe422c3499bc9c2311ddf5bd0b1b6e1d8f66269e3112c"
+    },
+    {
+      "path": ".live-validation/reimagine-after/graph-fictional-en-1024.png",
+      "sha256": "7566f30e976445e35a83d61215815032b56de531b99a3583474e54f012e7c206"
+    },
+    {
+      "path": ".live-validation/reimagine-after/graph-fictional-en-1440.png",
+      "sha256": "8ab5ccc6b864d30599f084427db01a562eb9a9b69ddb977c6d031a073350f410"
+    },
+    {
+      "path": ".live-validation/reimagine-after/graph-fictional-en-320.png",
+      "sha256": "4a07825dcb869b346b9ae1a8adf903437a2e17d9f85e583340b98a61f7967110"
+    },
+    {
+      "path": ".live-validation/reimagine-after/graph-fictional-en-390.png",
+      "sha256": "37683e3f7a542ff5160c9366f44a5ddb535e18e44cc6dc9b3f433e5616e7c505"
+    },
+    {
+      "path": ".live-validation/reimagine-after/graph-fictional-hi-1024.png",
+      "sha256": "a9946852df0b2024be00ff2a3811a6eae07d17261b8bf1f5c40e27260f080ca7"
+    },
+    {
+      "path": ".live-validation/reimagine-after/graph-fictional-hi-1440.png",
+      "sha256": "7e3520e5523c8f62d8073fd327e2d9f46dd7f6f75a985d0f27c880a41dcd0989"
+    },
+    {
+      "path": ".live-validation/reimagine-after/graph-fictional-hi-320.png",
+      "sha256": "5e017e3dbec2035a71557559cbb0196c3a664c0aa0a5a19302fff13bc640ee02"
+    },
+    {
+      "path": ".live-validation/reimagine-after/graph-fictional-hi-390.png",
+      "sha256": "c493cdcdd2c4822632e13abd274f28a56eeb9907feedaee020b83e6c141388bd"
+    },
+    {
+      "path": ".live-validation/reimagine-after/landing-fictional-en-1024.png",
+      "sha256": "f17ab17d896c34017cb687303e95355c7e0abb17a74bcdd29588b73caad067f2"
+    },
+    {
+      "path": ".live-validation/reimagine-after/landing-fictional-en-1440.png",
+      "sha256": "6343173a184ff9cd6115adcc96968d9794c1ec3f830a00d2d699c3ba219940d5"
+    },
+    {
+      "path": ".live-validation/reimagine-after/landing-fictional-en-320.png",
+      "sha256": "c99ce68545901d1cca36538142ef342c86cad85a91fba93696db9f1d95ec0d3b"
+    },
+    {
+      "path": ".live-validation/reimagine-after/landing-fictional-en-390.png",
+      "sha256": "e108b194c16f6e77edf0e9e5368be3eb063d6f2ead2c240c0d39e5eebe2e59cc"
+    },
+    {
+      "path": ".live-validation/reimagine-after/landing-fictional-hi-1024.png",
+      "sha256": "29a0f7250026f1b6cc8820c224887d14de764ebd1aba00aaaf7d23a22b6996c4"
+    },
+    {
+      "path": ".live-validation/reimagine-after/landing-fictional-hi-1440.png",
+      "sha256": "db933bc6ccdc316e71b32b3f4b8ae190eb54d8797c908a0048da95a3686c8e93"
+    },
+    {
+      "path": ".live-validation/reimagine-after/landing-fictional-hi-320.png",
+      "sha256": "6d33b2259113abf37317a34c7af355a7e3ce3ee4ba0a43ca3b470766b5e97794"
+    },
+    {
+      "path": ".live-validation/reimagine-after/landing-fictional-hi-390.png",
+      "sha256": "44511f2462ba90b9d580300896bef3527254ace5341e9bee2ce60775be222d6d"
+    },
+    {
+      "path": ".live-validation/reimagine-after/overview-fictional-en-1024.png",
+      "sha256": "14007a10c31deacabbe7681326a94711793e3447ed529ec2aae9dc90b81af570"
+    },
+    {
+      "path": ".live-validation/reimagine-after/overview-fictional-en-1440.png",
+      "sha256": "2586f70794bd38f543ea98aaae329c3aa4b309e561482b0f98ee7291372e8e77"
+    },
+    {
+      "path": ".live-validation/reimagine-after/overview-fictional-en-320.png",
+      "sha256": "28d28b649fa31b582d8877e962cf29d1661e964bd8ceb7b6276c739aaf355884"
+    },
+    {
+      "path": ".live-validation/reimagine-after/overview-fictional-en-390.png",
+      "sha256": "777af2e96ca4af5880b209299c9b6f37335f3903fd9b3182126c36063bef9c7e"
+    },
+    {
+      "path": ".live-validation/reimagine-after/overview-fictional-hi-1024.png",
+      "sha256": "445198af33d0ade75111f70947e772a15e7821f3820c9f6bc7f787868fe48b5d"
+    },
+    {
+      "path": ".live-validation/reimagine-after/overview-fictional-hi-1440.png",
+      "sha256": "65c45e3349df8dad69cad075ec8262d749cfaf9d03f3c80e02e8e398a84bd623"
+    },
+    {
+      "path": ".live-validation/reimagine-after/overview-fictional-hi-320.png",
+      "sha256": "a322b81200b0875d7486a05c3d24f3c455c85f560c9e2e7a27637ad75c6d8f81"
+    },
+    {
+      "path": ".live-validation/reimagine-after/overview-fictional-hi-390.png",
+      "sha256": "d623efc8fe0ab2e9d8383dbe5429cf8071aa61488f3a8209ce81c48bb59df66a"
+    },
+    {
+      "path": ".live-validation/reimagine-after/profile-fictional-en-1024.png",
+      "sha256": "c7c7bb6e84961a41f49b22e2f4ab943366e818db28d69e5bcdb7160ab37df49c"
+    },
+    {
+      "path": ".live-validation/reimagine-after/profile-fictional-en-1440.png",
+      "sha256": "489991b6e24eedb2ecaa269508b27a2c32932f4440cd05aa8cf3e7acfd75bf5e"
+    },
+    {
+      "path": ".live-validation/reimagine-after/profile-fictional-en-320.png",
+      "sha256": "c78f8bf5a9b0f38f07691f859f8f7ef80c928a67cfc369204c764ad849d8acc7"
+    },
+    {
+      "path": ".live-validation/reimagine-after/profile-fictional-en-390.png",
+      "sha256": "586c41ebcaf6f2d5c54638689c5e370e2b9a5428c1268db3e264805286f4e5b3"
+    },
+    {
+      "path": ".live-validation/reimagine-after/profile-fictional-hi-1024.png",
+      "sha256": "69462fea20b1a5413717f29184850aac06759a5072a9a1e36fbfc55529af7e0e"
+    },
+    {
+      "path": ".live-validation/reimagine-after/profile-fictional-hi-1440.png",
+      "sha256": "d1daf32660ae19e8b0d93a7ebbb2b102d613f5f54bc5106c3daf8e7d22e086d4"
+    },
+    {
+      "path": ".live-validation/reimagine-after/profile-fictional-hi-320.png",
+      "sha256": "1fed5172e619a272c9413e14b41a7b02d27f0a69b5fc6117fe81e1e5059fae10"
+    },
+    {
+      "path": ".live-validation/reimagine-after/profile-fictional-hi-390.png",
+      "sha256": "3cd30cbd9041b0394b1e458ff0e57b649c119634aafa2e48ec8062eac188e2f9"
+    },
+    {
+      "path": ".live-validation/reimagine-after/settings-fictional-en-1024.png",
+      "sha256": "a58d71845bce88eaffdd12b79f71e63c6ec5d39bc46bd9b6c20e8972c548e8dc"
+    },
+    {
+      "path": ".live-validation/reimagine-after/settings-fictional-en-1440.png",
+      "sha256": "11a0effd600b483f77ebba91b98bb18634ba7aebc63ad001771466cec0f35ffe"
+    },
+    {
+      "path": ".live-validation/reimagine-after/settings-fictional-en-320.png",
+      "sha256": "a14c005a557b475fd29bfd26db10509ba693b5807ecebbb3c988db8926c0fa66"
+    },
+    {
+      "path": ".live-validation/reimagine-after/settings-fictional-en-390.png",
+      "sha256": "b0614a050eee6104cdd77bc41affa1a80d86b572e8efc1939488d8eaffab7a2b"
+    },
+    {
+      "path": ".live-validation/reimagine-after/settings-fictional-hi-1024.png",
+      "sha256": "c0e2f9b52b782d4da2fc67fb7216941937ec05dc9c8d09c7dfe2148a18497455"
+    },
+    {
+      "path": ".live-validation/reimagine-after/settings-fictional-hi-1440.png",
+      "sha256": "80011031c327b4988884c6fe3806bee5c621b27e2e99fae38e78d63d45c30a23"
+    },
+    {
+      "path": ".live-validation/reimagine-after/settings-fictional-hi-320.png",
+      "sha256": "4140d5fec990e032981fc8f3c29f7a44791fb3846345d82268d5eb3f76e814fd"
+    },
+    {
+      "path": ".live-validation/reimagine-after/settings-fictional-hi-390.png",
+      "sha256": "ff9c505e6fcc27ee42bd895044f0c2caa92a6c76b657e842ae12a0fa1b4529f7"
+    }
+  ]
+}
