@@ -1,0 +1,112 @@
+.document-toolbar,
+.document-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.document-toolbar span {
+  color: var(--muted);
+}
+.document-upload {
+  max-width: 860px;
+  margin-bottom: 30px;
+}
+.document-metadata {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.document-upload fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.document-upload details {
+  margin: 18px 0;
+}
+.document-upload input[type='file'] {
+  max-width: 100%;
+  padding: 14px;
+}
+.vault-layout {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+.vault-layout .panel {
+  margin: 18px 0;
+}
+.document-state {
+  color: var(--primary);
+  font-weight: 600;
+}
+.document-card .document-actions {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  margin: 20px 0 0;
+}
+.requirement-document > .text-button,
+.requirement-document > .button {
+  display: inline-flex;
+  margin: 10px 10px 0 0;
+}
+.requirement-document > small {
+  display: block;
+  margin: 8px 0;
+}
+.private-preview {
+  margin-top: 25px;
+}
+.private-preview iframe {
+  width: 100%;
+  min-height: 600px;
+  border: 1px solid var(--line);
+  background: var(--canvas);
+}
+.private-preview img {
+  display: block;
+  max-width: 100%;
+  max-height: 700px;
+  margin: auto;
+  object-fit: contain;
+}
+.document-vault button:disabled {
+  cursor: not-allowed;
+}
+@media (max-width: 900px) {
+  .vault-layout {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 540px) {
+  .document-metadata {
+    grid-template-columns: 1fr;
+  }
+  .document-actions {
+    gap: 10px;
+  }
+  .document-upload input[type='file'] {
+    font-size: 14px;
+  }
+  .private-preview iframe {
+    min-height: 420px;
+  }
+  .document-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+.document-action-notice {
+  flex-direction: column;
+  align-items: stretch;
+}
+.document-action-notice .button {
+  white-space: normal;
+  text-align: left;
+  justify-content: flex-start;
+}

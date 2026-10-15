@@ -1751,3 +1751,130 @@
     margin-bottom: 22px;
   }
 }
+
+/* Guided profile questions and saved overview share the existing Opportunity OS tokens. */
+.profile-journey .profile-summary .page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.profile-journey .profile-summary [role='status'] {
+  color: var(--primary);
+  font-size: 14px;
+}
+.profile-section {
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+  margin-top: 18px;
+}
+.profile-section dl > div,
+.profile-review dl > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  padding: 10px 0;
+}
+.profile-section dt {
+  color: var(--muted);
+}
+.profile-section dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.guided-question {
+  margin: 24px 0;
+  scroll-margin-top: 130px;
+}
+.guided-question .field > span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.guided-question small {
+  font-weight: 400;
+  color: var(--muted);
+}
+.profile-journey .topic-chip[aria-pressed='true'] {
+  background: var(--primary);
+  color: white;
+}
+@media (max-width: 540px) {
+  .profile-journey .profile-summary .page-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .profile-section dl > div,
+  .profile-review dl > div {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+}
+
+.workspace-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+}
+.workspace-tabs .context-card {
+  display: inline-flex;
+  width: auto;
+  max-width: 100%;
+  padding: 14px 20px;
+}
+.workspace-overview > .page-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.workspace-overview dl > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  padding: 10px 0;
+}
+.workspace-overview dd {
+  margin: 0;
+}
+.guided-workspace {
+  max-width: 800px;
+}
+.guided-workspace fieldset,
+.dependent-onboarding fieldset {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+.dependent-onboarding {
+  max-width: 800px;
+}
+.business-optional {
+  margin: 22px 0;
+}
+.workspace-journey .member-row {
+  display: block;
+}
+.workspace-journey .member-row .document-actions {
+  margin: 20px 0 0;
+}
+.workspace-journey .member-row h3 {
+  margin-bottom: 8px;
+}
+.guided-workspace.business {
+  border-top: 4px solid var(--violet);
+}
+.guided-workspace.household {
+  border-top: 4px solid var(--primary);
+}
+@media (max-width: 540px) {
+  .workspace-overview > .page-heading {
+    flex-direction: column;
+  }
+  .workspace-overview dl > div {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+}

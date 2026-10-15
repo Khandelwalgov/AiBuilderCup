@@ -1,3 +1,4 @@
+import { documentStatus } from '../features/documents/Documents';
 import { useSubject, ContextLink as Link } from '../app/subject-context';
 import { useEffect, useRef, useState } from 'react';
 
@@ -201,6 +202,11 @@ export function IntelligenceMap({
                     : 'NEXT STEP'}
               </span>
               <strong>{title(a)}</strong>
+              {a.kind === 'document' && (
+                <small className="document-node-state">
+                  {documentStatus(a.documentary_status, hi)}
+                </small>
+              )}
               <span className="node-impact">
                 {new Set(a.opportunities.map((o) => o.id)).size}{' '}
                 {hi ? 'जुड़े अवसर' : 'connected opportunities'}

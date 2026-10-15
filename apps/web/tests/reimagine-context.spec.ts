@@ -69,7 +69,7 @@ test('profile edits survive background refetch and declined navigation; account 
     return r.fulfill({ json: { id: person, display_name: 'Fictional original', facts: [] } });
   });
   await page.goto('/profile');
-  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: 'Edit about you', exact: true }).click();
   await page.getByRole('textbox', { name: 'Profile name' }).fill('Unsaved fictional change');
   await page
     .getByRole('button', { name: 'Refetch fictional profile', includeHidden: true })
@@ -84,7 +84,7 @@ test('profile edits survive background refetch and declined navigation; account 
   await page
     .getByRole('button', { name: 'Switch fictional account', includeHidden: true })
     .evaluate((el: HTMLButtonElement) => el.click());
-  await page.getByRole('button', { name: 'Back', exact: true }).click();
+  await page.getByRole('button', { name: 'Edit about you', exact: true }).click();
   await expect(page.getByRole('textbox', { name: 'Profile name' })).toHaveValue(
     'Fictional original',
   );
@@ -221,6 +221,7 @@ test('eligibility sends each authorized subject and fresh/renewal selection; uns
       expect(requests.at(-1)).toEqual({
         subject: { kind, id: identifier || null },
         application_type,
+        development: false,
       });
     }
   }

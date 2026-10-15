@@ -1,5 +1,6 @@
 export const strings = {
   en: {
+    documents: 'My Documents',
     profileEyebrow: 'YOUR INFORMATION, YOUR CONTROL',
     profileIntro:
       'Add only the facts needed by an opportunity. Leave anything you do not know blank.',
@@ -106,7 +107,7 @@ export const strings = {
       enrollment_mode: 'Study mode',
       school_recognized_or_government: 'Government or government/board-recognized school',
       student_status: 'Currently a student',
-      nationality: 'Nationality (source code, e.g. IN)',
+      nationality: 'Nationality',
       disability_percentage: 'Disability percentage',
       annual_parental_income: 'Annual parental income (INR)',
       annual_personal_income: 'Annual personal income (INR)',
@@ -156,7 +157,7 @@ export const strings = {
     signIn: 'Sign in',
     signOut: 'Sign out',
     guest: 'Public browsing',
-    foundation: 'Foundation preview',
+    foundation: 'Your workspace',
     future: 'This journey is being built',
     futureText:
       'Personal profiles and preliminary evaluation are available. Household, business, and application-tracking workflows are planned for a later phase.',
@@ -212,6 +213,7 @@ export const strings = {
     browseSub: 'A starting point for what comes next.',
   },
   hi: {
+    documents: 'मेरे दस्तावेज़',
     profileEyebrow: 'आपकी जानकारी, आपका नियंत्रण',
     profileIntro: 'अवसर के लिए आवश्यक तथ्य ही जोड़ें। अज्ञात जानकारी खाली छोड़ें।',
     syntheticProfile: 'इस प्रोटोटाइप में काल्पनिक विवरण प्रयोग करें',
@@ -315,7 +317,7 @@ export const strings = {
       enrollment_mode: 'पढ़ाई का प्रकार',
       school_recognized_or_government: 'सरकारी या सरकार/बोर्ड से मान्यता प्राप्त स्कूल',
       student_status: 'वर्तमान में छात्र',
-      nationality: 'राष्ट्रीयता (स्रोत कोड, जैसे IN)',
+      nationality: 'राष्ट्रीयता',
       disability_percentage: 'दिव्यांगता प्रतिशत',
       annual_parental_income: 'वार्षिक माता-पिता की आय (रु.)',
       annual_personal_income: 'वार्षिक व्यक्तिगत आय (रु.)',
@@ -365,7 +367,7 @@ export const strings = {
     signIn: 'साइन इन करें',
     signOut: 'साइन आउट',
     guest: 'सार्वजनिक ब्राउज़िंग',
-    foundation: 'प्रारंभिक संस्करण',
+    foundation: 'आपका कार्यक्षेत्र',
     future: 'यह सुविधा विकसित हो रही है',
     futureText:
       'व्यक्तिगत प्रोफ़ाइल और प्रारंभिक मूल्यांकन उपलब्ध हैं। परिवार, व्यवसाय और आवेदन ट्रैकिंग अगले चरण में आएँगे।',

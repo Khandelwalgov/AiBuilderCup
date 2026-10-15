@@ -1,78 +1,137 @@
-import { useDirtyForm } from '../../app/dirty-forms';
-import { useSubject, ContextLink as Link } from '../../app/subject-context';
-import { ReadinessJourney } from '../../components/Atlas';
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Plus, Trash2, UserRound } from 'lucide-react';
-import { useStrings, useLanguage } from '../../app/App';
-import { api, fail } from '../../lib/api/client';
+import { useDirtyForm } from '../../app/dirty-forms';
+import { useSubject, ContextLink as Link } from '../../app/subject-context';
+import { useLanguage, useStrings } from '../../app/App';
+import { api, fail, RequestError } from '../../lib/api/client';
+import { displayDate } from '../../i18n/format';
+import { DocumentSummary } from '../documents/Documents';
+import {
+  questions,
+  valuesOf,
+  conflicts,
+  answered,
+  answerLabel,
+  documentKeys,
+  incomeKeys,
+  type Fact,
+  type Goal,
+  type Category,
+  type Question,
+} from './questions';
 import type { components } from '../../lib/api/schema';
-type Fact = components['schemas']['FactInput'];
-const fields: { key: Fact['key']; kind: 'text' | 'number' | 'boolean' }[] = [
-  { key: 'age', kind: 'number' },
-  { key: 'education_level', kind: 'text' },
-  { key: 'student_status', kind: 'boolean' },
-  { key: 'enrollment_mode', kind: 'text' },
-  { key: 'school_recognized_or_government', kind: 'boolean' },
-  { key: 'nationality', kind: 'text' },
-  { key: 'disability_percentage', kind: 'number' },
-  { key: 'annual_parental_income', kind: 'number' },
-  { key: 'annual_personal_income', kind: 'number' },
-  { key: 'domicile_state', kind: 'text' },
-  { key: 'domicile_district', kind: 'text' },
-  { key: 'residence_state', kind: 'text' },
-  { key: 'residence_district', kind: 'text' },
-  { key: 'employment_status', kind: 'text' },
-  { key: 'has_income_certificate', kind: 'boolean' },
-  { key: 'has_disability_certificate', kind: 'boolean' },
-  { key: 'has_udid_certificate', kind: 'boolean' },
-];
+type View = components['schemas']['ProfileView'];
+type Draft = { name: string; facts: Fact[] };
+const signature = (d: Draft) =>
+  JSON.stringify({ name: d.name, facts: [...d.facts].sort((a, b) => a.key.localeCompare(b.key)) });
+function editable(data: View | null): Draft {
+  return {
+    name: data?.display_name ?? '',
+    facts: (data?.facts ?? [])
+      .filter((f) => ['user_supplied', 'unknown'].includes(f.origin))
+      .map((f) => ({
+        key: f.key as Fact['key'],
+        value: f.value,
+        valid_from: f.valid_from ?? null,
+        valid_until: f.valid_until ?? null,
+        income_period: (f.context?.income_period as string) ?? null,
+        income_definition: (f.context?.income_definition as string) ?? null,
+      })),
+  };
+}
 export function Profile() {
-  const context = useSubject();
-  const hi = useLanguage() === 'hi';
-  if (context.pending)
+  const [routeParams] = useSearchParams();
+  const c = useSubject(),
+    hi = useLanguage() === 'hi';
+  if (c.pending)
     return (
       <div className="page" role="status">
         {hi ? 'लोड हो रहा है…' : 'Loading…'}
       </div>
     );
-  if (!context.available || context.subject.kind !== 'person')
+  if (!c.available || c.subject.kind !== 'person')
     return (
       <div className="page panel">
-        <h1>{hi ? 'व्यक्तिगत प्रोफ़ाइल' : 'Person profile'}</h1>
-        <p>
-          {hi
-            ? 'व्यक्ति चुनें या संबंधित कार्यस्थल संपादित करें।'
-            : 'Select a person to edit their profile, or open the selected household or business workspace.'}
-        </p>
-        <Link to={context.subject.kind === 'business' ? '/businesses' : '/family'}>
+        <h1>{hi ? 'व्यक्तिगत जानकारी' : 'Person profile'}</h1>
+        <p>{hi ? 'किसी व्यक्ति को चुनें।' : 'Select a person to view their profile.'}</p>
+        <Link to={c.subject.kind === 'business' ? '/businesses' : '/family'}>
           {hi ? 'कार्यस्थल खोलें' : 'Open workspace'}
         </Link>
       </div>
     );
-  return <PersonProfile key={context.key} />;
+  return (
+    <PersonProfile
+      key={`${c.key}:${routeParams.get('field') ?? ''}:${routeParams.get('section') ?? ''}`}
+    />
+  );
 }
 function PersonProfile() {
-  const t = useStrings();
-  const hi = useLanguage() === 'hi';
-  const { personId: routePersonId } = useParams();
-  const context = useSubject();
-  const personId = routePersonId ?? context.subject.id ?? undefined;
+  const hi = useLanguage() === 'hi',
+    t = useStrings(),
+    c = useSubject(),
+    cache = useQueryClient();
+  const { personId: routeId } = useParams();
+  const personId = routeId ?? c.subject.id ?? undefined;
   const [params] = useSearchParams();
-  const requestedField = fields.find((f) => f.key === params.get('field'))?.key;
-  const cache = useQueryClient();
-  const [name, setName] = useState('');
-  const [facts, setFacts] = useState<Fact[]>([]);
-  const [saved, setSaved] = useState(false);
-  const [stage, setStage] = useState(0);
-  const initialized = useRef(false);
-  const [topic, setTopic] = useState<string[] | null>(null);
-  const baseline = useRef<string | null>(null);
-  const submitted = useRef('');
-  const signature = JSON.stringify({ name, facts });
-  const dirty = baseline.current !== null && baseline.current !== signature;
-  useDirtyForm(dirty);
+  const requested = questions.find((q) => q.key === params.get('field'));
+  const routeSection = ['basics', 'education', 'employment', 'income', 'support'].includes(
+    params.get('section') ?? '',
+  )
+    ? (params.get('section') as Category)
+    : null;
+  const opportunityId = params.get('opportunity');
+  const source = useQuery({
+    queryKey: ['profile-opportunity', opportunityId, params.get('development')],
+    enabled: !!opportunityId,
+    retry: false,
+    queryFn: async () => {
+      const { data, error } = await api.GET('/v1/opportunities/{identifier}', {
+        params: {
+          path: { identifier: opportunityId! },
+          query: { development: params.get('development') === 'true' },
+        },
+      });
+      return data ?? fail(error);
+    },
+  });
+  const mentions = (rule: unknown, key: string | undefined, depth = 0): boolean => {
+    if (!key || depth > 8 || !rule || typeof rule !== 'object') return false;
+    const node = rule as Record<string, unknown>;
+    const condition = node.condition as Record<string, unknown> | null;
+    if (node.op === 'condition')
+      return (
+        !!condition &&
+        ['eq', 'gte', 'lte', 'in'].includes(String(condition.op)) &&
+        condition.fact === key
+      );
+    return (
+      ['all', 'any'].includes(String(node.op)) &&
+      Array.isArray(node.children) &&
+      node.children.slice(0, 100).some((child) => mentions(child, key, depth + 1))
+    );
+  };
+  const sourceRequirement = source.data?.requirements.find(
+    (r) => r.id === params.get('requirement') && mentions(r.rule, requested?.key),
+  );
+  const requestedDocument = documentKeys.has(params.get('field') as Fact['key']);
+  const [draft, setDraft] = useState<Draft | null>(null),
+    [editing, setEditing] = useState(false),
+    [stage, setStage] = useState(0),
+    [goal, setGoal] = useState<Goal>('general'),
+    [section, setSection] = useState<Category | null>(null);
+  const baseline = useRef(''),
+    revision = useRef<string | undefined>(undefined),
+    initialized = useRef(false);
+  const sectionNames: Record<Category, [string, string]> = {
+    basics: ['about you', 'मूल जानकारी'],
+    education: ['education', 'शिक्षा'],
+    employment: ['work', 'कामकाज'],
+    income: ['income', 'आय'],
+    support: ['support', 'सहायता'],
+  };
+  const dirty = draft !== null && signature(draft) !== baseline.current;
+  const guard = useDirtyForm(dirty);
   const query = useQuery({
     queryKey: ['personal-profile', personId],
     retry: false,
@@ -85,458 +144,686 @@ function PersonProfile() {
     },
   });
   useEffect(() => {
-    if (query.data && !dirty) {
-      if (!initialized.current) {
-        setStage(1);
-        initialized.current = true;
-      }
-      setName(query.data.display_name);
-      setFacts(
-        query.data.facts
-          .filter((f) => f.origin === 'user_supplied' || f.origin === 'unknown')
-          .map((f) => ({
-            key: f.key as Fact['key'],
-            value: f.value,
-            valid_from: f.valid_from,
-            valid_until: f.valid_until,
-            income_period: (f.context?.income_period as string) ?? null,
-            income_definition: (f.context?.income_definition as string) ?? null,
-          })),
-      );
-      baseline.current = JSON.stringify({
-        name: query.data.display_name,
-        facts: query.data.facts
-          .filter((f) => f.origin === 'user_supplied' || f.origin === 'unknown')
-          .map((f) => ({
-            key: f.key,
-            value: f.value,
-            valid_from: f.valid_from,
-            valid_until: f.valid_until,
-            income_period: (f.context?.income_period as string) ?? null,
-            income_definition: (f.context?.income_definition as string) ?? null,
-          })),
-      });
-    } else if (!query.isPending && !query.isError && !query.data && baseline.current === null) {
-      baseline.current = signature;
+    if (query.isPending || query.isError || dirty) return;
+    const next = editable(query.data ?? null);
+    baseline.current = signature(next);
+    revision.current = query.data?.revision || undefined;
+    setDraft(next);
+    if (!initialized.current) {
+      setEditing(!query.data || !!requested || !!routeSection);
+      setStage(requested || routeSection ? 1 : 0);
+      setSection(requested?.category ?? routeSection);
+      if (next.facts.some((f) => f.key === 'education_level' || f.key === 'student_status'))
+        setGoal('education');
+      initialized.current = true;
     }
-  }, [query.data, query.isPending, query.isError, dirty, signature]);
+  }, [query.data, query.isPending, query.isError, dirty, requested, routeSection]);
   useEffect(() => {
-    if (!query.isPending && !query.isError && requestedField) {
+    if (requested && initialized.current) {
+      setEditing(true);
+      setSection(requested.category);
       setStage(1);
-      setTopic([requestedField]);
-      setFacts((previous) =>
-        previous.some((f) => f.key === requestedField)
-          ? previous
-          : [...previous, { key: requestedField, value: null }],
-      );
-      window.setTimeout(
-        () =>
-          document
-            .getElementById(`fact-${requestedField}`)
-            ?.scrollIntoView({ block: 'center', behavior: 'smooth' }),
-        150,
-      );
     }
-  }, [requestedField, query.isPending, query.isError]);
+  }, [requested]);
+  const submitted = useRef<Draft | null>(null);
   const save = useMutation({
     mutationFn: async () => {
+      const payload = {
+        display_name: submitted.current!.name.trim(),
+        facts: submitted.current!.facts,
+        ...(revision.current ? { expected_revision: revision.current } : {}),
+      };
       if (personId) {
         const { data, error } = await api.PUT('/v1/people/{identifier}', {
           params: { path: { identifier: personId } },
-          body: { display_name: name, facts },
+          body: payload,
         });
         if (!data) return fail(error);
-        return { id: data.id, display_name: data.name, facts: data.facts };
+        return {
+          id: data.id,
+          display_name: data.name,
+          facts: data.facts,
+          revision: data.revision,
+        } as View;
       }
-      const { data, error } = await api.PUT('/v1/profile/me', {
-        body: { display_name: name, facts },
-      });
+      const { data, error } = await api.PUT('/v1/profile/me', { body: payload });
       return data ?? fail(error);
     },
     onSuccess: (data) => {
+      const next = editable(data);
+      baseline.current = signature(next);
+      revision.current = data.revision || undefined;
+      setDraft(next);
+      setEditing(false);
+      setSection(null);
       cache.setQueryData(['personal-profile', personId], data);
-      void cache.invalidateQueries({ queryKey: ['workspaces'] });
-      void cache.invalidateQueries({ queryKey: ['dashboard-summary'] });
-      void cache.invalidateQueries({ queryKey: ['plan'] });
-      baseline.current = submitted.current;
-      setSaved(signature === submitted.current);
+      for (const key of ['workspaces', 'dashboard-summary', 'plan'])
+        void cache.invalidateQueries({ queryKey: [key] });
     },
   });
-  function update(index: number, patch: Partial<Fact>) {
-    setSaved(false);
-    setFacts((previous) => previous.map((fact, i) => (i === index ? { ...fact, ...patch } : fact)));
-  }
-  if (query.isPending)
+  if (query.isError)
+    return (
+      <div className="page panel" role="alert">
+        <p>{query.error.message}</p>
+        <button className="button" onClick={() => void query.refetch()}>
+          {t.retry}
+        </button>
+      </div>
+    );
+  if (query.isPending || !draft)
     return (
       <div className="page" role="status">
         {t.loading}
       </div>
     );
-  if (query.isError)
-    return (
-      <div className="page">
-        <section className="panel" role="alert">
-          <h1>{t.profile}</h1>
-          <p>{query.error.message}</p>
-          <Link className="button" to="/settings">
-            {t.signIn}
-          </Link>
-        </section>
-      </div>
-    );
-  return (
-    <div className="page narrow">
-      <div className="page-heading">
-        <span className="eyebrow">{t.profileEyebrow}</span>
-        <h1>{t.profile}</h1>
-        <p>{t.profileIntro}</p>
-      </div>
-      <div className="notice">
-        <UserRound size={18} />
-        <div>
-          <strong>{t.syntheticProfile}</strong>
-          <span>{t.syntheticProfileNote}</span>
-        </div>
-      </div>
-      <ReadinessJourney
-        steps={
+  const values = valuesOf(draft.facts),
+    invalid = conflicts(draft.facts),
+    isNew = !query.data;
+  function update(key: Fact['key'], value: Fact['value'], extra: Partial<Fact> = {}) {
+    let next = [...draft!.facts];
+    const clearing: Fact['key'][] =
+      key === 'student_status' && value === false
+        ? ['enrollment_mode', 'school_recognized_or_government']
+        : key === 'education_level' && ['undergraduate', 'postgraduate'].includes(String(value))
+          ? ['school_recognized_or_government']
+          : [];
+    if (next.some((f) => clearing.includes(f.key) && valuesOf(next)[f.key] != null)) {
+      if (
+        !window.confirm(
           hi
-            ? ['अपनी पहचान', 'ज़रूरी जानकारी', 'सहेजें और जाँचें']
-            : ['Your context', 'Relevant questions', 'Save and assess']
-        }
-        active={stage}
-      />
-      <section className="profile-guide">
-        <span className="step-dot">1</span>
-        <div>
-          <strong>{hi ? 'जो जानते हैं, उससे शुरू करें' : 'Start with what you know'}</strong>
-          <p>
-            {hi
-              ? 'जानकारी वैकल्पिक है। अज्ञात को खाली छोड़ें।'
-              : 'Answer only relevant questions. Leave uncertain information blank; you can return later.'}
-          </p>
-        </div>
-      </section>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setSaved(false);
-          if (stage < 2) {
-            setStage(stage + 1);
-            return;
-          }
-          submitted.current = signature;
-          save.mutate();
-        }}
-      >
-        <section className="panel" hidden={stage !== 0}>
-          <label className="field">
-            {t.displayName}
+            ? 'इस बदलाव से पहले के अध्ययन उत्तर अब लागू नहीं होंगे। उन्हें खाली करें? अन्य जानकारी सुरक्षित रहेगी।'
+            : 'This change makes earlier study answers irrelevant. Clear those answers? Your other information will stay.',
+        )
+      )
+        return;
+      next = next.map((f) =>
+        clearing.includes(f.key) && valuesOf(next)[f.key] != null ? { ...f, value: null } : f,
+      );
+    }
+    const old = next.find((f) => f.key === key);
+    next = old
+      ? next.map((f) => (f.key === key ? { ...f, value, ...extra } : f))
+      : [
+          ...next,
+          {
+            key,
+            value,
+            valid_from: null,
+            valid_until: null,
+            income_period: null,
+            income_definition: null,
+            ...extra,
+          },
+        ];
+    setDraft({ ...draft!, facts: next });
+    save.reset();
+  }
+  function begin(category: Category) {
+    setEditing(true);
+    setSection(category);
+    setStage(1);
+    save.reset();
+  }
+  function discard() {
+    if (!guard.confirmLeave()) return;
+    const next = editable(query.data ?? null);
+    baseline.current = signature(next);
+    setDraft(next);
+    setEditing(false);
+    setSection(null);
+    save.reset();
+  }
+  function renderQuestion(q: Question) {
+    const f = draft!.facts.find((f) => f.key === q.key),
+      value = f?.value;
+    if (q.when && !q.when(values)) return null;
+    const label = q.label[hi ? 1 : 0];
+    return (
+      <div className="guided-question" id={`fact-${q.key}`} key={q.key}>
+        <label className="field">
+          <span>
+            {label} <small>{hi ? 'वैकल्पिक' : 'Optional'}</small>
+          </span>
+          {q.type === 'boolean' || q.type === 'select' ? (
+            <select
+              aria-label={label}
+              disabled={save.isPending}
+              value={value == null ? '' : String(value)}
+              onChange={(e) =>
+                update(
+                  q.key,
+                  e.target.value === ''
+                    ? null
+                    : q.type === 'boolean'
+                      ? e.target.value === 'true'
+                      : e.target.value,
+                )
+              }
+            >
+              <option value="">{hi ? 'अभी पता नहीं / छोड़ें' : 'Not sure yet / skip'}</option>
+              {q.type === 'boolean' ? (
+                <>
+                  <option value="true">{t.yes}</option>
+                  <option value="false">{t.no}</option>
+                </>
+              ) : (
+                q.choices?.map((choice) => (
+                  <option key={choice[0]} value={choice[0]}>
+                    {choice[hi ? 2 : 1]}
+                  </option>
+                ))
+              )}
+              {q.type === 'select' && value != null && !q.choices?.some((x) => x[0] === value) && (
+                <option value={String(value)}>{String(value)}</option>
+              )}
+            </select>
+          ) : (
             <input
-              value={name}
-              maxLength={80}
-              required
-              onChange={(e) => {
-                setName(e.target.value);
-                setSaved(false);
-              }}
-              placeholder="Demo learner"
+              aria-label={label}
+              disabled={save.isPending}
+              type={q.type === 'number' ? 'number' : 'text'}
+              min={q.min}
+              max={q.max}
+              step={q.key === 'age' ? 1 : 'any'}
+              maxLength={100}
+              value={value == null ? '' : String(value)}
+              onChange={(e) =>
+                update(
+                  q.key,
+                  e.target.value === ''
+                    ? null
+                    : q.type === 'number'
+                      ? Number(e.target.value)
+                      : e.target.value,
+                )
+              }
             />
-          </label>
-        </section>
-        <section className="panel" hidden={stage !== 1}>
-          <h2>{t.profileFacts}</h2>
-          <p>{t.factHelp}</p>
-          <div className="question-topics">
-            {[
-              {
-                label: hi ? 'शिक्षा' : 'Education',
-                keys: [
-                  'education_level',
-                  'student_status',
-                  'enrollment_mode',
-                  'school_recognized_or_government',
-                ],
-              },
-              {
-                label: hi ? 'स्थान' : 'Where you live',
-                keys: [
-                  'domicile_state',
-                  'domicile_district',
-                  'residence_state',
-                  'residence_district',
-                ],
-              },
-              {
-                label: hi ? 'रोजगार' : 'Employment',
-                keys: ['employment_status'],
-              },
-              {
-                label: hi ? 'आय' : 'Relevant income',
-                keys: ['annual_parental_income', 'annual_personal_income'],
-              },
-              {
-                label: hi ? 'दस्तावेज़' : 'Evidence gaps',
-                keys: [
-                  'has_income_certificate',
-                  'has_disability_certificate',
-                  'has_udid_certificate',
-                ],
-              },
-            ].map((topic) => (
-              <button
-                type="button"
-                key={topic.label}
-                className="topic-chip"
-                onClick={() => {
-                  setSaved(false);
-                  setTopic(topic.keys);
-                  setFacts((previous) => [
-                    ...previous,
-                    ...topic.keys
-                      .filter((key) => !previous.some((f) => f.key === key))
-                      .map((key) => ({ key: key as Fact['key'], value: null })),
-                  ]);
-                }}
-              >
-                {topic.label}
-                <Plus size={14} />
-              </button>
-            ))}
-          </div>
-          {topic && (
-            <button type="button" className="text-button" onClick={() => setTopic(null)}>
-              {hi ? 'सभी जोड़े गए सवाल देखें' : 'Show all added questions'}
-            </button>
           )}
-          {facts.map((fact, index) => {
-            const kind = fields.find((f) => f.key === fact.key)?.kind || 'text';
-            const income = fact.key.includes('income');
-            if (topic && !topic.includes(fact.key)) return null;
-            return (
-              <div id={`fact-${fact.key}`} className="fact-editor" key={fact.key}>
-                <h3 className="question-label">
-                  {t.factNames[fact.key as keyof typeof t.factNames] || fact.key}
-                </h3>
-                <label className="field">
-                  {hi ? 'आपका उत्तर' : 'Your answer'}
-                  {['enrollment_mode', 'education_level'].includes(fact.key) ? (
-                    <select
-                      aria-label={`${t.value} ${index + 1}`}
-                      value={fact.value == null ? '' : String(fact.value)}
-                      onChange={(e) => update(index, { value: e.target.value || null })}
-                    >
-                      <option value="">{t.unknown}</option>
-                      {(fact.key === 'enrollment_mode'
-                        ? ['full_time', 'part_time', 'distance']
-                        : ['IX', 'X', 'XI', 'XII', 'undergraduate', 'postgraduate', 'other']
-                      ).map((v) => (
-                        <option key={v} value={v}>
-                          {hi
-                            ? {
-                                full_time: 'नियमित पूर्णकालिक',
-                                part_time: 'अंशकालिक',
-                                distance: 'दूरस्थ',
-                                undergraduate: 'स्नातक',
-                                postgraduate: 'स्नातकोत्तर',
-                                other: 'अन्य',
-                              }[v] || v
-                            : v.replaceAll('_', ' ')}
-                        </option>
-                      ))}
-                    </select>
-                  ) : kind === 'boolean' ? (
-                    <select
-                      aria-label={`${t.value} ${index + 1}`}
-                      value={fact.value === true ? 'true' : fact.value === false ? 'false' : ''}
-                      onChange={(e) =>
-                        update(index, {
-                          value: e.target.value === '' ? null : e.target.value === 'true',
-                        })
-                      }
-                    >
-                      <option value="">{t.unknown}</option>
-                      <option value="true">{t.yes}</option>
-                      <option value="false">{t.no}</option>
-                    </select>
-                  ) : (
-                    <input
-                      aria-label={`${t.value} ${index + 1}`}
-                      type={kind === 'number' ? 'number' : 'text'}
-                      min={kind === 'number' ? 0 : undefined}
-                      max={
-                        fact.key === 'age'
-                          ? 130
-                          : fact.key === 'disability_percentage'
-                            ? 100
-                            : undefined
-                      }
-                      step={fact.key === 'age' ? 1 : 'any'}
-                      value={fact.value == null ? '' : String(fact.value)}
-                      placeholder={t.unknown}
-                      maxLength={100}
-                      onChange={(e) =>
-                        update(index, {
-                          value:
-                            e.target.value === ''
-                              ? null
-                              : kind === 'number'
-                                ? Number(e.target.value)
-                                : e.target.value,
-                        })
-                      }
-                    />
-                  )}
-                </label>
-                <button
-                  className="icon-button remove-fact"
-                  type="button"
-                  aria-label={`${t.removeFact} ${index + 1}`}
-                  onClick={() => {
-                    setFacts((prev) => prev.filter((_, i) => i !== index));
-                    setSaved(false);
-                  }}
-                >
-                  <Trash2 size={17} />
-                </button>
-                {income && (
-                  <>
-                    <label className="field">
-                      {t.incomePeriod}
-                      <input
-                        value={fact.income_period || ''}
-                        onChange={(e) => update(index, { income_period: e.target.value || null })}
-                      />
-                    </label>
-                    <label className="field">
-                      {t.incomeDefinition}
-                      <input
-                        value={fact.income_definition || ''}
-                        onChange={(e) =>
-                          update(index, { income_definition: e.target.value || null })
-                        }
-                      />
-                    </label>
-                  </>
-                )}
-                <details className="fact-dates">
-                  <summary>{t.validity}</summary>
-                  <label className="field">
-                    {t.validFrom}
-                    <input
-                      type="date"
-                      value={fact.valid_from || ''}
-                      onChange={(e) => update(index, { valid_from: e.target.value || null })}
-                    />
-                  </label>
-                  <label className="field">
-                    {t.validUntil}
-                    <input
-                      type="date"
-                      value={fact.valid_until || ''}
-                      onChange={(e) => update(index, { valid_until: e.target.value || null })}
-                    />
-                  </label>
-                </details>
-                <small className="fact-origin">
-                  {fact.value === null ? t.unknown : t.userSupplied}
-                </small>
-              </div>
-            );
-          })}
-          <button
-            className="text-button add-fact"
-            type="button"
-            onClick={() => {
-              setTopic(null);
-              setFacts((prev) => [
-                ...prev,
-                {
-                  key: fields.find((f) => !prev.some((v) => v.key === f.key))?.key || 'age',
-                  value: null,
-                },
-              ]);
-              setSaved(false);
-            }}
-            disabled={facts.length >= fields.length}
-          >
-            <Plus size={16} />
-            {t.addFact}
-          </button>
-        </section>
-        {query.data?.facts
-          .filter((f) => f.origin === 'verified_document')
-          .map((f) => (
-            <section className="panel" key={f.id}>
-              <strong>{f.key}</strong>
-              <p>
-                {String(f.value)} · {f.origin} · {f.verification}
-              </p>
-            </section>
-          ))}
-        {stage === 2 && (
-          <section className="panel profile-review">
-            <span className="eyebrow">
-              {hi ? 'सहेजने से पहले समीक्षा' : 'REVIEW BEFORE SAVING'}
-            </span>
-            <h2>{hi ? 'आपकी साझा जानकारी' : 'What you choose to share'}</h2>
-            <h3>{name}</h3>
-            <dl>
-              {facts.map((f) => (
-                <div key={f.key}>
-                  <dt>{t.factNames[f.key as keyof typeof t.factNames] ?? f.key}</dt>
-                  <dd>
-                    {f.value === null ? t.unknown : String(f.value)} <small>{t.userSupplied}</small>
-                  </dd>
-                </div>
-              ))}
-            </dl>
+        </label>
+        {q.help && <p className="muted">{q.help[hi ? 1 : 0]}</p>}
+        {(f?.valid_from || f?.valid_until) && (
+          <details>
+            <summary>
+              {hi ? 'इस उत्तर की लागू अवधि जाँचें' : 'Check when this answer applies'}
+            </summary>
             <p>
               {hi
-                ? 'यह स्वयं दी गई जानकारी है। दस्तावेज़ सत्यापित नहीं हुए हैं।'
-                : 'These facts are self-reported. No document has been verified.'}
+                ? 'पहले सहेजी अवधि इस उत्तर के साथ रहेगी। ज़रूरत हो तो स्पष्ट रूप से बदलें।'
+                : 'The previously saved dates stay with this answer. Change them explicitly if needed.'}
             </p>
-          </section>
+            <label className="field">
+              {hi ? 'कब से लागू है?' : 'Applies from'}
+              <input
+                type="date"
+                disabled={save.isPending}
+                value={f.valid_from ?? ''}
+                onChange={(e) =>
+                  update(q.key, value ?? null, { valid_from: e.target.value || null })
+                }
+              />
+            </label>
+            <label className="field">
+              {hi ? 'कब तक लागू है?' : 'Applies until'}
+              <input
+                type="date"
+                disabled={save.isPending}
+                value={f.valid_until ?? ''}
+                onChange={(e) =>
+                  update(q.key, value ?? null, { valid_until: e.target.value || null })
+                }
+              />
+            </label>
+          </details>
         )}
-        <div className="form-actions">
-          {stage > 0 && (
-            <button type="button" className="button secondary" onClick={() => setStage(stage - 1)}>
-              {hi ? 'पीछे' : 'Back'}
-            </button>
-          )}
-          {stage < 2 && (
-            <button
-              type="button"
-              className="button"
-              disabled={!name.trim()}
-              onClick={() => setStage(stage + 1)}
-            >
-              {stage === 0
-                ? hi
-                  ? 'ज़रूरी सवाल चुनें'
-                  : 'Choose relevant questions'
-                : hi
-                  ? 'समीक्षा करें'
-                  : 'Review your answers'}
-            </button>
-          )}
-          <button className="button" hidden={stage !== 2} disabled={save.isPending}>
-            {save.isPending ? t.saving : t.saveProfile}
+        {incomeKeys.has(q.key) && value != null && (
+          <div className="notice">
+            <p>
+              {hi
+                ? 'इस आय का उपयोग तभी होगा जब अवधि और शामिल आय अवसर की शर्त से मेल खाएँ।'
+                : 'This amount can only be assessed when its period and included income match the opportunity.'}
+            </p>
+            <label className="field">
+              {hi ? 'किस वर्ष या अवधि की आय?' : 'Which year or period does this cover?'}
+              <input
+                disabled={save.isPending}
+                value={f?.income_period ?? ''}
+                onChange={(e) =>
+                  update(q.key, value ?? null, { income_period: e.target.value || null })
+                }
+              />
+            </label>
+            <label className="field">
+              {hi
+                ? 'किसकी आय और कौनसे स्रोत शामिल हैं?'
+                : 'Whose income and which sources are included?'}
+              <input
+                disabled={save.isPending}
+                value={f?.income_definition ?? ''}
+                onChange={(e) =>
+                  update(q.key, value ?? null, { income_definition: e.target.value || null })
+                }
+              />
+            </label>
+            <p>
+              {hi
+                ? 'यदि पता नहीं, आकलन में यह अज्ञात रहेगा।'
+                : 'If unknown, the income condition remains unknown.'}
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  }
+  const visible = questions.filter((q) =>
+    requested
+      ? q.key === requested.key
+      : section
+        ? q.category === section
+        : isNew
+          ? ['age', 'domicile_state'].includes(q.key) || q.goals?.includes(goal)
+          : false,
+  );
+  return (
+    <div className="page narrow profile-journey">
+      <div className="page-heading">
+        <span className="eyebrow">{c.label}</span>
+        <h1>{hi ? 'आपकी जानकारी' : 'Your profile'}</h1>
+        <p>
+          {hi
+            ? 'छोटी शुरुआत करें। अवसर के अनुसार बाकी जानकारी बाद में जोड़ें।'
+            : 'Start small. Add other information when an opportunity needs it.'}
+        </p>
+      </div>
+      {sourceRequirement && (
+        <section className="panel">
+          <h2>{hi ? 'यह जानकारी क्यों चाहिए?' : 'Why are we asking?'}</h2>
+          <p>
+            {source.data?.title} · {sourceRequirement.description}
+          </p>
+          {sourceRequirement.citations.map((citation, i) => (
+            <blockquote key={i}>
+              {citation.passage}
+              <a href={citation.source_url} target="_blank" rel="noreferrer">
+                {hi ? 'मूल शर्त' : 'Original condition'} · {citation.page}
+              </a>
+            </blockquote>
+          ))}
+        </section>
+      )}
+      {requestedDocument && (
+        <div className="notice">
+          <p>
+            {hi
+              ? 'प्रमाणपत्र का प्रबंधन दस्तावेज़ों में करें। अपलोड से सत्यापन नहीं होता।'
+              : 'Manage certificates in My Documents. Uploading does not verify them.'}
+          </p>
+          <Link className="button" to="/documents">
+            {hi ? 'मेरे दस्तावेज़' : 'My Documents'}
+          </Link>
+        </div>
+      )}
+      {invalid && (
+        <div className="notice" role="alert">
+          <p>
+            {hi
+              ? 'पहले सहेजे गए अध्ययन उत्तरों में असंगति है। बाकी जानकारी सुरक्षित है।'
+              : 'Some saved study answers conflict. Your other information is preserved.'}
+          </p>
+          <button
+            className="button secondary"
+            onClick={() => {
+              if (
+                window.confirm(
+                  hi
+                    ? 'अप्रासंगिक अध्ययन उत्तर खाली करें?'
+                    : 'Clear the conflicting study answers?',
+                )
+              ) {
+                setDraft({
+                  ...draft,
+                  facts: draft.facts.map((f) =>
+                    (values.student_status === false &&
+                      ['enrollment_mode', 'school_recognized_or_government'].includes(f.key)) ||
+                    (['undergraduate', 'postgraduate'].includes(String(values.education_level)) &&
+                      f.key === 'school_recognized_or_government')
+                      ? { ...f, value: null }
+                      : f,
+                  ),
+                });
+                setEditing(true);
+                setSection('education');
+                setStage(1);
+              }
+            }}
+          >
+            {hi ? 'अध्ययन उत्तर सुधारें' : 'Resolve study details'}
           </button>
-          {saved && (
-            <div role="status">
-              <p>{t.profileSaved}</p>
-              <Link
-                className="field-followup"
-                to={personId ? `/plan?kind=person&id=${personId}` : '/plan'}
+        </div>
+      )}
+      {!editing && !isNew ? (
+        <>
+          <section className="panel profile-summary">
+            <div className="page-heading">
+              <h2>{draft.name}</h2>
+              <span role="status">{hi ? 'सहेजा गया और अद्यतन' : 'Saved and up to date'}</span>
+            </div>
+            <p>
+              {displayDate(
+                query.data?.last_saved_at,
+                hi,
+                hi ? 'आपकी सहेजी जानकारी' : 'Your saved information',
+              )}
+            </p>
+            <p>
+              {hi
+                ? 'उत्तर आपके द्वारा दिए गए हैं। प्रमाणपत्रों का सत्यापन अलग है।'
+                : 'These are your own answers. Document verification is separate.'}
+            </p>
+            {(['basics', 'education', 'employment', 'income', 'support'] as Category[]).map(
+              (category) => {
+                const entries = answered(draft.facts).filter(
+                  (f) => questions.find((q) => q.key === f.key)?.category === category,
+                );
+                if (!entries.length && ['income', 'support'].includes(category)) return null;
+                return (
+                  <section className="profile-section" key={category}>
+                    <h3>
+                      {hi
+                        ? {
+                            basics: 'मूल जानकारी',
+                            education: 'शिक्षा',
+                            employment: 'कामकाज',
+                            income: 'संबंधित आय',
+                            support: 'सहायता',
+                          }[category]
+                        : {
+                            basics: 'About you',
+                            education: 'Education',
+                            employment: 'Work',
+                            income: 'Relevant income',
+                            support: 'Support',
+                          }[category]}
+                    </h3>
+                    <dl>
+                      {entries.map((f) => (
+                        <div key={f.key}>
+                          <dt>{questions.find((q) => q.key === f.key)?.label[hi ? 1 : 0]}</dt>
+                          <dd>
+                            {answerLabel(f, hi)}
+                            {(f.valid_from || f.valid_until) && (
+                              <small>
+                                {' '}
+                                · {hi ? 'लागू अवधि' : 'Applies'}: {f.valid_from ?? '…'} –{' '}
+                                {f.valid_until ?? '…'}
+                              </small>
+                            )}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                    <button className="text-button" onClick={() => begin(category)}>
+                      {hi
+                        ? `${sectionNames[category][1]} संपादित करें`
+                        : `Edit ${sectionNames[category][0]}`}
+                    </button>
+                  </section>
+                );
+              },
+            )}
+            <button
+              className="button secondary"
+              onClick={() =>
+                begin(
+                  goal === 'education'
+                    ? 'education'
+                    : goal === 'employment'
+                      ? 'employment'
+                      : 'basics',
+                )
+              }
+            >
+              {hi ? 'जानकारी जोड़ें' : 'Add relevant information'}
+            </button>
+          </section>
+          <DocumentSummary />
+          <section className="panel">
+            <h2>{hi ? 'आपके अगले कदम' : 'Your next steps'}</h2>
+            <Link className="button" to="/discover">
+              {hi ? 'अवसर खोजें' : 'Explore opportunities'}
+            </Link>{' '}
+            <Link className="button secondary" to="/documents">
+              {hi ? 'मेरे दस्तावेज़' : 'My Documents'}
+            </Link>{' '}
+            <Link to="/plan">{hi ? 'तैयारी की योजना' : 'View readiness plan'}</Link>
+          </section>
+        </>
+      ) : (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (stage === 0) {
+              setStage(1);
+              return;
+            }
+            if (stage === 1 && isNew) {
+              setStage(2);
+              return;
+            }
+            if (save.isPending || !dirty || invalid) return;
+            submitted.current = structuredClone(draft);
+            save.mutate();
+          }}
+        >
+          <p role="status">
+            {save.isPending
+              ? t.saving
+              : save.error instanceof RequestError && save.error.code === 'profile_conflict'
+                ? hi
+                  ? 'यह बदलाव पुरानी प्रति पर है — सहेजी जानकारी पुनः लोड करें'
+                  : 'Conflicting edit — reload the saved version'
+                : save.isError
+                  ? hi
+                    ? 'बदलाव सहेजे नहीं गए'
+                    : 'Changes were not saved'
+                  : dirty
+                    ? hi
+                      ? 'सहेजे नहीं गए बदलाव'
+                      : 'Unsaved changes'
+                    : isNew
+                      ? hi
+                        ? 'अभी प्रोफ़ाइल नहीं बना'
+                        : 'Not yet created'
+                      : hi
+                        ? 'कोई बदलाव नहीं'
+                        : 'No changes to save'}
+          </p>
+          {isNew && stage === 0 ? (
+            <section className="panel">
+              <h2>{hi ? 'आप क्या खोजना चाहते हैं?' : 'What would you like to explore?'}</h2>
+              <p>
+                {hi
+                  ? 'यह सवाल चुनने में मदद करता है। सभी अवसर फिर भी देख सकते हैं।'
+                  : 'This helps us keep your questions relevant. You can still browse every opportunity.'}
+              </p>
+              <label className="field">
+                {hi ? 'नाम या उपनाम' : 'Name or nickname'}
+                <input
+                  aria-label="Profile name"
+                  disabled={save.isPending}
+                  required
+                  maxLength={80}
+                  value={draft.name}
+                  onChange={(e) => setDraft({ ...draft, name: e.target.value })}
+                />
+              </label>
+              <div className="question-topics">
+                {(['education', 'employment', 'general'] as Goal[]).map((g) => (
+                  <button
+                    type="button"
+                    className="topic-chip"
+                    aria-pressed={goal === g}
+                    key={g}
+                    onClick={() => setGoal(g)}
+                  >
+                    {hi
+                      ? { education: 'शिक्षा', employment: 'रोज़गार', general: 'अभी खोज रहा हूँ' }[
+                          g
+                        ]
+                      : {
+                          education: 'Education',
+                          employment: 'Work and skills',
+                          general: 'Just exploring',
+                        }[g]}
+                  </button>
+                ))}
+              </div>
+              <Link to="/discover">{hi ? 'पहले अवसर देखें' : 'Explore before setting up'}</Link>
+            </section>
+          ) : stage === 2 && isNew ? (
+            <section className="panel profile-review">
+              <h2>{hi ? 'अपनी जानकारी की समीक्षा करें' : 'Review your answers'}</h2>
+              <h3>{draft.name}</h3>
+              <dl>
+                {answered(draft.facts).map((f) => (
+                  <div key={f.key}>
+                    <dt>
+                      {questions.find((q) => q.key === f.key)?.label[hi ? 1 : 0] ??
+                        t.factNames[f.key as keyof typeof t.factNames]}
+                    </dt>
+                    <dd>
+                      {answerLabel(f, hi)}
+                      {(f.valid_from || f.valid_until) && (
+                        <small>
+                          {' '}
+                          · {hi ? 'लागू अवधि' : 'Applies'}: {f.valid_from ?? '…'} –{' '}
+                          {f.valid_until ?? '…'}
+                        </small>
+                      )}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <p>
+                {hi
+                  ? 'छोड़े गए सवाल अज्ञात रहेंगे। बाद में जोड़ सकते हैं।'
+                  : 'Skipped answers stay unknown. You can add them later.'}
+              </p>
+            </section>
+          ) : (
+            <section className="panel">
+              <h2>
+                {requested
+                  ? requested.label[hi ? 1 : 0]
+                  : hi
+                    ? 'केवल उपयोगी सवाल'
+                    : 'Only the questions that help'}
+              </h2>
+              {!isNew && section === 'basics' && (
+                <label className="field">
+                  {hi ? 'नाम या उपनाम' : 'Name or nickname'}
+                  <input
+                    aria-label="Profile name"
+                    disabled={save.isPending}
+                    required
+                    value={draft.name}
+                    maxLength={80}
+                    onChange={(e) => setDraft({ ...draft, name: e.target.value })}
+                  />
+                </label>
+              )}
+              <p>
+                {hi
+                  ? 'सभी सवाल वैकल्पिक हैं। उत्तर आपके द्वारा दिए गए हैं।'
+                  : 'Every question is optional. Answers are self-reported.'}
+              </p>
+              {visible.map(renderQuestion)}
+              {requested?.when && !requested.when(values) && (
+                <p role="status">
+                  {hi
+                    ? 'यह सवाल आपकी वर्तमान स्थिति पर लागू नहीं होता। पहले शिक्षा संबंधी जानकारी स्पष्ट करें।'
+                    : 'This question does not apply to your current study context. Clarify your education details first.'}
+                  <Link to="/profile?section=education">
+                    {hi ? 'शिक्षा की जानकारी खोलें' : 'Open education details'}
+                  </Link>
+                </p>
+              )}
+            </section>
+          )}
+          <div className="form-actions">
+            {isNew && stage > 0 && (
+              <button
+                type="button"
+                className="button secondary"
+                disabled={save.isPending}
+                onClick={() => setStage(stage - 1)}
               >
-                {hi ? 'अद्यतन कार्ययोजना देखें' : 'See your updated plan'}
-              </Link>
+                {hi ? 'पीछे' : 'Back'}
+              </button>
+            )}
+            {!isNew && (
+              <button
+                type="button"
+                className="button secondary"
+                disabled={save.isPending}
+                onClick={discard}
+              >
+                {hi ? 'रद्द करें' : 'Cancel'}
+              </button>
+            )}
+            <button
+              className="button"
+              disabled={
+                save.isPending ||
+                !draft.name.trim() ||
+                invalid ||
+                ((!isNew || stage === 2) && !dirty)
+              }
+            >
+              {save.isPending
+                ? t.saving
+                : isNew
+                  ? stage === 0
+                    ? hi
+                      ? 'आगे बढ़ें'
+                      : 'Continue'
+                    : stage === 1
+                      ? hi
+                        ? 'समीक्षा करें'
+                        : 'Review your answers'
+                      : hi
+                        ? 'सेटअप पूरा करें'
+                        : 'Finish setup'
+                  : hi
+                    ? 'बदलाव सहेजें'
+                    : 'Save changes'}
+            </button>
+          </div>
+          {save.isError && (
+            <div role="alert">
+              <p>{save.error.message}</p>
+              <p>
+                {hi
+                  ? 'आपके उत्तर यहीं सुरक्षित हैं। दोबारा कोशिश करें। पुरानी प्रति होने पर सहेजी जानकारी पुनः लोड करें।'
+                  : 'Your answers are still here. Retry, or reload the saved version if this edit is stale.'}
+              </p>
+              <button
+                type="button"
+                className="text-button"
+                onClick={() => {
+                  if (guard.confirmLeave()) {
+                    baseline.current = signature(draft);
+                    initialized.current = false;
+                    setDraft(null);
+                    void query.refetch();
+                  }
+                }}
+              >
+                {hi ? 'सहेजी जानकारी पुनः लोड करें' : 'Reload saved version'}
+              </button>
             </div>
           )}
-          {save.isError && <p role="alert">{save.error.message}</p>}
-        </div>
-      </form>
+        </form>
+      )}
     </div>
   );
 }

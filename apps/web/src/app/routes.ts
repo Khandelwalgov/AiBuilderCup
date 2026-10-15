@@ -6,6 +6,7 @@ import {
   UsersRound,
   BriefcaseBusiness,
   Layers3,
+  Files,
   ShieldCheck,
   Settings2,
 } from 'lucide-react';
@@ -60,6 +61,14 @@ export const routeMetadata = [
     nav: 'businesses',
     access: 'authenticated',
     icon: BriefcaseBusiness,
+  },
+  {
+    id: 'documents',
+    path: '/documents',
+    titleKey: 'documents',
+    nav: 'documents',
+    access: 'authenticated',
+    icon: Files,
   },
   {
     id: 'plan',

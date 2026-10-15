@@ -71,19 +71,24 @@ test('household and unregistered business creation controls (mocked API)', async
     await route.fulfill({ json: business });
   });
   await page.goto('/family');
-  await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Fictional household');
-  await page.getByRole('button', { name: 'Save context', exact: true }).click();
+  await page
+    .getByRole('textbox', { name: 'Household name', exact: true })
+    .fill('Fictional household');
+  await page.getByRole('button', { name: 'Create household', exact: true }).click();
   await expect(
     page.getByRole('heading', { name: 'Fictional household', exact: true }),
   ).toBeVisible();
+  await page.getByRole('button', { name: 'Edit details', exact: true }).click();
   await page
     .getByRole('textbox', { name: 'Household name', exact: true })
     .fill('Fictional household revised');
-  await page.getByRole('button', { name: 'Save and make primary household' }).click();
+  await page.getByRole('button', { name: 'Save changes', exact: true }).click();
   await expect(
     page.getByRole('heading', { name: 'Fictional household revised', exact: true }),
   ).toBeVisible();
-  await page.getByRole('textbox', { name: 'Profile name' }).fill('Fictional dependent');
+  await page
+    .getByRole('textbox', { name: 'Dependent’s name or nickname' })
+    .fill('Fictional dependent');
   await page.getByRole('checkbox').check();
   await page.getByRole('button', { name: 'Add dependent', exact: true }).click();
   await expect(page.getByText('Fictional dependent', { exact: true })).toBeVisible();
@@ -95,12 +100,19 @@ test('household and unregistered business creation controls (mocked API)', async
   await captureContract(page, 'family');
   page.once('dialog', (dialog) => dialog.accept());
   await page.getByRole('button', { name: 'Stop managing', exact: true }).click();
-  await expect(page.getByText('Adult authorization required')).toBeVisible();
+  await expect(
+    page.getByText('Adult permission required — private identity and records are not shared.'),
+  ).toBeVisible();
   await expect(page.getByText('Fictional dependent', { exact: true })).toHaveCount(0);
   await page.goto('/businesses');
-  await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Fictional microbusiness');
-  await page.getByRole('button', { name: 'Save context', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Edit business' })).toBeVisible();
+  await page
+    .getByRole('textbox', { name: 'Business name', exact: true })
+    .fill('Fictional microbusiness');
+  await page.getByRole('button', { name: 'Continue', exact: true }).click();
+  await page.getByRole('button', { name: 'Create business', exact: true }).click();
+  await expect(
+    page.getByRole('heading', { name: 'Fictional microbusiness', exact: true }),
+  ).toBeVisible();
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: `${artifacts}/business-populated-contract-1440.png`,

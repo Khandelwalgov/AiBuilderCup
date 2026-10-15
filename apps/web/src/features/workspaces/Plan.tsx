@@ -1,3 +1,5 @@
+import { useSearchParams } from 'react-router-dom';
+import { documentStatus, documentsHref } from '../documents/Documents';
 import { ContextLink as Link } from '../../app/subject-context';
 import { IntelligenceMap } from '../../components/IntelligenceMap';
 import { AssessmentLedger } from '../../components/Atlas';
@@ -19,27 +21,29 @@ function SubjectPlan() {
   const t = useStrings();
   const hi = useLanguage() === 'hi';
   const context = useSubject();
+  const [params] = useSearchParams();
+  const development = params.get('development') === 'true';
   const subject = context.subject;
   const identifier = subject.id;
   const [selected, setSelected] = useState<Action | null>(null);
   const [age, setAge] = useState('');
   const [explanationId, setExplanationId] = useState('');
   const query = useQuery({
-    queryKey: ['plan', subject],
+    queryKey: ['plan', subject, development],
     enabled: context.available && !context.pending,
     retry: false,
     staleTime: 0,
     refetchOnMount: 'always',
     refetchOnWindowFocus: false,
     queryFn: async () => {
-      const { data, error } = await api.POST('/v1/plan', { body: { subject } });
+      const { data, error } = await api.POST('/v1/plan', { body: { subject, development } });
       return data ?? fail(error);
     },
   });
   const simulation = useMutation({
     mutationFn: async () => {
       const { data, error } = await api.POST('/v1/plan/simulate', {
-        body: { subject, facts: [{ key: 'age', value: Number(age) }] },
+        body: { subject, development, facts: [{ key: 'age', value: Number(age) }] },
       });
       return data ?? fail(error);
     },
@@ -249,7 +253,16 @@ function SubjectPlan() {
                         <strong>{actionTitle(a)}</strong>
                         <small>
                           {new Set(a.opportunities.map((o) => o.id)).size}{' '}
-                          {hi ? 'अवसरों से जुड़ा' : 'linked opportunities'} · {a.status}
+                          {hi ? 'अवसरों से जुड़ा' : 'linked opportunities'} ·{' '}
+                          {a.kind === 'document'
+                            ? documentStatus(a.documentary_status, hi)
+                            : a.status === 'in_progress'
+                              ? hi
+                                ? 'प्रगति में'
+                                : 'In progress'
+                              : hi
+                                ? 'बाकी'
+                                : 'Pending'}
                         </small>
                       </span>
                       <ArrowRight size={16} />
@@ -265,18 +278,41 @@ function SubjectPlan() {
                 </section>
                 <section className="panel" aria-live="polite">
                   <h2>
-                    {selected?.title ??
-                      (hi ? 'हर कदम के पीछे प्रमाण' : 'Evidence behind every step')}
+                    {selected
+                      ? actionTitle(selected)
+                      : hi
+                        ? 'हर कदम के पीछे प्रमाण'
+                        : 'Evidence behind every step'}
                   </h2>
                   {selected ? (
                     <>
                       <p>{selected.explanation}</p>
+                      {selected.kind === 'document' && (
+                        <div className="notice document-action-notice">
+                          <strong>{documentStatus(selected.documentary_status, hi)}</strong>
+                          <p>
+                            {hi
+                              ? 'निजी फ़ाइल जोड़ने से आधिकारिक सत्यापन नहीं होता।'
+                              : 'Adding a private file does not establish official verification.'}
+                          </p>
+                          {selected.opportunities.map((o) => (
+                            <Link
+                              key={String(o.requirement_id)}
+                              className="button secondary"
+                              to={documentsHref(String(o.requirement_id))}
+                            >
+                              {hi ? 'दस्तावेज़ जोड़ें या देखें:' : 'Add or manage evidence:'}{' '}
+                              {String(o.requirement)}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                       {selected.kind === 'information' &&
                         selected.fact &&
                         subject.kind === 'person' && (
                           <Link
                             className="field-followup"
-                            to={`${identifier ? `/people/${identifier}/edit` : '/profile'}?field=${selected.fact}`}
+                            to={`${identifier ? `/people/${identifier}/edit` : '/profile'}?${new URLSearchParams({ field: selected.fact, opportunity: String(selected.opportunities[0]?.id ?? ''), requirement: String(selected.opportunities[0]?.requirement_id ?? '') })}`}
                           >
                             {hi ? 'यह जानकारी दें' : 'Provide this missing information'}
                             <ArrowRight size={16} />

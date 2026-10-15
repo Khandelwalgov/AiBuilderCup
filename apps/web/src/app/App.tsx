@@ -7,6 +7,7 @@ import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-
 import { Workspaces } from '../features/workspaces/Workspaces';
 import { Plan } from '../features/workspaces/Plan';
 import { Profile } from '../features/profiles/Profile';
+import { Documents } from '../features/documents/Documents';
 import { Admin } from '../features/admin/Admin';
 import { useQuery } from '@tanstack/react-query';
 import { metadataFor, routeMetadata, routeTitle } from './routes';
@@ -26,7 +27,7 @@ import {
   X,
 } from 'lucide-react';
 import { strings, type Language } from '../i18n/strings';
-import { authConfigured } from './auth';
+import { authConfigured, usingAuthEmulator } from './auth';
 import { api, fail } from '../lib/api/client';
 import { Discover, Detail } from '../features/opportunities/Discover';
 export const Locale = createContext<Language>('en');
@@ -185,7 +186,11 @@ export function ApplicationFrame({ session }: { session: SessionState }) {
                       <UserRound size={18} />
                     </span>
                     <div>
-                      <strong>{user?.displayName || t.guest}</strong>
+                      <strong>
+                        {user
+                          ? user.displayName || (language === 'hi' ? 'आपका खाता' : 'Your account')
+                          : t.guest}
+                      </strong>
                       <small>{t.foundation}</small>
                     </div>
                   </div>
@@ -273,6 +278,13 @@ export function ApplicationFrame({ session }: { session: SessionState }) {
                   {t[errorKey]}
                 </div>
               )}
+              {usingAuthEmulator && (
+                <p className="notice" role="status">
+                  {hi
+                    ? 'काल्पनिक खातों के लिए स्थानीय प्रमाणीकरण एमुलेटर'
+                    : 'Local Firebase Auth emulator — fictional accounts only'}
+                </p>
+              )}
               <main key={user?.uid || 'public'} id="main" tabIndex={-1}>
                 <Routes>
                   {routeMetadata.map((route) => (
@@ -291,6 +303,7 @@ export function ApplicationFrame({ session }: { session: SessionState }) {
                               discover: <Discover />,
                               detail: <Detail />,
                               profile: <Profile />,
+                              documents: <Documents />,
                               dependent: <Profile />,
                               family: <Workspaces kind="household" />,
                               businesses: <Workspaces kind="business" />,
@@ -358,7 +371,9 @@ export function Cockpit() {
     retry: false,
     refetchOnWindowFocus: false,
     queryFn: async () => {
-      const { data, error } = await api.POST('/v1/plan', { body: { subject: context.subject } });
+      const { data, error } = await api.POST('/v1/plan', {
+        body: { subject: context.subject, development: false },
+      });
       return data ?? fail(error);
     },
   });
@@ -592,6 +607,18 @@ function Settings({
             ? 'इस प्रोटोटाइप में केवल काल्पनिक जानकारी प्रयोग करें। वयस्कों का निमंत्रण, दस्तावेज़ सत्यापन और खाता हटाने की सुविधा अभी उपलब्ध नहीं है।'
             : 'Use fictional information in this prototype. Adult invitations, document verification and account deletion are not yet available.'}
         </p>
+        {user && (
+          <Link className="button secondary" to="/documents">
+            {language === 'hi'
+              ? 'अपने निजी दस्तावेज़ देखें या हटाएँ'
+              : 'View or remove your private documents'}
+          </Link>
+        )}
+        <p>
+          {language === 'hi'
+            ? 'दस्तावेज़ हटाने पर उसकी पहुँच तुरंत बंद होती है। फ़ाइल हटाने में समस्या हो तो दोबारा कोशिश करें। सीमित इतिहास बना रहता है।'
+            : 'Removing a document immediately ends access. If file removal fails, retry it in My Documents. A minimal history record remains.'}
+        </p>
       </section>
     </div>
   );
@@ -650,7 +677,7 @@ function AccountMenu({
         aria-haspopup="menu"
         onClick={() => setOpen((v) => !v)}
       >
-        {user.displayName || t.account}
+        {user.displayName || (hi ? 'खाता' : 'Account')}
         <UserRound size={17} />
       </button>
       {open && (

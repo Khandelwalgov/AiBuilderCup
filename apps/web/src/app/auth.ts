@@ -1,5 +1,11 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  connectAuthEmulator,
+} from 'firebase/auth';
 const env = import.meta.env;
 export const authConfigured = Boolean(
   env.VITE_FIREBASE_API_KEY &&
@@ -17,6 +23,15 @@ export const auth = authConfigured
       }),
     )
   : null;
+export const usingAuthEmulator = Boolean(
+  import.meta.env.DEV && env.VITE_FIREBASE_AUTH_EMULATOR_URL,
+);
+if (auth && usingAuthEmulator) {
+  const url = new URL(env.VITE_FIREBASE_AUTH_EMULATOR_URL);
+  if (!['127.0.0.1', 'localhost'].includes(url.hostname) || url.protocol !== 'http:')
+    throw new Error('The development auth emulator must use loopback HTTP.');
+  connectAuthEmulator(auth, url.origin, { disableWarnings: true });
+}
 export async function login() {
   if (auth) await signInWithPopup(auth, new GoogleAuthProvider());
 }

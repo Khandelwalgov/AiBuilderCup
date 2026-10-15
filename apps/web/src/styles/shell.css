@@ -12,6 +12,10 @@
   flex-direction: column;
   z-index: 60;
   border-right: 1px solid #29334b;
+  overflow-y: auto;
+}
+.sidebar > * {
+  flex-shrink: 0;
 }
 .brand {
   display: flex;

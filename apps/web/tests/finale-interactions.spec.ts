@@ -33,8 +33,10 @@ test('missing-fact deep link adds only the supported question, without saving (f
   });
   await page.goto('/profile?field=domicile_state');
   await expect(page.locator('#fact-domicile_state')).toBeVisible();
-  await expect(page.locator('.fact-editor')).toHaveCount(1);
-  await expect(page.getByRole('textbox', { name: 'Value 1' })).toHaveValue('');
+  await expect(page.locator('.guided-question')).toHaveCount(1);
+  await expect(
+    page.getByRole('textbox', { name: 'Which state is your permanent home?' }),
+  ).toHaveValue('');
   expect(writes).toBe(0);
   await page.setViewportSize({ width: 320, height: 900 });
   await page.getByRole('combobox', { name: 'Interface language' }).selectOption('hi');

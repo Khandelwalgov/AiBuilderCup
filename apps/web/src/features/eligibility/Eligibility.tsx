@@ -1,3 +1,6 @@
+import { useSearchParams } from 'react-router-dom';
+import { documentStatus, documentsHref } from '../documents/Documents';
+import { documentKeys, answerLabel, type Fact } from '../profiles/questions';
 import { displayDate } from '../../i18n/format';
 import { ContextLink as Link } from '../../app/subject-context';
 import { AssessmentLedger } from '../../components/Atlas';
@@ -16,6 +19,8 @@ export function Eligibility({ id }: { id: string }) {
 }
 function Assessment({ id }: { id: string }) {
   const context = useSubject();
+  const [params] = useSearchParams();
+  const development = params.get('development') === 'true';
   const t = useStrings();
   const hi = useLanguage() === 'hi';
   const [applicationType, setApplicationType] = useState<'fresh' | 'renewal' | ''>('');
@@ -23,7 +28,7 @@ function Assessment({ id }: { id: string }) {
     mutationFn: async () => {
       const { data, error } = await api.POST('/v1/opportunities/{identifier}/evaluate', {
         params: { path: { identifier: id } },
-        body: { subject: context.subject, application_type: applicationType || null },
+        body: { subject: context.subject, application_type: applicationType || null, development },
       });
       return data ?? fail(error);
     },
@@ -101,6 +106,35 @@ function Assessment({ id }: { id: string }) {
                   <span>{t.outcomes[outcome]}</span>
                 </div>
                 <p>{req.result.reason}</p>
+                {(req.result.kind === 'evidence_gap' || req.documentary_status) && (
+                  <div className="notice">
+                    <strong>{documentStatus(req.documentary_status, hi)}</strong>
+                    <p>
+                      {hi
+                        ? 'अपलोड और आधिकारिक सत्यापन अलग हैं। पात्रता की अनिश्चितता अभी बनी रहती है।'
+                        : 'Uploading and official verification are separate. Eligibility uncertainty remains.'}
+                    </p>
+                    <Link className="button secondary" to={documentsHref(req.requirement_id)}>
+                      {hi ? 'दस्तावेज़ जोड़ें या प्रबंधित करें' : 'Add or manage document'}
+                    </Link>
+                  </div>
+                )}
+                {req.result.kind !== 'evidence_gap' &&
+                  req.result.missing
+                    .filter(
+                      (field) => !documentKeys.has(field as never) && field !== 'application_type',
+                    )
+                    .map((field) => (
+                      <Link
+                        className="field-followup"
+                        key={field}
+                        to={`/profile?field=${encodeURIComponent(field)}&opportunity=${id}&requirement=${req.requirement_id}`}
+                      >
+                        {hi ? 'यह जानकारी दें:' : 'Provide missing information:'}{' '}
+                        {t.factNames[field as keyof typeof t.factNames] ??
+                          (hi ? 'शर्त स्पष्ट करें' : 'Clarify condition')}
+                      </Link>
+                    ))}
                 {req.result.kind === 'evidence_gap' && (
                   <strong className="evidence-gap">{t.evidenceGap}</strong>
                 )}
@@ -109,7 +143,20 @@ function Assessment({ id }: { id: string }) {
                     <summary>{t.factsUsed}</summary>
                     {req.result.facts.map((f, i) => (
                       <p key={`${f.id}-${i}`}>
-                        {f.key}: {String(f.value)} · {f.origin} · {f.verification}
+                        {t.factNames[f.key as keyof typeof t.factNames] ??
+                          (hi ? 'संबंधित जानकारी' : 'Relevant answer')}
+                        : {answerLabel({ key: f.key as Fact['key'], value: f.value }, hi)} ·{' '}
+                        {f.origin === 'verified_document' && f.verification === 'verified'
+                          ? hi
+                            ? 'अधिकृत प्रमाण से सत्यापित'
+                            : 'Verified by an authorized evidence process'
+                          : f.origin === 'ai_inference'
+                            ? hi
+                              ? 'AI की व्याख्या — समीक्षा आवश्यक'
+                              : 'AI interpretation — needs review'
+                            : hi
+                              ? 'आपका उत्तर — स्वतंत्र सत्यापन नहीं हुआ'
+                              : 'Your answer — not independently verified'}
                       </p>
                     ))}
                   </details>
@@ -120,7 +167,8 @@ function Assessment({ id }: { id: string }) {
                     {req.result.children.map((child, i) => (
                       <p key={i}>
                         {t.outcomes[child.outcome]} · {child.reason}
-                        {child.missing.length > 0 && ` (${child.missing.join(', ')})`}
+                        {child.missing.length > 0 &&
+                          ` (${child.missing.map((field) => t.factNames[field as keyof typeof t.factNames] ?? (hi ? 'स्पष्टीकरण आवश्यक' : 'Clarification needed')).join(', ')})`}
                       </p>
                     ))}
                   </details>
@@ -128,7 +176,14 @@ function Assessment({ id }: { id: string }) {
                 {req.next_steps.length > 0 && (
                   <ul>
                     {req.next_steps.map((step) => (
-                      <li key={step}>{step}</li>
+                      <li key={step}>
+                        {step.replace(
+                          /\b[a-z]+(?:_[a-z]+)+\b/g,
+                          (field) =>
+                            t.factNames[field as keyof typeof t.factNames] ??
+                            (hi ? 'संबंधित शर्त' : 'the relevant condition'),
+                        )}
+                      </li>
                     ))}
                   </ul>
                 )}

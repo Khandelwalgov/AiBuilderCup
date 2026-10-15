@@ -1,4 +1,4 @@
-.PHONY: setup db migrate seed api web contracts check test-e2e preflight gemini-smoke extraction-smoke
+.PHONY: setup db migrate seed api web contracts check test-e2e test-product-e2e preflight gemini-smoke extraction-smoke
 setup:
 	cd apps/api && uv sync --locked
 	cd apps/web && pnpm install --frozen-lockfile
@@ -16,10 +16,14 @@ contracts:
 	cd apps/api && uv run python ../../scripts/export_openapi.py
 	cd apps/web && pnpm generate
 check:
-	cd apps/api && uv run ruff check . ../../infra/deploy.py && uv run ruff format --check . ../../infra/deploy.py && uv run pytest && uv run alembic check
+	cd apps/api && uv run ruff check . ../../infra/deploy.py ../../scripts/product_e2e_server.py && uv run ruff format --check . ../../infra/deploy.py ../../scripts/product_e2e_server.py && uv run pytest && uv run alembic check
 	cd apps/web && pnpm lint && pnpm typecheck && pnpm build
 test-e2e:
 	cd apps/web && pnpm exec playwright test
+
+# Requires the explicitly local fictional Firebase Auth emulator; see docs/real-user-acceptance.md.
+test-product-e2e:
+	cd apps/web && pnpm exec playwright test --config playwright.product.config.ts
 
 preflight:
 	cd apps/api && uv run python -m opportunity_platform.operations.readiness

@@ -14,6 +14,8 @@ export async function sessionFixture(page: Page, signedIn = true) {
   await page.route('**/v1/me', (r) =>
     r.fulfill({ json: { uid: 'fictional-one', is_admin: false } }),
   );
+  await page.route('**/v1/documents?*', (r) => r.fulfill({ json: [] }));
+  await page.route('**/v1/documents/requirements?*', (r) => r.fulfill({ json: [] }));
   await page.route('**/v1/workspaces', (r) => r.fulfill({ json: [] }));
   await page.route('**/v1/dashboard', (r) =>
     r.fulfill({

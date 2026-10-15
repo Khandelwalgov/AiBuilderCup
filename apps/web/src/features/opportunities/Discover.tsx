@@ -1,3 +1,4 @@
+import { documentStatus, documentsHref, useDocumentNeeds } from '../documents/Documents';
 import { displayLabel, displayDate } from '../../i18n/format';
 import { ContextLink as Link } from '../../app/subject-context';
 import { Eligibility } from '../eligibility/Eligibility';
@@ -327,6 +328,7 @@ function safeUrl(value: string | null) {
   }
 }
 export function Detail() {
+  const documentNeeds = useDocumentNeeds();
   const hi = useLanguage() === 'hi';
   const { id } = useParams();
   const [params] = useSearchParams();
@@ -391,7 +393,9 @@ export function Detail() {
                 <p>{t.sourceWarning}</p>
               </div>
             ) : null}
-            {!item.is_synthetic && <Eligibility id={item.id} />}
+            {(!item.is_synthetic || (development && item.publication_state === 'published')) && (
+              <Eligibility id={item.id} />
+            )}
             <div className="detail-grid">
               <div>
                 <section className="panel">
@@ -475,6 +479,16 @@ export function Detail() {
                         key={req.id}
                       >
                         <h3>{req.description}</h3>
+                        {documentNeeds.data
+                          ?.filter((n) => n.requirement_id === req.id)
+                          .map((n) => (
+                            <div className="notice" key={n.requirement_id}>
+                              <p>{documentStatus(n.documentary_status, hi)}</p>
+                              <Link className="button secondary" to={documentsHref(req.id)}>
+                                {hi ? 'दस्तावेज़ जोड़ें या देखें' : 'Add or view document'}
+                              </Link>
+                            </div>
+                          ))}
                         {req.citations.map((citation, i) => (
                           <blockquote key={i}>
                             <p>{citation.passage}</p>

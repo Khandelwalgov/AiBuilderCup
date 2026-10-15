@@ -1,3 +1,4 @@
+import { useDocumentNeeds, documentsHref, documentStatus } from '../documents/Documents';
 import { useLanguage } from '../../app/App';
 import { useState } from 'react';
 import { ContextLink as Link, useSubject } from '../../app/subject-context';
@@ -28,6 +29,7 @@ function AssessmentAssistant({
   evaluationId: string;
   opportunityId: string;
 }) {
+  const needs = useDocumentNeeds();
   const context = useSubject();
   const hi = useLanguage() === 'hi';
   const [question, setQuestion] = useState('');
@@ -143,6 +145,16 @@ function AssessmentAssistant({
             <details key={item.requirement_id} open>
               <summary>{item.condition}</summary>
               <p>{item.explanation}</p>
+              {needs.data
+                ?.filter((n) => n.requirement_id === item.requirement_id)
+                .map((n) => (
+                  <div className="notice" key={n.requirement_id}>
+                    <p>{documentStatus(n.documentary_status, hi)}</p>
+                    <Link className="button secondary" to={documentsHref(n.requirement_id)}>
+                      {hi ? 'संबंधित दस्तावेज़ प्रबंधित करें' : 'Manage this document requirement'}
+                    </Link>
+                  </div>
+                ))}
               <Link
                 className="field-followup"
                 to={context.href(

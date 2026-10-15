@@ -5,6 +5,7 @@ import {
   useEffect,
   useId,
   useState,
+  useRef,
   type ReactNode,
 } from 'react';
 import { useBlocker } from 'react-router-dom';
@@ -13,20 +14,21 @@ const Context = createContext<Guard>({ register: () => {}, confirmLeave: () => t
 export function DirtyFormsProvider({ children, hi }: { children: ReactNode; hi: boolean }) {
   const [forms, setForms] = useState<Record<string, boolean>>({});
   const dirty = Object.values(forms).some(Boolean);
-  const register = useCallback(
-    (key: string, value: boolean) =>
-      setForms((old) => (old[key] === value ? old : { ...old, [key]: value })),
-    [],
-  );
+  const formsRef = useRef(forms);
+  const register = useCallback((key: string, value: boolean) => {
+    if (formsRef.current[key] === value) return;
+    formsRef.current = { ...formsRef.current, [key]: value };
+    setForms(formsRef.current);
+  }, []);
   const confirmLeave = useCallback(
     () =>
-      !dirty ||
+      !Object.values(formsRef.current).some(Boolean) ||
       window.confirm(
         hi ? 'सहेजे नहीं गए बदलाव छोड़कर आगे बढ़ें?' : 'Leave and discard your unsaved changes?',
       ),
-    [dirty, hi],
+    [hi],
   );
-  const blocker = useBlocker(dirty);
+  const blocker = useBlocker(() => Object.values(formsRef.current).some(Boolean));
   useEffect(() => {
     if (blocker.state === 'blocked') {
       if (confirmLeave()) blocker.proceed();
@@ -53,7 +55,7 @@ export function useDirtyForm(dirty: boolean) {
     register(id, dirty);
     return () => register(id, false);
   }, [id, dirty, register]);
-  return guard;
+  return { ...guard, markSaved: () => register(id, false) };
 }
 export function useDiscardGuard() {
   return useContext(Context);

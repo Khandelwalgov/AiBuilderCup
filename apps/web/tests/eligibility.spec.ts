@@ -17,7 +17,8 @@ test('profile → published opportunity → cited eligibility results (mocked au
     if (route.request().method() === 'PUT') {
       const input = route.request().postDataJSON() as components['schemas']['ProfileWrite'];
       expect(input.display_name).toBe('Synthetic learner');
-      expect(input.facts).toEqual([{ key: 'age', value: 20 }]);
+      expect(input.facts).toHaveLength(1);
+      expect(input.facts[0]).toMatchObject({ key: 'age', value: 20 });
       profile = {
         id,
         display_name: input.display_name,
@@ -89,14 +90,12 @@ test('profile → published opportunity → cited eligibility results (mocked au
   });
   await page.goto('/profile');
   await page.getByRole('textbox', { name: 'Profile name' }).fill('Synthetic learner');
-  await page.getByRole('button', { name: 'Choose relevant questions' }).click();
-  await page.getByRole('button', { name: 'Add a relevant fact' }).click();
-  await page.getByRole('spinbutton', { name: 'Value 1', exact: true }).fill('20');
+  await page.getByRole('button', { name: 'Continue', exact: true }).click();
+  await page.getByRole('spinbutton', { name: 'How old are you?', exact: true }).fill('20');
   await page.getByRole('button', { name: 'Review your answers' }).click();
-  await page.getByRole('button', { name: 'Save profile' }).click();
-  await expect(
-    page.getByText('Profile saved. You can now check a published opportunity.'),
-  ).toBeVisible();
+  await page.getByRole('button', { name: 'Finish setup' }).click();
+  await expect(page.locator('.profile-summary').getByRole('status')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Save changes', exact: true })).toHaveCount(0);
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: '/Users/govind/Projects/AIBuildersCup/.live-validation/ui/profile-populated-contract-1440.png',

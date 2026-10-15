@@ -18,6 +18,7 @@ type Context = {
   key: string;
   label: string;
   available: boolean;
+  authenticated: boolean;
   pending: boolean;
   options: Option[];
   select: (value: string) => void;
@@ -29,6 +30,7 @@ const fallback: Context = {
   key: 'person:',
   label: 'My personal profile',
   available: true,
+  authenticated: false,
   pending: false,
   options: [],
   select: () => {},
@@ -49,12 +51,10 @@ export function SubjectProvider({
   const params = new URLSearchParams(location.search);
   const dependent = matchPath('/people/:personId/edit', location.pathname)?.params.personId;
   const rawKind = dependent ? 'person' : (params.get('kind') ?? 'person');
-  const id = dependent ?? params.get('id') ?? null;
+  const rawId = dependent ?? params.get('id') ?? null;
   const kind = (
     ['person', 'household', 'business'].includes(rawKind) ? rawKind : 'person'
   ) as Ref['kind'];
-  const subject: Ref = { kind, id };
-  const key = `${rawKind}:${id ?? ''}`;
   const query = useQuery({
     queryKey: ['workspaces'],
     enabled,
@@ -65,6 +65,12 @@ export function SubjectProvider({
       return data ?? fail(error);
     },
   });
+  const self = query.data
+    ?.flatMap((w) => w.members)
+    .find((m) => m.self === true && m.access === 'authorized');
+  const id = kind === 'person' && self?.id === rawId ? null : rawId;
+  const subject: Ref = { kind, id };
+  const key = `${rawKind}:${id ?? ''}`;
   const options = useMemo(() => {
     const map = new Map<string, Option>();
     map.set('person:', {
@@ -84,7 +90,7 @@ export function SubjectProvider({
           role: w.role,
         });
         for (const m of w.members)
-          if (m.id && m.access === 'authorized')
+          if (m.id && m.access === 'authorized' && m.self !== true)
             map.set(`person:${String(m.id)}`, {
               value: `person:${String(m.id)}`,
               label: `${m.managed ? (hi ? 'आश्रित' : 'Dependent') : hi ? 'व्यक्ति' : 'Person'} · ${String(m.name)}`,
@@ -110,6 +116,8 @@ export function SubjectProvider({
         if (subject.id) target.searchParams.set('id', subject.id);
       }
     }
+    if (params.get('development') === 'true' && !target.searchParams.has('development'))
+      target.searchParams.set('development', 'true');
     return target.pathname + target.search + target.hash;
   };
   const select = (value: string) => {
@@ -135,6 +143,7 @@ export function SubjectProvider({
         key,
         label: selected?.label ?? (hi ? 'यह संदर्भ उपलब्ध नहीं है' : 'This context is unavailable'),
         available: !!selected,
+        authenticated: enabled,
         pending: enabled && query.isPending,
         options,
         select,
