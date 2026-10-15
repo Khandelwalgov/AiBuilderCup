@@ -29,6 +29,8 @@ class RequirementResult(BaseModel):
     kind: str = "eligibility"
     application_context: str = "all"
     document_dependency: dict | None = None
+    documentary_status: str | None = None
+    documents: list[dict] = []
     result: Result
     citations: list[CitationView]
     next_steps: list[str]
@@ -58,6 +60,7 @@ def check(
     commit: bool = True,
     application_type: str | None = None,
     _prepared: dict | None = None,
+    development: bool = False,
 ) -> EvaluationView:
     if application_type not in {None, "fresh", "renewal"}:
         raise APIError(422, "invalid_application_context", "Choose fresh, renewal or unknown.")
@@ -96,7 +99,13 @@ def check(
     row = (
         _prepared["row"]
         if _prepared
-        else session.execute(catalogue().where(Opportunity.id == opportunity_id)).first()
+        else session.execute(
+            catalogue(development).where(
+                Opportunity.id == opportunity_id,
+                OpportunityVersion.publication_state == "published",
+                Opportunity.published_version_id == OpportunityVersion.id,
+            )
+        ).first()
     )
     if row is None:
         raise APIError(
@@ -105,6 +114,13 @@ def check(
             "Only reviewed, published real opportunities can be evaluated.",
         )
     opportunity, version, _source = row
+    from opportunity_platform.documents.service import readiness
+
+    documentary = (
+        _prepared.get("documentary", {})
+        if _prepared
+        else {str(r.requirement_id): r for r in readiness(session, uid, subject)}
+    )
     results = []
     requirements = (
         _prepared["requirements"]
@@ -208,6 +224,14 @@ def check(
                 kind=requirement.kind,
                 application_context=requirement.application_context,
                 document_dependency=requirement.document_dependency,
+                documentary_status=documentary[str(requirement.id)].documentary_status
+                if str(requirement.id) in documentary
+                else None,
+                documents=[
+                    d.model_dump(mode="json") for d in documentary[str(requirement.id)].documents
+                ]
+                if str(requirement.id) in documentary
+                else [],
                 result=result,
                 citations=citations,
                 next_steps=next_steps,
@@ -271,7 +295,9 @@ def check(
             "engine_version": "3",
             "application_type": application_type,
         },
-        results=[r.model_dump(mode="json") for r in results],
+        results=[
+            r.model_dump(mode="json", exclude={"documents", "documentary_status"}) for r in results
+        ],
     )
     if (
         hypothetical is None

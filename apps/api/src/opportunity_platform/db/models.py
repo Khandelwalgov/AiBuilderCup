@@ -129,7 +129,30 @@ class Document(SubjectEntity):
     blob_key: Mapped[str]
     media_type: Mapped[str]
     approved_uses: Mapped[list] = mapped_column(JSON, default=list)
+    display_name: Mapped[str] = mapped_column(default="Document", server_default="Document")
+    document_type: Mapped[str] = mapped_column(default="other", server_default="other")
+    byte_size: Mapped[int] = mapped_column(default=0, server_default="0")
+    sha256: Mapped[str | None]
+    issuer: Mapped[str | None]
+    issued_on: Mapped[date | None]
+    expires_on: Mapped[date | None]
+    status: Mapped[str] = mapped_column(
+        default="legacy_unavailable", server_default="legacy_unavailable"
+    )
+    storage_backend: Mapped[str] = mapped_column(default="local", server_default="local")
+    uploaded_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    replaces_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("documents.id"))
+    purge_pending: Mapped[bool] = mapped_column(default=False, server_default="false")
     __table_args__ = (CheckConstraint(SUBJECT_CHECK),)
+
+
+class DocumentRequirementLink(Entity):
+    __tablename__ = "document_requirement_links"
+    document_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("documents.id"), index=True)
+    requirement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("requirements.id"), index=True)
+    version_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("opportunity_versions.id"))
+    compatibility: Mapped[dict] = mapped_column(JSON)
+    __table_args__ = (UniqueConstraint("document_id", "requirement_id"),)
 
 
 class EvidenceLink(Entity):

@@ -18,6 +18,7 @@ from opportunity_platform.core.auth import current_uid
 from opportunity_platform.core.config import settings
 from opportunity_platform.core.errors import APIError, ErrorEnvelope, response
 from opportunity_platform.db.session import get_session
+from opportunity_platform.documents.router import router as documents_router
 from opportunity_platform.opportunities import service
 from opportunity_platform.opportunities.schemas import (
     Facets,
@@ -47,7 +48,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=settings().cors_origins,
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type"],
+    allow_headers=["Authorization", "Content-Type", "X-Document-Access"],
 )
 DB = Annotated[Session, Depends(get_session)]
 
@@ -58,6 +59,10 @@ async def request_logging(request: Request, call_next):
     start = time.monotonic()
     result = await call_next(request)
     result.headers["X-Request-ID"] = request.state.request_id
+    if request.url.path.startswith("/v1/documents"):
+        result.headers["Cache-Control"] = "private, no-store"
+        result.headers["X-Content-Type-Options"] = "nosniff"
+        result.headers["Referrer-Policy"] = "no-referrer"
     logger.info(
         json.dumps(
             {
@@ -176,3 +181,4 @@ def me(session: DB, uid: Annotated[str, Depends(current_uid)]):
 
 
 app.include_router(router)
+app.include_router(documents_router)

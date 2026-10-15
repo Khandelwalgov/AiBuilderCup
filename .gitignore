@@ -22,3 +22,6 @@ infra/deploy.local.json
 .live-validation/
 
 firebase-debug.log
+
+# Private development document blobs (never source-control these).
+.private-documents/

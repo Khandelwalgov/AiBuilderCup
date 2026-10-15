@@ -1,3 +1,4 @@
+import os
 from functools import lru_cache
 from typing import Literal
 from urllib.parse import urlsplit
@@ -27,6 +28,14 @@ class Settings(BaseSettings):
     ai_assistant_live_enabled: bool = False
     ai_ingestion_live_enabled: bool = False
     ai_ingestion_test_budget_usd: float | None = Field(default=None, ge=0, le=1000)
+    document_uploads_enabled: bool = False
+    document_storage_backend: Literal["local", "gcs"] = "local"
+    document_local_root: str = ".private-documents"
+    document_gcs_bucket: str = ""
+    document_signing_key: str = ""
+    document_max_file_bytes: int = Field(default=5_242_880, ge=1024, le=10_485_760)
+    document_max_count: int = Field(default=25, ge=1, le=100)
+    document_max_total_bytes: int = Field(default=52_428_800, ge=1024, le=524_288_000)
     enable_development_catalogue: bool = False
     ingestion_min_interval_seconds: int = Field(default=30, ge=0, le=3600)
     model_config = SettingsConfigDict(env_file=".env", extra="ignore", hide_input_in_errors=True)
@@ -34,6 +43,12 @@ class Settings(BaseSettings):
     @model_validator(mode="after")
     def production_configuration(self):
         if self.environment == "production":
+            if os.environ.get("FIREBASE_AUTH_EMULATOR_HOST"):
+                raise ValueError("Production must never use the Firebase Auth emulator")
+            if self.document_uploads_enabled:
+                raise ValueError(
+                    "Production uploads require malware scanning and security acceptance"
+                )
             if not self.firebase_project_id or self.enable_development_catalogue:
                 raise ValueError("Production needs a Firebase project and real-only catalogue")
             if self.database_url == Settings.model_fields["database_url"].default or urlsplit(

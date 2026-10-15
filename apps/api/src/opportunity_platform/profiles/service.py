@@ -1,8 +1,8 @@
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
-from sqlalchemy import delete, select
+from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
@@ -10,17 +10,30 @@ from opportunity_platform.core.errors import APIError
 from opportunity_platform.db.models import AuditEvent, Person, ProfileFact, User
 from opportunity_platform.eligibility.engine import FactRecord
 from opportunity_platform.eligibility.rules import FactInput
+from opportunity_platform.profiles.persistence import reconcile, revision
 
 
 class ProfileWrite(BaseModel):
     model_config = ConfigDict(extra="forbid")
     display_name: str = Field(min_length=1, max_length=80)
     facts: list[FactInput] = Field(max_length=30)
+    expected_revision: str | None = Field(default=None, min_length=64, max_length=64)
 
     @model_validator(mode="after")
     def unique_keys(self):
         if len({f.key for f in self.facts}) != len(self.facts):
             raise ValueError("Each fact key may appear only once")
+        values = {f.key: f.value for f in self.facts}
+        if values.get("student_status") is False and any(
+            values.get(k) is not None
+            for k in ("enrollment_mode", "school_recognized_or_government")
+        ):
+            raise ValueError("Clarify current study details when the person is not a student")
+        if (
+            values.get("education_level") in {"undergraduate", "postgraduate"}
+            and values.get("school_recognized_or_government") is not None
+        ):
+            raise ValueError("School recognition is not a university-level answer")
         return self
 
 
@@ -28,6 +41,8 @@ class ProfileView(BaseModel):
     id: uuid.UUID
     display_name: str
     facts: list[FactRecord]
+    revision: str = ""
+    last_saved_at: datetime | None = None
 
 
 class AccountView(BaseModel):
@@ -81,8 +96,22 @@ def facts_for(session: Session, profile: Person) -> list[FactRecord]:
 def get_profile(session: Session, uid: str) -> ProfileView:
     user = account(session, uid)
     profile = person(session, user)
+    facts = facts_for(session, profile)
+    saved_at = session.scalar(
+        select(AuditEvent.created_at)
+        .where(
+            AuditEvent.object_id == profile.id,
+            AuditEvent.action.in_(["profile_updated", "authorized_person_updated"]),
+        )
+        .order_by(AuditEvent.created_at.desc())
+        .limit(1)
+    )
     return ProfileView(
-        id=profile.id, display_name=profile.display_name, facts=facts_for(session, profile)
+        id=profile.id,
+        display_name=profile.display_name,
+        facts=facts,
+        revision=revision(profile.display_name, facts),
+        last_saved_at=saved_at,
     )
 
 
@@ -115,43 +144,36 @@ def save_profile(session: Session, uid: str, data: ProfileWrite) -> ProfileView:
         profile = Person(user_id=user.id, display_name=data.display_name)
         session.add(profile)
         session.flush()
+    session.execute(select(Person).where(Person.id == profile.id).with_for_update())
+    session.refresh(profile)
+    before = facts_for(session, profile)
+    if data.expected_revision and data.expected_revision != revision(profile.display_name, before):
+        raise APIError(
+            409,
+            "profile_conflict",
+            "This profile changed. Reload the saved version before saving your changes.",
+        )
+    renamed = profile.display_name != data.display_name
     profile.display_name = data.display_name
-    changed_keys = changed_fact_keys(facts_for(session, profile), data.facts)
-    # Replace only user-owned user-supplied facts. Never overwrite verified evidence.
-    session.execute(
-        delete(ProfileFact).where(
-            ProfileFact.person_id == profile.id,
-            ProfileFact.origin.in_(["user_supplied", "unknown"]),
+    changed_keys = reconcile(session, "person", profile.id, data.facts)
+    if renamed or changed_keys or not before:
+        # Creation is audited once; identical subsequent saves do not add events.
+        existing_audit = session.scalar(
+            select(AuditEvent.id).where(AuditEvent.object_id == profile.id).limit(1)
         )
-    )
-    for fact in data.facts:
-        session.add(
-            ProfileFact(
-                person_id=profile.id,
-                key=fact.key,
-                value=fact.value,
-                origin="unknown" if fact.value is None else "user_supplied",
-                verification="unknown" if fact.value is None else "unverified",
-                valid_from=fact.valid_from,
-                valid_until=fact.valid_until,
-                context={
-                    "income_period": fact.income_period,
-                    "income_definition": fact.income_definition,
-                    "recorded_at": datetime.now(timezone.utc).isoformat(),
-                },
+        if renamed or changed_keys or existing_audit is None:
+            session.add(
+                AuditEvent(
+                    actor_id=user.id,
+                    action="profile_updated",
+                    object_id=profile.id,
+                    details={"changed_fields": sorted(changed_keys)},
+                )
             )
-        )
-    session.add(
-        AuditEvent(
-            actor_id=user.id,
-            action="profile_updated",
-            object_id=profile.id,
-            details={"fact_count": len(data.facts)},
-        )
-    )
     session.flush()
     from opportunity_platform.eligibility.refresh import affected
 
-    affected(session, uid, "person", profile.id, changed_keys)
+    if changed_keys:
+        affected(session, uid, "person", profile.id, changed_keys)
     session.commit()
     return get_profile(session, uid)

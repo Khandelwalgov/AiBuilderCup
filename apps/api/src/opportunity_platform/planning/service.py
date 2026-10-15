@@ -15,6 +15,7 @@ from opportunity_platform.db.models import (
     AuditEvent,
     MatchEvaluation,
     Opportunity,
+    OpportunityVersion,
     Requirement,
     RequirementEvidence,
     User,
@@ -28,6 +29,7 @@ from opportunity_platform.subjects.service import SubjectRef, resolve, subject_f
 class PlanRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     subject: SubjectRef = Field(default_factory=SubjectRef)
+    development: bool = False
 
 
 class SimulationRequest(PlanRequest):
@@ -43,6 +45,8 @@ class ActionView(BaseModel):
     fact: str | None = None
     opportunities: list[dict]
     explanation: str
+    documentary_status: str | None = None
+    documents: list[dict] = []
 
 
 class PlanView(BaseModel):
@@ -119,12 +123,25 @@ def application_context(session, kind, identifier, version_id):
     return previous.fact_snapshot.get("application_type") if previous else None
 
 
-def build(session, uid, subject, hypothetical=None):
+def build(session, uid, subject, hypothetical=None, development=False):
     user, obj, _ = resolve(session, uid, subject)
     subject = SubjectRef(kind=subject.kind, id=obj.id)
     # Serialize plan mutation to avoid duplicate actions across simultaneous requests.
     session.execute(select(User).where(User.id == user.id).with_for_update())
-    rows = list(session.execute(catalogue().order_by(Opportunity.id).limit(100)))
+    rows = list(
+        session.execute(
+            catalogue(development)
+            .where(
+                OpportunityVersion.publication_state == "published",
+                Opportunity.published_version_id == OpportunityVersion.id,
+            )
+            .order_by(Opportunity.id)
+            .limit(100)
+        )
+    )
+    from opportunity_platform.documents.service import readiness
+
+    documentary = {str(r.requirement_id): r for r in readiness(session, uid, subject)}
     facts = subject_facts(session, subject.kind, obj.id)
     requirements = {}
     for requirement in session.scalars(
@@ -160,6 +177,7 @@ def build(session, uid, subject, hypothetical=None):
                 "facts": facts,
                 "requirements": requirements.get(row[1].id, []),
                 "evidence": evidence,
+                "documentary": documentary,
             },
         )
         for row in rows
@@ -197,8 +215,20 @@ def build(session, uid, subject, hypothetical=None):
                         "kind": payload["kind"],
                         "fact": payload.get("fact"),
                         "opportunities": [],
+                        "documentary_status": None,
+                        "documents": [],
                     },
                 )
+                if payload["kind"] == "document":
+                    states = [entry["documentary_status"], r.documentary_status]
+                    entry["documentary_status"] = (
+                        "uploaded_unverified"
+                        if "uploaded_unverified" in states
+                        else r.documentary_status or entry["documentary_status"] or "not_provided"
+                    )
+                    for document in r.documents:
+                        if not any(d["id"] == document["id"] for d in entry["documents"]):
+                            entry["documents"].append(document)
                 if link not in entry["opportunities"]:
                     entry["opportunities"].append(link)
     evaluations.sort(

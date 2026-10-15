@@ -1,0 +1,67 @@
+%PDF-1.3
+%‚„œ”
+1 0 obj
+<<
+/Producer (pypdf)
+/Title (FICTIONAL document \055 test only)
+>>
+endobj
+2 0 obj
+<<
+/Type /Pages
+/Count 1
+/Kids [ 4 0 R ]
+>>
+endobj
+3 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+4 0 obj
+<<
+/Type /Page
+/Resources <<
+/Font <<
+/F1 5 0 R
+>>
+>>
+/MediaBox [ 0.0 0.0 595 842 ]
+/Parent 2 0 R
+/Contents 6 0 R
+>>
+endobj
+5 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+6 0 obj
+<<
+/Length 317
+>>
+stream
+BT /F1 18 Tf 45 760 Td (FICTIONAL DOCUMENT - TEST ONLY) Tj 0 -40 Td /F1 12 Tf (Fictional learner: Example Student) Tj 0 -25 Td (Parental income certificate - fictional 2026 period) Tj 0 -25 Td (No real identity, financial details or government authority.) Tj 0 -25 Td (Uploaded files are not verified evidence.) Tj ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000015 00000 n 
+0000000097 00000 n 
+0000000156 00000 n 
+0000000205 00000 n 
+0000000337 00000 n 
+0000000407 00000 n 
+trailer
+<<
+/Size 7
+/Root 3 0 R
+/Info 1 0 R
+>>
+startxref
+775
+%%EOF

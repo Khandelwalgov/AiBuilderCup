@@ -5,7 +5,7 @@ from datetime import date, datetime, timezone
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
-from sqlalchemy import delete, select
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from opportunity_platform.core.errors import APIError
@@ -22,7 +22,8 @@ from opportunity_platform.db.models import (
 )
 from opportunity_platform.eligibility.engine import FactRecord
 from opportunity_platform.eligibility.rules import FactInput
-from opportunity_platform.profiles.service import ProfileWrite, account, changed_fact_keys, person
+from opportunity_platform.profiles.persistence import reconcile, revision
+from opportunity_platform.profiles.service import ProfileWrite, account, person
 
 Kind = Literal["person", "household", "business"]
 
@@ -43,12 +44,14 @@ class WorkspaceView(BaseModel):
     facts: list[FactRecord] = []
     members: list[dict] = []
     primary: bool = False
+    revision: str = ""
 
 
 class HouseholdWrite(BaseModel):
     model_config = ConfigDict(extra="forbid")
     name: str = Field(min_length=1, max_length=100)
     primary: bool = True
+    expected_revision: str | None = Field(default=None, min_length=64, max_length=64)
 
 
 class DependentWrite(ProfileWrite):
@@ -63,6 +66,7 @@ class BusinessWrite(BaseModel):
     description: str | None = Field(default=None, max_length=1000)
     legal_status: Literal["unregistered", "sole_proprietor", "partnership", "company", "other"]
     facts: list[FactInput] = Field(default_factory=list, max_length=10)
+    expected_revision: str | None = Field(default=None, min_length=64, max_length=64)
 
 
 def resolve(session: Session, uid: str, ref: SubjectRef, write=False):
@@ -149,29 +153,7 @@ def replace_facts(session, kind, identifier, facts):
         raise APIError(
             422, "business_fact_required", "Only supported business facts can be stored here."
         )
-    session.execute(
-        delete(ProfileFact).where(
-            getattr(ProfileFact, kind + "_id") == identifier,
-            ProfileFact.origin.in_(["user_supplied", "unknown"]),
-        )
-    )
-    for f in facts:
-        session.add(
-            ProfileFact(
-                **{kind + "_id": identifier},
-                key=f.key,
-                value=f.value,
-                origin="unknown" if f.value is None else "user_supplied",
-                verification="unverified",
-                valid_from=f.valid_from,
-                valid_until=f.valid_until,
-                context={
-                    "income_period": f.income_period,
-                    "income_definition": f.income_definition,
-                },
-            )
-        )
-    session.flush()
+    return reconcile(session, kind, identifier, facts)
 
 
 def view(session, uid, ref):
@@ -202,6 +184,9 @@ def view(session, uid, ref):
                 # No private identity or facts for unconnected adults.
                 members.append({"access": "restricted", "name": "Adult authorization required"})
     return WorkspaceView(
+        revision=revision(obj.display_name, subject_facts(session, "person", obj.id))
+        if ref.kind == "person"
+        else "",
         id=obj.id,
         kind=ref.kind,
         name=obj.display_name if ref.kind == "person" else obj.name,
@@ -284,22 +269,40 @@ def add_dependent(session, uid, identifier, data):
 
 def update_person(session, uid, identifier, data):
     user, p, _ = resolve(session, uid, SubjectRef(kind="person", id=identifier), True)
-    changed_keys = changed_fact_keys(subject_facts(session, "person", p.id), data.facts)
     session.execute(select(Person).where(Person.id == p.id).with_for_update())
+    session.refresh(p)
+    before = subject_facts(session, "person", p.id)
+    if data.expected_revision and data.expected_revision != revision(p.display_name, before):
+        raise APIError(409, "profile_conflict", "This profile changed. Reload before saving.")
+    renamed = p.display_name != data.display_name
     p.display_name = data.display_name
-    replace_facts(session, "person", p.id, data.facts)
-    session.add(AuditEvent(actor_id=user.id, action="authorized_person_updated", object_id=p.id))
+    changed_keys = replace_facts(session, "person", p.id, data.facts)
+    if renamed or changed_keys:
+        session.add(
+            AuditEvent(actor_id=user.id, action="authorized_person_updated", object_id=p.id)
+        )
     from opportunity_platform.eligibility.refresh import affected
 
-    affected(session, uid, "person", p.id, changed_keys)
+    if changed_keys:
+        affected(session, uid, "person", p.id, changed_keys)
     session.commit()
     return view(session, uid, SubjectRef(kind="person", id=p.id))
 
 
 def save_business(session, uid, data, identifier=None):
+    created = not identifier
     if identifier:
         user, b, _ = resolve(session, uid, SubjectRef(kind="business", id=identifier), True)
         session.execute(select(Business).where(Business.id == b.id).with_for_update())
+        session.refresh(b)
+        if (
+            data.expected_revision
+            and data.expected_revision
+            != view(session, uid, SubjectRef(kind="business", id=b.id)).revision
+        ):
+            raise APIError(
+                409, "workspace_conflict", "This business changed. Reload before saving."
+            )
     else:
         user = account(session, uid)
         person(session, user)
@@ -307,26 +310,44 @@ def save_business(session, uid, data, identifier=None):
         session.add(b)
         session.flush()
         session.add(BusinessMembership(business_id=b.id, user_id=user.id, role="owner"))
-    changed_keys = changed_fact_keys(subject_facts(session, "business", b.id), data.facts)
+    metadata_changed = (b.name, b.description, b.legal_status) != (
+        data.name,
+        data.description,
+        data.legal_status,
+    )
     b.name, b.description, b.legal_status = data.name, data.description, data.legal_status
-    replace_facts(session, "business", b.id, data.facts)
-    session.add(AuditEvent(actor_id=user.id, action="business_saved", object_id=b.id))
+    changed_keys = replace_facts(session, "business", b.id, data.facts)
+    if created or metadata_changed or changed_keys:
+        session.add(AuditEvent(actor_id=user.id, action="business_saved", object_id=b.id))
     from opportunity_platform.eligibility.refresh import affected
 
-    affected(session, uid, "business", b.id, changed_keys)
+    if changed_keys:
+        affected(session, uid, "business", b.id, changed_keys)
     session.commit()
     return view(session, uid, SubjectRef(kind="business", id=b.id))
 
 
 def update_household(session, uid, identifier, data):
     user, h, _ = resolve(session, uid, SubjectRef(kind="household", id=identifier), True)
+    session.execute(select(Household).where(Household.id == h.id).with_for_update())
+    session.refresh(h)
+    if (
+        data.expected_revision
+        and data.expected_revision
+        != view(session, uid, SubjectRef(kind="household", id=h.id)).revision
+    ):
+        raise APIError(409, "workspace_conflict", "This household changed. Reload before saving.")
+    changed = h.name != data.name or (
+        data.primary and user.notification_preferences.get("primary_household_id") != str(h.id)
+    )
     h.name = data.name
     if data.primary:
         user.notification_preferences = {
             **user.notification_preferences,
             "primary_household_id": str(h.id),
         }
-    session.add(AuditEvent(actor_id=user.id, action="household_updated", object_id=h.id))
+    if changed:
+        session.add(AuditEvent(actor_id=user.id, action="household_updated", object_id=h.id))
     session.commit()
     return view(session, uid, SubjectRef(kind="household", id=h.id))
 

@@ -54,12 +54,15 @@ def save_profile(data: profiles.ProfileWrite, session: DB, uid: UID):
 @router.get("/people/{identifier}", response_model=profiles.ProfileView)
 def get_person(identifier: uuid.UUID, session: DB, uid: UID):
     result = subjects.view(session, uid, subjects.SubjectRef(kind="person", id=identifier))
-    return profiles.ProfileView(id=result.id, display_name=result.name, facts=result.facts)
+    return profiles.ProfileView(
+        id=result.id, display_name=result.name, facts=result.facts, revision=result.revision
+    )
 
 
 class EvaluationRequest(BaseModel):
     subject: subjects.SubjectRef = subjects.SubjectRef()
     application_type: Literal["fresh", "renewal"] | None = None
+    development: bool = False
 
 
 @router.post(
@@ -67,7 +70,12 @@ class EvaluationRequest(BaseModel):
 )
 def evaluate_context(identifier: uuid.UUID, data: EvaluationRequest, session: DB, uid: UID):
     return eligibility.check(
-        session, uid, identifier, data.subject, application_type=data.application_type
+        session,
+        uid,
+        identifier,
+        data.subject,
+        application_type=data.application_type,
+        development=data.development,
     )
 
 
@@ -79,6 +87,7 @@ def evaluate(identifier: uuid.UUID, session: DB, uid: UID, data: EvaluationReque
         identifier,
         data.subject if data else None,
         application_type=data.application_type if data else None,
+        development=data.development if data else False,
     )
 
 
@@ -275,12 +284,12 @@ def update_business(identifier: uuid.UUID, data: subjects.BusinessWrite, session
 
 @router.post("/plan", response_model=planning.PlanView)
 def plan(data: planning.PlanRequest, session: DB, uid: UID):
-    return planning.build(session, uid, data.subject)
+    return planning.build(session, uid, data.subject, development=data.development)
 
 
 @router.post("/plan/simulate", response_model=planning.PlanView)
 def simulate(data: planning.SimulationRequest, session: DB, uid: UID):
-    return planning.build(session, uid, data.subject, data.facts)
+    return planning.build(session, uid, data.subject, data.facts, development=data.development)
 
 
 @router.post("/assistant/explain", response_model=assistant.ExplanationView)
