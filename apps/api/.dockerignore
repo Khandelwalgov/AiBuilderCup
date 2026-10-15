@@ -12,3 +12,5 @@ tests
 *credentials*.json
 *.pem
 *.key
+
+.private-documents

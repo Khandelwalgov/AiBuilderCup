@@ -149,3 +149,52 @@ def test_simultaneous_edits_have_one_winner(db):
         results = list(executor.map(change, [21, 22]))
     assert results.count("profile_conflict") == 1
     assert any(result in [21, 22] for result in results)
+
+
+def test_business_repeat_and_stale_save_preserves_facts(db):
+    save_profile(db, "business-completion", ProfileWrite(display_name="Fictional owner", facts=[]))
+    data = subjects.BusinessWrite(
+        name="Fictional informal enterprise",
+        legal_status="unregistered",
+        facts=[
+            FactInput(key="business_registered", value=False),
+            FactInput(key="residence_state", value="Rajasthan"),
+        ],
+    )
+    first = subjects.save_business(db, "business-completion", data)
+    count = db.scalar(select(func.count()).select_from(AuditEvent))
+    second = subjects.save_business(db, "business-completion", data, first.id)
+    assert [f.id for f in second.facts] == [f.id for f in first.facts]
+    assert second.revision == first.revision
+    assert db.scalar(select(func.count()).select_from(AuditEvent)) == count
+    subjects.save_business(
+        db,
+        "business-completion",
+        data.model_copy(update={"name": "Fictional changed", "expected_revision": first.revision}),
+        first.id,
+    )
+    with pytest.raises(APIError) as caught:
+        subjects.save_business(
+            db,
+            "business-completion",
+            data.model_copy(update={"expected_revision": first.revision}),
+            first.id,
+        )
+    assert caught.value.code == "workspace_conflict"
+    db.rollback()
+
+
+def test_historical_study_answer_is_not_a_current_contradiction():
+    from datetime import date, timedelta
+
+    ProfileWrite(
+        display_name="Fictional former student",
+        facts=[
+            FactInput(key="student_status", value=False),
+            FactInput(
+                key="enrollment_mode",
+                value="full_time",
+                valid_until=date.today() - timedelta(days=1),
+            ),
+        ],
+    )

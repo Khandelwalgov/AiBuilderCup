@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import date, datetime
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy import select
@@ -21,9 +21,18 @@ class ProfileWrite(BaseModel):
 
     @model_validator(mode="after")
     def unique_keys(self):
+        self.display_name = self.display_name.strip()
+        if not self.display_name:
+            raise ValueError("A name or nickname is required")
         if len({f.key for f in self.facts}) != len(self.facts):
             raise ValueError("Each fact key may appear only once")
-        values = {f.key: f.value for f in self.facts}
+        today = date.today()
+        values = {
+            f.key: f.value
+            for f in self.facts
+            if (not f.valid_from or f.valid_from <= today)
+            and (not f.valid_until or f.valid_until >= today)
+        }
         if values.get("student_status") is False and any(
             values.get(k) is not None
             for k in ("enrollment_mode", "school_recognized_or_government")

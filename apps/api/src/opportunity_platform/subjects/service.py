@@ -178,6 +178,7 @@ def view(session, uid, ref):
                         "name": p.display_name,
                         "access": "authorized",
                         "managed": p.user_id is None,
+                        "self": p.user_id == user.id,
                     }
                 )
             except APIError:
@@ -186,7 +187,14 @@ def view(session, uid, ref):
     return WorkspaceView(
         revision=revision(obj.display_name, subject_facts(session, "person", obj.id))
         if ref.kind == "person"
-        else "",
+        else revision(
+            obj.name,
+            subject_facts(session, ref.kind, obj.id),
+            {
+                "description": getattr(obj, "description", None),
+                "legal_status": getattr(obj, "legal_status", None),
+            },
+        ),
         id=obj.id,
         kind=ref.kind,
         name=obj.display_name if ref.kind == "person" else obj.name,

@@ -57,6 +57,13 @@ def configuration_report(web_file: Path) -> dict:
         "provider": provider,
         "model": model,
         "database": "configured (value withheld)",
+        "documents": {
+            "uploads_enabled": config.document_uploads_enabled
+            and config.environment == "development",
+            "storage_backend": config.document_storage_backend,
+            "production_uploads_ready": False,
+            "malware_scanning": "not configured; production uploads remain gated",
+        },
         "frontend_api_origin": "configured" if web.get("VITE_API_BASE_URL") else "local Vite proxy",
         "token_limits": {
             "input": config.openai_max_input_tokens

@@ -16,6 +16,7 @@ from opportunity_platform.core.config import settings
 from opportunity_platform.db.models import (
     BusinessMembership,
     Document,
+    Opportunity,
     Requirement,
     Source,
 )
@@ -132,7 +133,11 @@ def test_real_file_lifecycle_compatible_reuse_unknown_eligibility(vault):
     assert retrieve(client, saved, access, "preview").status_code == 404
     preview = retrieve(client, saved, token(client, saved, "preview"), "preview")
     assert preview.status_code == 200 and "inline" in preview.headers["content-disposition"]
-    requirement = next(r for r in client.get("/v1/documents/requirements").json() if r["requirement_id"] == str(reqs[0]))
+    requirement = next(
+        r
+        for r in client.get("/v1/documents/requirements").json()
+        if r["requirement_id"] == str(reqs[0])
+    )
     assert requirement["documentary_status"] == "uploaded_unverified"
     plan = client.post("/v1/plan", json={"subject": {"kind": "person"}, "development": True}).json()
     action = next(
@@ -311,3 +316,165 @@ def test_no_auth_and_production_upload_gate(client, db, monkeypatch):
         ).status_code
         == 503
     )
+
+
+def test_scoped_access_expiry_mutation_and_no_user_verification(vault, monkeypatch):
+    from opportunity_platform.documents import service as documents
+
+    client, _, _, reqs = vault
+    forged = client.post(
+        "/v1/documents",
+        json={
+            "subject": {"kind": "person"},
+            "display_name": "Fictional",
+            "document_type": "other",
+            "approved_uses": ["readiness"],
+            "verification": "verified",
+        },
+    )
+    assert forged.status_code == 422
+    doc = upload(client, create(client, reqs[:1])).json()
+    grant = token(client, doc)
+    assert retrieve(client, doc, grant + "tampered").status_code == 404
+    now = documents.time.time()
+    monkeypatch.setattr(documents.time, "time", lambda: now + 61)
+    assert retrieve(client, doc, grant).status_code == 404
+
+
+def test_quota_replacement_and_physical_delete_retry(vault, monkeypatch):
+    from opportunity_platform.documents.storage import LocalStorage
+
+    client, _, tmp, reqs = vault
+    monkeypatch.setattr(settings(), "document_max_count", 1)
+    monkeypatch.setattr(settings(), "document_max_total_bytes", len(pdf()))
+    first = upload(client, create(client, reqs[:1])).json()
+    replacement = create(client, replaces_id=first["id"])
+    new = upload(client, replacement).json()
+    assert new["status"] == "uploaded_unverified" and len(list((tmp / "private").iterdir())) == 1
+    grant = token(client, new)
+    actual = LocalStorage.delete
+
+    def fail_delete(self, key):
+        raise OSError("fictional temporary storage failure")
+
+    monkeypatch.setattr(LocalStorage, "delete", fail_delete)
+    removed = client.request(
+        "DELETE", f"/v1/documents/{new['id']}", json={"expected_revision": new["revision"]}
+    )
+    assert removed.status_code == 503
+    assert retrieve(client, new, grant).status_code == 404
+    pending = client.get(f"/v1/documents/{new['id']}").json()
+    assert pending["status"] == "deleted" and pending["purge_pending"] is True
+    monkeypatch.setattr(LocalStorage, "delete", actual)
+    assert (
+        client.request(
+            "DELETE", f"/v1/documents/{new['id']}", json={"expected_revision": new["revision"]}
+        ).json()["purge_pending"]
+        is False
+    )
+    assert not list((tmp / "private").iterdir())
+
+
+def test_write_failure_retries_without_partial_blob_and_active_pdf_rejected(vault, monkeypatch):
+    from opportunity_platform.documents.storage import LocalStorage
+
+    client, _, tmp, _ = vault
+    intent = create(client)
+    writer = PdfWriter()
+    writer.add_blank_page(width=50, height=50)
+    writer.add_js('app.alert("Fictional test")')
+    data = io.BytesIO()
+    writer.write(data)
+    assert upload(client, intent, data.getvalue()).status_code == 422
+    original = LocalStorage.put
+
+    def fail_put(self, *args):
+        raise OSError("fictional interrupted write")
+
+    monkeypatch.setattr(LocalStorage, "put", fail_put)
+    assert upload(client, intent).status_code == 503
+    assert not list((tmp / "private").iterdir())
+    assert client.get(f"/v1/documents/{intent['id']}").json()["status"] == "pending_upload"
+    monkeypatch.setattr(LocalStorage, "put", original)
+    assert upload(client, intent).status_code == 200
+    import stat
+
+    assert stat.S_IMODE((tmp / "private").stat().st_mode) == 0o700
+    assert stat.S_IMODE(next((tmp / "private").iterdir()).stat().st_mode) == 0o600
+
+
+def test_publication_change_does_not_silently_reuse_old_period(vault):
+    from datetime import datetime, timezone
+
+    from opportunity_platform.db.models import OpportunityVersion
+
+    client, db, _, reqs = vault
+    doc = upload(client, create(client, reqs[:1])).json()
+    original = db.get(Requirement, reqs[0])
+    old = db.get(OpportunityVersion, original.version_id)
+    op = db.get(Opportunity, old.opportunity_id)
+    new = OpportunityVersion(
+        opportunity_id=op.id,
+        version=old.version + 1,
+        publication_state="published",
+        status="verified",
+        title="FICTIONAL changed period",
+        summary="Fictional amended policy, isolated test only.",
+        source_url=old.source_url,
+        reviewer_id=old.reviewer_id,
+        last_verified_at=datetime.now(timezone.utc),
+        country="IN",
+    )
+    db.add(new)
+    db.flush()
+    op.published_version_id = new.id
+    rule = {
+        **original.rule,
+        "condition": {**original.rule["condition"], "income_period": "fictional-2027"},
+    }
+    req = Requirement(
+        version_id=new.id,
+        description="FICTIONAL new-period certificate",
+        subject_context="person",
+        kind="document",
+        application_context="all",
+        rule=rule,
+    )
+    db.add(req)
+    db.commit()
+    metadata = client.get(f"/v1/documents/{doc['id']}").json()
+    assert metadata["linked_requirements"][0]["current"] is False
+    current = next(
+        n
+        for n in client.get("/v1/documents/requirements").json()
+        if n["requirement_id"] == str(req.id)
+    )
+    assert current["documentary_status"] == "not_provided"
+    assert (
+        client.post(
+            f"/v1/documents/{doc['id']}/links",
+            json={"requirement_ids": [str(req.id)], "expected_revision": metadata["revision"]},
+        ).status_code
+        == 422
+    )
+    assert (
+        client.post(
+            f"/v1/documents/{doc['id']}/links",
+            json={"requirement_ids": [str(reqs[0])], "expected_revision": metadata["revision"]},
+        ).status_code
+        == 404
+    )
+
+
+def test_cross_origin_scoped_header_and_private_metadata_cache(client):
+    response = client.options(
+        "/v1/documents",
+        headers={
+            "Origin": "http://localhost:5173",
+            "Access-Control-Request-Method": "GET",
+            "Access-Control-Request-Headers": "Authorization, X-Document-Access",
+        },
+    )
+    assert response.status_code == 200
+    assert "x-document-access" in response.headers["access-control-allow-headers"].lower()
+    assert client.get("/v1/documents").headers["cache-control"] == "private, no-store"

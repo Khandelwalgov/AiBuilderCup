@@ -14,7 +14,7 @@ from functools import lru_cache
 
 from PIL import Image
 from pypdf import PdfReader
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 
 from opportunity_platform.core.config import settings
 from opportunity_platform.core.errors import APIError
@@ -35,6 +35,7 @@ from opportunity_platform.documents.schemas import (
 )
 from opportunity_platform.documents.storage import storage
 from opportunity_platform.eligibility.rules import Rule
+from opportunity_platform.profiles.service import account
 from opportunity_platform.subjects.service import SubjectRef, resolve
 
 ACTIVE = {"pending_upload", "uploaded_unverified"}
@@ -49,6 +50,9 @@ def subject_ref(doc):
 
 
 def authorize(session, uid, identifier, write=False, lock=False):
+    if lock:
+        actor = account(session, uid)
+        session.execute(select(User).where(User.id == actor.id).with_for_update())
     query = select(Document).where(Document.id == identifier)
     if lock:
         query = query.with_for_update()
@@ -268,17 +272,6 @@ def create(session, uid, data: DocumentCreate):
     require_uploads()
     user, obj, _ = resolve(session, uid, data.subject, True)
     session.execute(select(User).where(User.id == user.id).with_for_update())
-    count, total = session.execute(
-        select(func.count(), func.coalesce(func.sum(Document.byte_size), 0)).where(
-            Document.owner_user_id == user.id, Document.status.in_(ACTIVE)
-        )
-    ).one()
-    if count >= settings().document_max_count or total >= settings().document_max_total_bytes:
-        raise APIError(
-            429,
-            "document_quota",
-            "Storage limit reached. Remove an unused document first.",
-        )
     old = None
     if data.replaces_id:
         _, old = authorize(session, uid, data.replaces_id, True, True)
@@ -295,6 +288,22 @@ def create(session, uid, data: DocumentCreate):
             raise APIError(
                 422, "document_type_mismatch", "A replacement must have the same document purpose."
             )
+    count, total = session.execute(
+        select(func.count(), func.coalesce(func.sum(Document.byte_size), 0)).where(
+            Document.owner_user_id == user.id,
+            or_(Document.status.in_(ACTIVE), Document.purge_pending.is_(True)),
+        )
+    ).one()
+    if count - (
+        1 if old and old.owner_user_id == user.id else 0
+    ) >= settings().document_max_count or (
+        not old and total >= settings().document_max_total_bytes
+    ):
+        raise APIError(
+            429,
+            "document_quota",
+            "Storage limit reached. Remove an unused document first.",
+        )
     doc = Document(
         **{data.subject.kind + "_id": obj.id},
         owner_user_id=user.id,
@@ -402,6 +411,10 @@ def upload(session, uid, identifier, content, media):
     user, doc = authorize(session, uid, identifier, True, True)
     if doc.status == "uploaded_unverified":
         if doc.sha256 == hashlib.sha256(content).hexdigest():
+            if doc.replaces_id:
+                _, previous = authorize(session, uid, doc.replaces_id, True, True)
+                if previous.purge_pending:
+                    purge(session, previous)
             return view(session, doc)
         raise APIError(409, "document_conflict", "Use Replace to update an uploaded file.")
     if doc.owner_user_id != user.id:
@@ -410,15 +423,6 @@ def upload(session, uid, identifier, content, media):
         raise APIError(409, "document_not_uploadable", "Start a new upload for this document.")
     validate_file(content, media)
     session.execute(select(User).where(User.id == user.id).with_for_update())
-    total = session.scalar(
-        select(func.coalesce(func.sum(Document.byte_size), 0)).where(
-            Document.owner_user_id == user.id, Document.status.in_(ACTIVE)
-        )
-    )
-    if total + len(content) > settings().document_max_total_bytes:
-        raise APIError(
-            429, "document_quota", "Your private document storage limit has been reached."
-        )
     old = None
     if doc.replaces_id:
         _, old = authorize(session, uid, doc.replaces_id, True, True)
@@ -426,6 +430,19 @@ def upload(session, uid, identifier, content, media):
             raise APIError(
                 409, "document_conflict", "This document was already replaced or removed."
             )
+    total = session.scalar(
+        select(func.coalesce(func.sum(Document.byte_size), 0)).where(
+            Document.owner_user_id == user.id,
+            or_(Document.status.in_(ACTIVE), Document.purge_pending.is_(True)),
+        )
+    )
+    if (
+        total - (old.byte_size if old and old.owner_user_id == user.id else 0) + len(content)
+        > settings().document_max_total_bytes
+    ):
+        raise APIError(
+            429, "document_quota", "Your private document storage limit has been reached."
+        )
     backend = storage(doc.storage_backend)
     wrote = False
     try:
