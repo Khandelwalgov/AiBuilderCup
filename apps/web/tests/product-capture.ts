@@ -14,5 +14,6 @@ export async function productCapture(page: Page, name: string) {
   await page.screenshot({
     path: `/Users/govind/Projects/AIBuildersCup/.live-validation/${name}.png`,
     fullPage: true,
+    animations: 'disabled',
   });
 }

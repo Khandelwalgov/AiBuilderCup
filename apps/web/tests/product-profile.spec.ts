@@ -35,6 +35,10 @@ test('first-time learner gets a short conditional flow, saved summary and indivi
   await page.goto('/profile');
   await page.getByRole('textbox', { name: 'Profile name' }).fill('Fictional learner');
   await page.getByRole('button', { name: 'Education', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Education', exact: true })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
   await productCapture(page, 'product-profile-new-en');
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await expect(page.getByRole('combobox', { name: 'Are you currently a student?' })).toBeVisible();

@@ -1,0 +1,11 @@
+# Product completion progress — 16 October 2026
+
+Completed the authorized local implementation: deterministic goal/answer questionnaire, saved summaries and section edits; stable fact reconciliation/optimistic revisions; private local/GCS-adapter vault and additive migration; compatible published requirement links and documentary graph states; separated household/dependent/business creation/editing; official Firebase Auth emulator real browser harness and negative permission tests. Production uploads remain blocked. Existing local fictional uploads enabled without changing credentials/provider. No model calls, live ingestion, official publication, cloud resources/deploy or push.
+
+Implementation commits: ebb58c4, 08aabd5, 665433f, 1f98d81. Final documentation/screenshots commit follows. Both real DEPwD drafts remain unchanged, unpublished, with 70 citations and the same 68-page source capture/hash.
+
+Validation: final backend 123 passed/1 live-fetch skipped, migrations no drift; browser regressions 29 passed; actual local emulator/API/PostgreSQL/private-file journeys 4 passed (11.2 seconds), with automatic cleanup verified at zero remaining product test schemas/files; isolated finale demo 8 passed; contracts/preflight/lint/types/format/clean web build/no-cache Docker build/local+container smoke passed. Main bundle size warning remains. See product-completion-report.md for exact evidence levels, logs and fifteen fictional screenshots.
+
+No core local task is blocked. Remaining human release gates: real Google OAuth/hosted acceptance and human two-minute onboarding timing; substantive official-source review before publication; malware scanning/quarantine, GCS/IAM/retention/privacy security acceptance before real sensitive production uploads. Adult invitations, authenticity verification, full account export/erasure, alerts/submission remain deferred. These are explicitly documented; no unsupported verification/publication is inferred from a file upload.
+
+Resume from docs/real-user-acceptance.md for human acceptance. Do not re-run paid AI/ingestion, publish drafts or deploy as a consequence of resuming this sprint. Normal app listeners 5173/8000 and DB were preserved; task-owned browser servers/schemas/files/container/emulator are cleaned up after validation.

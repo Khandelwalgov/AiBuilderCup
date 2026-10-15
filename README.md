@@ -1,8 +1,8 @@
-# Opportunity Intelligence · Phase 2
+# Opportunity Intelligence · Unclaimed
 
 Working name: **Unclaimed**. React + TypeScript/Vite → FastAPI → PostgreSQL, with Firebase Authentication and server-side Google GenAI extraction. Phase 2 adds an official-source ingestion, human review, publication and deterministic personal eligibility pipeline while preserving the Phase 1 interface.
 
-**Validation status:** the official PDFs were fetched and parsed live. Gemini and real Firebase sign-in require credentials that were unavailable during implementation. No real opportunity was extracted, reviewed or published during validation. The normal public catalogue is therefore empty; it never substitutes synthetic records. Automated extraction/review tests use clearly fictional data confined to tests.
+**Current local status (16 October 2026):** two real DEPwD candidates remain private drafts (70 saved citations; zero real publications). Guided profiles, household/dependent/business workspaces, the Unlock Graph and private fictional-document lifecycle are implemented locally. Four browser journeys use the official Firebase Auth emulator, actual FastAPI/PostgreSQL and local files; real Google sign-in and hosted acceptance remain human gates. Production uploads are blocked pending malware scanning/security acceptance. See the [product completion report](docs/product-completion-report.md) and [real-user checklist](docs/real-user-acceptance.md). No deployment or new AI call occurred in this sprint.
 
 ## Local setup
 
@@ -20,7 +20,7 @@ make contracts
 
 Start `make api` and `make web` in separate terminals. Open [the app](http://127.0.0.1:5173), [API docs](http://127.0.0.1:8000/docs) or [readiness](http://127.0.0.1:8000/health). Migrations preserve Phase 1 records. `docker compose stop` retains the database volume. Use `UV_CACHE_DIR=/tmp/opportunity-uv-cache` if the default cache is restricted.
 
-Normal discovery exposes only the explicitly selected, reviewed real version. To inspect the old fixtures locally, set `ENABLE_DEVELOPMENT_CATALOGUE=true` in the API environment and optionally `VITE_ENABLE_DEVELOPMENT_CATALOGUE=true` in the web environment, restart, then open `/discover?development=true`. Development mode exposes synthetic records only, labels them, and cannot publish or evaluate them. Both switches default to false; never enable them for production.
+Normal discovery exposes only the explicitly selected, reviewed real version. To inspect the old fixtures locally, set `ENABLE_DEVELOPMENT_CATALOGUE=true` in the API environment and optionally `VITE_ENABLE_DEVELOPMENT_CATALOGUE=true` in the web environment, restart, then open `/discover?development=true`. Development mode exposes labeled synthetic records and cannot publish them. Evaluation/planning requires an explicitly opted-in development request and a current published synthetic test version; the ordinary seeded drafts are not evaluated. Both switches default to false; never enable them for production.
 
 ## Credentials and first administrator
 
@@ -71,7 +71,7 @@ A missing key produces `extraction_blocked / gemini_not_configured` after saving
 5. Browse `/discover`, open a reviewed opportunity and click **Check my eligibility**. The backend evaluates stored typed rules against only the caller's profile and persists the rule version, fact snapshot, engine version and result time.
 6. Inspect satisfied, not satisfied and unknown requirements, original clauses, facts used and next steps. Missing documents remain evidence gaps. A substantive failure remains a failure even when an unrelated document is added. All-satisfied results are preliminary potential matches, never official approval or verified application readiness.
 
-The review editor is an advanced JSON interface with evidence alongside it. English/Hindi navigation, forms and outcome labels are localized; original policy passages and deterministic explanations retain English/source language. There is no conversational AI assistant in this milestone.
+The review editor is an advanced JSON interface with evidence alongside it. English/Hindi navigation, forms and outcome labels are localized; original policy passages and deterministic explanations retain English/source language. Cited deterministic EN/HI explanations are available; optional Gemini only classifies safe intent when explicitly enabled.
 
 ## API and persistence
 
@@ -106,15 +106,13 @@ RUN_LIVE_SOURCE_TESTS=1 uv run pytest -q tests/test_pipeline.py::test_live_offic
 
 `make check` runs Ruff, PostgreSQL integration tests, Alembic drift detection, ESLint, TypeScript and production build. Tests use isolated schemas, removed afterward, without truncating application data. Set `TEST_DATABASE_URL` for a separate database; the role needs schema creation permission. The migration test upgrades the actual Phase 1 schema, preserves an existing account, checks drift and exercises downgrade/re-upgrade. Browser tests start local servers if necessary; existing API servers must have `ENABLE_DEVELOPMENT_CATALOGUE=true` for fixture regressions. Run `make migrate seed` first.
 
-Browser profile/evaluation tests use explicitly mocked auth/API responses confined to tests; other browser journeys use the actual database-backed public API. Backend tests override identity only inside tests and exercise actual PostgreSQL services, permissions, review/publication, source failures, unknown outcomes and exact evidence validation. The opt-in live test fetches the real PDFs with extraction intentionally unconfigured. Live Gemini output quality and real Firebase login are **not** validated by test doubles. See [validation record](docs/phase-2-validation.md) for executed results.
+The ordinary browser suite uses explicitly mocked auth/API responses for authenticated contracts and the actual public API for public pages. The separate `make test-product-e2e` suite uses official local Firebase Auth emulator tokens and actual API/PostgreSQL/private files. Backend tests override identity only inside tests and exercise actual PostgreSQL services, permissions, review/publication, source failures, unknown outcomes and exact evidence validation. The opt-in live test fetches the real PDFs with extraction intentionally unconfigured. Live Gemini output quality and real Firebase login are **not** validated by test doubles. See [validation record](docs/phase-2-validation.md) for executed results.
 
 ## Limits and next milestone
 
-No cloud resources were provisioned or deployed; [deployment preparation](infra/README.md) remains available. Add the new server environment variables when deploying and choose a request timeout adequate for synchronous ingestion. There is no scheduler, automatic selective re-evaluation, notification delivery, full PDF binary archive/GCS integration, document upload/verification, family consent workflow, business UI, application submission or graph planner. Public text snapshots and binary hashes are saved in PostgreSQL; original binaries are not retained. Unexpected process termination may roll back a run rather than leaving durable crash history.
+No cloud resources were provisioned or deployed in this sprint; [deployment preparation](infra/README.md) remains available. Guided profile/subject workspaces, selective fact-change re-evaluation, planner and actual private local file workflows now exist. Production uploads remain disabled until malware scanning, private GCS/IAM, key/retention/privacy controls pass review. The GCS adapter is implemented but not live-accepted. Adult invitations, authenticity verification, full account export/erasure, automatic scheduling/alerts and application submission remain unavailable. Public text snapshots and original binary hashes are preserved; original official PDF binaries are not archived by ingestion.
 
-Data export/deletion and verified-document correction flows are not implemented. Use synthetic personal information only. Do not onboard real sensitive data before retention, export/deletion and consent controls are ready. Source failure warnings appear in detail; manual checks are the only freshness guarantee. Exact quotation matching prevents fabricated quotes, but cannot prove semantic extraction correctness—human review is essential.
-
-**Next milestone:** configure Firebase/Gemini, measure extraction on these real documents and complete a live reviewed-publication demo. Then add secure synthetic-document verification and one shared-blocker action that updates several version-aware evaluations. Preserve the existing architecture and truthful coverage boundaries. [Phase 2 decisions](docs/decisions/0002-reviewed-intelligence.md) supersede Phase 1 publication behavior.
+Use fictional personal information and document fixtures only. Exact quote matching checks evidence presence, not semantic/legal correctness. Human substantive review remains mandatory before either real candidate is published. The [product audit](docs/product-completion-audit.md) distinguishes actual local journeys from mocked browser contracts and remaining human gates.
 
 Phase 2.5 adds bounded model requests, sanitized failure codes, evidence preservation, production configuration guards and a plan-first deployment runner. See [live integration validation](docs/phase-2.5-validation.md) and [deployment procedure](infra/README.md). Run `make preflight` before attempting live acceptance; configuration readiness does not prove Firebase permissions or Gemini access.
 
@@ -129,7 +127,7 @@ Gemini remains the default (`AI_EXTRACTION_PROVIDER=gemini`), using `GEMINI_API_
 
 OpenAI uses a strict transport schema while original Pydantic/citation validation still decides whether a draft can be created. Source hashes, provider/model/extractor identity and token usage are persisted on runs/versions; failed public-source output is explicitly unvalidated privileged diagnostics, never a publishable version. Repeated identity/snapshot processing is idempotent and cannot move the publication pointer. See [provider decision](docs/decisions/0006-explicit-extraction-providers.md).
 
-**Current validation:** one genuine DEPwD draft exists in `/admin`, unpublished and requiring substantive human review. Gemini's free-tier alternative was documented but not live-tested because the replaced Google key is unavailable. See the current [integration audit](docs/live-integration-audit.md) for measured calls, costs, tests and identified review gaps.
+**Current validation:** two real DEPwD drafts exist in `/admin`, unpublished and requiring substantive human review; the second is explicitly labeled manual curation of the saved capture. Gemini's free-tier alternative was documented but not live-tested because the replaced Google key is unavailable. See the current [integration audit](docs/live-integration-audit.md) for measured calls, costs, tests and identified review gaps.
 
 ## Nightfall product workflows
 
@@ -156,3 +154,12 @@ shows the configured provider/model, existing draft count and optional
 spending cap. The API rejects stale provider/model confirmations. Draft correction
 and human review remain available with ingestion disabled. Do not enable the flag
 merely to inspect source evidence. See [Reimagine acceptance](docs/reimagine-acceptance.md).
+
+
+## Guided profiles and private documents
+
+New profiles use name/interest → short conditional questions → review/finish. Returning users see saved summaries and section edits. Save is enabled only for changes; failed/stale saves retain answers. Stable fact identities and optional optimistic revisions prevent unnecessary writes and detect conflicting edits in current clients.
+
+My Documents accepts real private PDF/JPEG/PNG files for fictional local testing, supports secure preview/download, replace/remove and explicit links to compatible published requirements. Uploading never verifies authenticity or satisfies legal conditions. Enable `DOCUMENT_UPLOADS_ENABLED=true` only for development with private local storage and restart the API; examples default false and production rejects true. See [document architecture](docs/document-architecture.md).
+
+`make test-product-e2e` runs the separate real emulator/API/database/file suite after starting the documented local Auth emulator. It owns ports 15210/18210, creates/drops only isolated schemas and private temporary fixtures, makes no provider calls and leaves normal local app data untouched. `make test-e2e` retains the existing public/mocked browser regressions. Follow [acceptance setup](docs/real-user-acceptance.md), then stop only the emulator you started.

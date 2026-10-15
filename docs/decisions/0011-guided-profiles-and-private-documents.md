@@ -1,0 +1,7 @@
+# 0011 — Guided profiles and private documentary readiness
+
+16 October 2026. Keep the monorepo, typed evaluator, reviewed publications and Opportunity OS theme. Use a deterministic question-definition table with goal/answer predicates and supported source-rule deep links; no LLM questionnaire generation. Explicit-save editors reconcile stable fact identities and send optimistic revisions. Older clients remain compatible, while new editors detect stale saves.
+
+Add a backend document domain with metadata intents followed by bounded authenticated binary uploads, local/GCS storage adapters and exact versioned requirement links. The vault adds documentary readiness without inventing authenticity or legal eligibility. Reuse only exact compatible semantics for an authorized subject. Access grants require a fresh Firebase identity and permission check; logical removal precedes physical purge and failures remain retryable.
+
+Production uploads are blocked until malware scanning and security/privacy acceptance. Firebase's official local Auth emulator is allowed only in development and labeled in the UI; it is never an authentication dependency override or production login alternative. Real browser persistence tests use randomly isolated PostgreSQL schemas and private temporary storage, with fictional published requirements and no provider calls. Existing real source drafts stay untouched and unpublished.
