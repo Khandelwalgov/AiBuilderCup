@@ -228,6 +228,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/ingestion-settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ingestion Settings */
+        get: operations["ingestion_settings_v1_admin_ingestion_settings_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/admin/sources/{key}/ingest": {
         parameters: {
             query?: never;
@@ -984,6 +1001,37 @@ export interface components {
              */
             primary: boolean;
         };
+        /** IngestionConfirmation */
+        IngestionConfirmation: {
+            /**
+             * Expected Provider
+             * @enum {string}
+             */
+            expected_provider: "gemini" | "openai";
+            /** Expected Model */
+            expected_model: string;
+            /**
+             * Confirm Potential Paid Use
+             * @constant
+             */
+            confirm_potential_paid_use: true;
+        };
+        /** IngestionPermission */
+        IngestionPermission: {
+            /** Provider */
+            provider: string;
+            /** Model */
+            model: string;
+            /** Live Enabled */
+            live_enabled: boolean;
+            /** Test Budget Usd */
+            test_budget_usd: number | null;
+            /**
+             * Estimate Available
+             * @default false
+             */
+            estimate_available: boolean;
+        };
         /** OpportunityPage */
         OpportunityPage: {
             /** Items */
@@ -1387,6 +1435,11 @@ export interface components {
             last_checked_at: string | null;
             /** Status */
             status: string;
+            /**
+             * Draft Count
+             * @default 0
+             */
+            draft_count: number;
         };
         /** SourceView */
         SourceView: {
@@ -2841,6 +2894,89 @@ export interface operations {
             };
         };
     };
+    ingestion_settings_v1_admin_ingestion_settings_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IngestionPermission"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
     ingest_v1_admin_sources__key__ingest_post: {
         parameters: {
             query?: never;
@@ -2850,7 +2986,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IngestionConfirmation"];
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {

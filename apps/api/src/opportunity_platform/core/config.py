@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     gemini_max_input_tokens: int = Field(default=200000, ge=1024, le=1048576)
     gemini_max_output_tokens: int = Field(default=16384, ge=1024, le=65536)
     ai_assistant_live_enabled: bool = False
+    ai_ingestion_live_enabled: bool = False
+    ai_ingestion_test_budget_usd: float | None = Field(default=None, ge=0, le=1000)
     enable_development_catalogue: bool = False
     ingestion_min_interval_seconds: int = Field(default=30, ge=0, le=3600)
     model_config = SettingsConfigDict(env_file=".env", extra="ignore", hide_input_in_errors=True)

@@ -1825,6 +1825,99 @@
         ]
       }
     },
+    "/v1/admin/ingestion-settings": {
+      "get": {
+        "summary": "Ingestion Settings",
+        "operationId": "ingestion_settings_v1_admin_ingestion_settings_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngestionPermission"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/v1/admin/sources/{key}/ingest": {
       "post": {
         "summary": "Ingest",
@@ -1845,6 +1938,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IngestionConfirmation"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -5159,6 +5262,75 @@
         ],
         "title": "HouseholdWrite"
       },
+      "IngestionConfirmation": {
+        "properties": {
+          "expected_provider": {
+            "type": "string",
+            "enum": [
+              "gemini",
+              "openai"
+            ],
+            "title": "Expected Provider"
+          },
+          "expected_model": {
+            "type": "string",
+            "title": "Expected Model"
+          },
+          "confirm_potential_paid_use": {
+            "type": "boolean",
+            "const": true,
+            "title": "Confirm Potential Paid Use"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "expected_provider",
+          "expected_model",
+          "confirm_potential_paid_use"
+        ],
+        "title": "IngestionConfirmation"
+      },
+      "IngestionPermission": {
+        "properties": {
+          "provider": {
+            "type": "string",
+            "title": "Provider"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "live_enabled": {
+            "type": "boolean",
+            "title": "Live Enabled"
+          },
+          "test_budget_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Test Budget Usd"
+          },
+          "estimate_available": {
+            "type": "boolean",
+            "title": "Estimate Available",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "provider",
+          "model",
+          "live_enabled",
+          "test_budget_usd"
+        ],
+        "title": "IngestionPermission"
+      },
       "OpportunityPage": {
         "properties": {
           "items": {
@@ -6304,6 +6476,11 @@
           "status": {
             "type": "string",
             "title": "Status"
+          },
+          "draft_count": {
+            "type": "integer",
+            "title": "Draft Count",
+            "default": 0
           }
         },
         "type": "object",

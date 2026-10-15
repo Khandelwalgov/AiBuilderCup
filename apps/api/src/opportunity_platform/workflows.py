@@ -4,14 +4,22 @@ import uuid
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, Query
-from pydantic import BaseModel
-from sqlalchemy import select
+from pydantic import BaseModel, ConfigDict
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from opportunity_platform.admin import service as admin
 from opportunity_platform.assistant import service as assistant
 from opportunity_platform.core.auth import current_uid
-from opportunity_platform.db.models import IngestionRun, OpportunityVersion, Source, User
+from opportunity_platform.core.config import settings
+from opportunity_platform.core.errors import APIError
+from opportunity_platform.db.models import (
+    IngestionRun,
+    Opportunity,
+    OpportunityVersion,
+    Source,
+    User,
+)
 from opportunity_platform.db.session import get_session
 from opportunity_platform.eligibility import service as eligibility
 from opportunity_platform.ingestion import service as ingestion
@@ -107,6 +115,7 @@ class SourceItem(BaseModel):
     context_url: str
     last_checked_at: str | None
     status: str
+    draft_count: int = 0
 
 
 @router.get("/admin/sources", response_model=list[SourceItem])
@@ -116,6 +125,15 @@ def sources(session: DB, actor: ADMIN):
         source = session.get(Source, uuid.uuid5(ingestion.NAMESPACE, key))
         result.append(
             SourceItem(
+                draft_count=session.scalar(
+                    select(func.count())
+                    .select_from(OpportunityVersion)
+                    .join(Opportunity, Opportunity.id == OpportunityVersion.opportunity_id)
+                    .where(
+                        Opportunity.source_id == uuid.uuid5(ingestion.NAMESPACE, key),
+                        OpportunityVersion.publication_state == "draft",
+                    )
+                ),
                 key=key,
                 name=adapter.name,
                 url=adapter.url,
@@ -156,8 +174,52 @@ def run_view(run):
     return RunView(**fields)
 
 
+class IngestionPermission(BaseModel):
+    provider: str
+    model: str
+    live_enabled: bool
+    test_budget_usd: float | None
+    estimate_available: bool = False
+
+
+@router.get("/admin/ingestion-settings", response_model=IngestionPermission)
+def ingestion_settings(actor: ADMIN):
+    config = settings()
+    return IngestionPermission(
+        provider=config.ai_extraction_provider,
+        model=config.openai_model
+        if config.ai_extraction_provider == "openai"
+        else config.gemini_model,
+        live_enabled=config.ai_ingestion_live_enabled,
+        test_budget_usd=config.ai_ingestion_test_budget_usd,
+    )
+
+
+class IngestionConfirmation(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    expected_provider: Literal["gemini", "openai"]
+    expected_model: str
+    confirm_potential_paid_use: Literal[True]
+
+
 @router.post("/admin/sources/{key}/ingest", response_model=RunView)
-def ingest(key: str, session: DB, actor: ADMIN):
+def ingest(key: str, data: IngestionConfirmation, session: DB, actor: ADMIN):
+    config = settings()
+    if not config.ai_ingestion_live_enabled:
+        raise APIError(
+            409,
+            "ingestion_not_authorized",
+            "Live ingestion is disabled by the operator. No model request was made.",
+        )
+    model = (
+        config.openai_model if config.ai_extraction_provider == "openai" else config.gemini_model
+    )
+    if data.expected_provider != config.ai_extraction_provider or data.expected_model != model:
+        raise APIError(
+            409,
+            "provider_configuration_changed",
+            "Provider settings changed. Review a fresh confirmation before retrying.",
+        )
     return run_view(ingestion.ingest(session, key, actor))
 
 

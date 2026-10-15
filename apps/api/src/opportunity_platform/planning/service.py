@@ -133,6 +133,12 @@ def build(session, uid, subject, hypothetical=None):
         .order_by(Requirement.id)
     ):
         requirements.setdefault(requirement.version_id, []).append(requirement)
+    rows = [
+        row
+        for row in rows
+        if not requirements.get(row[1].id)
+        or any(r.subject_context == subject.kind for r in requirements[row[1].id])
+    ]
     evidence = {}
     reqids = [r.id for group in requirements.values() for r in group]
     if reqids:

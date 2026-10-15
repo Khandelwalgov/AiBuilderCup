@@ -117,6 +117,13 @@ def check(
             )
         )
     )
+    if requirements and not any(r.subject_context == subject.kind for r in requirements):
+        raise APIError(
+            422,
+            "unsupported_subject_context",
+            "The reviewed conditions do not support this subject type. "
+            "Choose an appropriate authorized context.",
+        )
     evidence_by_requirement = _prepared["evidence"] if _prepared else {}
     if requirements and not _prepared:
         for evidence in session.scalars(

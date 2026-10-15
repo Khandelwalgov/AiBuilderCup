@@ -150,10 +150,11 @@ def test_shared_action_simulation_and_subject_context(db, pipeline):  # noqa: F8
     h = subjects.create_household(
         db, "fictional-owner", subjects.HouseholdWrite(name="Fictional family")
     )
-    household = eligibility.check(
-        db, "fictional-owner", first.id, subjects.SubjectRef(kind="household", id=h.id)
-    )
-    assert all(r.result.outcome == "unknown" for r in household.requirements)
+    with pytest.raises(APIError) as unsupported:
+        eligibility.check(
+            db, "fictional-owner", first.id, subjects.SubjectRef(kind="household", id=h.id)
+        )
+    assert unsupported.value.code == "unsupported_subject_context"
 
 
 def test_assistant_is_cited_private_and_live_disabled(db, pipeline):  # noqa: F811
