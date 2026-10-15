@@ -9,6 +9,7 @@ export default defineConfig({
     {
       command: '../api/.venv/bin/python ../../scripts/product_e2e_server.py',
       url: 'http://127.0.0.1:18210/health',
+      gracefulShutdown: { signal: 'SIGTERM', timeout: 10000 },
       reuseExistingServer: false,
       env: {
         ENVIRONMENT: 'development',

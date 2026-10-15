@@ -5,8 +5,10 @@ Never imports or overrides authentication. No live sources/providers or applicat
 
 import os
 import shutil
+import signal
 import tempfile
 import uuid
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -41,6 +43,8 @@ os.environ["OPENAI_API_KEY"] = ""
 os.environ["GEMINI_API_KEY"] = ""
 settings.cache_clear()
 try:
+    from sqlalchemy.orm import Session
+
     from opportunity_platform.db.models import (
         Base,
         Opportunity,
@@ -51,7 +55,6 @@ try:
         User,
     )
     from opportunity_platform.db.session import engine
-    from sqlalchemy.orm import Session
 
     Base.metadata.create_all(engine)
     now = datetime.now(timezone.utc)
@@ -146,7 +149,25 @@ try:
         session.commit()
     import uvicorn
 
-    uvicorn.run("opportunity_platform.main:app", host="127.0.0.1", port=18210, access_log=False)
+    class DisposableServer(uvicorn.Server):
+        @contextmanager
+        def capture_signals(self):
+            # Uvicorn normally re-raises SIGTERM before our outer finally can run.
+            # Test-only process: finish graceful shutdown, then clean our own resources.
+            previous = {
+                sig: signal.signal(sig, self.handle_exit) for sig in (signal.SIGINT, signal.SIGTERM)
+            }
+            try:
+                yield
+            finally:
+                for sig, handler in previous.items():
+                    signal.signal(sig, handler)
+
+    DisposableServer(
+        uvicorn.Config(
+            "opportunity_platform.main:app", host="127.0.0.1", port=18210, access_log=False
+        )
+    ).run()
 finally:
     if "engine" in locals():
         engine.dispose()
