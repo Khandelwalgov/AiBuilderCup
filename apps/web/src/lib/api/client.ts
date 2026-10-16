@@ -39,6 +39,7 @@ export class RequestError extends Error {
   constructor(
     public code: string,
     message: string,
+    public issues: Array<{ fields?: string[]; message?: string[] }> = [],
   ) {
     super(message);
     this.name = 'RequestError';
@@ -47,11 +48,20 @@ export class RequestError extends Error {
 export function fail(error: unknown): never {
   const envelope =
     error && typeof error === 'object' && 'error' in error
-      ? (error as { error: { code: string; message: string } }).error
+      ? (
+          error as {
+            error: {
+              code: string;
+              message: string;
+              issues?: Array<{ fields?: string[]; message?: string[] }>;
+            };
+          }
+        ).error
       : null;
   throw new RequestError(
     envelope?.code ?? 'connection_failed',
     envelope?.message ?? 'Unable to connect. Please try again.',
+    envelope?.issues ?? [],
   );
 }
 

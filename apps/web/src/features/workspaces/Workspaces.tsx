@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDirtyForm, useDiscardGuard } from '../../app/dirty-forms';
 import { useSubject, ContextLink as Link } from '../../app/subject-context';
 import { useStrings, useLanguage } from '../../app/App';
-import { api, fail } from '../../lib/api/client';
+import { api, fail, RequestError } from '../../lib/api/client';
 import { displayLabel } from '../../i18n/format';
 import type { components } from '../../lib/api/schema';
 type Workspace = components['schemas']['WorkspaceView'];
@@ -166,8 +166,12 @@ function WorkspacePage({ kind }: { kind: Kind }) {
             {kind === 'business' ? (
               <>
                 <p>
-                  {displayLabel(current.legal_status ?? 'unknown', hi)} ·{' '}
-                  {displayLabel(current.role, hi)}
+                  {current.legal_status === 'unknown'
+                    ? hi
+                      ? 'कानूनी संरचना नहीं बताई गई'
+                      : 'Legal structure not specified'
+                    : displayLabel(current.legal_status ?? 'unknown', hi)}{' '}
+                  · {displayLabel(current.role, hi)}
                 </p>
                 {current.description && <p>{current.description}</p>}
                 <dl>
@@ -327,6 +331,9 @@ function workspaceLabel(key: string, hi: boolean) {
   const labels: Record<string, [string, string]> = {
     business_registered: ['Registered business', 'पंजीकृत व्यवसाय'],
     business_turnover: ['Annual turnover', 'वार्षिक टर्नओवर'],
+    business_registration_state: ['Registration state', 'पंजीकरण का राज्य'],
+    business_registration_district: ['Registration district', 'पंजीकरण का जिला'],
+    business_operating_status: ['Business activity', 'व्यवसाय की गतिविधि'],
     residence_state: ['Operating state', 'संचालन राज्य'],
     residence_district: ['Operating district', 'संचालन जिला'],
     has_registration_certificate: [
@@ -348,10 +355,13 @@ function initial(current?: Workspace) {
   return {
     name: current?.name ?? '',
     description: current?.description ?? '',
-    legal: current?.legal_status ?? 'unregistered',
+    legal: current?.legal_status ?? 'unknown',
     registered: get('business_registered'),
     state: get('residence_state'),
     district: get('residence_district'),
+    registrationState: get('business_registration_state'),
+    registrationDistrict: get('business_registration_district'),
+    activity: get('business_operating_status'),
     turnover: get('business_turnover'),
     period: String(turnover?.context?.income_period ?? ''),
     definition: String(turnover?.context?.income_definition ?? ''),
@@ -429,6 +439,9 @@ function WorkspaceForm({
         },
         { key: 'residence_state', value: draft.state || null },
         { key: 'residence_district', value: draft.district || null },
+        { key: 'business_registration_state', value: draft.registrationState || null },
+        { key: 'business_registration_district', value: draft.registrationDistrict || null },
+        { key: 'business_operating_status', value: draft.activity || null },
         {
           key: 'business_turnover',
           value: draft.turnover === '' ? null : Number(draft.turnover),
@@ -437,7 +450,8 @@ function WorkspaceForm({
         },
       ];
       for (const fact of supplied)
-        if (factMap.has(fact.key) || fact.value != null) factMap.set(fact.key, fact);
+        if (factMap.has(fact.key) || fact.value != null)
+          factMap.set(fact.key, { ...factMap.get(fact.key), ...fact });
       const body = {
         name: draft.name.trim(),
         description: draft.description || null,
@@ -547,11 +561,19 @@ function WorkspaceForm({
               {hi ? 'व्यवसाय किस तरह बना है?' : 'How is your business set up?'}
               <select value={draft.legal} onChange={(e) => change({ legal: e.target.value })}>
                 {(
-                  ['unregistered', 'sole_proprietor', 'partnership', 'company', 'other'] as const
+                  [
+                    'unknown',
+                    'unregistered',
+                    'sole_proprietor',
+                    'partnership',
+                    'company',
+                    'other',
+                  ] as const
                 ).map((value) => (
                   <option key={value} value={value}>
                     {hi
                       ? {
+                          unknown: 'अभी पता नहीं / छोड़ें',
                           unregistered: 'अपंजीकृत / अनौपचारिक',
                           sole_proprietor: 'एकल स्वामित्व',
                           partnership: 'साझेदारी',
@@ -559,6 +581,7 @@ function WorkspaceForm({
                           other: 'अन्य',
                         }[value]
                       : {
+                          unknown: 'Not sure yet / skip',
                           unregistered: 'Unregistered or informal',
                           sole_proprietor: 'Sole proprietor',
                           partnership: 'Partnership',
@@ -623,6 +646,51 @@ function WorkspaceForm({
                           value={draft.district}
                           onChange={(e) => change({ district: e.target.value })}
                         />
+                      </label>
+                    </div>
+                    <p>
+                      {hi
+                        ? 'संचालन का स्थान पंजीकरण के स्थान से अलग हो सकता है। कानूनी संरचना से पंजीकरण या वर्तमान काम का अनुमान नहीं लगाया जाएगा।'
+                        : 'Operating location can differ from registration location. Legal structure does not automatically answer registration or current activity.'}
+                    </p>
+                    <div className="form-grid">
+                      <label className="field">
+                        {hi
+                          ? 'पंजीकरण का राज्य (यदि लागू हो)'
+                          : 'Registration state (if applicable)'}
+                        <input
+                          value={draft.registrationState}
+                          maxLength={100}
+                          onChange={(e) => change({ registrationState: e.target.value })}
+                        />
+                      </label>
+                      <label className="field">
+                        {hi
+                          ? 'पंजीकरण का जिला (यदि लागू हो)'
+                          : 'Registration district (if applicable)'}
+                        <input
+                          value={draft.registrationDistrict}
+                          maxLength={100}
+                          onChange={(e) => change({ registrationDistrict: e.target.value })}
+                        />
+                      </label>
+                      <label className="field">
+                        {hi ? 'व्यवसाय अभी किस स्थिति में है?' : 'What is the business doing now?'}
+                        <select
+                          value={draft.activity}
+                          onChange={(e) => change({ activity: e.target.value })}
+                        >
+                          <option value="">
+                            {hi ? 'अभी पता नहीं / छोड़ें' : 'Not sure yet / skip'}
+                          </option>
+                          <option value="active">{hi ? 'काम चल रहा है' : 'Operating'}</option>
+                          <option value="inactive">
+                            {hi ? 'अभी काम बंद है' : 'Not operating now'}
+                          </option>
+                          <option value="prelaunch">
+                            {hi ? 'शुरू करने की तैयारी' : 'Preparing to start'}
+                          </option>
+                        </select>
                       </label>
                     </div>
                     <button
@@ -728,7 +796,28 @@ function WorkspaceForm({
               ? 'बदलाव सहेजे नहीं गए; आपके उत्तर यहीं हैं।'
               : 'Changes were not saved; your answers are still here.'}
           </p>
-          <Link to="/profile">{hi ? 'व्यक्तिगत प्रोफ़ाइल देखें' : 'Open personal profile'}</Link>
+          {mutation.error instanceof RequestError &&
+            mutation.error.code === 'workspace_conflict' && (
+              <>
+                <p>
+                  {hi
+                    ? 'दूसरे टैब या सत्र में नई जानकारी सहेजी गई है। यहाँ के अनसहेजे उत्तर बने हुए हैं।'
+                    : 'Another tab or session saved newer information. Your unsaved answers remain here.'}
+                </p>
+                <button
+                  type="button"
+                  className="button secondary"
+                  onClick={() => {
+                    if (guard.confirmLeave()) {
+                      guard.markSaved();
+                      window.location.reload();
+                    }
+                  }}
+                >
+                  {hi ? 'सहेजी जानकारी पुनः लोड करें' : 'Reload saved workspace'}
+                </button>
+              </>
+            )}
         </div>
       )}
     </form>

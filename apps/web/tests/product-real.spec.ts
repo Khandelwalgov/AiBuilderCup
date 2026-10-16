@@ -17,9 +17,11 @@ async function profile(page: Page, name: string) {
   await page.getByRole('textbox', { name: 'Profile name' }).fill(name);
   await page.getByRole('button', { name: 'Education', exact: true }).click();
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
-  await page.getByRole('combobox', { name: 'Are you currently a student?' }).selectOption('true');
   await page
-    .getByRole('combobox', { name: 'Current or highest level of education' })
+    .getByRole('combobox', { name: 'Are you studying anywhere right now?' })
+    .selectOption('true');
+  await page
+    .getByRole('combobox', { name: 'What are you currently studying?' })
     .selectOption('undergraduate');
   await page.getByRole('button', { name: 'Review your answers', exact: true }).click();
   await page.getByRole('button', { name: 'Finish setup', exact: true }).click();
@@ -312,7 +314,7 @@ test('real concurrent profile edits preserve the stale draft and reject duplicat
   await other.getByRole('button', { name: 'Save changes', exact: true }).click();
   await expect(other.locator('.profile-summary')).toContainText('Fictional winning saved edit');
   await page.getByRole('button', { name: 'Save changes', exact: true }).click();
-  await expect(page.getByRole('status').filter({ hasText: 'Conflicting edit' })).toBeVisible();
+  await expect(page.getByRole('status').filter({ hasText: 'Stale edit' })).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'Profile name' })).toHaveValue(
     'Fictional stale local draft',
   );

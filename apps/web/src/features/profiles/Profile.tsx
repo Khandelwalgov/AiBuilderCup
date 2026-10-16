@@ -11,6 +11,7 @@ import {
   questions,
   valuesOf,
   conflicts,
+  semanticIssues,
   answered,
   answerLabel,
   documentKeys,
@@ -23,6 +24,12 @@ import {
 import type { components } from '../../lib/api/schema';
 type View = components['schemas']['ProfileView'];
 type Draft = { name: string; facts: Fact[] };
+const today = () => new Date().toLocaleDateString('en-CA');
+const yesterday = () => {
+  const date = new Date();
+  date.setDate(date.getDate() - 1);
+  return date.toLocaleDateString('en-CA');
+};
 const signature = (d: Draft) =>
   JSON.stringify({ name: d.name, facts: [...d.facts].sort((a, b) => a.key.localeCompare(b.key)) });
 function editable(data: View | null): Draft {
@@ -103,7 +110,13 @@ function PersonProfile() {
       return (
         !!condition &&
         ['eq', 'gte', 'lte', 'in'].includes(String(condition.op)) &&
-        condition.fact === key
+        (condition.fact === key ||
+          (key === 'student_status' &&
+            [
+              'current_education_level',
+              'enrollment_mode',
+              'school_recognized_or_government',
+            ].includes(String(condition.fact))))
       );
     return (
       ['all', 'any'].includes(String(node.op)) &&
@@ -153,7 +166,16 @@ function PersonProfile() {
       setEditing(!query.data || !!requested || !!routeSection);
       setStage(requested || routeSection ? 1 : 0);
       setSection(requested?.category ?? routeSection);
-      if (next.facts.some((f) => f.key === 'education_level' || f.key === 'student_status'))
+      if (
+        next.facts.some((f) =>
+          [
+            'education_level',
+            'current_education_level',
+            'highest_completed_education',
+            'student_status',
+          ].includes(f.key),
+        )
+      )
         setGoal('education');
       initialized.current = true;
     }
@@ -217,30 +239,45 @@ function PersonProfile() {
       </div>
     );
   const values = valuesOf(draft.facts),
-    invalid = conflicts(draft.facts),
+    invalid = conflicts(draft.facts, editable(query.data ?? null).facts),
     isNew = !query.data;
   function update(key: Fact['key'], value: Fact['value'], extra: Partial<Fact> = {}) {
     let next = [...draft!.facts];
     const clearing: Fact['key'][] =
       key === 'student_status' && value === false
-        ? ['enrollment_mode', 'school_recognized_or_government']
-        : key === 'education_level' && ['undergraduate', 'postgraduate'].includes(String(value))
+        ? ['current_education_level', 'enrollment_mode', 'school_recognized_or_government']
+        : key === 'current_education_level' &&
+            ['undergraduate', 'postgraduate', 'other'].includes(String(value))
           ? ['school_recognized_or_government']
           : [];
     if (next.some((f) => clearing.includes(f.key) && valuesOf(next)[f.key] != null)) {
       if (
         !window.confirm(
           hi
-            ? 'इस बदलाव से पहले के अध्ययन उत्तर अब लागू नहीं होंगे। उन्हें खाली करें? अन्य जानकारी सुरक्षित रहेगी।'
-            : 'This change makes earlier study answers irrelevant. Clear those answers? Your other information will stay.',
+            ? 'सहेजे गए पढ़ाई के उत्तर कल तक के ऐतिहासिक उत्तर रहेंगे। नए अनसहेजे पढ़ाई के उत्तर खाली होंगे। बाकी उत्तर बने रहेंगे। जारी रखें? पहले देखने के लिए रद्द करें।'
+            : 'Saved current-study answers will be kept as historical answers ending yesterday. New unsaved study answers will be cleared. Other answers will stay. Continue? Cancel to review first.',
         )
       )
         return;
-      next = next.map((f) =>
-        clearing.includes(f.key) && valuesOf(next)[f.key] != null ? { ...f, value: null } : f,
-      );
+      next = next.flatMap((f) => {
+        if (!clearing.includes(f.key) || valuesOf(next)[f.key] == null) return [f];
+        return query.data?.facts.some((saved) => saved.key === f.key)
+          ? [{ ...f, valid_until: yesterday() }]
+          : [];
+      });
     }
     const old = next.find((f) => f.key === key);
+    if (old?.valid_until && old.valid_until < today() && !Object.keys(extra).length) {
+      if (
+        !window.confirm(
+          hi
+            ? 'पुराने उत्तर का इतिहास बना रहेगा। इसे आज से वर्तमान उत्तर बनाएँ?'
+            : 'The earlier answer will remain in history. Use this new answer from today?',
+        )
+      )
+        return;
+      extra = { valid_from: today(), valid_until: null };
+    }
     next = old
       ? next.map((f) => (f.key === key ? { ...f, value, ...extra } : f))
       : [
@@ -275,11 +312,18 @@ function PersonProfile() {
   }
   function renderQuestion(q: Question) {
     const f = draft!.facts.find((f) => f.key === q.key),
-      value = f?.value;
+      value = values[q.key];
     if (q.when && !q.when(values)) return null;
     const label = q.label[hi ? 1 : 0];
     return (
       <div className="guided-question" id={`fact-${q.key}`} key={q.key}>
+        {semanticIssues(draft!.facts, editable(query.data ?? null).facts)
+          .filter((issue) => issue.fields.includes(q.key) && issue.severity === 'error')
+          .map((issue) => (
+            <p role="alert" key={issue.code}>
+              {issue.message[hi ? 1 : 0]}
+            </p>
+          ))}
         <label className="field">
           <span>
             {label} <small>{hi ? 'वैकल्पिक' : 'Optional'}</small>
@@ -288,7 +332,20 @@ function PersonProfile() {
             <select
               aria-label={label}
               disabled={save.isPending}
-              value={value == null ? '' : String(value)}
+              aria-invalid={
+                semanticIssues(draft!.facts, editable(query.data ?? null).facts).some(
+                  (issue) => issue.severity === 'error' && issue.fields.includes(q.key),
+                ) ||
+                (save.error instanceof RequestError &&
+                  save.error.issues.some((issue) => issue.fields?.includes(q.key)))
+              }
+              value={
+                value == null
+                  ? ''
+                  : q.key === 'nationality'
+                    ? answerLabel({ key: q.key, value }, hi)
+                    : String(value)
+              }
               onChange={(e) =>
                 update(
                   q.key,
@@ -326,7 +383,13 @@ function PersonProfile() {
               max={q.max}
               step={q.key === 'age' ? 1 : 'any'}
               maxLength={100}
-              value={value == null ? '' : String(value)}
+              value={
+                value == null
+                  ? ''
+                  : q.key === 'nationality'
+                    ? answerLabel({ key: q.key, value }, hi)
+                    : String(value)
+              }
               onChange={(e) =>
                 update(
                   q.key,
@@ -462,44 +525,92 @@ function PersonProfile() {
           </Link>
         </div>
       )}
-      {invalid && (
-        <div className="notice" role="alert">
-          <p>
-            {hi
-              ? 'पहले सहेजे गए अध्ययन उत्तरों में असंगति है। बाकी जानकारी सुरक्षित है।'
-              : 'Some saved study answers conflict. Your other information is preserved.'}
-          </p>
-          <button
-            className="button secondary"
-            onClick={() => {
-              if (
-                window.confirm(
-                  hi
-                    ? 'अप्रासंगिक अध्ययन उत्तर खाली करें?'
-                    : 'Clear the conflicting study answers?',
+      {semanticIssues(draft.facts, editable(query.data ?? null).facts).map((issue) => (
+        <section
+          className="panel semantic-issue"
+          key={issue.code}
+          role={issue.severity === 'error' ? 'alert' : 'status'}
+        >
+          <h2>{hi ? 'इन उत्तरों की अवधि स्पष्ट करें' : 'Clarify when these answers apply'}</h2>
+          <p>{issue.message[hi ? 1 : 0]}</p>
+          <dl>
+            {issue.fields.map((key) => {
+              const fact = draft.facts.find((f) => f.key === key);
+              return (
+                fact && (
+                  <div key={key}>
+                    <dt>
+                      {questions.find((q) => q.key === key)?.label[hi ? 1 : 0] ??
+                        (hi
+                          ? 'पहले सहेजा गया शिक्षा उत्तर (अर्थ अस्पष्ट)'
+                          : 'Earlier education answer (meaning unclear)')}
+                    </dt>
+                    <dd>
+                      {answerLabel(fact, hi)} ·{' '}
+                      {hi
+                        ? issue.code === 'legacy_education_ambiguous'
+                          ? 'अर्थ और लागू अवधि स्पष्ट करना बाकी है'
+                          : 'उसी वर्तमान अवधि के उत्तर'
+                        : issue.code === 'legacy_education_ambiguous'
+                          ? 'Meaning and applicable period need clarification'
+                          : `Applies ${fact.valid_from ?? '…'} – ${fact.valid_until ?? 'no end date'}; active now`}
+                    </dd>
+                  </div>
                 )
-              ) {
-                setDraft({
-                  ...draft,
-                  facts: draft.facts.map((f) =>
-                    (values.student_status === false &&
-                      ['enrollment_mode', 'school_recognized_or_government'].includes(f.key)) ||
-                    (['undergraduate', 'postgraduate'].includes(String(values.education_level)) &&
-                      f.key === 'school_recognized_or_government')
-                      ? { ...f, value: null }
-                      : f,
-                  ),
-                });
-                setEditing(true);
-                setSection('education');
-                setStage(1);
-              }
-            }}
-          >
-            {hi ? 'अध्ययन उत्तर सुधारें' : 'Resolve study details'}
-          </button>
-        </div>
-      )}
+              );
+            })}
+          </dl>
+          {issue.fields
+            .filter((key) =>
+              [
+                'education_level',
+                'current_education_level',
+                'enrollment_mode',
+                'school_recognized_or_government',
+              ].includes(key),
+            )
+            .map((key) => (
+              <button
+                type="button"
+                className="button secondary"
+                key={key}
+                onClick={() => {
+                  if (
+                    !window.confirm(
+                      hi
+                        ? 'यह उत्तर आज से वर्तमान नहीं रहेगा। मान और इतिहास बने रहेंगे। जारी रखें?'
+                        : 'Mark this answer as no longer current from today? Its value and history will be preserved.',
+                    )
+                  )
+                    return;
+                  setDraft({
+                    ...draft,
+                    facts: draft.facts.map((f) =>
+                      f.key === key ? { ...f, valid_until: yesterday() } : f,
+                    ),
+                  });
+                  setEditing(true);
+                  setSection('education');
+                  setStage(1);
+                  save.reset();
+                }}
+              >
+                {hi ? 'पुराना उत्तर ऐतिहासिक रखें: ' : 'Keep previous answer as historical: '}
+                {questions.find((q) => q.key === key)?.label[hi ? 1 : 0] ??
+                  (hi
+                    ? 'पहले सहेजा गया शिक्षा उत्तर (अर्थ अस्पष्ट)'
+                    : 'Earlier education answer (meaning unclear)')}
+              </button>
+            ))}
+          {issue.code === 'legacy_education_ambiguous' && (
+            <button className="text-button" onClick={() => begin('education')}>
+              {hi
+                ? 'वर्तमान और पूरी की गई शिक्षा अलग बताएँ'
+                : 'Clarify current study and completed education separately'}
+            </button>
+          )}
+        </section>
+      ))}
       {!editing && !isNew ? (
         <>
           <section className="panel profile-summary">
@@ -522,7 +633,10 @@ function PersonProfile() {
             {(['basics', 'education', 'employment', 'income', 'support'] as Category[]).map(
               (category) => {
                 const entries = answered(draft.facts).filter(
-                  (f) => questions.find((q) => q.key === f.key)?.category === category,
+                  (f) =>
+                    (!f.valid_from || f.valid_from <= today()) &&
+                    (!f.valid_until || f.valid_until >= today()) &&
+                    questions.find((q) => q.key === f.key)?.category === category,
                 );
                 if (!entries.length && ['income', 'support'].includes(category)) return null;
                 return (
@@ -550,6 +664,23 @@ function PersonProfile() {
                           <dt>{questions.find((q) => q.key === f.key)?.label[hi ? 1 : 0]}</dt>
                           <dd>
                             {answerLabel(f, hi)}
+                            {f.key === 'age' && (
+                              <small>
+                                {hi ? 'उम्र दर्ज की गई: ' : 'Age recorded on: '}
+                                {query.data?.facts.find((row) => row.key === 'age')?.context
+                                  ?.recorded_at
+                                  ? String(
+                                      query.data.facts.find((row) => row.key === 'age')?.context
+                                        ?.recorded_at,
+                                    ).slice(0, 10)
+                                  : hi
+                                    ? 'तारीख़ उपलब्ध नहीं; सही होने की पुष्टि करें'
+                                    : 'date unavailable; confirm it is still accurate'}
+                                {hi
+                                  ? '। जन्मतिथि से अपने आप नहीं बढ़ती।'
+                                  : '. It does not advance automatically from a birth date.'}
+                              </small>
+                            )}
                             {(f.valid_from || f.valid_until) && (
                               <small>
                                 {' '}
@@ -585,6 +716,45 @@ function PersonProfile() {
               {hi ? 'जानकारी जोड़ें' : 'Add relevant information'}
             </button>
           </section>
+          {draft.facts.some(
+            (f) =>
+              f.key === 'education_level' ||
+              (f.valid_until && f.valid_until < today()) ||
+              (f.valid_from && f.valid_from > today()),
+          ) && (
+            <section className="panel">
+              <h2>{hi ? 'पहले के उत्तर और उनकी अवधि' : 'Earlier answers and when they applied'}</h2>
+              {draft.facts
+                .filter(
+                  (f) =>
+                    f.key === 'education_level' ||
+                    (f.valid_until && f.valid_until < today()) ||
+                    (f.valid_from && f.valid_from > today()),
+                )
+                .map((f) => (
+                  <p key={f.key}>
+                    {(
+                      {
+                        current_education_level: hi
+                          ? 'पहले दर्ज पाठ्यक्रम'
+                          : 'Previously recorded course',
+                        enrollment_mode: hi
+                          ? 'पहले दर्ज पढ़ाई का तरीका'
+                          : 'Previously recorded study mode',
+                        school_recognized_or_government: hi
+                          ? 'पहले दर्ज स्कूल मान्यता'
+                          : 'Previously recorded school recognition',
+                      } as Record<string, string>
+                    )[f.key] ??
+                      questions.find((q) => q.key === f.key)?.label[hi ? 1 : 0] ??
+                      (hi ? 'पुराना शिक्षा उत्तर' : 'Legacy education answer')}
+                    : {answerLabel(f, hi)} · {f.valid_from ?? '…'} –{' '}
+                    {f.valid_until ??
+                      (hi ? 'अर्थ स्पष्ट करना बाकी है' : 'meaning needs clarification')}
+                  </p>
+                ))}
+            </section>
+          )}
           <DocumentSummary />
           <section className="panel">
             <h2>{hi ? 'आपके अगले कदम' : 'Your next steps'}</h2>
@@ -619,8 +789,8 @@ function PersonProfile() {
               ? t.saving
               : save.error instanceof RequestError && save.error.code === 'profile_conflict'
                 ? hi
-                  ? 'यह बदलाव पुरानी प्रति पर है — सहेजी जानकारी पुनः लोड करें'
-                  : 'Conflicting edit — reload the saved version'
+                  ? 'पुरानी प्रति — दूसरे टैब या सत्र में नई जानकारी सहेजी गई है। आपके अनसहेजे उत्तर बने रहेंगे।'
+                  : 'Stale edit — another tab or session saved newer information. Your unsaved answers are preserved.'
                 : save.isError
                   ? hi
                     ? 'बदलाव सहेजे नहीं गए'
@@ -801,10 +971,35 @@ function PersonProfile() {
           {save.isError && (
             <div role="alert">
               <p>{save.error.message}</p>
+              {save.error instanceof RequestError &&
+                save.error.issues.map((issue, index) => (
+                  <p key={index}>
+                    {issue.fields
+                      ?.map(
+                        (key) =>
+                          questions.find((q) => q.key === key)?.label[hi ? 1 : 0] ??
+                          (hi ? 'संबंधित प्रश्न' : 'The indicated question'),
+                      )
+                      .join(' · ')}
+                    {issue.message ? `: ${issue.message[hi ? 1 : 0]}` : ''}
+                  </p>
+                ))}
               <p>
                 {hi
                   ? 'आपके उत्तर यहीं सुरक्षित हैं। दोबारा कोशिश करें। पुरानी प्रति होने पर सहेजी जानकारी पुनः लोड करें।'
-                  : 'Your answers are still here. Retry, or reload the saved version if this edit is stale.'}
+                  : save.error instanceof RequestError && save.error.code === 'profile_conflict'
+                    ? 'Another tab or session saved newer information. Your draft is preserved. Review it before choosing Reload saved version.'
+                    : save.error instanceof RequestError &&
+                        ['subject_not_found', 'authentication_required', 'invalid_token'].includes(
+                          save.error.code,
+                        )
+                      ? 'Your subject access or session is unavailable. Sign in or select an authorized person. Your draft has not been saved.'
+                      : save.error instanceof RequestError &&
+                          save.error.code === 'semantic_conflict'
+                        ? 'Review the identified questions and their dates. Other answers remain here.'
+                        : save.error instanceof RequestError && save.error.code === 'invalid_value'
+                          ? 'Check the indicated value or date. Your answers are still here.'
+                          : 'Your answers are still here. The request failed; retry when the connection or service is available.'}
               </p>
               <button
                 type="button"

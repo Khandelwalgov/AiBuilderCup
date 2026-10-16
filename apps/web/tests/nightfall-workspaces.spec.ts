@@ -108,6 +108,9 @@ test('household and unregistered business creation controls (mocked API)', async
   await page
     .getByRole('textbox', { name: 'Business name', exact: true })
     .fill('Fictional microbusiness');
+  await page
+    .getByRole('combobox', { name: 'How is your business set up?' })
+    .selectOption('unregistered');
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await page.getByRole('button', { name: 'Create business', exact: true }).click();
   await expect(

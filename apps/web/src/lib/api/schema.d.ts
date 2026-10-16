@@ -716,7 +716,7 @@ export interface components {
              * Legal Status
              * @enum {string}
              */
-            legal_status: "unregistered" | "sole_proprietor" | "partnership" | "company" | "other";
+            legal_status: "unknown" | "unregistered" | "sole_proprietor" | "partnership" | "company" | "other";
             /** Facts */
             facts?: components["schemas"]["FactInput"][];
             /** Expected Revision */
@@ -883,7 +883,7 @@ export interface components {
              */
             op: "eq" | "gte" | "lte" | "in" | "document" | "unknown";
             /** Fact */
-            fact?: ("age" | "annual_personal_income" | "annual_parental_income" | "disability_percentage" | "nationality" | "domicile_state" | "domicile_district" | "residence_state" | "residence_district" | "education_level" | "enrollment_mode" | "school_recognized_or_government" | "student_status" | "employment_status" | "has_bank_account" | "auto_debit_consent" | "has_income_certificate" | "business_registered" | "business_turnover" | "has_registration_certificate" | "has_disability_certificate" | "has_udid_certificate") | null;
+            fact?: ("age" | "annual_personal_income" | "annual_parental_income" | "disability_percentage" | "nationality" | "domicile_state" | "domicile_district" | "residence_state" | "residence_district" | "education_level" | "current_education_level" | "highest_completed_education" | "business_registration_state" | "business_registration_district" | "business_operating_status" | "enrollment_mode" | "school_recognized_or_government" | "student_status" | "employment_status" | "has_bank_account" | "auto_debit_consent" | "has_income_certificate" | "business_registered" | "business_turnover" | "has_registration_certificate" | "has_disability_certificate" | "has_udid_certificate") | null;
             /** Value */
             value?: string | number | boolean | (string | number | boolean)[] | null;
             /** Income Period */
@@ -1049,6 +1049,13 @@ export interface components {
             message: string;
             /** Request Id */
             request_id?: string | null;
+            /**
+             * Issues
+             * @default []
+             */
+            issues: {
+                [key: string]: unknown;
+            }[];
         };
         /** ErrorEnvelope */
         ErrorEnvelope: {
@@ -1197,7 +1204,7 @@ export interface components {
              * Key
              * @enum {string}
              */
-            key: "age" | "annual_personal_income" | "annual_parental_income" | "disability_percentage" | "nationality" | "domicile_state" | "domicile_district" | "residence_state" | "residence_district" | "education_level" | "enrollment_mode" | "school_recognized_or_government" | "student_status" | "employment_status" | "has_bank_account" | "auto_debit_consent" | "has_income_certificate" | "business_registered" | "business_turnover" | "has_registration_certificate" | "has_disability_certificate" | "has_udid_certificate";
+            key: "age" | "annual_personal_income" | "annual_parental_income" | "disability_percentage" | "nationality" | "domicile_state" | "domicile_district" | "residence_state" | "residence_district" | "education_level" | "current_education_level" | "highest_completed_education" | "business_registration_state" | "business_registration_district" | "business_operating_status" | "enrollment_mode" | "school_recognized_or_government" | "student_status" | "employment_status" | "has_bank_account" | "auto_debit_consent" | "has_income_certificate" | "business_registered" | "business_turnover" | "has_registration_certificate" | "has_disability_certificate" | "has_udid_certificate";
             /** Value */
             value?: string | number | boolean | null;
             /** Valid From */

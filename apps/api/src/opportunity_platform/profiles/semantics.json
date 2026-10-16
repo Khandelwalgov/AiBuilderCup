@@ -4,10 +4,7 @@
     {
       "code": "not_enrolled_current_course",
       "severity": "error",
-      "fields": [
-        "student_status",
-        "current_education_level"
-      ],
+      "fields": ["student_status", "current_education_level"],
       "when": [
         {
           "key": "student_status",
@@ -26,10 +23,7 @@
     {
       "code": "not_enrolled_study_mode",
       "severity": "error",
-      "fields": [
-        "student_status",
-        "enrollment_mode"
-      ],
+      "fields": ["student_status", "enrollment_mode"],
       "when": [
         {
           "key": "student_status",
@@ -48,10 +42,7 @@
     {
       "code": "not_enrolled_school",
       "severity": "error",
-      "fields": [
-        "student_status",
-        "school_recognized_or_government"
-      ],
+      "fields": ["student_status", "school_recognized_or_government"],
       "when": [
         {
           "key": "student_status",
@@ -70,18 +61,11 @@
     {
       "code": "course_school_scope",
       "severity": "error",
-      "fields": [
-        "current_education_level",
-        "school_recognized_or_government"
-      ],
+      "fields": ["current_education_level", "school_recognized_or_government"],
       "when": [
         {
           "key": "current_education_level",
-          "one_of": [
-            "undergraduate",
-            "postgraduate",
-            "other"
-          ]
+          "one_of": ["undergraduate", "postgraduate", "other"]
         },
         {
           "key": "school_recognized_or_government",
@@ -96,9 +80,7 @@
     {
       "code": "legacy_education_ambiguous",
       "severity": "warning",
-      "fields": [
-        "education_level"
-      ],
+      "fields": ["education_level"],
       "when": [
         {
           "key": "education_level",

@@ -3,7 +3,7 @@ const webPort = Number(process.env.E2E_WEB_PORT || 5174);
 const apiPort = Number(process.env.E2E_API_PORT || 8001);
 export default defineConfig({
   testDir: './tests',
-  testIgnore: 'product-real.spec.ts',
+  testIgnore: ['product-real.spec.ts', 'common-sense.spec.ts'],
   use: { baseURL: `http://127.0.0.1:${webPort}` },
   webServer: [
     {

@@ -1,3 +1,4 @@
+import specification from './semantics.generated.json';
 import type { components } from '../../lib/api/schema';
 export type Fact = components['schemas']['FactInput'];
 export type Goal = 'education' | 'employment' | 'general';
@@ -72,30 +73,56 @@ export const questions: Question[] = [
     key: 'student_status',
     category: 'education',
     goals: ['education'],
-    label: ['Are you currently a student?', 'क्या आप अभी विद्यार्थी हैं?'],
+    label: ['Are you studying anywhere right now?', 'क्या आप अभी कहीं पढ़ाई कर रहे हैं?'],
     type: 'boolean',
   },
   {
-    key: 'education_level',
+    key: 'highest_completed_education',
     category: 'education',
-    goals: ['education'],
-    label: ['Current or highest level of education', 'वर्तमान या उच्चतम शिक्षा'],
+    label: [
+      "What is the highest level of education you've completed?",
+      'आपने शिक्षा का कौनसा उच्चतम स्तर पूरा किया है?',
+    ],
     type: 'select',
     choices: [
+      ['none', 'No completed qualification yet', 'अभी कोई योग्यता पूरी नहीं हुई'],
+      ['below_IX', 'Below Class 9', 'कक्षा 9 से नीचे'],
       ['IX', 'Class 9', 'कक्षा 9'],
       ['X', 'Class 10', 'कक्षा 10'],
       ['XI', 'Class 11', 'कक्षा 11'],
       ['XII', 'Class 12', 'कक्षा 12'],
-      ['undergraduate', 'Undergraduate degree', 'स्नातक'],
-      ['postgraduate', 'Postgraduate degree', 'स्नातकोत्तर'],
-      ['other', 'Another level', 'अन्य स्तर'],
+      ['undergraduate', 'Undergraduate degree', 'स्नातक उपाधि'],
+      ['postgraduate', 'Postgraduate degree', 'स्नातकोत्तर उपाधि'],
+      ['other', 'Another completed qualification', 'अन्य पूरी की गई योग्यता'],
+    ],
+    help: [
+      'A completed qualification is independent of whether you study or work now.',
+      'पूरी की गई योग्यता आपकी वर्तमान पढ़ाई या काम से अलग है।',
+    ],
+  },
+  {
+    key: 'current_education_level',
+    category: 'education',
+    goals: ['education'],
+    label: ['What are you currently studying?', 'आप अभी क्या पढ़ रहे हैं?'],
+    type: 'select',
+    when: (v) => v.student_status === true,
+    choices: [
+      ['below_IX', 'Below Class 9', 'कक्षा 9 से नीचे'],
+      ['IX', 'Class 9', 'कक्षा 9'],
+      ['X', 'Class 10', 'कक्षा 10'],
+      ['XI', 'Class 11', 'कक्षा 11'],
+      ['XII', 'Class 12', 'कक्षा 12'],
+      ['undergraduate', 'Undergraduate degree', 'स्नातक पाठ्यक्रम'],
+      ['postgraduate', 'Postgraduate degree', 'स्नातकोत्तर पाठ्यक्रम'],
+      ['other', 'Another course', 'अन्य पाठ्यक्रम'],
     ],
   },
   {
     key: 'enrollment_mode',
     category: 'education',
     goals: ['education'],
-    label: ['How are you studying?', 'आप किस तरह पढ़ रहे हैं?'],
+    label: ['How are you studying now?', 'आप अभी किस तरीके से पढ़ रहे हैं?'],
     type: 'select',
     when: (v) => v.student_status === true,
     choices: [
@@ -109,11 +136,13 @@ export const questions: Question[] = [
     category: 'education',
     goals: ['education'],
     label: [
-      'Is your school government-run or officially recognized?',
-      'क्या आपका स्कूल सरकारी या मान्यता प्राप्त है?',
+      'Is your current school government-run or officially recognized?',
+      'क्या आपका वर्तमान स्कूल सरकारी या मान्यता प्राप्त है?',
     ],
     type: 'boolean',
-    when: (v) => v.student_status === true && school.includes(String(v.education_level)),
+    when: (v) =>
+      v.student_status === true &&
+      [...school, 'below_IX'].includes(String(v.current_education_level)),
   },
   {
     key: 'employment_status',
@@ -132,10 +161,10 @@ export const questions: Question[] = [
     key: 'nationality',
     category: 'basics',
     label: ['What is your nationality?', 'आपकी राष्ट्रीयता क्या है?'],
-    type: 'select',
-    choices: [
-      ['IN', 'Indian', 'भारतीय'],
-      ['other', 'Another nationality', 'अन्य'],
+    type: 'text',
+    help: [
+      'For example, Indian. Leave it unknown if unclear; nationality is separate from residence or domicile.',
+      'जैसे भारतीय। स्पष्ट न हो तो अज्ञात छोड़ें; राष्ट्रीयता निवास या मूल निवास से अलग है।',
     ],
   },
   {
@@ -176,20 +205,82 @@ export function valuesOf(facts: Fact[]): Values {
       .map((f) => [f.key, f.value]),
   );
 }
-export function conflicts(facts: Fact[]) {
-  const v = valuesOf(facts);
-  return (
-    (v.student_status === false &&
-      [v.enrollment_mode, v.school_recognized_or_government].some((x) => x != null)) ||
-    (['undergraduate', 'postgraduate'].includes(String(v.education_level)) &&
-      v.school_recognized_or_government != null)
-  );
+export type SemanticIssue = {
+  code: string;
+  severity: string;
+  fields: string[];
+  message: string[];
+  values: Record<string, Fact['value']>;
+  retained: boolean;
+};
+export function semanticIssues(
+  facts: Fact[],
+  before: Fact[] = [],
+  today?: string,
+): SemanticIssue[] {
+  const current = today
+    ? Object.fromEntries(
+        facts
+          .filter(
+            (f) =>
+              (!f.valid_from || f.valid_from <= today) &&
+              (!f.valid_until || f.valid_until >= today),
+          )
+          .map((f) => [f.key, f.value]),
+      )
+    : valuesOf(facts);
+  return specification.rules
+    .filter((rule) =>
+      rule.when.every((test) => {
+        const condition = test as {
+          key: string;
+          known?: boolean;
+          eq?: unknown;
+          one_of?: unknown[];
+        };
+        const value = current[condition.key as Fact['key']];
+        return (
+          (!condition.known || value != null) &&
+          (!('eq' in condition) || value === condition.eq) &&
+          (!condition.one_of || condition.one_of.includes(value))
+        );
+      }),
+    )
+    .map((rule) => {
+      const retained = rule.fields.every((key) => {
+        const a = facts.find((f) => f.key === key),
+          b = before.find((f) => f.key === key);
+        return (
+          !!a &&
+          !!b &&
+          a.value === b.value &&
+          (a.valid_from ?? null) === (b.valid_from ?? null) &&
+          (a.valid_until ?? null) === (b.valid_until ?? null)
+        );
+      });
+      return {
+        ...rule,
+        severity: retained ? 'warning' : rule.severity,
+        retained,
+        values: Object.fromEntries(rule.fields.map((key) => [key, current[key as Fact['key']]])),
+      };
+    });
+}
+export function conflicts(facts: Fact[], before: Fact[] = []) {
+  return semanticIssues(facts, before).some((issue) => issue.severity === 'error');
 }
 export function answered(facts: Fact[]) {
   return facts.filter((f) => f.value !== null && f.value !== undefined && f.value !== '');
 }
 export function answerLabel(fact: Fact, hi: boolean) {
-  const q = questions.find((q) => q.key === fact.key);
+  if (
+    fact.key === 'nationality' &&
+    ['IN', 'IND', 'India', 'Indian', 'भारतीय', 'भारत'].includes(String(fact.value))
+  )
+    return hi ? 'भारतीय' : 'Indian';
+  const q = questions.find(
+    (q) => q.key === (fact.key === 'education_level' ? 'current_education_level' : fact.key),
+  );
   if (typeof fact.value === 'boolean')
     return fact.value ? (hi ? 'हाँ' : 'Yes') : hi ? 'नहीं' : 'No';
   return (

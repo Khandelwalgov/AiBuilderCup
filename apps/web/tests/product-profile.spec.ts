@@ -41,24 +41,32 @@ test('first-time learner gets a short conditional flow, saved summary and indivi
   );
   await productCapture(page, 'product-profile-new-en');
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
-  await expect(page.getByRole('combobox', { name: 'Are you currently a student?' })).toBeVisible();
-  await expect(page.getByRole('combobox', { name: 'How are you studying?' })).toHaveCount(0);
-  await page.getByRole('combobox', { name: 'Are you currently a student?' }).selectOption('true');
+  await expect(
+    page.getByRole('combobox', { name: 'Are you studying anywhere right now?' }),
+  ).toBeVisible();
+  await expect(page.getByRole('combobox', { name: 'How are you studying now?' })).toHaveCount(0);
   await page
-    .getByRole('combobox', { name: 'Current or highest level of education' })
+    .getByRole('combobox', { name: 'Are you studying anywhere right now?' })
+    .selectOption('true');
+  await page
+    .getByRole('combobox', { name: 'What are you currently studying?' })
     .selectOption('undergraduate');
   await expect(page.getByRole('combobox', { name: /your school government/ })).toHaveCount(0);
   await expect(page.getByText('annual income', { exact: false })).toHaveCount(0);
   await expect(page.getByRole('combobox', { name: /work situation/ })).toHaveCount(0);
-  await page.getByRole('combobox', { name: 'How are you studying?' }).selectOption('full_time');
+  await page.getByRole('combobox', { name: 'How are you studying now?' }).selectOption('full_time');
   page.once('dialog', (d) => d.dismiss());
-  await page.getByRole('combobox', { name: 'Are you currently a student?' }).selectOption('false');
-  await expect(page.getByRole('combobox', { name: 'Are you currently a student?' })).toHaveValue(
-    'true',
-  );
+  await page
+    .getByRole('combobox', { name: 'Are you studying anywhere right now?' })
+    .selectOption('false');
+  await expect(
+    page.getByRole('combobox', { name: 'Are you studying anywhere right now?' }),
+  ).toHaveValue('true');
   page.once('dialog', (d) => d.accept());
-  await page.getByRole('combobox', { name: 'Are you currently a student?' }).selectOption('false');
-  await expect(page.getByRole('combobox', { name: 'How are you studying?' })).toHaveCount(0);
+  await page
+    .getByRole('combobox', { name: 'Are you studying anywhere right now?' })
+    .selectOption('false');
+  await expect(page.getByRole('combobox', { name: 'How are you studying now?' })).toHaveCount(0);
   await productCapture(page, 'product-profile-incomplete-en');
   await page.getByRole('button', { name: 'Review your answers', exact: true }).click();
   await expect(page.locator('.profile-review')).not.toContainText('Not sure');

@@ -49,6 +49,8 @@ try:
         Base,
         Opportunity,
         OpportunityVersion,
+        Person,
+        ProfileFact,
         Requirement,
         RequirementEvidence,
         Source,
@@ -72,7 +74,7 @@ try:
         )
         session.add(source)
         session.flush()
-        for index in [1, 2]:
+        for index in [1, 2, 3]:
             op = Opportunity(
                 source_id=source.id,
                 source_key=f"fictional-documentary-{index}",
@@ -97,6 +99,34 @@ try:
             session.add(version)
             session.flush()
             op.published_version_id = version.id
+            if index == 3:
+                course = Requirement(
+                    version_id=version.id,
+                    description="FICTIONAL currently studying postgraduate course",
+                    subject_context="person",
+                    kind="eligibility",
+                    application_context="all",
+                    rule={
+                        "op": "condition",
+                        "condition": {
+                            "op": "eq",
+                            "fact": "current_education_level",
+                            "value": "postgraduate",
+                        },
+                        "children": [],
+                    },
+                )
+                session.add(course)
+                session.flush()
+                session.add(
+                    RequirementEvidence(
+                        requirement_id=course.id,
+                        source_url=source.url,
+                        page="1",
+                        passage="FICTIONAL policy: currently enrolled in a postgraduate course.",
+                    )
+                )
+                continue
             age = Requirement(
                 version_id=version.id,
                 description="FICTIONAL minimum age is eighteen",
@@ -144,6 +174,48 @@ try:
                     source_url=source.url,
                     page="1",
                     passage="FICTIONAL parental income certificate for the 2026 test period.",
+                )
+            )
+        # Fictional legacy record deliberately bypasses modern input validation at seed time.
+        # It reproduces pre-existing hidden study answers, never real application data.
+        import firebase_admin
+        from firebase_admin import auth
+
+        try:
+            firebase_app = firebase_admin.get_app()
+        except ValueError:
+            firebase_app = firebase_admin.initialize_app(
+                options={"projectId": "demo-opportunity-completion"}
+            )
+        try:
+            auth.create_user(
+                uid="fictional-legacy-education",
+                email="legacy-education@example.invalid",
+                password="Fictional-Only-123",
+                app=firebase_app,
+            )
+        except auth.UidAlreadyExistsError:
+            pass
+        legacy_user = User(firebase_uid="fictional-legacy-education")
+        session.add(legacy_user)
+        session.flush()
+        legacy = Person(user_id=legacy_user.id, display_name="Fictional legacy graduate")
+        session.add(legacy)
+        session.flush()
+        for key, value in {
+            "student_status": False,
+            "education_level": "undergraduate",
+            "enrollment_mode": "full_time",
+            "school_recognized_or_government": True,
+        }.items():
+            session.add(
+                ProfileFact(
+                    person_id=legacy.id,
+                    key=key,
+                    value=value,
+                    origin="user_supplied",
+                    verification="unverified",
+                    context={},
                 )
             )
         session.commit()
