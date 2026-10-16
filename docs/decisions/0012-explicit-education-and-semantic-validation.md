@@ -1,0 +1,7 @@
+# 0012 — Separate education meanings; preserve ambiguous legacy data
+
+16 October 2026. `education_level` conflated current study and attainment. Keep existing values/rules untouched but explicitly ambiguous; they cannot decide either meaning automatically. Add current_education_level and highest_completed_education to the closed FactKey contract. Enrollment, mode and current-school recognition have period/applicability dependencies. Completed qualifications do not establish enrollment or vice versa. Future extraction uses the precise keys; ambiguous source mappings need human review, never automatic publication.
+
+Backend-owned declarative `profiles/semantics.json` is copied through contract generation and consumed in browser and backend validation. Shared scenario cases test parity. Authentication and optimistic revision checks precede semantic save validation. Retained legacy conflicts become visible warnings rather than hidden traps; new contradictions return precise field-referenced errors. Explicit archive/dating preserves values and prior context in fact history; unsaved corrections do not invent history. Current summaries exclude inactive facts.
+
+Income scope filtering precedes value-conflict detection. Enrollment dependencies participate in evaluation fingerprints and selective refresh; engine version 4 preserves earlier immutable evaluations. Existing generic fact storage needs no DDL or automatic backfill. Production uploads and official publications remain human/security gated.

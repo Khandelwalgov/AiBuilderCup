@@ -163,3 +163,10 @@ New profiles use name/interest → short conditional questions → review/finish
 My Documents accepts real private PDF/JPEG/PNG files for fictional local testing, supports secure preview/download, replace/remove and explicit links to compatible published requirements. Uploading never verifies authenticity or satisfies legal conditions. Enable `DOCUMENT_UPLOADS_ENABLED=true` only for development with private local storage and restart the API; examples default false and production rejects true. See [document architecture](docs/document-architecture.md).
 
 `make test-product-e2e` runs the separate real emulator/API/database/file suite after starting the documented local Auth emulator. It owns ports 15210/18210, creates/drops only isolated schemas and private temporary fixtures, makes no provider calls and leaves normal local app data untouched. `make test-e2e` retains the existing public/mocked browser regressions. Follow [acceptance setup](docs/real-user-acceptance.md), then stop only the emulator you started.
+
+
+## Domain meaning and legacy education
+
+Current study and completed education now have separate questions/typed facts. Existing `education_level` answers remain preserved and explicitly ambiguous; clarify them in Edit education or explicitly archive them as historical. An old source rule using that ambiguous key needs source-backed administrator correction before determining education eligibility. No degree or enrollment is inferred from the old answer.
+
+Shared semantic rules distinguish field/value/date problems from stale edits and visible legacy warnings. Historical answers stay separate from current summaries. Income comparisons use the exact assessment period/basis; uploaded files remain unverified. See the [Common Sense audit](docs/common-sense-audit.md), [44-scenario semantics matrix](docs/domain-semantics-matrix.md) and [validation report](docs/common-sense-final-report.md). No real draft or profile was automatically rewritten, published or deployed in this sprint.
