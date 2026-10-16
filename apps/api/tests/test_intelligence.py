@@ -401,3 +401,78 @@ def test_new_unreviewed_draft_never_replaces_published_index_version(db, monkeyp
     after, _, _, _ = load_catalogue(db, request)
     assert len(after) == len(rows)
     assert next(version for op, version, _ in after if op.id == o.id).id == v.id
+
+
+def test_exact_income_boundary_and_large_changes_do_not_filter_candidates(db, monkeypatch):
+    from opportunity_platform.core.config import settings
+
+    monkeypatch.setattr(settings(), "enable_development_catalogue", True)
+    fictional_catalogue(db, 9)
+    user = account(db, "income-boundary")
+    p = Person(user_id=user.id, display_name="Fictional income boundary")
+    db.add(p)
+    db.flush()
+    db.add(
+        ProfileFact(
+            person_id=p.id,
+            key="annual_parental_income",
+            value=202000,
+            origin="user_supplied",
+            verification="unverified",
+            context={"income_period": "2026-27", "income_definition": "parental"},
+        )
+    )
+    db.commit()
+    request = SearchRequest(development=True)
+    actual = search(db, "income-boundary", request)
+    target = next(i for i in actual.items if i.opportunity.category == "state_support")
+    assert target.assessments[0].evaluation.status == "potential_match"
+    for income in [202001, 10**12]:
+        response = simulate(
+            db,
+            "income-boundary",
+            ScenarioRequest(
+                base=request,
+                overrides=[
+                    {
+                        "subject_key": f"person:{p.id}",
+                        "facts": [
+                            {
+                                "key": "annual_parental_income",
+                                "value": income,
+                                "income_period": "2026-27",
+                                "income_definition": "parental",
+                            }
+                        ],
+                    }
+                ],
+            ),
+        )
+        item = next(
+            i for i in response.hypothetical.items if i.opportunity.id == target.opportunity.id
+        )
+        assert item.assessments[0].evaluation.status == "not_eligible_on_known_facts"
+    wrong_scope = simulate(
+        db,
+        "income-boundary",
+        ScenarioRequest(
+            base=request,
+            overrides=[
+                {
+                    "subject_key": f"person:{p.id}",
+                    "facts": [
+                        {
+                            "key": "annual_parental_income",
+                            "value": 0,
+                            "income_period": "2026-27",
+                            "income_definition": "household",
+                        }
+                    ],
+                }
+            ],
+        ),
+    )
+    item = next(
+        i for i in wrong_scope.hypothetical.items if i.opportunity.id == target.opportunity.id
+    )
+    assert item.assessments[0].evaluation.status == "possibly_eligible_missing_information"

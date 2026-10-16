@@ -106,7 +106,6 @@ export function Discover() {
         </span>
       </header>
       <SearchModes mode={mode} onChange={(value) => filter('mode', value)} />
-      {mode !== 'explore' && <Recommendations mode={mode} />}
       <form
         className="research-search search-box"
         onSubmit={(e) => {
@@ -166,7 +165,11 @@ export function Discover() {
           <p>{t.browseSub}</p>
         </div>
         <span className="result-count">
-          {total ?? '—'} {t.results}
+          {mode === 'explore'
+            ? `${total ?? '—'} ${t.results}`
+            : hi
+              ? 'संदर्भ के अनुसार सुझाव'
+              : 'Context recommendations'}
         </span>
       </div>
       <div className="filters" aria-label={t.filters}>
@@ -213,6 +216,7 @@ export function Discover() {
           </button>
         )}
       </div>
+      {mode !== 'explore' && <Recommendations mode={mode} />}
       {mode !== 'explore' ? null : query.isPending ? (
         <div className="card-grid" role="status" aria-label={t.loading}>
           {[1, 2, 3].map((i) => (

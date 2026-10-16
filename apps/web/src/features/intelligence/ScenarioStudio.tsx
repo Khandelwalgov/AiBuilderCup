@@ -356,7 +356,7 @@ function Studio() {
           reset();
         }}
       />
-      <section className="surface" style={{ padding: 20 }}>
+      <section className="panel" style={{ padding: 20 }}>
         <h2>
           {hi ? 'वास्तविक आधार' : 'Actual base'} ·{' '}
           {mode === 'me' ? (hi ? 'मैं' : 'Me') : context.label}
@@ -394,7 +394,7 @@ function Studio() {
         baseQuery.data?.subjects
           .filter((subject) => subject.kind === 'person')
           .map((subject) => (
-            <section className="surface" key={String(subject.key)} style={{ padding: 20 }}>
+            <section className="panel" key={String(subject.key)} style={{ padding: 20 }}>
               <h3>{String(subject.name)}</h3>
               <label>
                 <input
@@ -424,7 +424,7 @@ function Studio() {
             </section>
           ))}
       {mode !== 'business' && (
-        <section className="surface" style={{ padding: 20 }}>
+        <section className="panel" style={{ padding: 20 }}>
           <h2>{hi ? 'काल्पनिक परिवार' : 'Fictional family'}</h2>
           <p>
             {hi

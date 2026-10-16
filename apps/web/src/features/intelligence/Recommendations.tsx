@@ -24,9 +24,9 @@ export function RankedCards({ response }: { response: Response }) {
             : 'This is a bounded shortlist. Potentially relevant opportunities may be absent; use Explore All for the full catalogue.'}
         </div>
       )}
-      <div className="opportunity-grid">
+      <div className="card-grid">
         {response.items.slice(0, limit).map((item) => (
-          <article className="surface" key={item.opportunity.id} style={{ padding: 20 }}>
+          <article className="panel" key={item.opportunity.id} style={{ padding: 20 }}>
             <span className="eyebrow">
               {item.opportunity.is_synthetic
                 ? hi

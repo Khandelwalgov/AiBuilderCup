@@ -579,3 +579,22 @@
     font-size: 25px;
   }
 }
+
+/* Context controls reuse the existing form and panel design. */
+.search-context {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.search-context label {
+  min-width: 0;
+}
+.search-context select {
+  width: 100%;
+}
+@media (max-width: 640px) {
+  .search-context {
+    grid-template-columns: 1fr;
+  }
+}

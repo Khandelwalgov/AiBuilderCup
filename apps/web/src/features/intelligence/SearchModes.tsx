@@ -21,7 +21,7 @@ export function SearchModes({
         : o.kind === 'person' && !!o.id,
   );
   return (
-    <div className="filter-bar">
+    <div className="search-context">
       <label>
         {hi ? 'किसके लिए खोजें?' : 'Who is this search for?'}
         <select
