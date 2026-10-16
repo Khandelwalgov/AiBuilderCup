@@ -47,6 +47,7 @@ release-local:
 
 # Public acquisition only: no model calls, publication or product-database writes.
 # Override with CORPUS_ARGS='--dry-run' or '--source rajasthan-scholarships'.
+.PHONY: corpus-collect corpus-update corpus-verify corpus-report
 corpus-collect:
 	cd apps/api && uv run python -m opportunity_platform.corpus.cli collect $(CORPUS_ARGS)
 

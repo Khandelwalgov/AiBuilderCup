@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS events (
 );
 CREATE INDEX IF NOT EXISTS tasks_pending ON tasks(run_id,status,kind);
 CREATE INDEX IF NOT EXISTS events_run ON events(run_id);
+CREATE UNIQUE INDEX IF NOT EXISTS events_idempotent ON events(run_id,source_id,url,kind,status);
 """
 
 
@@ -123,13 +124,22 @@ class Store:
                     identity(source.key),
                     candidate.url,
                     candidate.discovery_url,
-                    candidate.model_dump_json(),
+                    json.dumps(
+                        {
+                            **candidate.model_dump(mode="json"),
+                            "registry_metadata": {
+                                "authority": source.authority,
+                                "jurisdiction": source.jurisdiction,
+                                "category": source.category,
+                            },
+                        }
+                    ),
                 ),
             )
 
     def event(self, run_id, source_id, url, kind, status, *, snapshot_id=None, detail=None):
         self.db.execute(
-            "INSERT INTO events "
+            "INSERT OR IGNORE INTO events "
             "(run_id,source_id,url,kind,status,recorded_at,snapshot_id,detail) "
             "VALUES(?,?,?,?,?,?,?,?)",
             (run_id, source_id, url, kind, status, now(), snapshot_id, json.dumps(detail or {})),
@@ -141,6 +151,27 @@ class Store:
                 task["run_id"], task["source_id"], task["url"], task["kind"], status, detail=detail
             )
             self.db.execute("UPDATE tasks SET status='done' WHERE id=?", (task["id"],))
+
+    def observe_missing(self, task, listing_url, current_urls):
+        previous = self.db.execute(
+            "SELECT DISTINCT document_url FROM discoveries WHERE source_id=? "
+            "AND discovery_url=? AND run_id!=?",
+            (task["source_id"], listing_url, task["run_id"]),
+        )
+        with self.db:
+            for row in previous:
+                if row[0] not in current_urls:
+                    self.event(
+                        task["run_id"],
+                        task["source_id"],
+                        row[0],
+                        "observation",
+                        "not_seen_in_listing_needs_review",
+                        detail={
+                            "listing_url": listing_url,
+                            "meaning": "Absence in this index response; not official withdrawal",
+                        },
+                    )
 
     def capture(self, task, source, payload, fmt, validation):
         digest = hashlib.sha256(payload.raw).hexdigest()
@@ -213,6 +244,31 @@ class Store:
             self.db.execute("UPDATE tasks SET status='done' WHERE id=?", (task["id"],))
         return status
 
+    def archive_index(self, payload):
+        digest = hashlib.sha256(payload.raw).hexdigest()
+        relative = f"indexes/{digest}.raw"
+        path = self.root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(".tmp-" + uuid.uuid4().hex)
+        try:
+            with temporary.open("xb") as stream:
+                stream.write(payload.raw)
+                stream.flush()
+                os.fsync(stream.fileno())
+            try:
+                os.link(temporary, path)
+            except FileExistsError:
+                if hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+                    raise RuntimeError("Existing index archive failed integrity check")
+        finally:
+            temporary.unlink(missing_ok=True)
+        return {
+            "index_sha256": digest,
+            "index_path": relative,
+            "index_size_bytes": len(payload.raw),
+            "http_metadata": payload.headers,
+        }
+
     def records(self):
         for snapshot in self.db.execute(
             "SELECT s.*,d.canonical_url FROM snapshots s JOIN documents d ON s.document_id=d.id "
@@ -220,14 +276,28 @@ class Store:
         ):
             associations = []
             for row in self.db.execute(
-                "SELECT DISTINCT d.source_id,s.source_key,s.config,d.metadata FROM discoveries d "
-                "JOIN sources s ON s.id=d.source_id WHERE d.document_url=?",
+                "SELECT DISTINCT d.source_id,s.source_key,s.config,d.metadata,"
+                "d.run_id,r.started_at "
+                "FROM discoveries d JOIN sources s ON s.id=d.source_id "
+                "JOIN runs r ON r.id=d.run_id WHERE d.document_url=? ORDER BY r.started_at DESC",
                 (snapshot["canonical_url"],),
             ):
                 source, meta = json.loads(row["config"]), json.loads(row["metadata"])
+                source = meta.get("registry_metadata", source)
+                closes_on = meta.get("closes_on")
+                deadline_state = "unknown"
+                if closes_on:
+                    deadline_state = (
+                        "expired"
+                        if closes_on < snapshot["downloaded_at"][:10]
+                        else "not_expired_at_capture"
+                    )
                 associations.append(
                     {
                         **meta,
+                        "discovery_run_id": row["run_id"],
+                        "discovered_at": row["started_at"],
+                        "deadline_state_at_capture": deadline_state,
                         "source_id": row["source_id"],
                         "source_key": row["source_key"],
                         "issuing_authority": source["authority"],

@@ -120,6 +120,8 @@ def collect(store, sources, options, client, resume=None):
                 candidate = Candidate(url=url, discovery_url=url, title=source.key)
                 if kind == "document":
                     store.discovery(run_id, source, candidate)
+                    if options.get("discovery_only"):
+                        continue
                 store.enqueue(run_id, source, kind, url, candidate=candidate)
     print(json.dumps({"event": "run_started", "run_id": run_id}), flush=True)
     lookup = {identity(s.key): s for s in sources}
@@ -175,6 +177,11 @@ def collect(store, sources, options, client, resume=None):
                         status = store.capture(task, source, payload, fmt, validation)
                     else:
                         candidates, pages = discover(payload, source, fetcher)
+                        index_metadata = store.archive_index(payload)
+                        if candidates:
+                            store.observe_missing(
+                                task, payload.final_url, {candidate.url for candidate in candidates}
+                            )
                         # Every candidate is recorded, even if the run's download cap is reached.
                         for candidate in candidates:
                             store.discovery(run_id, source, candidate)
@@ -183,7 +190,7 @@ def collect(store, sources, options, client, resume=None):
                                 "AND source_id=? AND kind='document'",
                                 (run_id, task["source_id"]),
                             ).fetchone()[0]
-                            if queued < source.max_documents:
+                            if queued < source.max_documents and not options.get("discovery_only"):
                                 store.enqueue(
                                     run_id, source, "document", candidate.url, candidate=candidate
                                 )
@@ -207,6 +214,7 @@ def collect(store, sources, options, client, resume=None):
                                 "traversal_links": len(pages),
                                 "final_url": payload.final_url,
                                 "policy": payload.policy,
+                                **index_metadata,
                             },
                         )
                     print(
@@ -287,6 +295,11 @@ def main():
         "--dry-run", action="store_true", help="Print plan; no network or ledger writes"
     )
     parser.add_argument("--max-documents", type=int, default=200)
+    parser.add_argument(
+        "--discovery-only",
+        action="store_true",
+        help="Archive indexes and candidate metadata without downloading documents",
+    )
     parser.add_argument("--max-requests", type=int, default=1200)
     parser.add_argument("--max-file-mib", type=int, default=20)
     parser.add_argument("--max-total-mib", type=int, default=600)
@@ -310,6 +323,7 @@ def main():
             parser.error(f"Unknown sources: {sorted(unknown)}")
         sources = [s for s in sources if s.key in args.source]
     options = {
+        "discovery_only": args.discovery_only,
         "max_documents": args.max_documents,
         "max_requests": args.max_requests,
         "max_file_bytes": args.max_file_mib * 1024**2,

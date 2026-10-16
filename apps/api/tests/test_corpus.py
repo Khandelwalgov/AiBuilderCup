@@ -70,7 +70,10 @@ def test_new_unchanged_changed_and_integrity(tmp_path):
     for raw in (pdf(), pdf(), pdf(2), pdf()):
         with httpx.Client(transport=transport(raw)) as client:
             collect(store, [source], options(), client)
-    assert [r[0] for r in store.db.execute("SELECT status FROM events WHERE kind='document'")] == [
+    assert [
+        r[0]
+        for r in store.db.execute("SELECT status FROM events WHERE kind='document' ORDER BY id")
+    ] == [
         "new",
         "unchanged",
         "updated",
@@ -285,3 +288,116 @@ def test_registry_is_valid():
     from opportunity_platform.corpus.cli import REPO
 
     assert len(load_sources(REPO / "data/corpus/sources.json")) >= 20
+
+
+@pytest.mark.parametrize(
+    "raw",
+    [
+        b"<rss><channel><item><title>RSS scholarship</title><link>https://test.gov.in/a.pdf</link>"
+        b"<pubDate>Fri, 16 Oct 2026 00:00:00 GMT</pubDate></item></channel></rss>",
+        b'<feed xmlns="http://www.w3.org/2005/Atom"><entry><title>Atom scholarship</title>'
+        b'<link href="https://test.gov.in/a.pdf"/></entry></feed>',
+    ],
+)
+def test_rss_and_atom(raw):
+    candidates, _ = feed_links(raw, "https://test.gov.in/feed", spec())
+    assert candidates[0].url == "https://test.gov.in/a.pdf"
+    assert "scholarship" in candidates[0].title
+
+
+def test_feed_external_entities_rejected():
+    with pytest.raises(AcquisitionError, match="unsafe_feed_xml"):
+        feed_links(
+            b'<!DOCTYPE feed [<!ENTITY a SYSTEM "file:///etc/passwd">]><feed/>',
+            "https://test.gov.in/feed",
+            spec(),
+        )
+
+
+def test_missing_listing_candidate_preserves_snapshot(tmp_path):
+    store = Store(tmp_path)
+    with httpx.Client(transport=transport(pdf())) as client:
+        collect(store, [spec()], options(), client)
+    with httpx.Client(
+        transport=transport(pdf(), '<a href="/b.pdf">Other scholarship</a>')
+    ) as client:
+        run = collect(store, [spec()], options(), client)
+    observed = list(
+        store.db.execute("SELECT * FROM events WHERE run_id=? AND kind='observation'", (run,))
+    )
+    assert observed[0]["status"] == "not_seen_in_listing_needs_review"
+    assert observed[0]["url"] == "https://test.gov.in/a.pdf"
+    assert store.db.execute("SELECT count(*) FROM documents").fetchone()[0] == 2
+    store.close()
+
+
+def test_timeout_retries_are_bounded():
+    def handler(request):
+        raise httpx.ReadTimeout("Synthetic timeout", request=request)
+
+    client, fetcher = fetch_with(handler)
+    with pytest.raises(AcquisitionError, match="timeout"):
+        fetcher.fetch("https://test.gov.in/a.pdf", spec())
+    assert fetcher.requests == 3
+    client.close()
+
+
+def test_captcha_pauses_host():
+    def handler(request):
+        if request.url.path == "/robots.txt":
+            return httpx.Response(200, text="User-agent: *\nAllow: /")
+        return httpx.Response(200, text="Verify you are human")
+
+    client, fetcher = fetch_with(handler)
+    with pytest.raises(AcquisitionError, match="manual_access_required"):
+        fetcher.fetch("https://test.gov.in/a", spec())
+    requests = fetcher.requests
+    with pytest.raises(AcquisitionError, match="host_paused"):
+        fetcher.fetch("https://test.gov.in/b", spec())
+    assert fetcher.requests == requests
+    client.close()
+
+
+def test_expired_tender_manifest_and_immutable_index(tmp_path):
+    store = Store(tmp_path)
+    source = spec().model_copy(update={"adapter": "feed", "category": "procurement"})
+    feed = json.dumps(
+        {"items": [{"url": "/a.pdf", "title": "Synthetic tender", "closes_on": "2020-01-01"}]}
+    )
+
+    def handler(request):
+        if request.url.path == "/robots.txt":
+            return httpx.Response(200, text="User-agent: *\nAllow: /")
+        if request.url.path == "/index":
+            return httpx.Response(200, text=feed, headers={"content-type": "application/json"})
+        return httpx.Response(200, content=pdf(), headers={"content-type": "application/pdf"})
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        collect(store, [source], options(), client)
+    record = next(store.records())
+    assert record.discoveries[0]["deadline_state_at_capture"] == "expired"
+    index = list((tmp_path / "indexes").glob("*.raw"))
+    assert len(index) == 1
+    assert index[0].read_text() == feed
+    store.close()
+
+
+def test_layout_table_does_not_supply_title_or_relations():
+    raw = (
+        b'<table><tr><td><a href="/a.pdf">Useful guidelines</a>'
+        b"<table><tr><td>Unrelated footer</td></tr></table></td></tr></table>"
+    )
+    candidates, _ = html_links(raw, "https://test.gov.in/index", spec())
+    assert candidates[0].title == "Useful guidelines"
+    assert candidates[0].related_urls == []
+
+
+def test_discovery_only_archives_index_without_document_fetch(tmp_path):
+    store = Store(tmp_path)
+    with httpx.Client(transport=transport(pdf())) as client:
+        run = collect(store, [spec()], options(discovery_only=True), client)
+    assert metrics(store, run)["successful_document_fetches"] == 0
+    assert store.db.execute("SELECT count(*) FROM discoveries").fetchone()[0] == 1
+    assert len(list((tmp_path / "indexes").glob("*.raw"))) == 1
+    assert metrics(store, run)["pending_tasks"] == 0
+    store.close()

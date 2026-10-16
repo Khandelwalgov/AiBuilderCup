@@ -157,3 +157,19 @@ A future Cloud Run Job can use the existing Python image and this CLI, but must 
 checkpoint/export state and blobs to durable storage, implement distributed locking, handle
 SIGTERM cleanly, and review each source's terms/pacing before Cloud Scheduler is enabled.
 The current local flock and SQLite archive alone are **not** durable cloud deployment support.
+
+Incremental listing responses are also saved immutably under `indexes/<sha256>.raw`
+and referenced with HTTP metadata/hash/size by listing events. These are discovery
+evidence and are excluded from document counts. The initial acquisition predates this
+additional index-archive check; its candidate associations and listing outcomes remain
+in the ledger. A document absent from a later successfully parsed index generates
+`not_seen_in_listing_needs_review`, never automatic withdrawal or deletion. Explicit
+close dates produce `deadline_state_at_capture`; unknown closes remain `unknown`.
+RSS/Atom XML rejects DTD/entity declarations and uses bounded standard XML parsing.
+CAPTCHA/challenge responses pause the host for the rest of that run.
+
+`make corpus-update CORPUS_ARGS='--discovery-only --source rajasthan-welfare'`
+archives reviewed indexes and reconciles candidate metadata without fetching document
+bytes. Legacy layout tables are excluded from document-row titles and amendment
+associations. Manifest associations retain discovery run/timestamp and are ordered
+newest first, so corrected index metadata does not erase historical discoveries.

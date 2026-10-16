@@ -209,7 +209,11 @@ class Fetcher:
                 code = "listing_unavailable" if status in (404, 410) else "http_error"
                 raise AcquisitionError(code, status)
             if not raw.startswith(b"%PDF-"):
-                challenge(raw)
+                try:
+                    challenge(raw)
+                except AcquisitionError:
+                    self.blocked_hosts[urlsplit(url).hostname] = "manual_access_required"
+                    raise
             selected = {
                 key: headers.get(key)
                 for key in ("content-type", "etag", "last-modified", "date", "content-length")

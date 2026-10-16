@@ -3,7 +3,9 @@
 import io
 import json
 import re
+from email.utils import parsedate_to_datetime
 from urllib.parse import urljoin
+from xml.etree import ElementTree
 
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
@@ -25,6 +27,9 @@ def html_links(raw, url, source):
         except AcquisitionError:
             continue
         row = a.find_parent("tr")
+        # Legacy portals wrap whole layouts in a table row; that is not a document row.
+        if row and (row.find("tr") or len(row.select("a[href]")) > 4):
+            row = None
         label = a.get_text(" ", strip=True)
         title = row.get_text(" ", strip=True) if row else label
         title = title or a.get("title") or target.rsplit("/", 1)[-1]
@@ -70,18 +75,34 @@ def feed_links(raw, url, source):
         except (ValueError, KeyError, TypeError):
             raise AcquisitionError("invalid_feed") from None
     else:
-        # html.parser intentionally avoids external-entity expansion and XML network access.
-        soup = BeautifulSoup(raw, "html.parser")
+        if b"<!DOCTYPE" in raw.upper() or b"<!ENTITY" in raw.upper():
+            raise AcquisitionError("unsafe_feed_xml")
+        try:
+            root = ElementTree.fromstring(raw)
+        except ElementTree.ParseError:
+            raise AcquisitionError("invalid_feed") from None
         candidates = []
-        for item in soup.find_all(["item", "entry"]):
-            link, title = item.find("link"), item.find("title")
-            if link:
-                target = link.get("href") or link.get_text(strip=True)
+        for item in root.iter():
+            if item.tag.split("}")[-1] not in ("item", "entry"):
+                continue
+            children = {child.tag.split("}")[-1]: child for child in item}
+            link, title = children.get("link"), children.get("title")
+            if link is not None:
+                target = link.get("href") or link.text or ""
+                if not target:
+                    continue
+                publication_date = None
+                if "pubDate" in children:
+                    try:
+                        publication_date = parsedate_to_datetime(children["pubDate"].text).date()
+                    except (ValueError, TypeError):
+                        pass  # Unparseable source dates stay unknown.
                 candidates.append(
                     Candidate(
                         url=canonical(urljoin(url, target)),
                         discovery_url=url,
-                        title=title.get_text() if title else target,
+                        title=title.text if title is not None and title.text else target,
+                        publication_date=publication_date,
                     )
                 )
     accepted = []

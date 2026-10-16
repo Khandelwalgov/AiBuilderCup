@@ -165,6 +165,17 @@ My Documents accepts real private PDF/JPEG/PNG files for fictional local testing
 `make test-product-e2e` runs the separate real emulator/API/database/file suite after starting the documented local Auth emulator. It owns ports 15210/18210, creates/drops only isolated schemas and private temporary fixtures, makes no provider calls and leaves normal local app data untouched. `make test-e2e` retains the existing public/mocked browser regressions. Follow [acceptance setup](docs/real-user-acceptance.md), then stop only the emulator you started.
 
 
+## Public government document corpus
+
+The separate public-source corpus job is documented in
+[corpus architecture](docs/corpus-architecture.md),
+[source access inventory](docs/corpus-sources.md), and
+[acquisition report](docs/corpus-acquisition-report.md).
+Use `make corpus-collect CORPUS_ARGS='--dry-run'` to inspect its bounded plan,
+`make corpus-update` for incremental discovery, and `make corpus-verify` for stored-byte checks.
+Original public documents and resumable checkpoints live in the Git-ignored `.corpus/` directory.
+These commands do not call a paid model, publish opportunities, or modify existing drafts.
+
 ## Domain meaning and legacy education
 
 Current study and completed education now have separate questions/typed facts. Existing `education_level` answers remain preserved and explicitly ambiguous; clarify them in Edit education or explicitly archive them as historical. An old source rule using that ambiguous key needs source-backed administrator correction before determining education eligibility. No degree or enrollment is inferred from the old answer.

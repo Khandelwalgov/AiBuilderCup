@@ -1,0 +1,53 @@
+{
+  "generated_at_utc": "2026-10-16T17:51:02.320505+00:00",
+  "corpus_location": "/Users/govind/Projects/AIBuildersCup/.corpus",
+  "sources_registered": 23,
+  "sources_network_attempted": 4,
+  "sources_with_validated_documents": 4,
+  "successful_document_fetches": 129,
+  "distinct_document_urls": 125,
+  "unique_content_count": 120,
+  "pdf_html_unique_counts": {
+    "pdf": 115,
+    "html": 5
+  },
+  "category_unique_counts": {
+    "scholarships": 77,
+    "procurement": 20,
+    "msme": 7,
+    "welfare": 16
+  },
+  "successful_source_jurisdictions": {
+    "India": 1,
+    "Rajasthan": 3
+  },
+  "blob_storage_bytes": 193031267,
+  "total_local_storage_bytes": 200456672,
+  "change_counts": {
+    "new": 120,
+    "unchanged": 4,
+    "duplicate": 5
+  },
+  "duplicate_link_events": 1,
+  "retrieval_failure_counts": {
+    "invalid_pdf": 10,
+    "file_too_large": 1
+  },
+  "run_ids": [
+    "28bd1611-01e9-46a6-a61f-c39de96d1392",
+    "bde9df92-3f6b-4f3c-8052-0f48fb674a99",
+    "8b5d0809-0c49-4a76-9df3-a0e18c0e2c4d"
+  ],
+  "all_runs_completed": true,
+  "requests": 162,
+  "wire_bytes": 255656161,
+  "verification": {
+    "unique_blobs_checked": 120,
+    "errors": []
+  },
+  "validation": {
+    "collector_tests_passed": 32,
+    "backend_regression_result": "191 passed, 1 skipped",
+    "web_lint_typecheck_build": "passed"
+  }
+}
