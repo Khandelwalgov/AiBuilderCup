@@ -16,6 +16,11 @@ FactKey = Literal[
     "residence_state",
     "residence_district",
     "education_level",
+    "current_education_level",
+    "highest_completed_education",
+    "business_registration_state",
+    "business_registration_district",
+    "business_operating_status",
     "enrollment_mode",
     "school_recognized_or_government",
     "student_status",
@@ -135,6 +140,31 @@ class FactInput(BaseModel):
             "distance",
         }:
             raise ValueError("Enrollment mode must be full_time, part_time, distance or unknown")
+        if self.key in {
+            "current_education_level",
+            "highest_completed_education",
+        } and self.value not in {
+            None,
+            "none",
+            "below_IX",
+            "IX",
+            "X",
+            "XI",
+            "XII",
+            "undergraduate",
+            "postgraduate",
+            "other",
+        }:
+            raise ValueError("Choose a supported course or completed qualification")
+        if self.key == "current_education_level" and self.value == "none":
+            raise ValueError("Use not enrolled or unknown, not a current course named none")
+        if self.key == "business_operating_status" and self.value not in {
+            None,
+            "active",
+            "inactive",
+            "prelaunch",
+        }:
+            raise ValueError("Choose active, inactive, prelaunch or unknown")
         if self.value is not None:
             if self.key in {
                 "age",

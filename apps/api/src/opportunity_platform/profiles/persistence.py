@@ -73,11 +73,23 @@ def reconcile(session, kind, identifier, facts):
         if row is None:
             row = ProfileFact(**{kind + "_id": identifier}, key=fact.key)
             session.add(row)
+        history = list(row.context.get("history", [])) if row.context else []
+        if previous is not None:
+            history.append(
+                {
+                    "value": row.value,
+                    "valid_from": str(row.valid_from) if row.valid_from else None,
+                    "valid_until": str(row.valid_until) if row.valid_until else None,
+                    "context": {k: v for k, v in row.context.items() if k != "history"},
+                }
+            )
         row.value = fact.value
         row.origin = "unknown" if fact.value is None else "user_supplied"
         row.verification = "unknown" if fact.value is None else "unverified"
         row.valid_from, row.valid_until = fact.valid_from, fact.valid_until
         row.context = {
+            "history": history,
+            "semantic_version": "education-v2",
             "income_period": fact.income_period,
             "income_definition": fact.income_definition,
             "recorded_at": datetime.now(timezone.utc).isoformat(),

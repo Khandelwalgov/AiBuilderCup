@@ -1,0 +1,342 @@
+[
+  {
+    "name": "graduate_not_student",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": false
+      },
+      {
+        "key": "highest_completed_education",
+        "value": "undergraduate"
+      }
+    ],
+    "before": [],
+    "expected": []
+  },
+  {
+    "name": "graduate_pursuing_postgrad",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": true
+      },
+      {
+        "key": "highest_completed_education",
+        "value": "undergraduate"
+      },
+      {
+        "key": "current_education_level",
+        "value": "postgraduate"
+      }
+    ],
+    "before": [],
+    "expected": []
+  },
+  {
+    "name": "employed_parttime_student",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": true
+      },
+      {
+        "key": "employment_status",
+        "value": "employed"
+      },
+      {
+        "key": "enrollment_mode",
+        "value": "part_time"
+      }
+    ],
+    "before": [],
+    "expected": []
+  },
+  {
+    "name": "unemployed_postgraduate",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": false
+      },
+      {
+        "key": "employment_status",
+        "value": "unemployed"
+      },
+      {
+        "key": "highest_completed_education",
+        "value": "postgraduate"
+      }
+    ],
+    "before": [],
+    "expected": []
+  },
+  {
+    "name": "class_IX_fulltime",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": true
+      },
+      {
+        "key": "current_education_level",
+        "value": "IX"
+      },
+      {
+        "key": "enrollment_mode",
+        "value": "full_time"
+      },
+      {
+        "key": "school_recognized_or_government",
+        "value": true
+      }
+    ],
+    "before": [],
+    "expected": []
+  },
+  {
+    "name": "formerly_recognized_school",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": false
+      },
+      {
+        "key": "school_recognized_or_government",
+        "value": true,
+        "valid_until": "2025-12-31"
+      }
+    ],
+    "before": [],
+    "expected": []
+  },
+  {
+    "name": "last_year_fulltime",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": false
+      },
+      {
+        "key": "enrollment_mode",
+        "value": "full_time",
+        "valid_until": "2025-12-31"
+      }
+    ],
+    "before": [],
+    "expected": []
+  },
+  {
+    "name": "new_conflicting_mode",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": false
+      },
+      {
+        "key": "enrollment_mode",
+        "value": "full_time"
+      }
+    ],
+    "before": [],
+    "expected": [
+      "not_enrolled_study_mode:error"
+    ]
+  },
+  {
+    "name": "retained_hidden_mode",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": false
+      },
+      {
+        "key": "enrollment_mode",
+        "value": "full_time"
+      }
+    ],
+    "before": [
+      {
+        "key": "student_status",
+        "value": false
+      },
+      {
+        "key": "enrollment_mode",
+        "value": "full_time"
+      }
+    ],
+    "expected": [
+      "not_enrolled_study_mode:warning"
+    ]
+  },
+  {
+    "name": "below_class_IX",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": true
+      },
+      {
+        "key": "current_education_level",
+        "value": "below_IX"
+      },
+      {
+        "key": "school_recognized_or_government",
+        "value": true
+      }
+    ],
+    "before": [],
+    "expected": []
+  },
+  {
+    "name": "gap_year",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": false
+      },
+      {
+        "key": "highest_completed_education",
+        "value": "XII"
+      }
+    ],
+    "before": [],
+    "expected": []
+  },
+  {
+    "name": "legacy_degree_ambiguous",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": false
+      },
+      {
+        "key": "education_level",
+        "value": "undergraduate"
+      }
+    ],
+    "before": [],
+    "expected": [
+      "legacy_education_ambiguous:warning"
+    ]
+  },
+  {
+    "name": "course_not_enrolled",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": false
+      },
+      {
+        "key": "current_education_level",
+        "value": "undergraduate"
+      }
+    ],
+    "before": [],
+    "expected": [
+      "not_enrolled_current_course:error"
+    ]
+  },
+  {
+    "name": "current_school_without_enrollment",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": false
+      },
+      {
+        "key": "school_recognized_or_government",
+        "value": false
+      }
+    ],
+    "before": [],
+    "expected": [
+      "not_enrolled_school:error"
+    ]
+  },
+  {
+    "name": "university_current_school_conflict",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": true
+      },
+      {
+        "key": "current_education_level",
+        "value": "undergraduate"
+      },
+      {
+        "key": "school_recognized_or_government",
+        "value": true
+      }
+    ],
+    "before": [],
+    "expected": [
+      "course_school_scope:error"
+    ]
+  },
+  {
+    "name": "another_undergrad_after_postgrad",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": true
+      },
+      {
+        "key": "current_education_level",
+        "value": "undergraduate"
+      },
+      {
+        "key": "highest_completed_education",
+        "value": "postgraduate"
+      }
+    ],
+    "before": [],
+    "expected": []
+  },
+  {
+    "name": "unknown_enrollment_not_false",
+    "facts": [
+      {
+        "key": "student_status",
+        "value": null
+      },
+      {
+        "key": "current_education_level",
+        "value": "undergraduate"
+      }
+    ],
+    "before": [],
+    "expected": []
+  },
+  {
+    "name": "different_residence_domicile",
+    "facts": [
+      {
+        "key": "residence_state",
+        "value": "Delhi"
+      },
+      {
+        "key": "domicile_state",
+        "value": "Rajasthan"
+      }
+    ],
+    "before": [],
+    "expected": []
+  },
+  {
+    "name": "zero_personal_positive_parental",
+    "facts": [
+      {
+        "key": "annual_personal_income",
+        "value": 0
+      },
+      {
+        "key": "annual_parental_income",
+        "value": 200000
+      }
+    ],
+    "before": [],
+    "expected": []
+  }
+]

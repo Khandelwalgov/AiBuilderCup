@@ -1,5 +1,5 @@
 import uuid
-from datetime import date, datetime
+from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy import select
@@ -26,23 +26,6 @@ class ProfileWrite(BaseModel):
             raise ValueError("A name or nickname is required")
         if len({f.key for f in self.facts}) != len(self.facts):
             raise ValueError("Each fact key may appear only once")
-        today = date.today()
-        values = {
-            f.key: f.value
-            for f in self.facts
-            if (not f.valid_from or f.valid_from <= today)
-            and (not f.valid_until or f.valid_until >= today)
-        }
-        if values.get("student_status") is False and any(
-            values.get(k) is not None
-            for k in ("enrollment_mode", "school_recognized_or_government")
-        ):
-            raise ValueError("Clarify current study details when the person is not a student")
-        if (
-            values.get("education_level") in {"undergraduate", "postgraduate"}
-            and values.get("school_recognized_or_government") is not None
-        ):
-            raise ValueError("School recognition is not a university-level answer")
         return self
 
 
@@ -162,6 +145,9 @@ def save_profile(session: Session, uid: str, data: ProfileWrite) -> ProfileView:
             "profile_conflict",
             "This profile changed. Reload the saved version before saving your changes.",
         )
+    from opportunity_platform.profiles.semantics import validate_person
+
+    validate_person(data.facts, before)
     renamed = profile.display_name != data.display_name
     profile.display_name = data.display_name
     changed_keys = reconcile(session, "person", profile.id, data.facts)

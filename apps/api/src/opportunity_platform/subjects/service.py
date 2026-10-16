@@ -64,7 +64,9 @@ class BusinessWrite(BaseModel):
     model_config = ConfigDict(extra="forbid")
     name: str = Field(min_length=1, max_length=100)
     description: str | None = Field(default=None, max_length=1000)
-    legal_status: Literal["unregistered", "sole_proprietor", "partnership", "company", "other"]
+    legal_status: Literal[
+        "unknown", "unregistered", "sole_proprietor", "partnership", "company", "other"
+    ]
     facts: list[FactInput] = Field(default_factory=list, max_length=10)
     expected_revision: str | None = Field(default=None, min_length=64, max_length=64)
 
@@ -143,6 +145,9 @@ def replace_facts(session, kind, identifier, facts):
         f.key
         not in {
             "business_registered",
+            "business_registration_state",
+            "business_registration_district",
+            "business_operating_status",
             "business_turnover",
             "has_registration_certificate",
             "residence_state",
@@ -153,6 +158,10 @@ def replace_facts(session, kind, identifier, facts):
         raise APIError(
             422, "business_fact_required", "Only supported business facts can be stored here."
         )
+    if kind == "person":
+        from opportunity_platform.profiles.semantics import validate_person
+
+        validate_person(facts, subject_facts(session, kind, identifier))
     return reconcile(session, kind, identifier, facts)
 
 

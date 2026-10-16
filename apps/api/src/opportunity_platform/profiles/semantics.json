@@ -1,0 +1,114 @@
+{
+  "version": "education-v2",
+  "rules": [
+    {
+      "code": "not_enrolled_current_course",
+      "severity": "error",
+      "fields": [
+        "student_status",
+        "current_education_level"
+      ],
+      "when": [
+        {
+          "key": "student_status",
+          "eq": false
+        },
+        {
+          "key": "current_education_level",
+          "known": true
+        }
+      ],
+      "message": [
+        "Not studying now conflicts with a current course in the same active period. End-date the old course or correct whether you are studying. Saved answers remain until you choose a change.",
+        "अभी पढ़ाई नहीं करने और उसी लागू अवधि में वर्तमान पाठ्यक्रम के उत्तर अलग हैं। पुराने पाठ्यक्रम की अवधि समाप्त करें या पढ़ाई की स्थिति सुधारें। बदलाव चुनने तक सहेजे उत्तर बने रहेंगे।"
+      ]
+    },
+    {
+      "code": "not_enrolled_study_mode",
+      "severity": "error",
+      "fields": [
+        "student_status",
+        "enrollment_mode"
+      ],
+      "when": [
+        {
+          "key": "student_status",
+          "eq": false
+        },
+        {
+          "key": "enrollment_mode",
+          "known": true
+        }
+      ],
+      "message": [
+        "Not studying now conflicts with a current study mode in the same active period. End-date the earlier mode if it describes past study, or correct your study status. No answer will be silently removed.",
+        "अभी पढ़ाई नहीं करने और उसी लागू अवधि की पढ़ाई के तरीके में अंतर है। यदि तरीका पुरानी पढ़ाई का है तो उसकी अवधि समाप्त करें, या पढ़ाई की स्थिति सुधारें। कोई उत्तर अपने आप नहीं हटेगा।"
+      ]
+    },
+    {
+      "code": "not_enrolled_school",
+      "severity": "error",
+      "fields": [
+        "student_status",
+        "school_recognized_or_government"
+      ],
+      "when": [
+        {
+          "key": "student_status",
+          "eq": false
+        },
+        {
+          "key": "school_recognized_or_government",
+          "known": true
+        }
+      ],
+      "message": [
+        "Not studying now and a current-school answer refer to incompatible active periods. End-date the previous school answer or correct enrollment; completed qualifications are independent.",
+        "अभी पढ़ाई नहीं करने और वर्तमान स्कूल के उत्तर एक लागू अवधि के नहीं हो सकते। पुराने स्कूल के उत्तर की अवधि समाप्त करें या पढ़ाई की स्थिति सुधारें; पूरी की गई शिक्षा अलग है।"
+      ]
+    },
+    {
+      "code": "course_school_scope",
+      "severity": "error",
+      "fields": [
+        "current_education_level",
+        "school_recognized_or_government"
+      ],
+      "when": [
+        {
+          "key": "current_education_level",
+          "one_of": [
+            "undergraduate",
+            "postgraduate",
+            "other"
+          ]
+        },
+        {
+          "key": "school_recognized_or_government",
+          "known": true
+        }
+      ],
+      "message": [
+        "A current university/other course and current school recognition need different contexts. End-date the former school answer or correct your current course. Completed education is not the conflict.",
+        "वर्तमान विश्वविद्यालय/अन्य पाठ्यक्रम और वर्तमान स्कूल की मान्यता अलग संदर्भ हैं। पुराने स्कूल के उत्तर की अवधि समाप्त करें या वर्तमान पाठ्यक्रम सुधारें। पूरी की गई शिक्षा में विरोध नहीं है।"
+      ]
+    },
+    {
+      "code": "legacy_education_ambiguous",
+      "severity": "warning",
+      "fields": [
+        "education_level"
+      ],
+      "when": [
+        {
+          "key": "education_level",
+          "known": true
+        }
+      ],
+      "message": [
+        "The earlier education answer does not say whether it was a current course or a completed qualification. It is preserved as legacy information and will not decide education eligibility. Add the separate answers only if known.",
+        "पुराने शिक्षा उत्तर से वर्तमान पाठ्यक्रम या पूरी की गई शिक्षा स्पष्ट नहीं है। वह पुराने उत्तर के रूप में बना रहेगा और शिक्षा पात्रता तय नहीं करेगा। पता होने पर अलग उत्तर दें।"
+      ]
+    }
+  ]
+}

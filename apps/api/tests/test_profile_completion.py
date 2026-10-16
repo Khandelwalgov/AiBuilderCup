@@ -1,5 +1,4 @@
 import pytest
-from pydantic import ValidationError
 from sqlalchemy import func, select
 
 from opportunity_platform.core.errors import APIError
@@ -89,28 +88,35 @@ def test_dependent_repeat_save_and_stale_revision(db):
 
 
 def test_contradictory_study_answers_rejected_but_prior_education_preserved():
-    with pytest.raises(ValidationError):
-        ProfileWrite(
-            display_name="Fictional learner",
-            facts=[
+    from opportunity_platform.profiles.semantics import validate
+
+    with pytest.raises(APIError):
+        validate(
+            [
                 FactInput(key="student_status", value=False),
                 FactInput(key="enrollment_mode", value="full_time"),
-            ],
+            ]
         )
-    with pytest.raises(ValidationError):
-        ProfileWrite(
-            display_name="Fictional learner",
-            facts=[
-                FactInput(key="education_level", value="undergraduate"),
+    with pytest.raises(APIError):
+        validate(
+            [
+                FactInput(key="student_status", value=True),
+                FactInput(key="current_education_level", value="undergraduate"),
                 FactInput(key="school_recognized_or_government", value=True),
-            ],
+            ]
         )
-    ProfileWrite(
-        display_name="Fictional graduate",
-        facts=[
+    validate(
+        [
+            FactInput(key="student_status", value=False),
+            FactInput(key="highest_completed_education", value="undergraduate"),
+        ]
+    )
+    # Legacy education alone is ambiguous, not a false contradiction.
+    validate(
+        [
             FactInput(key="student_status", value=False),
             FactInput(key="education_level", value="undergraduate"),
-        ],
+        ]
     )
 
 

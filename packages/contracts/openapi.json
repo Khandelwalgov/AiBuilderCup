@@ -5092,6 +5092,7 @@
           "legal_status": {
             "type": "string",
             "enum": [
+              "unknown",
               "unregistered",
               "sole_proprietor",
               "partnership",
@@ -5698,6 +5699,11 @@
                   "residence_state",
                   "residence_district",
                   "education_level",
+                  "current_education_level",
+                  "highest_completed_education",
+                  "business_registration_state",
+                  "business_registration_district",
+                  "business_operating_status",
                   "enrollment_mode",
                   "school_recognized_or_government",
                   "student_status",
@@ -6267,6 +6273,15 @@
               }
             ],
             "title": "Request Id"
+          },
+          "issues": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Issues",
+            "default": []
           }
         },
         "type": "object",
@@ -6605,6 +6620,11 @@
               "residence_state",
               "residence_district",
               "education_level",
+              "current_education_level",
+              "highest_completed_education",
+              "business_registration_state",
+              "business_registration_district",
+              "business_operating_status",
               "enrollment_mode",
               "school_recognized_or_government",
               "student_status",

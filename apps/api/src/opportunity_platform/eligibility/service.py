@@ -239,7 +239,11 @@ def check(
         )
     if any(r.result.outcome == "unsatisfied" for r in results):
         status = "not_eligible_on_known_facts"
-    elif not results or any(r.result.outcome == "unknown" for r in results):
+    elif (
+        not results
+        or all(r.result.outcome == "not_applicable" for r in results)
+        or any(r.result.outcome == "unknown" for r in results)
+    ):
         status = "possibly_eligible_missing_information"
     else:
         # Satisfied self-reported conditions never imply document-verified readiness.
@@ -258,6 +262,12 @@ def check(
     baseline = previous
     now = datetime.now(timezone.utc)
     relevant_keys = {c.fact for r in results for c in rule_leaves(r.rule) if c.fact}
+    if relevant_keys & {
+        "current_education_level",
+        "enrollment_mode",
+        "school_recognized_or_government",
+    }:
+        relevant_keys.add("student_status")
     canonical_facts = sorted(
         [
             {
@@ -279,7 +289,7 @@ def check(
                 "facts": canonical_facts,
                 "date": now.date().isoformat(),
                 "application_type": application_type,
-                "engine": "3",
+                "engine": "4",
             },
             sort_keys=True,
         ).encode()
@@ -292,7 +302,7 @@ def check(
         fact_snapshot={
             "facts": [f.model_dump(mode="json") for f in facts],
             "evaluation_date": now.date().isoformat(),
-            "engine_version": "3",
+            "engine_version": "4",
             "application_type": application_type,
         },
         results=[

@@ -79,12 +79,41 @@ async def request_logging(request: Request, call_next):
 
 @app.exception_handler(APIError)
 async def api_error(request: Request, error: APIError):
-    return response(request, error.status, error.code, error.message)
+    return response(request, error.status, error.code, error.message, issues=error.issues)
 
 
 @app.exception_handler(RequestValidationError)
 async def validation_error(request: Request, error: RequestValidationError):
-    return response(request, 422, "invalid_request", "Check the request parameters and try again.")
+    # Return allowlisted field names, never private input values or Pydantic ctx.
+    from typing import get_args
+
+    from opportunity_platform.eligibility.rules import FactKey
+
+    issues = []
+    for item in error.errors():
+        fields = [str(part) for part in item["loc"]]
+        if len(item["loc"]) > 2 and item["loc"][1] == "facts":
+            index = item["loc"][2]
+            if isinstance(index, int) and isinstance(error.body, dict):
+                facts = error.body.get("facts", [])
+                if (
+                    isinstance(facts, list)
+                    and index < len(facts)
+                    and isinstance(facts[index], dict)
+                ):
+                    key = facts[index].get("key")
+                    if key in get_args(FactKey):
+                        fields = [key]
+        issues.append({"fields": fields, "type": item["type"]})
+    return response(
+        request,
+        422,
+        "invalid_value"
+        if request.url.path.startswith(("/v1/profile", "/v1/people", "/v1/businesses"))
+        else "invalid_request",
+        "A value or date is invalid. Check the identified field. Your answers are preserved.",
+        issues=issues,
+    )
 
 
 @app.exception_handler(HTTPException)

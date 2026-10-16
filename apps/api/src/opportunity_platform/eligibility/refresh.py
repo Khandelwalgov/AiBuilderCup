@@ -14,7 +14,14 @@ from opportunity_platform.subjects.service import SubjectRef
 
 def keys(rule):
     if rule.op == "condition":
-        return {rule.condition.fact} if rule.condition.fact else set()
+        found = {rule.condition.fact} if rule.condition.fact else set()
+        if found & {
+            "current_education_level",
+            "enrollment_mode",
+            "school_recognized_or_government",
+        }:
+            found.add("student_status")
+        return found
     return set().union(*(keys(child) for child in rule.children))
 
 

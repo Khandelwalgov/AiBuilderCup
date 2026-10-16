@@ -112,6 +112,9 @@ class OpenAIProvider:
             + """
 Rule language value types: age, annual_personal_income, annual_parental_income,
 disability_percentage, business_turnover are nonnegative numbers (age a whole number).
+Use current_education_level for explicit current courses, highest_completed_education for
+explicit completed qualifications. Never infer one from the other. Do not use legacy
+education_level for new rules; ambiguous educational semantics remain unknown with a review flag.
 student_status, has_* facts, auto_debit_consent, business_registered are booleans.
 Other facts are short text. Only numeric facts support gte/lte; eq needs one scalar;
 in needs a nonempty list of appropriate scalars. document uses only supported has_* fields.
