@@ -114,6 +114,20 @@ test('current enrollment and completed qualification change independently with v
   await expect(page.getByRole('combobox', { name: enrolled })).toHaveValue('false');
   await page.getByRole('button', { name: 'Save changes', exact: true }).click();
   await expect(page.locator('.profile-summary')).toContainText('Postgraduate degree');
+  // Editing an archived answer's date must retain its stored course value.
+  await page.getByRole('button', { name: 'Edit education', exact: true }).click();
+  await page.getByRole('combobox', { name: enrolled }).selectOption('true');
+  await expect(page.getByRole('combobox', { name: course })).toHaveValue('');
+  const previousCourse = page.locator('#fact-current_education_level');
+  await previousCourse.getByText('Check when this answer applies', { exact: true }).click();
+  await previousCourse
+    .getByLabel('Applies until', { exact: true })
+    .fill(new Date().toLocaleDateString('en-CA'));
+  await expect(page.getByRole('combobox', { name: course })).toHaveValue('postgraduate');
+  await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+  await page.reload();
+  await page.getByRole('button', { name: 'Edit education', exact: true }).click();
+  await expect(page.getByRole('combobox', { name: course })).toHaveValue('postgraduate');
 });
 test('fictional current-course source maps to the exact enrollment/course question; historical course never satisfies it', async ({
   page,

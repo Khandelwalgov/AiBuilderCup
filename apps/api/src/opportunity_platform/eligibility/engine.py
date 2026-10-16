@@ -235,12 +235,41 @@ def evaluate(rule: Rule, facts: list[FactRecord], today: date) -> Result:
                 "scheme-specific income basis."
             )
         )
+    geography = {
+        "domicile_state",
+        "domicile_district",
+        "residence_state",
+        "residence_district",
+        "business_registration_state",
+        "business_registration_district",
+    }
+    aliases = {
+        "राजस्थान": "rajasthan",
+        "दौसा": "dausa",
+        "दिल्ली": "delhi",
+        "महाराष्ट्र": "maharashtra",
+        "पुणे": "pune",
+    }
+
+    def place(value):
+        text = value.strip().casefold()
+        return aliases.get(text, text)
+
     value = known[0].value
     if c.fact == "nationality" and value == "other":
         return unknown(
             "The previous Other nationality answer does not identify a country. "
             "Specify the nationality before comparing this source condition."
         )
+    compared = c.value if isinstance(c.value, list) else [c.value]
+    if c.fact in geography and isinstance(value, str) and all(isinstance(v, str) for v in compared):
+        if not any(place(value) == place(v) for v in compared) and any(
+            not place(v).isascii() for v in [value, *compared]
+        ):
+            return unknown(
+                "Location spellings/languages need clarification against the source. "
+                "No location or domicile has been inferred from another field."
+            )
     try:
 
         def same(a, b):
@@ -262,9 +291,11 @@ def evaluate(rule: Rule, facts: list[FactRecord], today: date) -> Result:
                     "domicile_district",
                     "residence_state",
                     "residence_district",
+                    "business_registration_state",
+                    "business_registration_district",
                 }
             ):
-                return a.strip().casefold() == b.strip().casefold()
+                return place(a) == place(b)
             return type(a) is type(b) and a == b
 
         if c.op == "eq":

@@ -421,7 +421,7 @@ function PersonProfile() {
                 disabled={save.isPending}
                 value={f.valid_from ?? ''}
                 onChange={(e) =>
-                  update(q.key, value ?? null, { valid_from: e.target.value || null })
+                  update(q.key, f?.value ?? null, { valid_from: e.target.value || null })
                 }
               />
             </label>
@@ -432,7 +432,7 @@ function PersonProfile() {
                 disabled={save.isPending}
                 value={f.valid_until ?? ''}
                 onChange={(e) =>
-                  update(q.key, value ?? null, { valid_until: e.target.value || null })
+                  update(q.key, f?.value ?? null, { valid_until: e.target.value || null })
                 }
               />
             </label>

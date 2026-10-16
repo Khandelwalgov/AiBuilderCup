@@ -189,7 +189,9 @@ function WorkspacePage({ kind }: { kind: Kind }) {
                               : hi
                                 ? 'नहीं'
                                 : 'No'
-                            : String(f.value)}
+                            : f.key === 'business_operating_status'
+                              ? displayLabel(String(f.value), hi)
+                              : String(f.value)}
                         </dd>
                       </div>
                     ))}

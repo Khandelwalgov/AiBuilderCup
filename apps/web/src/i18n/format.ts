@@ -1,4 +1,8 @@
 const hindi: Record<string, string> = {
+  active: 'काम चल रहा है',
+  inactive: 'अभी काम बंद है',
+  prelaunch: 'शुरू करने की तैयारी',
+  unknown: 'अभी पता नहीं',
   education: 'शिक्षा',
   business: 'व्यवसाय',
   employment: 'रोज़गार',

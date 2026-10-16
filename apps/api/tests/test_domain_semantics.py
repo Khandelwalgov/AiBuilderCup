@@ -305,3 +305,39 @@ def test_nationality_representation_does_not_reject_indian_country_code():
         evaluate(leaf("nationality", "IN"), [record("nationality", "Nepali")], TODAY).outcome
         == "unsatisfied"
     )
+
+
+@pytest.mark.parametrize(
+    "key,value",
+    [
+        ("current_education_level", "none"),
+        ("current_education_level", "unmapped_course"),
+        ("highest_completed_education", "unmapped_award"),
+        ("business_operating_status", "invented_status"),
+    ],
+)
+def test_new_fact_choices_are_closed(key, value):
+    from pydantic import ValidationError
+
+    with pytest.raises(ValidationError):
+        FactInput(key=key, value=value)
+
+
+def test_location_language_aliases_do_not_mix_residence_domicile_or_registration():
+    facts = [
+        record("domicile_state", "राजस्थान"),
+        record("residence_state", "Delhi"),
+        record("business_registration_state", "महाराष्ट्र"),
+    ]
+    assert evaluate(leaf("domicile_state", "Rajasthan"), facts, TODAY).outcome == "satisfied"
+    assert evaluate(leaf("residence_state", "Rajasthan"), facts, TODAY).outcome == "unsatisfied"
+    assert (
+        evaluate(leaf("business_registration_state", "Maharashtra"), facts, TODAY).outcome
+        == "satisfied"
+    )
+    assert (
+        evaluate(
+            leaf("residence_state", "Unmapped"), [record("residence_state", "अज्ञात स्थान")], TODAY
+        ).outcome
+        == "unknown"
+    )
