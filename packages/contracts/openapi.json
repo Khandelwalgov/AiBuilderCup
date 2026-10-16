@@ -7601,6 +7601,11 @@
             },
             "type": "array",
             "title": "Known Blockers"
+          },
+          "retrieval_truncated": {
+            "type": "boolean",
+            "title": "Retrieval Truncated",
+            "default": false
           }
         },
         "type": "object",

@@ -12,11 +12,13 @@ export function IntelligenceMap({
   selected,
   onSelect,
   title,
+  subjectLabel,
 }: {
   plan: Plan;
   selected: Action | null;
   onSelect: (action: Action) => void;
   title: (action: Action) => string;
+  subjectLabel?: string;
 }) {
   const hi = useLanguage() === 'hi';
   const context = useSubject();
@@ -48,6 +50,13 @@ export function IntelligenceMap({
   const active = hover ?? selected?.id;
   return (
     <section className="intelligence-map">
+      {plan.retrieval_truncated && (
+        <p role="status">
+          {hi
+            ? 'यह सीमित सूची है; सभी अवसरों के लिए खोज देखें।'
+            : 'This plan uses a bounded shortlist. Explore All shows the full catalogue.'}
+        </p>
+      )}
       <header className="map-header">
         <div>
           <span className="eyebrow">{hi ? 'आपके साझा कदम' : 'YOUR CONNECTED ACTIONS'}</span>
@@ -166,7 +175,7 @@ export function IntelligenceMap({
           </svg>
           <div className="map-subject" style={{ top: height / 2 - 65 }}>
             <Fingerprint size={30} />
-            <strong>{context.label}</strong>
+            <strong>{subjectLabel || context.label}</strong>
             <span>
               {plan.subject.kind === 'person'
                 ? hi

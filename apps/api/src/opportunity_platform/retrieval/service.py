@@ -1,5 +1,6 @@
 """Permission-scoped hybrid retrieval. Exact evaluation never writes in this module."""
 
+import json
 import uuid
 from collections import Counter, defaultdict
 from dataclasses import dataclass
@@ -18,6 +19,7 @@ from opportunity_platform.db.models import (
     OpportunityVersion,
     Requirement,
     RequirementEvidence,
+    Source,
 )
 from opportunity_platform.eligibility.engine import FactRecord
 from opportunity_platform.eligibility.rules import FactKey
@@ -128,7 +130,18 @@ def authorized_subjects(session, uid, request):
 
 
 def published_query(request):
-    query = catalogue(request.development).where(
+    if request.development:
+        if not settings().enable_development_catalogue:
+            raise APIError(404, "development_disabled", "The development catalogue is disabled.")
+        query = (
+            select(Opportunity, OpportunityVersion, Source)
+            .join(OpportunityVersion, Opportunity.published_version_id == OpportunityVersion.id)
+            .join(Source, Source.id == Opportunity.source_id)
+            .where(Opportunity.is_synthetic.is_(True), Source.is_synthetic.is_(True))
+        )
+    else:
+        query = catalogue(False)
+    query = query.where(
         Opportunity.published_version_id == OpportunityVersion.id,
         OpportunityVersion.publication_state == "published",
         OpportunityVersion.status == "verified",
@@ -173,10 +186,12 @@ def load_catalogue(session, request):
     if request.q.strip():
         tsquery = func.websearch_to_tsquery("english", request.q)
         rank = func.ts_rank_cd(OpportunityVersion.search_vector, tsquery)
-        for o, v, _s in session.execute(
-            published_query(request).where(OpportunityVersion.search_vector.op("@@")(tsquery))
+        for o, v, _s, score in session.execute(
+            published_query(request)
+            .add_columns(rank)
+            .where(OpportunityVersion.search_vector.op("@@")(tsquery))
         ):
-            fts[o.id] = session.scalar(select(rank).where(OpportunityVersion.id == v.id)) or 0
+            fts[o.id] = score or 0
     return rows, reqs, evidence, fts
 
 
@@ -197,7 +212,21 @@ def select_candidates(rows, reqs, subjects, request, fts, neural=None):
             str(v.id),
             v.content_hash or "",
             f"{v.title}\n{v.summary}",
-            [r.rule for r in reqs[v.id]],
+            [
+                {
+                    "rule": r.rule,
+                    "subject_context": r.subject_context,
+                    "kind": r.kind,
+                    "application_context": r.application_context,
+                }
+                for r in reqs[v.id]
+            ],
+            {
+                "category": v.category or o.category,
+                "country": v.country,
+                "state": v.state,
+                "district": v.district,
+            },
         )
         for o, v, _ in rows
     ]
@@ -282,6 +311,16 @@ def search(session: Session, uid: str, request: SearchRequest, subjects=None):
     generation_ms = (perf_counter() - start) * 1000
     start = perf_counter()
     assessments, action_counts = [], Counter()
+    from opportunity_platform.planning.service import identities
+
+    def action_keys(results):
+        return {
+            json.dumps(payload, sort_keys=True)
+            for r in results
+            if r.result.outcome == "unknown"
+            for payload, _ in identities(r)
+        }
+
     for subject, row in pairs:
         o, v, _ = row
         results = evaluate_requirements(
@@ -304,10 +343,8 @@ def search(session: Session, uid: str, request: SearchRequest, subjects=None):
             else "Preliminary assessment; authorities decide.",
             opportunity_title=v.title,
         )
-        for r in results:
-            if r.result.outcome == "unknown":
-                for missing in r.result.missing:
-                    action_counts[(subject.key, missing)] += 1
+        for key in action_keys(results):
+            action_counts[(subject.key, key)] += 1
         assessments.append((subject, row, evaluation))
     exact_ms = (perf_counter() - start) * 1000
     start = perf_counter()
@@ -315,7 +352,7 @@ def search(session: Session, uid: str, request: SearchRequest, subjects=None):
     for subject, row, evaluation in assessments:
         o, v, _ = row
         satisfied = sum(r.result.outcome == "satisfied" for r in evaluation.requirements)
-        missing = sorted({key for r in evaluation.requirements for key in r.result.missing})
+
         reasons = [f"{subject.name}: {evaluation.status.replace('_', ' ')}."]
         for r in evaluation.requirements:
             reasons.append(f"{r.requirement}: {r.result.reason}")
@@ -323,7 +360,9 @@ def search(session: Session, uid: str, request: SearchRequest, subjects=None):
             reasons.append(f"Published closing date: {v.closes_on.isoformat()}.")
         if (v.category or o.category) in request.interests:
             reasons.append("Matches your selected category interest.")
-        shared = sum(action_counts[(subject.key, key)] > 1 for key in missing)
+        shared = sum(
+            action_counts[(subject.key, key)] > 1 for key in action_keys(evaluation.requirements)
+        )
         if shared:
             reasons.append(
                 "Some missing information or evidence is shared across these opportunities."
@@ -335,7 +374,7 @@ def search(session: Session, uid: str, request: SearchRequest, subjects=None):
             -(v.category in request.interests),
             -satisfied,
             -shared,
-            v.closes_on or date.max,
+            v.closes_on if v.closes_on and v.closes_on >= date.today() else date.max,
             str(o.id),
         )
         assessment = Assessment(

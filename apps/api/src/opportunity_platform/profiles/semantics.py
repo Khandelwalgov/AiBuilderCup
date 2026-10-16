@@ -63,14 +63,14 @@ def validate_person(facts, before=()):
     wrong = [
         f.key
         for f in facts
-        if f.key.startswith("business_")
+        if (f.key.startswith("business_") or f.key == "annual_household_income")
         and (f.key not in prior or signature(f) != signature(prior[f.key]))
     ]
     if wrong:
         raise APIError(
             422,
             "subject_fact_mismatch",
-            "Business facts belong in an authorized business profile. "
+            "Household and business facts belong in the appropriate authorized context. "
             "Your personal answers are preserved.",
             issues=[{"fields": wrong}],
         )

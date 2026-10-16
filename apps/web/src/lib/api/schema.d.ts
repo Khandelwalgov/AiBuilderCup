@@ -1478,6 +1478,11 @@ export interface components {
             known_blockers: {
                 [key: string]: unknown;
             }[];
+            /**
+             * Retrieval Truncated
+             * @default false
+             */
+            retrieval_truncated: boolean;
         };
         /** ProfileView */
         ProfileView: {

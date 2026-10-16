@@ -1,3 +1,5 @@
+import { SearchModes, type Mode } from '../intelligence/SearchModes';
+import { Recommendations } from '../intelligence/Recommendations';
 import { documentStatus, documentsHref, useDocumentNeeds } from '../documents/Documents';
 import { displayLabel, displayDate } from '../../i18n/format';
 import { ContextLink as Link } from '../../app/subject-context';
@@ -38,6 +40,11 @@ export function Discover() {
   const t = useStrings();
   const hi = useLanguage() === 'hi';
   const [params, setParams] = useSearchParams();
+  const mode = (
+    ['me', 'family', 'member', 'business'].includes(params.get('mode') || '')
+      ? params.get('mode')
+      : 'explore'
+  ) as Mode;
   const nationalParam = params.get('national');
   const [includeNational, setIncludeNational] = useState(nationalParam !== 'false');
   useEffect(() => setIncludeNational(nationalParam !== 'false'), [nationalParam]);
@@ -57,6 +64,7 @@ export function Discover() {
     setParams(next);
   }
   const query = useInfiniteQuery({
+    enabled: mode === 'explore',
     queryKey: ['opportunities', q, category, state, district, development, includeNational],
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {
@@ -78,7 +86,7 @@ export function Discover() {
     },
     getNextPageParam: (last) => last.next_cursor ?? undefined,
   });
-  const items = query.data?.pages.flatMap((p) => p.items) ?? [];
+  const items = mode === 'explore' ? (query.data?.pages.flatMap((p) => p.items) ?? []) : [];
   const total = query.data?.pages[0]?.total;
   return (
     <div className="page discovery">
@@ -97,6 +105,8 @@ export function Discover() {
           {development ? t.synthetic : t.publishedCatalogue}
         </span>
       </header>
+      <SearchModes mode={mode} onChange={(value) => filter('mode', value)} />
+      {mode !== 'explore' && <Recommendations mode={mode} />}
       <form
         className="research-search search-box"
         onSubmit={(e) => {
@@ -203,7 +213,7 @@ export function Discover() {
           </button>
         )}
       </div>
-      {query.isPending ? (
+      {mode !== 'explore' ? null : query.isPending ? (
         <div className="card-grid" role="status" aria-label={t.loading}>
           {[1, 2, 3].map((i) => (
             <div className="skeleton" key={i}>

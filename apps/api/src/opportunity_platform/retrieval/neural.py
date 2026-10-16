@@ -11,6 +11,8 @@ class PolicyRepresentation:
     source_hash: str
     text: str
     typed_requirements: list[dict]
+    metadata: dict
+    representation_version: str = "policy-v1"
 
 
 @dataclass(frozen=True)

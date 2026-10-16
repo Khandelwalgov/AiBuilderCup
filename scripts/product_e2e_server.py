@@ -74,7 +74,7 @@ try:
         )
         session.add(source)
         session.flush()
-        for index in [1, 2, 3]:
+        for index in [1, 2, 3, 4, 5]:
             op = Opportunity(
                 source_id=source.id,
                 source_key=f"fictional-documentary-{index}",
@@ -99,6 +99,41 @@ try:
             session.add(version)
             session.flush()
             op.published_version_id = version.id
+            if index in {4, 5}:
+                kind = "business" if index == 4 else "household"
+                op.category = kind
+                version.category = kind
+                version.title = f"FICTIONAL {kind} opportunity"
+                condition = (
+                    {"op": "eq", "fact": "business_registered", "value": True}
+                    if index == 4
+                    else {
+                        "op": "lte",
+                        "fact": "annual_household_income",
+                        "value": 300000,
+                        "income_period": "2026-27",
+                        "income_definition": "fictional-household",
+                    }
+                )
+                req = Requirement(
+                    version_id=version.id,
+                    description=f"FICTIONAL {kind} condition",
+                    subject_context=kind,
+                    kind="eligibility",
+                    application_context="all",
+                    rule={"op": "condition", "condition": condition, "children": []},
+                )
+                session.add(req)
+                session.flush()
+                session.add(
+                    RequirementEvidence(
+                        requirement_id=req.id,
+                        source_url=source.url,
+                        page="1",
+                        passage=f"FICTIONAL test-only condition: {condition}",
+                    )
+                )
+                continue
             if index == 3:
                 course = Requirement(
                     version_id=version.id,

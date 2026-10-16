@@ -15,7 +15,12 @@ import { useSubject } from '../../app/subject-context';
 type Action = components['schemas']['ActionView'];
 export function Plan() {
   const context = useSubject();
-  return <SubjectPlan key={context.key} />;
+  return (
+    <>
+      <Link to="/scenarios">Scenario Studio · परिदृश्य स्टूडियो</Link>
+      <SubjectPlan key={context.key} />
+    </>
+  );
 }
 function SubjectPlan() {
   const t = useStrings();

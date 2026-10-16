@@ -79,6 +79,14 @@ export const routeMetadata = [
     icon: Layers3,
   },
   {
+    id: 'scenarios',
+    path: '/scenarios',
+    titleKey: 'workspaceNav',
+    nav: 'scenarios',
+    access: 'authenticated',
+    icon: Layers3,
+  },
+  {
     id: 'admin',
     path: '/admin',
     titleKey: 'adminReview',
@@ -116,6 +124,7 @@ export function routeTitle(
   if (meta.id === 'home' && !authenticated) return hi ? 'होम' : 'Home';
   if (meta.id === 'dependent') return hi ? 'आश्रित का प्रोफ़ाइल' : 'Dependent profile';
   if (meta.id === 'candidate') return hi ? 'उम्मीदवार की समीक्षा' : 'Candidate review';
+  if (meta.id === 'scenarios') return hi ? 'परिदृश्य स्टूडियो' : 'Scenario Studio';
   if (meta.id === 'plan') return hi ? 'अनलॉक योजना' : 'Unlock plan';
   return t[meta.titleKey];
 }

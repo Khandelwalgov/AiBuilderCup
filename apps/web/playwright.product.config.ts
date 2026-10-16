@@ -1,7 +1,7 @@
 import { defineConfig } from '@playwright/test';
 export default defineConfig({
   testDir: './tests',
-  testMatch: ['product-real.spec.ts', 'common-sense.spec.ts'],
+  testMatch: ['product-real.spec.ts', 'common-sense.spec.ts', 'intelligence-real.spec.ts'],
   workers: 1,
   timeout: 60000,
   use: { baseURL: 'http://127.0.0.1:15210', acceptDownloads: true },

@@ -1,3 +1,4 @@
+import { ScenarioStudio } from '../features/intelligence/ScenarioStudio';
 import { DirtyFormsProvider, useDiscardGuard } from './dirty-forms';
 import { ContextLink as Link } from './subject-context';
 import { ContextNavLink as NavLink, SubjectProvider, useSubject } from './subject-context';
@@ -308,6 +309,7 @@ export function ApplicationFrame({ session }: { session: SessionState }) {
                               family: <Workspaces kind="household" />,
                               businesses: <Workspaces kind="business" />,
                               plan: <Plan />,
+                              scenarios: <ScenarioStudio />,
                               admin: <Admin />,
                               candidate: <Admin />,
                               settings: (

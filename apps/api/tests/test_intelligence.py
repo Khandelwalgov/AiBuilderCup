@@ -201,6 +201,8 @@ def test_hybrid_exact_and_scenario_nonpersistence(db, monkeypatch):
     assert [i.opportunity.id for i in first.items] == [
         i.opportunity.id for i in search(db, "phase4-test", request).items
     ]
+    unchanged = simulate(db, "phase4-test", ScenarioRequest(base=request))
+    assert all(c["change"] == "unchanged" for c in unchanged.changes)
     before = counts(db)
     body = ScenarioRequest(
         base=request,
@@ -243,6 +245,8 @@ def test_hybrid_exact_and_scenario_nonpersistence(db, monkeypatch):
         for c in result.changes
     )
     assert any(c["subject_key"] == "scenario:person:child" for c in result.changes)
+    actual_ids = {item.opportunity.id for item in result.actual.items}
+    assert any(item.opportunity.id not in actual_ids for item in result.hypothetical.items)
     assert result.plan.hypothetical
     assert result.plan.actions
     db.commit()  # Even a caller committing cannot save scenario objects.
@@ -302,3 +306,98 @@ def test_large_fair_shortlist_and_national(db, monkeypatch):
 def test_private_routes_require_firebase(client):
     assert client.post("/v1/search", json={"mode": "me"}).status_code == 401
     assert client.post("/v1/scenarios/evaluate", json={"base": {"mode": "me"}}).status_code == 401
+
+
+def test_family_authorized_members_and_household_income_scope(db, monkeypatch):
+    from opportunity_platform.core.config import settings
+    from opportunity_platform.eligibility.rules import FactInput
+    from opportunity_platform.profiles.service import ProfileWrite, save_profile
+    from opportunity_platform.subjects import service as subjects
+
+    monkeypatch.setattr(settings(), "enable_development_catalogue", True)
+    fictional_catalogue(db, 27)
+    save_profile(
+        db,
+        "family-test",
+        ProfileWrite(display_name="Fictional parent", facts=[FactInput(key="age", value=40)]),
+    )
+    home = subjects.create_household(
+        db, "family-test", subjects.HouseholdWrite(name="Fictional family")
+    )
+    child = subjects.add_dependent(
+        db,
+        "family-test",
+        home.id,
+        subjects.DependentWrite(
+            display_name="Fictional child",
+            facts=[FactInput(key="age", value=10)],
+            guardian_responsibility_confirmed=True,
+            relationship="parent",
+        ),
+    )
+    stranger = account(db, "private-adult")
+    adult = Person(user_id=stranger.id, display_name="PRIVATE ADULT NEVER EXPOSED")
+    db.add(adult)
+    db.flush()
+    from datetime import date
+
+    db.add(HouseholdMembership(household_id=home.id, person_id=adult.id, starts_on=date.today()))
+    db.commit()
+    result = search(
+        db, "family-test", SearchRequest(mode="family", subject_id=home.id, development=True)
+    )
+    assert len(result.subjects) == 3
+    assert "PRIVATE ADULT" not in result.model_dump_json()
+    assert {
+        a.subject_key for i in result.items for a in i.assessments if a.subject_kind == "person"
+    } >= {f"person:{child.id}"}
+    school = next(i for i in result.items if i.opportunity.category == "school")
+    assert {a.evaluation.status for a in school.assessments} == {
+        "potential_match",
+        "not_eligible_on_known_facts",
+    }
+    hh = next(a for i in result.items for a in i.assessments if a.subject_kind == "household")
+    assert hh.evaluation.status == "possibly_eligible_missing_information"
+    subjects.revoke_guardian_access(db, "family-test", child.id)
+    after = search(
+        db, "family-test", SearchRequest(mode="family", subject_id=home.id, development=True)
+    )
+    assert f"person:{child.id}" not in after.subject_coverage
+    assert len(after.subjects) == 2
+    with pytest.raises(APIError):
+        simulate(
+            db,
+            "family-test",
+            ScenarioRequest(
+                base=SearchRequest(mode="family", subject_id=home.id, development=True),
+                overrides=[
+                    {"subject_key": f"person:{child.id}", "facts": [{"key": "age", "value": 10}]}
+                ],
+            ),
+        )
+
+
+def test_new_unreviewed_draft_never_replaces_published_index_version(db, monkeypatch):
+    from opportunity_platform.core.config import settings
+
+    monkeypatch.setattr(settings(), "enable_development_catalogue", True)
+    fictional_catalogue(db, 9)
+    request = SearchRequest(development=True)
+    rows, _, _, _ = load_catalogue(db, request)
+    o, v, _ = rows[0]
+    db.add(
+        OpportunityVersion(
+            opportunity_id=o.id,
+            version=2,
+            publication_state="draft",
+            status="needs_review",
+            title="UNREVIEWED DRAFT NEVER RETRIEVED",
+            summary="draft",
+            issuer="Fictional",
+            country="IN",
+        )
+    )
+    db.commit()
+    after, _, _, _ = load_catalogue(db, request)
+    assert len(after) == len(rows)
+    assert next(version for op, version, _ in after if op.id == o.id).id == v.id

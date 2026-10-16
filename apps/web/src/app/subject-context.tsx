@@ -116,6 +116,8 @@ export function SubjectProvider({
         if (subject.id) target.searchParams.set('id', subject.id);
       }
     }
+    if (params.has('mode') && !target.searchParams.has('mode'))
+      target.searchParams.set('mode', params.get('mode')!);
     if (params.get('development') === 'true' && !target.searchParams.has('development'))
       target.searchParams.set('development', 'true');
     return target.pathname + target.search + target.hash;

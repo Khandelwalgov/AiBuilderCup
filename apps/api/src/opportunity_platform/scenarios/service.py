@@ -102,7 +102,7 @@ HOUSEHOLD_KEYS = {
 }
 
 
-def apply_facts(subject, inputs):
+def apply_facts(subject, inputs, invalidate_evidence=False):
     permitted = {"person": PERSON_KEYS, "household": HOUSEHOLD_KEYS, "business": BUSINESS_KEYS}[
         subject.kind
     ]
@@ -115,7 +115,12 @@ def apply_facts(subject, inputs):
             "documentary verification cannot be simulated.",
         )
     # Circumstance changes do not make old documentary facts verified for the new future.
-    facts = [f for f in subject.facts if f.key not in keys and f.origin != "verified_document"]
+    facts = [
+        f
+        for f in subject.facts
+        if f.key not in keys
+        and (f.origin != "verified_document" or not (inputs or invalidate_evidence))
+    ]
     facts += [
         FactRecord(
             id="scenario",
@@ -127,6 +132,10 @@ def apply_facts(subject, inputs):
         )
         for f in inputs
     ]
+    if subject.kind == "person":
+        from opportunity_platform.profiles.semantics import validate_person
+
+        validate_person(facts, subject.facts)
     return SearchSubject(subject.key, subject.kind, subject.name, subject.id, facts, True)
 
 
@@ -176,6 +185,7 @@ def make_plan(response, ref):
         evaluations=evaluations,
         actions=sorted(actions.values(), key=lambda a: (-len(a.opportunities), a.identity)),
         known_blockers=blockers,
+        retrieval_truncated=response.truncated,
     )
 
 
@@ -193,7 +203,11 @@ def simulate(session, uid, request):
         by_key[override.subject_key] = apply_facts(by_key[override.subject_key], override.facts)
     # Exclusion is scenario-only, not removal of a real membership.
     hypothetical = [
-        apply_facts(s, []) for key, s in by_key.items() if key not in request.excluded_subject_keys
+        apply_facts(
+            s, [], bool(request.people or request.excluded_subject_keys) and s.kind == "household"
+        )
+        for key, s in by_key.items()
+        if key not in request.excluded_subject_keys
     ]
     graph = [
         {"key": s.key, "kind": s.kind, "name": s.name, "fictional": False} for s in hypothetical
@@ -266,6 +280,7 @@ def simulate(session, uid, request):
                 "before": old[1].evaluation.status if old else None,
                 "after": new[1].evaluation.status if new else None,
                 "reasons": new[1].reasons if new else old[1].reasons,
+                "before_reasons": old[1].reasons if old else [],
             }
         )
     kind = {"me": "person", "member": "person", "family": "household", "business": "business"}[

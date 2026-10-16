@@ -15,14 +15,11 @@ from opportunity_platform.db.models import (
     AuditEvent,
     MatchEvaluation,
     Opportunity,
-    OpportunityVersion,
     Requirement,
-    RequirementEvidence,
     User,
 )
 from opportunity_platform.eligibility import service as eligibility
 from opportunity_platform.eligibility.rules import FactInput
-from opportunity_platform.opportunities.service import catalogue
 from opportunity_platform.subjects.service import SubjectRef, resolve, subject_facts
 
 
@@ -55,6 +52,7 @@ class PlanView(BaseModel):
     evaluations: list[eligibility.EvaluationView]
     actions: list[ActionView]
     known_blockers: list[dict]
+    retrieval_truncated: bool = False
 
 
 def leaves(rule):
@@ -128,41 +126,44 @@ def build(session, uid, subject, hypothetical=None, development=False):
     subject = SubjectRef(kind=subject.kind, id=obj.id)
     # Serialize plan mutation to avoid duplicate actions across simultaneous requests.
     session.execute(select(User).where(User.id == user.id).with_for_update())
-    rows = list(
-        session.execute(
-            catalogue(development)
-            .where(
-                OpportunityVersion.publication_state == "published",
-                Opportunity.published_version_id == OpportunityVersion.id,
-            )
-            .order_by(Opportunity.id)
-            .limit(100)
-        )
-    )
     from opportunity_platform.documents.service import readiness
+    from opportunity_platform.retrieval.service import (
+        SearchRequest,
+        SearchSubject,
+        load_catalogue,
+        select_candidates,
+    )
 
     documentary = {str(r.requirement_id): r for r in readiness(session, uid, subject)}
     facts = subject_facts(session, subject.kind, obj.id)
-    requirements = {}
-    for requirement in session.scalars(
-        select(Requirement)
-        .where(Requirement.version_id.in_([row[1].id for row in rows]))
-        .order_by(Requirement.id)
-    ):
-        requirements.setdefault(requirement.version_id, []).append(requirement)
-    rows = [
-        row
-        for row in rows
-        if not requirements.get(row[1].id)
-        or any(r.subject_context == subject.kind for r in requirements[row[1].id])
-    ]
-    evidence = {}
-    reqids = [r.id for group in requirements.values() for r in group]
-    if reqids:
-        for item in session.scalars(
-            select(RequirementEvidence).where(RequirementEvidence.requirement_id.in_(reqids))
-        ):
-            evidence.setdefault(item.requirement_id, []).append(item)
+    request = SearchRequest(development=development)
+    rows, requirements, evidence, fts = load_catalogue(session, request)
+    candidate_facts = facts
+    if hypothetical is not None:
+        overridden = {f.key for f in hypothetical}
+        from opportunity_platform.eligibility.engine import FactRecord
+
+        candidate_facts = [f for f in facts if f.key not in overridden] + [
+            FactRecord(
+                id="scenario",
+                key=f.key,
+                value=f.value,
+                context={
+                    "income_period": f.income_period,
+                    "income_definition": f.income_definition,
+                },
+            )
+            for f in hypothetical
+        ]
+    pairs, _, pair_count = select_candidates(
+        rows,
+        requirements,
+        [SearchSubject(str(obj.id), subject.kind, "Selected subject", obj.id, candidate_facts)],
+        request,
+        fts,
+    )
+    rows = [row for _, row in pairs]
+    truncated = len(rows) < pair_count
     evaluations = [
         eligibility.check(
             session,
@@ -280,7 +281,7 @@ def build(session, uid, subject, hypothetical=None, development=False):
         )
     if hypothetical is None:
         for identity, record in existing.items():
-            if identity not in grouped:
+            if identity not in grouped and not truncated:
                 record.status = "resolved_or_superseded"
                 session.execute(
                     delete(ActionDependency).where(ActionDependency.action_id == record.id)
@@ -294,6 +295,7 @@ def build(session, uid, subject, hypothetical=None, development=False):
             actions, key=lambda a: (-len({link["id"] for link in a.opportunities}), a.title)
         ),
         known_blockers=blockers,
+        retrieval_truncated=truncated,
     )
 
 
