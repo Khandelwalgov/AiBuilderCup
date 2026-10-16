@@ -56,6 +56,17 @@ def main():
         ]
         run("run", "--rm", *environment, image, "alembic", "upgrade", "head")
         run("run", "--rm", *environment, image, "alembic", "check")
+        run(
+            "run",
+            "--rm",
+            *environment,
+            image,
+            "python",
+            "-m",
+            "opportunity_platform.operations.migration_gate",
+            "--mode",
+            "verify",
+        )
         audit = """
 import json,os
 from pathlib import Path

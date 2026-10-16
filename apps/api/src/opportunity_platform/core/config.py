@@ -9,6 +9,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     environment: Literal["development", "production"] = "development"
+    database_provider: Literal["postgresql", "neon"] = "postgresql"
     database_url: str = (
         "postgresql+psycopg://opportunity:local-development-only@localhost:5432/opportunity"
     )
@@ -43,6 +44,10 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def production_configuration(self):
+        if self.database_provider == "neon":
+            from opportunity_platform.core.database import validate_neon_url
+
+            validate_neon_url(self.database_url)
         if self.environment == "production":
             if os.environ.get("FIREBASE_AUTH_EMULATOR_HOST"):
                 raise ValueError("Production must never use the Firebase Auth emulator")

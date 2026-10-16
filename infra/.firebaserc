@@ -1,0 +1,13 @@
+{
+  "projects": {},
+  "targets": {
+    "venuesignal": {
+      "hosting": {
+        "unclaimed": [
+          "unclaimed-ai-cup"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

@@ -103,7 +103,7 @@ def test_plan_and_execute_guards_and_safe_environment(tmp_path, monkeypatch):
     api = plan[-1][1]
     migration = plan[1][1]
     assert "--no-traffic" in api and "--cpu-throttling" in api
-    assert api[api.index("--min") + 1] == "0" and api[api.index("--max") + 1] == "2"
+    assert api[api.index("--min") + 1] == "0" and api[api.index("--max") + 1] == "1"
     assert api[api.index("--timeout") + 1] == "60s"
     assert "DATABASE_URL=opportunity-migration-database-url:1" in migration
     assert all(
@@ -112,6 +112,9 @@ def test_plan_and_execute_guards_and_safe_environment(tmp_path, monkeypatch):
         for arg in cmd
     )
     # Existing local env files are preserved; execution refuses a developer checkout.
+    (tmp_path / "infra").mkdir(exist_ok=True)
+    for name in ["firebase.json", ".firebaserc"]:
+        shutil.copy(ROOT / "infra" / name, tmp_path / "infra" / name)
     monkeypatch.setattr(deploy, "ROOT", tmp_path)
     (tmp_path / "apps/web").mkdir(parents=True)
     (tmp_path / "apps/web/.env.local").write_text("keep me")
@@ -206,6 +209,9 @@ def test_execute_orders_candidate_smoke_build_promotion_and_hosting_without_clou
     path.write_text(json.dumps(c))
     receipt = tmp_path / "receipt.json"
     calls = []
+    (tmp_path / "infra").mkdir(exist_ok=True)
+    for name in ["firebase.json", ".firebaserc"]:
+        shutil.copy(ROOT / "infra" / name, tmp_path / "infra" / name)
     monkeypatch.setattr(deploy, "ROOT", tmp_path)
     monkeypatch.setattr(deploy, "image_tag", lambda: "release-test")
     status = {
@@ -216,6 +222,11 @@ def test_execute_orders_candidate_smoke_build_promotion_and_hosting_without_clou
 
     def invoke(label, args, **kwargs):
         calls.append(label)
+        if label == "hosting":
+            assert args[args.index("--only") + 1] == "hosting:unclaimed"
+            assert args[args.index("--project") + 1] == "venuesignal"
+        if label == "migration-job":
+            assert "-m,opportunity_platform.operations.migration_gate,--mode,verify" in args
         if label == "record-existing-traffic":
             return json.dumps(
                 [
@@ -232,6 +243,8 @@ def test_execute_orders_candidate_smoke_build_promotion_and_hosting_without_clou
     monkeypatch.setattr(deploy, "invoke", invoke)
     monkeypatch.setattr(deploy, "smoke", lambda *args: calls.append("smoke"))
 
+    checked_urls = []
+
     class HostingResponse:
         status = 200
 
@@ -244,7 +257,11 @@ def test_execute_orders_candidate_smoke_build_promotion_and_hosting_without_clou
         def read(self):
             return b"<html>fictional mocked hosting</html>"
 
-    monkeypatch.setattr(deploy.urllib.request, "urlopen", lambda *args, **kwargs: HostingResponse())
+    def hosting_open(url, **kwargs):
+        checked_urls.append(url)
+        return HostingResponse()
+
+    monkeypatch.setattr(deploy.urllib.request, "urlopen", hosting_open)
     assert (
         deploy.main(
             [
@@ -267,7 +284,10 @@ def test_execute_orders_candidate_smoke_build_promotion_and_hosting_without_clou
         < calls.index("promote-api")
         < calls.index("hosting")
     )
+    assert checked_urls == ["https://unclaimed-ai-cup.web.app/profile"]
     assert "NEVER_IN_RECEIPT" not in receipt.read_text()
+    assert json.loads(receipt.read_text())["web"] == "https://unclaimed-ai-cup.web.app"
+    assert json.loads(receipt.read_text())["migration_mode"] == "verify"
 
     def failed_smoke(*args):
         raise RuntimeError("candidate failed")
@@ -292,3 +312,115 @@ def test_workflow_is_manual_keyless_and_ci_never_deploys():
     assert "credentials_json" not in workflow and "FIREBASE_TOKEN" not in workflow
     ci = (ROOT / ".github/workflows/ci.yml").read_text()
     assert "--execute" not in ci and "firebase deploy" not in ci and "gcloud" not in ci
+
+
+def test_neon_plan_and_hosting_are_explicit_and_exclusive(tmp_path, monkeypatch):
+    deploy = module("deploy")
+    c = deploy.validate(config())
+    deploy.validate_hosting(c)
+    assert deploy.backend_environment(c)["DATABASE_PROVIDER"] == "neon"
+    assert json.loads(deploy.backend_environment(c)["CORS_ORIGINS"]) == [
+        "https://unclaimed-ai-cup.web.app",
+        "https://unclaimed-ai-cup.firebaseapp.com",
+    ]
+    commands = deploy.plan(c, "public.json")
+    assert not any(
+        "cloudsql" in arg.lower() or "/cloudsql/" in arg for _, cmd in commands for arg in cmd
+    )
+    assert "-m,opportunity_platform.operations.migration_gate,--mode,verify" in commands[1][1]
+    assert "upgrade,head" not in commands[1][1]
+    bad = {**c, "cloud_sql_connection": "not-allowed"}
+    with pytest.raises(ValueError):
+        deploy.validate(bad)
+    (tmp_path / "infra").mkdir()
+    shutil.copy(ROOT / "infra/firebase.json", tmp_path / "infra/firebase.json")
+    rc = json.loads((ROOT / "infra/.firebaserc").read_text())
+    rc["targets"]["venuesignal"]["hosting"]["unclaimed"] = ["venuesignal", "unclaimed-ai-cup"]
+    (tmp_path / "infra/.firebaserc").write_text(json.dumps(rc))
+    monkeypatch.setattr(deploy, "ROOT", tmp_path)
+    with pytest.raises(ValueError):
+        deploy.validate_hosting(c)
+
+
+def test_neon_ssl_and_pooler_configuration():
+    from opportunity_platform.core.config import Settings
+    from opportunity_platform.core.database import connect_args, validate_neon_url
+
+    direct = "postgresql+psycopg://fake:fictional-password@ep-fictional.aws.neon.tech/db?sslmode=require&channel_binding=require"
+    pooled = direct.replace("ep-fictional.", "ep-fictional-pooler.")
+    validate_neon_url(direct, direct=True)
+    validate_neon_url(pooled)
+    assert connect_args("neon")["prepare_threshold"] is None
+    assert "prepare_threshold" not in connect_args("postgresql")
+    with pytest.raises(ValueError):
+        validate_neon_url(pooled, direct=True)
+    for bad in [
+        direct.replace("sslmode=require", "sslmode=disable"),
+        direct.replace(".neon.tech", ".invalid"),
+        direct + "&hostaddr=127.0.0.1",
+        "not-a-url",
+    ]:
+        with pytest.raises(ValueError) as error:
+            validate_neon_url(bad)
+        assert "fictional-password" not in str(error.value)
+    settings = Settings(
+        _env_file=None,
+        database_provider="neon",
+        database_url=pooled,
+        environment="production",
+        firebase_project_id="venuesignal",
+        cors_origins=["https://unclaimed-ai-cup.web.app"],
+    )
+    assert settings.database_provider == "neon"
+
+
+def test_schema_verification_is_read_only_and_never_initializes(db):
+    from sqlalchemy import text
+
+    from opportunity_platform.operations.migration_gate import main, verify_head
+
+    with pytest.raises(SystemExit):
+        main(["--mode", "upgrade"])
+    with db.bind.begin() as conn:
+        conn.execute(text("CREATE TABLE alembic_version (version_num VARCHAR(32))"))
+        conn.execute(text("INSERT INTO alembic_version VALUES ('f24a1000abcd')"))
+    with db.bind.connect() as conn:
+        verify_head(conn, ["f24a1000abcd"])
+        assert conn.scalar(text("SHOW transaction_read_only")) == "on"
+    with db.bind.connect() as conn:
+        with pytest.raises(RuntimeError):
+            verify_head(conn, ["not-the-head"])
+    with db.bind.connect() as conn:
+        assert conn.scalar(text("SELECT version_num FROM alembic_version")) == "f24a1000abcd"
+
+
+def test_schema_gate_missing_metadata_does_not_initialize(db):
+    from sqlalchemy import text
+    from sqlalchemy.exc import ProgrammingError
+
+    from opportunity_platform.operations.migration_gate import verify_head
+
+    with db.bind.connect() as connection:
+        with pytest.raises(ProgrammingError):
+            verify_head(connection, ["f24a1000abcd"])
+    with db.bind.connect() as connection:
+        assert connection.scalar(text("SELECT to_regclass('alembic_version')")) is None
+
+
+def test_upgrade_requires_separate_runner_authorization(tmp_path, monkeypatch, capsys):
+    deploy = module("deploy")
+    c = config()
+    c["migration_mode"] = "upgrade"
+    path = tmp_path / "public.json"
+    path.write_text(json.dumps(c))
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("Unexpected cloud operation")
+
+    monkeypatch.setattr(deploy, "invoke", forbidden)
+    with pytest.raises(SystemExit):
+        deploy.main(["--config", str(path), "--execute", "--approved-project", "venuesignal"])
+    assert "--approve-migrations" in capsys.readouterr().err
+    assert any(
+        "--approve-upgrade" in arg for _, cmd in deploy.plan(c, "public.json") for arg in cmd
+    )

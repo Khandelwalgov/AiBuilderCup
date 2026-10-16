@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
 from opportunity_platform.core.config import settings
+from opportunity_platform.core.database import connect_args
 
 engine = create_engine(
     settings().database_url,
@@ -9,7 +10,7 @@ engine = create_engine(
     pool_size=3,
     max_overflow=0,
     pool_timeout=10,
-    connect_args={"connect_timeout": 10},
+    connect_args=connect_args(settings().database_provider),
 )
 
 

@@ -1,24 +1,27 @@
 {
-  "project_id": "YOUR_PROJECT_ID",
+  "project_id": "venuesignal",
   "region": "asia-south1",
   "service": "opportunity-api",
   "repository": "opportunity",
-  "cloud_sql_connection": "YOUR_PROJECT_ID:asia-south1:opportunity-db",
-  "runtime_service_account": "opportunity-runtime@YOUR_PROJECT_ID.iam.gserviceaccount.com",
-  "migration_service_account": "opportunity-migrations@YOUR_PROJECT_ID.iam.gserviceaccount.com",
+  "runtime_service_account": "opportunity-runtime@venuesignal.iam.gserviceaccount.com",
+  "migration_service_account": "opportunity-migrations@venuesignal.iam.gserviceaccount.com",
   "database_secret": "opportunity-database-url",
   "database_secret_version": "1",
   "gemini_model": "gemini-3.8-flash",
   "firebase_web": {
-    "project_id": "YOUR_PROJECT_ID",
+    "project_id": "venuesignal",
     "api_key": "YOUR_PUBLIC_FIREBASE_WEB_API_KEY",
-    "auth_domain": "YOUR_PROJECT_ID.firebaseapp.com",
+    "auth_domain": "venuesignal.firebaseapp.com",
     "app_id": "YOUR_FIREBASE_WEB_APP_ID"
   },
   "migration_database_secret": "opportunity-migration-database-url",
   "migration_database_secret_version": "1",
   "document_signing_secret": "opportunity-document-signing-key",
   "document_signing_secret_version": "1",
-  "build_service_account": "opportunity-build@YOUR_PROJECT_ID.iam.gserviceaccount.com",
-  "build_source_bucket": "YOUR_PROJECT_ID-release-source"
+  "build_service_account": "opportunity-build@venuesignal.iam.gserviceaccount.com",
+  "build_source_bucket": "venuesignal-release-source",
+  "database_provider": "neon",
+  "migration_mode": "verify",
+  "hosting_site": "unclaimed-ai-cup",
+  "hosting_target": "unclaimed"
 }

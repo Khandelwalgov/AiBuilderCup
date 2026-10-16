@@ -18,7 +18,10 @@ FIELDS = {
     "region",
     "service",
     "repository",
-    "cloud_sql_connection",
+    "database_provider",
+    "migration_mode",
+    "hosting_site",
+    "hosting_target",
     "runtime_service_account",
     "migration_service_account",
     "database_secret",
@@ -52,11 +55,13 @@ def validate(config):
             r"[a-z][a-z0-9-]+@" + re.escape(project) + r"\.iam\.gserviceaccount\.com", config[field]
         ):
             raise ValueError("Service accounts must belong to the selected project")
-    if not re.fullmatch(
-        re.escape(project + ":" + config["region"] + ":") + r"[a-z][a-z0-9-]+",
-        config["cloud_sql_connection"],
-    ):
-        raise ValueError("Cloud SQL must use the selected project and region")
+    if config["database_provider"] != "neon":
+        raise ValueError("This release path supports external Neon, without Cloud SQL")
+    if config["migration_mode"] not in {"verify", "upgrade"}:
+        raise ValueError("Choose read-only schema verification or explicitly approved upgrade")
+    for field in ["hosting_site", "hosting_target"]:
+        if not re.fullmatch(r"[a-z][a-z0-9-]{1,61}[a-z0-9]", config[field]):
+            raise ValueError("Invalid Hosting identifier")
     for field in ["database_secret", "migration_database_secret", "document_signing_secret"]:
         if not re.fullmatch(r"[a-zA-Z0-9_-]{1,255}", config[field]):
             raise ValueError("Use Secret Manager names, never secret values")
@@ -91,6 +96,44 @@ def validate(config):
     if config["database_secret"] == config["migration_database_secret"]:
         raise ValueError("Use separate DML and migration database credentials")
     return config
+
+
+def validate_hosting(config):
+    """Read local public mapping; fail closed before any cloud command."""
+    hosting = json.loads((ROOT / "infra/firebase.json").read_text())["hosting"]
+    rc = json.loads((ROOT / "infra/.firebaserc").read_text())
+    expected = (
+        rc.get("targets", {})
+        .get(config["project_id"], {})
+        .get("hosting", {})
+        .get(config["hosting_target"])
+    )
+    if (
+        not isinstance(hosting, dict)
+        or hosting.get("target") != config["hosting_target"]
+        or hosting.get("site") is not None
+        or expected != [config["hosting_site"]]
+    ):
+        raise ValueError("Hosting configuration must target exactly the selected Unclaimed site")
+
+
+def hosting_origin(config):
+    return "https://" + config["hosting_site"] + ".web.app"
+
+
+def hosting_command(config):
+    # Firebase resolves .firebaserc from the directory containing the explicit config.
+    return [
+        "firebase",
+        "deploy",
+        "--only",
+        "hosting:" + config["hosting_target"],
+        "--config",
+        "infra/firebase.json",
+        "--project",
+        config["project_id"],
+        "--non-interactive",
+    ]
 
 
 def image_inputs(base=None):
@@ -145,9 +188,10 @@ def backend_environment(c):
     project = c["project_id"]
     return {
         "ENVIRONMENT": "production",
+        "DATABASE_PROVIDER": c["database_provider"],
         "FIREBASE_PROJECT_ID": project,
         "CORS_ORIGINS": json.dumps(
-            [f"https://{project}.web.app", f"https://{project}.firebaseapp.com"]
+            [hosting_origin(c), f"https://{c['hosting_site']}.firebaseapp.com"]
         ),
         "ENABLE_DEVELOPMENT_CATALOGUE": "false",
         "AI_EXTRACTION_PROVIDER": "gemini",
@@ -213,16 +257,16 @@ def plan(c, env_file):
                 image,
                 "--service-account",
                 c["migration_service_account"],
-                "--set-cloudsql-instances",
-                c["cloud_sql_connection"],
                 "--set-secrets",
                 migration_db,
                 "--env-vars-file",
                 str(env_file),
                 "--command",
-                "/app/.venv/bin/alembic",
+                "/app/.venv/bin/python",
                 "--args",
-                "upgrade,head",
+                "-m,opportunity_platform.operations.migration_gate,--mode,"
+                + c["migration_mode"]
+                + (",--approve-upgrade" if c["migration_mode"] == "upgrade" else ""),
                 "--tasks",
                 "1",
                 "--parallelism",
@@ -252,8 +296,6 @@ def plan(c, env_file):
                 c["runtime_service_account"],
                 "--execution-environment",
                 "gen2",
-                "--set-cloudsql-instances",
-                c["cloud_sql_connection"],
                 "--set-secrets",
                 db + "," + signing,
                 "--env-vars-file",
@@ -270,7 +312,7 @@ def plan(c, env_file):
                 "--min",
                 "0",
                 "--max",
-                "2",
+                "1",
                 "--cpu-throttling",
                 "--timeout",
                 "60s",
@@ -327,8 +369,10 @@ def main(argv=None):
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--approved-project")
     parser.add_argument("--receipt", type=Path)
+    parser.add_argument("--approve-migrations", action="store_true")
     args = parser.parse_args(argv)
     config = validate(json.loads(args.config.read_text()))
+    validate_hosting(config)
     if not args.execute:
         for label, command in plan(config, "TEMP_PUBLIC_ENV.json"):
             print(label + ": " + shlex.join(command))
@@ -355,28 +399,19 @@ def main(argv=None):
                 ]
             )
         )
+        print("hosting: " + shlex.join(hosting_command(config)))
+        print("frontend: " + hosting_origin(config))
         print(
-            "hosting: "
-            + shlex.join(
-                [
-                    "firebase",
-                    "deploy",
-                    "--only",
-                    "hosting",
-                    "--config",
-                    "infra/firebase.json",
-                    "--project",
-                    config["project_id"],
-                    "--non-interactive",
-                ]
-            )
+            "Schema mode: "
+            + config["migration_mode"]
+            + "; existing Neon head is verified read-only by default."
         )
-        print(
-            "Plan only. No cloud commands executed. Cloud SQL, IAM and secrets must already exist."
-        )
+        print("Plan only. No cloud commands executed. Neon secrets, IAM and billing must be ready.")
         return 0
     if args.approved_project != config["project_id"]:
         parser.error("Execution needs --approved-project matching the reviewed project")
+    if config["migration_mode"] == "upgrade" and not args.approve_migrations:
+        parser.error("Schema upgrade requires separate --approve-migrations authorization")
     if any(config["firebase_web"][key].startswith("YOUR_") for key in ["api_key", "app_id"]):
         parser.error("Fill the public Firebase web configuration before execution")
     if any(
@@ -418,6 +453,11 @@ def main(argv=None):
             ],
         )
     )
+    if any(
+        item.get("metadata", {}).get("annotations", {}).get("run.googleapis.com/cloudsql-instances")
+        for item in previous
+    ):
+        raise ValueError("Existing service has unexpected Cloud SQL attachments; resolve manually")
     if args.receipt:
         args.receipt.write_text(
             json.dumps(
@@ -435,6 +475,11 @@ def main(argv=None):
                         for t in item.get("status", {}).get("traffic", [])
                     ],
                     "image_tag": image_tag(),
+                    "database_provider": config["database_provider"],
+                    "migration_mode": config["migration_mode"],
+                    "hosting_site": config["hosting_site"],
+                    "hosting_target": config["hosting_target"],
+                    "web": hosting_origin(config),
                 },
                 indent=2,
             )
@@ -494,28 +539,15 @@ def main(argv=None):
             ],
         )
         smoke(url, json.loads(backend_environment(config)["CORS_ORIGINS"]))
-        invoke(
-            "hosting",
-            [
-                "firebase",
-                "deploy",
-                "--only",
-                "hosting",
-                "--config",
-                "infra/firebase.json",
-                "--project",
-                project,
-                "--non-interactive",
-            ],
-        )
-        with urllib.request.urlopen(f"https://{project}.web.app/profile", timeout=30) as response:
+        invoke("hosting", hosting_command(config))
+        with urllib.request.urlopen(hosting_origin(config) + "/profile", timeout=30) as response:
             if response.status != 200 or "<html" not in response.read().decode().lower():
                 raise RuntimeError("Hosting SPA routing failed")
         print(
             json.dumps(
                 {
                     "api": url,
-                    "web": f"https://{project}.web.app",
+                    "web": hosting_origin(config),
                     "acceptance": "Public smoke only; authenticated acceptance remains unverified.",
                 }
             )
