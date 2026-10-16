@@ -1,6 +1,7 @@
 """Offline audit/import by default; live extraction requires three explicit opt-ins."""
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 
@@ -18,6 +19,8 @@ def main():
     parser.add_argument("--registry", type=Path, default=REPO / "data/corpus/sources.json")
     parser.add_argument("--corpus-root", type=Path, required=True)
     parser.add_argument("--document-id", action="append")
+    parser.add_argument("--snapshot-id", action="append")
+    parser.add_argument("--provider", choices=["gemini"])
     parser.add_argument("--limit", type=int, default=8)
     parser.add_argument("--output", type=Path, help="New report path, exclusively created")
     parser.add_argument(
@@ -39,7 +42,8 @@ def main():
     if args.command == "live-test" and args.execute:
         if not (
             args.authorize_paid
-            and args.document_id
+            and (args.document_id or args.snapshot_id)
+            and args.provider == "gemini"
             and args.focus
             and args.model
             and args.review_model
@@ -49,14 +53,26 @@ def main():
                 "Live test requires --authorize-paid, one document, --limit 1, "
                 "explicit focus, extractor model and review model"
             )
-        if len(args.document_id) != 1:
+        if len(args.document_id or args.snapshot_id) != 1:
             parser.error("A future live test is bounded to one explicitly selected document")
+    if args.command == "live-test" and args.execute:
+        from opportunity_platform.core.config import settings
+
+        config = settings()
+        if not config.ai_ingestion_live_enabled or not config.gemini_api_key:
+            parser.error("Live Gemini ingestion is disabled or unconfigured; no database writes")
     records = load_manifest(args.manifest)
     if args.document_id:
         unknown = set(args.document_id) - {r.document_id for r in records}
         if unknown:
             parser.error("Document identity is not in the immutable manifest")
         records = [r for r in records if r.document_id in args.document_id]
+    if args.snapshot_id:
+        if set(args.snapshot_id) - {r.snapshot_id for r in records}:
+            parser.error("Snapshot identity is not in the selected immutable manifest")
+        records = [r for r in records if r.snapshot_id in args.snapshot_id]
+    if args.command == "live-test" and args.execute and len(records) != 1:
+        parser.error("Select one exact snapshot; document identity has multiple archived versions")
     if args.command != "audit":
         # Distinct source URL/hash, with chronological snapshot order retained.
         records = records[: args.limit]
@@ -67,6 +83,7 @@ def main():
         "documents": [a.public() for a in audited],
         "mode": "offline_read_only",
         "original_manifest_modified": False,
+        "immutable_manifest_sha256": hashlib.sha256(args.manifest.read_bytes()).hexdigest(),
     }
     if args.command != "audit" and args.execute:
         from sqlalchemy.orm import Session
@@ -80,7 +97,7 @@ def main():
             actor = require_admin(session, args.actor_uid)
             results = []
             for item in audited:
-                if not item.technically_ingestible:
+                if not item.technically_ingestible or item.document_type == "irrelevant":
                     results.append({"document_id": item.record.document_id, "status": "skipped"})
                     continue
                 if args.command == "import":

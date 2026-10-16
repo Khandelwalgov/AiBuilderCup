@@ -101,6 +101,11 @@ def run_pipeline(audited, focus, extractor, reviewer, *, max_repairs=2):
                 dict.fromkeys(
                     [
                         "CORPUS: human completeness and consequential-criteria review required",
+                        *(
+                            ["HTML citations use section ordinals, not physical PDF page numbers"]
+                            if audited.record.format == "html"
+                            else []
+                        ),
                         *candidate.candidate.review_flags,
                         *[f"{p.code}: {p.message}"[:500] for p in problems if p.human_required],
                     ]

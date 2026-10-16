@@ -20,6 +20,7 @@ from opportunity_platform.db.models import (
     Opportunity,
     OpportunityVersion,
     Requirement,
+    SourceSnapshot,
     User,
 )
 from opportunity_platform.ingestion.corpus_policy.archive import (
@@ -344,6 +345,9 @@ def test_import_draft_idempotency_versions_permissions_and_no_publication(db):
     ]
     review_count = db.scalar(select(func.count()).select_from(CandidateReview))
     requirement_count = db.scalar(select(func.count()).select_from(Requirement))
+    from opportunity_platform.opportunities.service import catalogue
+
+    public_before = list(db.execute(catalogue()))
     a = audited()
     with pytest.raises(APIError):
         import_archive(db, a, other)
@@ -358,6 +362,7 @@ def test_import_draft_idempotency_versions_permissions_and_no_publication(db):
         extract_candidate(db, a, actor, "Learner scholarship", extractor, reviewer).id == result.id
     )
     assert extractor.calls == 1 and reviewer.calls == 1
+    assert list(db.execute(catalogue())) == public_before
     draft = db.get(OpportunityVersion, uuid.UUID(result.diagnostics["draft_id"]))
     assert draft.publication_state == "draft" and draft.status == "needs_review"
     assert db.get(Opportunity, draft.opportunity_id).published_version_id is None
@@ -409,7 +414,13 @@ def test_real_archived_sources_with_mocked_pipeline(db, group):
         choices.append(a)
         if a.suitable_for_extraction:
             break
-    a = next((a for a in choices if a.suitable_for_extraction), choices[0])
+    a = next(
+        (a for a in choices if a.suitable_for_extraction),
+        next(
+            (a for a in choices if a.document_type in {"policy_guideline", "tender_notice"}),
+            choices[0],
+        ),
+    )
     assert a.technically_ingestible
     actor = User(firebase_uid="real-corpus-test-" + group, is_admin=True)
     db.add(actor)
@@ -468,9 +479,187 @@ def test_real_archived_sources_with_mocked_pipeline(db, group):
         Reviewer(),
         max_repairs=0,
     )
-    assert result.status in {"draft_for_human_review", "human_escalation"}
+    assert result.status == "draft_for_human_review"
+    assert result.diagnostics["workflow"]["stages"][0]["independent_review"] is not None
     assert result.diagnostics["workflow"]["human_required"] is True
     assert all(
         o.published_version_id is None
         for o in db.scalars(select(Opportunity).where(Opportunity.source_key.like("corpus:%")))
     )
+
+
+def test_independent_interpretation_issue_drives_repair():
+    a = audited()
+    wrong = envelope(a)
+    wrong["candidate"]["requirements"][0]["rule"]["condition"]["op"] = "lte"
+    evidence = wrong["candidate"]["requirements"][0]["evidence"]
+    problem = {
+        "code": "comparison_direction_wrong",
+        "severity": "error",
+        "field": "requirements.0",
+        "message": "At least eighteen is a lower bound rather than an upper bound.",
+        "evidence": evidence,
+        "suggested_correction": "Use gte for the explicit lower bound.",
+        "human_required": True,
+    }
+
+    class FeedbackReviewer(Reviewer):
+        def review(self, a, candidate):
+            self.issues = [problem] if self.calls == 0 else []
+            return super().review(a, candidate)
+
+    extractor = Extractor([wrong, envelope(a)])
+    out = run_pipeline(a, "Learner scholarship", extractor, FeedbackReviewer())
+    assert out.status == "draft_for_human_review" and out.repair_cycles == 1
+    assert "comparison_direction_wrong" in {i["code"] for i in extractor.feedback[1]}
+    assert out.stages[0].candidate_hash == out.stages[0].independent_review.candidate_hash
+
+
+def test_pipeline_failure_saves_diagnostics_without_draft(db):
+    actor = User(firebase_uid="corpus-escalation-admin", is_admin=True)
+    db.add(actor)
+    db.commit()
+    a = audited()
+    before = db.scalar(select(func.count()).select_from(OpportunityVersion))
+    result = extract_candidate(
+        db, a, actor, "Learner scholarship", Extractor([envelope(a, 99)]), Reviewer()
+    )
+    assert result.status == "human_escalation"
+    assert len(result.diagnostics["workflow"]["stages"]) == 3
+    assert db.scalar(select(func.count()).select_from(OpportunityVersion)) == before
+
+
+def test_live_provider_disabled_does_not_construct_client(monkeypatch):
+    from opportunity_platform.core.config import settings
+    from opportunity_platform.ingestion.corpus_policy import live
+
+    monkeypatch.setattr(settings(), "ai_ingestion_live_enabled", False)
+    monkeypatch.setattr(live.genai, "Client", lambda **kw: pytest.fail("Model calls prohibited"))
+    role = live.GeminiRole("extractor", "operator-selected-model")
+    with pytest.raises(ValueError, match="disabled"):
+        role.extract(audited(), "Future operator focus")
+
+
+def test_explicitly_unknown_income_keeps_unknown_instead_of_requiring_guessed_period():
+    a = audited()
+    value = envelope(a)
+    value["candidate"]["requirements"][0]["rule"]["condition"] = {
+        "op": "unknown",
+        "fact": "annual_parental_income",
+    }
+    _, issues = validate(value, a)
+    assert "unsupported_or_unknown_rule" in {i.code for i in issues}
+    assert not {i.code for i in issues} & {"income_period_not_cited", "income_definition_not_cited"}
+
+
+def test_document_index_titles_are_not_policy_rules(tmp_path):
+    raw = (
+        b'<html><form><h2>Hostel scheme</h2><a href="/a.pdf">Eligibility guidelines</a>'
+        b'<a href="/b.pdf">Grant assistance</a>'
+        b'<a href="/c.pdf">Required documents</a></form></html>'
+    )
+    r = record(raw, "html", "https://test.gov.in/index")
+    path = tmp_path / r.blob_path
+    path.parent.mkdir(parents=True)
+    path.write_bytes(raw)
+    source = SourceSpec(
+        key="test",
+        authority="Index owner",
+        jurisdiction="India",
+        category="welfare",
+        seeds=["https://test.gov.in/index"],
+        allowed_hosts=["test.gov.in"],
+        access="public",
+        access_note="Synthetic offline test",
+    )
+    result = audit_record(r, tmp_path, {"test": source})
+    assert result.technically_ingestible
+    assert result.document_type == "document_index" and not result.suitable_for_extraction
+    assert run_pipeline(result, "Hostel scheme", Extractor([]), Reviewer()).model_calls == 0
+
+
+def test_html_policy_prose_retains_sections_and_is_not_a_link_index(tmp_path):
+    raw = (
+        b"<html><form><h2>Eligibility</h2><p>Applicants must be at least 18 years old.</p>"
+        b'<a href="/a.pdf">Annex A</a><a href="/b.pdf">Annex B</a>'
+        b'<a href="/c.pdf">Annex C</a></form></html>'
+    )
+    r = record(raw, "html", "https://test.gov.in/policy")
+    path = tmp_path / r.blob_path
+    path.parent.mkdir(parents=True)
+    path.write_bytes(raw)
+    source = SourceSpec(
+        key="test",
+        authority="Index owner",
+        jurisdiction="India",
+        category="welfare",
+        seeds=["https://test.gov.in/index"],
+        allowed_hosts=["test.gov.in"],
+        access="public",
+        access_note="Synthetic offline test",
+    )
+    result = audit_record(r, tmp_path, {"test": source})
+    assert result.suitable_for_extraction
+    assert result.pages[0]["section"] == "Eligibility"
+
+
+def test_source_reversion_retains_occurrence_and_refuses_text_overwrite(db):
+    actor = User(firebase_uid="corpus-version-admin", is_admin=True)
+    db.add(actor)
+    db.commit()
+    a = audited()
+    original, first = import_archive(db, a, actor)
+    b = copy.deepcopy(a)
+    b.record.sha256 = hashlib.sha256(b"changed source bytes").hexdigest()
+    b.record.snapshot_id = str(uuid.uuid4())
+    b.record.previous_snapshot_id = a.record.snapshot_id
+    changed, second = import_archive(db, b, actor)
+    reverted = copy.deepcopy(a)
+    reverted.record.snapshot_id = str(uuid.uuid4())
+    reverted.record.previous_snapshot_id = b.record.snapshot_id
+    reused, third = import_archive(db, reverted, actor)
+    assert original.id == reused.id and changed.id != reused.id
+    assert len({first.id, second.id, third.id}) == 3
+    assert third.diagnostics["acquisition_previous_snapshot_id"] == b.record.snapshot_id
+    tampered = copy.deepcopy(a)
+    tampered.pages[0]["text"] = "An unrelated derivative must not overwrite the captured source."
+    with pytest.raises(APIError) as exc:
+        import_archive(db, tampered, actor)
+    assert exc.value.code == "corpus_text_derivative_conflict"
+    assert db.get(SourceSnapshot, original.id).pages == a.pages
+
+
+def test_live_cli_preflight_stops_before_manifest_or_database(monkeypatch):
+    from opportunity_platform.core.config import settings
+    from opportunity_platform.ingestion.corpus_policy import cli
+
+    monkeypatch.setattr(settings(), "ai_ingestion_live_enabled", False)
+    monkeypatch.setattr(cli, "load_manifest", lambda _: pytest.fail("Preflight must run first"))
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "corpus-policy",
+            "live-test",
+            "--execute",
+            "--authorize-paid",
+            "--actor-uid",
+            "existing-operator",
+            "--snapshot-id",
+            "selected-snapshot",
+            "--limit",
+            "1",
+            "--provider",
+            "gemini",
+            "--model",
+            "selected-extractor",
+            "--review-model",
+            "selected-reviewer",
+            "--focus",
+            "Explicit scope",
+            "--corpus-root",
+            "/unused",
+        ],
+    )
+    with pytest.raises(SystemExit) as exc:
+        cli.main()
+    assert exc.value.code == 2

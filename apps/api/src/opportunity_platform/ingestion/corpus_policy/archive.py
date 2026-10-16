@@ -136,12 +136,22 @@ def extract_pages(raw, record):
             total += len(text)
             if total > MAX_TEXT:
                 raise ValueError("extracted_text_limit")
+            fonts = page.get("/Resources", {}).get("/Font", {})
+            if hasattr(fonts, "get_object"):
+                fonts = fonts.get_object()
+            names = [str(font.get_object().get("/BaseFont", "")) for font in fonts.values()]
+            text_quality = quality(text)
+            if re.search(r"(?i)kruti|devlys|chanakya|shree|dv-tt", " ".join(names)):
+                devanagari = sum("\u0900" <= char <= "\u097f" for char in text)
+                if devanagari < max(20, len(text) // 10):
+                    text_quality = "unreadable_or_legacy_encoding"
             pages.append(
                 {
                     "page": index + 1,
                     "source_url": url,
                     "text": text,
-                    "quality": quality(text),
+                    "quality": text_quality,
+                    "fonts": names,
                     "provenance": "pdf_physical_page",
                 }
             )
@@ -238,9 +248,10 @@ def clean_title(record, pages):
                 for line in page["text"].splitlines()
                 if re.search(r"(?i)scheme|initiative|scholarship", line)
                 and 10 <= len(line.strip()) <= 220
+                and not re.match(r"(?i)^(?:[0-9]|no\.|page\b)", line.strip())
             )
         if possible:
-            title = possible[0]
+            title = re.sub(r"(?i)^Subject:\s*", "", possible[0])
         else:
             flags.append("metadata_generic_title")
     if len(set(titles)) > 1:
@@ -267,8 +278,23 @@ def audit_record(record, root, registry):
         if result.needs_ocr:
             result.flags.append("ocr_or_encoding_review_required")
         title = result.corrected_title.lower()
+        index_only = False
+        if record.format == "html":
+            index_soup = BeautifulSoup(raw, "html.parser")
+            pdf_links = sum(
+                ".pdf" in a.get("href", "").lower() for a in index_soup.select("a[href]")
+            )
+            for node in index_soup.select("a,script,style,nav,header,footer"):
+                node.decompose()
+            prose = index_soup.get_text(" ", strip=True)
+            index_only = (pdf_links > 0 and not NORMATIVE.search(prose)) or not any(
+                NORMATIVE.search(p["text"]) for p in result.pages
+            )
         if re.search(r"citizen charter|registration of training|telephone|list of trainees", title):
             result.document_type = "irrelevant"
+        elif index_only:
+            result.document_type = "document_index"
+            result.flags.append("index_page_not_substantive_policy_text")
         elif re.search(r"amend|corrigend|addendum|संशोधन", title):
             result.document_type = "amendment"
             result.flags.append("amendment_baseline_and_effect_need_review")
@@ -280,7 +306,7 @@ def audit_record(record, root, registry):
         ):
             result.document_type = "general_announcement"
         elif re.search(
-            r"guideline|scheme|scholarship|policy|grant|palanhar|hostel|"
+            r"guideline|scheme|scholarship|policy|grant|initiative|palanhar|hostel|"
             r"छात्रवृत्ति|दिशा|योजना|अनुदान",
             title,
         ):
@@ -349,7 +375,7 @@ def summarize(audited):
         "definitions": {
             "technically_ingestible": "Hash/size/source validated; text extraction completed",
             "needs_ocr": "At least one page has insufficient text or detected legacy encoding",
-            "questionable_metadata": "Title correction/variants or exact issuer unverified",
+            "questionable_metadata": "Unresolved layout/generic title or exact issuer unverified",
             "suitable": "Readable policy/tender with material clauses; human review required",
         },
     }

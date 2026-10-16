@@ -112,7 +112,15 @@ def import_archive(session, audited, actor):
         )
         session.add(snapshot)
         session.flush()
-    run_id = identifier(f"import:{snapshot_id}:{TEXT_VERSION}")
+    if snapshot.source_url != record.canonical_source_url or snapshot.content_hash != record.sha256:
+        raise APIError(409, "corpus_snapshot_conflict", "Stored snapshot identity conflicts.")
+    if digest(snapshot.pages) != digest(audited.pages):
+        raise APIError(
+            409,
+            "corpus_text_derivative_conflict",
+            "Existing immutable text differs; human reconciliation is required.",
+        )
+    run_id = identifier(f"import:{record.snapshot_id}:{TEXT_VERSION}")
     run = session.get(IngestionRun, run_id)
     if run is None:
         run = IngestionRun(
@@ -127,6 +135,8 @@ def import_archive(session, audited, actor):
             finished_at=datetime.now(UTC),
             diagnostics={
                 "origin": VERSION,
+                "acquisition_snapshot_id": record.snapshot_id,
+                "acquisition_previous_snapshot_id": record.previous_snapshot_id,
                 "quality_audit": audited.public(),
                 "publication": "none",
                 "source_check": "archived_capture_only",
@@ -152,6 +162,7 @@ def extract_candidate(session, audited, actor, focus, extractor, reviewer, *, ma
     key = digest(
         {
             "snapshot": str(snapshot.id),
+            "acquisition_snapshot_id": audited.record.snapshot_id,
             "focus": focus,
             "version": VERSION,
             "extractor": extractor.identity,

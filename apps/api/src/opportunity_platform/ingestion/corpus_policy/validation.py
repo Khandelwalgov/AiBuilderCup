@@ -163,8 +163,10 @@ def validate(raw, audited):
                             req.evidence,
                         )
                     )
-            if condition.fact and (
-                "income" in condition.fact or condition.fact == "business_turnover"
+            if (
+                condition.op != "unknown"
+                and condition.fact
+                and ("income" in condition.fact or condition.fact == "business_turnover")
             ):
                 text = normalize(req.evidence.passage).lower()
                 period = normalize(condition.income_period or "").lower()
@@ -202,6 +204,17 @@ def validate(raw, audited):
                             "income_subject_mismatch",
                             field,
                             "Parental income must not be inferred from family income.",
+                            req.evidence,
+                            human=True,
+                        )
+                    )
+            if condition.fact == "annual_household_income" and condition.op != "unknown":
+                if not re.search(r"(?i)household|family|परिवार", req.evidence.passage):
+                    problems.append(
+                        issue(
+                            "income_subject_mismatch",
+                            field,
+                            "Household income cannot be inferred from a parental clause.",
                             req.evidence,
                             human=True,
                         )
