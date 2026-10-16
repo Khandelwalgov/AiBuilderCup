@@ -25,3 +25,6 @@ firebase-debug.log
 
 # Private development document blobs (never source-control these).
 .private-documents/
+
+# Public source acquisition binaries, checkpoints and live run diagnostics.
+.corpus/

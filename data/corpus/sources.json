@@ -1,0 +1,345 @@
+[
+  {
+    "key": "rajasthan-scholarships",
+    "authority": "Department of Social Justice and Empowerment, Government of Rajasthan",
+    "jurisdiction": "Rajasthan",
+    "category": "scholarships",
+    "seeds": [
+      "https://sje.rajasthan.gov.in/scholarship_portal.aspx/Scholarship_Portal.aspx"
+    ],
+    "allowed_hosts": [
+      "sje.rajasthan.gov.in"
+    ],
+    "access": "public",
+    "access_note": "Bounded public primary-source acquisition; no credentials. Policy reviewed 2026-10-16.",
+    "max_documents": 85,
+    "terms_url": "https://sje.rajasthan.gov.in/default.aspx?PageID=2246"
+  },
+  {
+    "key": "rajasthan-welfare",
+    "authority": "Department of Social Justice and Empowerment, Government of Rajasthan",
+    "jurisdiction": "Rajasthan",
+    "category": "welfare",
+    "seeds": [
+      "https://sje.rajasthan.gov.in/Default.aspx?PageID=2"
+    ],
+    "allowed_hosts": [
+      "sje.rajasthan.gov.in"
+    ],
+    "access": "public",
+    "access_note": "Bounded public primary-source acquisition; no credentials. Policy reviewed 2026-10-16.",
+    "max_documents": 30,
+    "max_pages": 12,
+    "page_pattern": "(?i)Default\\.aspx\\?PageID=(81|85|78|124|287|156|155|157|154|151|152|153)$",
+    "document_pattern": "(?i)\\.pdf(?:$|\\?)|Default\\.aspx\\?PageID=(81|85|78|124|287|156|155|157|154|151|152|153)$",
+    "terms_url": "https://sje.rajasthan.gov.in/default.aspx?PageID=2246"
+  },
+  {
+    "key": "rajasthan-tenders",
+    "authority": "Department of Social Justice and Empowerment, Government of Rajasthan",
+    "jurisdiction": "Rajasthan",
+    "category": "procurement",
+    "seeds": [
+      "https://sje.rajasthan.gov.in/searchDocuments.aspx?doctype=8"
+    ],
+    "allowed_hosts": [
+      "sje.rajasthan.gov.in"
+    ],
+    "access": "public",
+    "access_note": "Bounded public primary-source acquisition; no credentials. Policy reviewed 2026-10-16.",
+    "max_documents": 20,
+    "max_depth": 0,
+    "terms_url": "https://sje.rajasthan.gov.in/default.aspx?PageID=2246",
+    "document_pattern": "(?i)(tender|bid|nivida|nib|\u0928\u093f\u0935\u093f\u0926\u093e).*\\.pdf|\\.pdf.*(tender|bid|nivida|nib|\u0928\u093f\u0935\u093f\u0926\u093e)"
+  },
+  {
+    "key": "msme-ramp",
+    "authority": "Ministry of Micro, Small and Medium Enterprises, Government of India",
+    "jurisdiction": "India",
+    "category": "msme",
+    "seeds": [
+      "https://ramp.msme.gov.in/ramp/scheme-guidelines"
+    ],
+    "allowed_hosts": [
+      "ramp.msme.gov.in"
+    ],
+    "access": "public",
+    "access_note": "Bounded public primary-source acquisition; no credentials. Policy reviewed 2026-10-16.",
+    "max_documents": 15,
+    "page_pattern": "/ramp/quicktabs/nojs/scheme_guidelines/",
+    "terms_url": "https://ramp.msme.gov.in/ramp/website-policy"
+  },
+  {
+    "key": "depwd",
+    "authority": "Department of Empowerment of Persons with Disabilities, Government of India",
+    "jurisdiction": "India",
+    "category": "disability",
+    "seeds": [
+      "https://depwd.gov.in/en/scholarship/"
+    ],
+    "allowed_hosts": [
+      "depwd.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Copyright policy requires prior permission for reproduction. Existing DEPwD drafts are untouched.",
+    "terms_url": "https://depwd.gov.in/en/copyright-policy/"
+  },
+  {
+    "key": "nsp",
+    "authority": "National Scholarship Portal, Government of India (index publisher; multiple issuing ministries)",
+    "jurisdiction": "India",
+    "category": "scholarships",
+    "seeds": [
+      "https://scholarships.gov.in/All-Scholarships"
+    ],
+    "allowed_hosts": [
+      "scholarships.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Public static PDF links exist, but copyright policy requires prior reproduction permission.",
+    "terms_url": "https://scholarships.gov.in/copyright-policy"
+  },
+  {
+    "key": "myscheme",
+    "authority": "National e-Governance Division, Ministry of Electronics and Information Technology",
+    "jurisdiction": "India",
+    "category": "cross-category",
+    "seeds": [
+      "https://www.myscheme.gov.in/"
+    ],
+    "allowed_hosts": [
+      "www.myscheme.gov.in"
+    ],
+    "access": "manual_access_required",
+    "access_note": "Terms of Use prohibit bots/scrapers without express written authorization. Do not crawl, including with Playwright.",
+    "terms_url": "https://www.myscheme.gov.in/terms-of-use"
+  },
+  {
+    "key": "maharashtra-welfare",
+    "authority": "Social Justice and Special Assistance Department, Government of Maharashtra",
+    "jurisdiction": "Maharashtra",
+    "category": "welfare",
+    "seeds": [
+      "https://sjsa.maharashtra.gov.in/en/schemes-programmes/"
+    ],
+    "allowed_hosts": [
+      "sjsa.maharashtra.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Website policy requires reproduction permission by email before archiving.",
+    "terms_url": "https://sjsa.maharashtra.gov.in/en/website-policies/"
+  },
+  {
+    "key": "gem",
+    "authority": "Government e Marketplace, Department of Commerce, Government of India",
+    "jurisdiction": "India",
+    "category": "procurement",
+    "seeds": [
+      "https://gem.gov.in/"
+    ],
+    "allowed_hosts": [
+      "gem.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Public HTML links to bid portal exist. Conflicting hyperlink restrictions and reuse terms require review; no bid API or document download verified.",
+    "terms_url": "https://gem.gov.in/websitePolicies"
+  },
+  {
+    "key": "mission-shakti",
+    "authority": "Ministry of Women and Child Development, Government of India",
+    "jurisdiction": "India",
+    "category": "women-child",
+    "seeds": [
+      "https://missionshakti.wcd.gov.in/"
+    ],
+    "allowed_hosts": [
+      "missionshakti.wcd.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Terms permit personal non-commercial download only; platform corpus reuse requires permission.",
+    "terms_url": "https://missionshakti.wcd.gov.in/termsconditions"
+  },
+  {
+    "key": "startup-india",
+    "authority": "Department for Promotion of Industry and Internal Trade, Government of India",
+    "jurisdiction": "India",
+    "category": "startup",
+    "seeds": [
+      "https://www.startupindia.gov.in/content/sih/en/government-schemes.html"
+    ],
+    "allowed_hosts": [
+      "www.startupindia.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Static PDF links found. Terms-of-use review pending; login-only documents must be skipped.",
+    "terms_url": "https://www.startupindia.gov.in/content/sih/en/terms-of-use.html"
+  },
+  {
+    "key": "central-social-justice",
+    "authority": "Department of Social Justice and Empowerment, Government of India",
+    "jurisdiction": "India",
+    "category": "welfare",
+    "seeds": [
+      "https://socialjustice.gov.in/schemes"
+    ],
+    "allowed_hosts": [
+      "socialjustice.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Initial robots/TLS/HTTP probe unsuccessful or challenge/empty response. Acquisition disabled until both public access and terms are reviewed."
+  },
+  {
+    "key": "tribal-scholarships",
+    "authority": "Ministry of Tribal Affairs, Government of India",
+    "jurisdiction": "India",
+    "category": "scholarships",
+    "seeds": [
+      "https://tribal.nic.in/ScholarshiP.aspx"
+    ],
+    "allowed_hosts": [
+      "tribal.nic.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Initial robots/TLS/HTTP probe unsuccessful or challenge/empty response. Acquisition disabled until both public access and terms are reviewed."
+  },
+  {
+    "key": "central-education",
+    "authority": "Ministry of Education, Government of India",
+    "jurisdiction": "India",
+    "category": "education",
+    "seeds": [
+      "https://www.education.gov.in/scholarships-education-loan-0"
+    ],
+    "allowed_hosts": [
+      "www.education.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Initial robots/TLS/HTTP probe unsuccessful or challenge/empty response. Acquisition disabled until both public access and terms are reviewed."
+  },
+  {
+    "key": "central-msme",
+    "authority": "Ministry of Micro, Small and Medium Enterprises, Government of India",
+    "jurisdiction": "India",
+    "category": "msme",
+    "seeds": [
+      "https://www.msme.gov.in/all-schemes"
+    ],
+    "allowed_hosts": [
+      "www.msme.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Initial robots/TLS/HTTP probe unsuccessful or challenge/empty response. Acquisition disabled until both public access and terms are reviewed."
+  },
+  {
+    "key": "central-skills",
+    "authority": "Ministry of Skill Development and Entrepreneurship, Government of India",
+    "jurisdiction": "India",
+    "category": "employment-skills",
+    "seeds": [
+      "https://www.msde.gov.in/en/schemes-initiatives"
+    ],
+    "allowed_hosts": [
+      "www.msde.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Initial robots/TLS/HTTP probe unsuccessful or challenge/empty response. Acquisition disabled until both public access and terms are reviewed."
+  },
+  {
+    "key": "central-rural",
+    "authority": "Ministry of Rural Development, Government of India",
+    "jurisdiction": "India",
+    "category": "rural",
+    "seeds": [
+      "https://www.rural.gov.in/en/documents/schemes-guidelines"
+    ],
+    "allowed_hosts": [
+      "www.rural.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Initial robots/TLS/HTTP probe unsuccessful or challenge/empty response. Acquisition disabled until both public access and terms are reviewed."
+  },
+  {
+    "key": "central-agriculture",
+    "authority": "Department of Agriculture and Farmers Welfare, Government of India",
+    "jurisdiction": "India",
+    "category": "agriculture",
+    "seeds": [
+      "https://agriwelfare.gov.in/en/Guidelines"
+    ],
+    "allowed_hosts": [
+      "agriwelfare.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Initial robots/TLS/HTTP probe unsuccessful or challenge/empty response. Acquisition disabled until both public access and terms are reviewed."
+  },
+  {
+    "key": "cppp",
+    "authority": "Central Public Procurement Portal, Government of India; individual tender issuers vary",
+    "jurisdiction": "India",
+    "category": "procurement",
+    "seeds": [
+      "https://eprocure.gov.in/eprocure/app"
+    ],
+    "allowed_hosts": [
+      "eprocure.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Initial robots/TLS/HTTP probe unsuccessful or challenge/empty response. Acquisition disabled until both public access and terms are reviewed."
+  },
+  {
+    "key": "kerala-welfare",
+    "authority": "Social Justice Department, Government of Kerala",
+    "jurisdiction": "Kerala",
+    "category": "welfare",
+    "seeds": [
+      "https://sjd.kerala.gov.in/schemes.php"
+    ],
+    "allowed_hosts": [
+      "sjd.kerala.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Initial robots/TLS/HTTP probe unsuccessful or challenge/empty response. Acquisition disabled until both public access and terms are reviewed."
+  },
+  {
+    "key": "delhi-women",
+    "authority": "Department of Women and Child Development, Government of NCT of Delhi",
+    "jurisdiction": "Delhi",
+    "category": "women-child",
+    "seeds": [
+      "https://wcd.delhi.gov.in/wcd/schemes"
+    ],
+    "allowed_hosts": [
+      "wcd.delhi.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Initial robots/TLS/HTTP probe unsuccessful or challenge/empty response. Acquisition disabled until both public access and terms are reviewed."
+  },
+  {
+    "key": "delhi-welfare",
+    "authority": "Department of Social Welfare, Government of NCT of Delhi",
+    "jurisdiction": "Delhi",
+    "category": "welfare",
+    "seeds": [
+      "https://socialwelfare.delhi.gov.in/social/schemes"
+    ],
+    "allowed_hosts": [
+      "socialwelfare.delhi.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Initial robots/TLS/HTTP probe unsuccessful or challenge/empty response. Acquisition disabled until both public access and terms are reviewed."
+  },
+  {
+    "key": "gujarat-welfare",
+    "authority": "Social Justice and Empowerment Department, Government of Gujarat",
+    "jurisdiction": "Gujarat",
+    "category": "welfare",
+    "seeds": [
+      "https://sje.gujarat.gov.in/schemes"
+    ],
+    "allowed_hosts": [
+      "sje.gujarat.gov.in"
+    ],
+    "access": "needs_review",
+    "access_note": "Initial robots/TLS/HTTP probe unsuccessful or challenge/empty response. Acquisition disabled until both public access and terms are reviewed."
+  }
+]

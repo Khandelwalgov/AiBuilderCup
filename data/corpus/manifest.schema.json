@@ -1,0 +1,115 @@
+{
+  "description": "One immutable snapshot, with all source/index associations in discoveries.",
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "snapshot_id": {
+      "title": "Snapshot Id",
+      "type": "string"
+    },
+    "document_id": {
+      "title": "Document Id",
+      "type": "string"
+    },
+    "previous_snapshot_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Previous Snapshot Id"
+    },
+    "canonical_source_url": {
+      "title": "Canonical Source Url",
+      "type": "string"
+    },
+    "originating_domain": {
+      "title": "Originating Domain",
+      "type": "string"
+    },
+    "final_url": {
+      "title": "Final Url",
+      "type": "string"
+    },
+    "downloaded_at": {
+      "format": "date-time",
+      "title": "Downloaded At",
+      "type": "string"
+    },
+    "sha256": {
+      "title": "Sha256",
+      "type": "string"
+    },
+    "size_bytes": {
+      "title": "Size Bytes",
+      "type": "integer"
+    },
+    "format": {
+      "enum": [
+        "pdf",
+        "html"
+      ],
+      "title": "Format",
+      "type": "string"
+    },
+    "blob_path": {
+      "title": "Blob Path",
+      "type": "string"
+    },
+    "http_metadata": {
+      "additionalProperties": true,
+      "title": "Http Metadata",
+      "type": "object"
+    },
+    "retrieval_status": {
+      "const": "captured",
+      "default": "captured",
+      "title": "Retrieval Status",
+      "type": "string"
+    },
+    "publication_state": {
+      "const": "unreviewed",
+      "default": "unreviewed",
+      "title": "Publication State",
+      "type": "string"
+    },
+    "validation": {
+      "additionalProperties": true,
+      "title": "Validation",
+      "type": "object"
+    },
+    "discoveries": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Discoveries",
+      "type": "array"
+    }
+  },
+  "required": [
+    "snapshot_id",
+    "document_id",
+    "previous_snapshot_id",
+    "canonical_source_url",
+    "originating_domain",
+    "final_url",
+    "downloaded_at",
+    "sha256",
+    "size_bytes",
+    "format",
+    "blob_path",
+    "http_metadata",
+    "validation",
+    "discoveries"
+  ],
+  "title": "ManifestRecord",
+  "type": "object"
+}

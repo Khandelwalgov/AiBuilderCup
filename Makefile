@@ -44,3 +44,17 @@ release-local:
 	$(MAKE) contracts
 	$(MAKE) check
 	$(MAKE) test-e2e
+
+# Public acquisition only: no model calls, publication or product-database writes.
+# Override with CORPUS_ARGS='--dry-run' or '--source rajasthan-scholarships'.
+corpus-collect:
+	cd apps/api && uv run python -m opportunity_platform.corpus.cli collect $(CORPUS_ARGS)
+
+corpus-update:
+	cd apps/api && uv run python -m opportunity_platform.corpus.cli update $(CORPUS_ARGS)
+
+corpus-verify:
+	cd apps/api && uv run python -m opportunity_platform.corpus.cli verify $(CORPUS_ARGS)
+
+corpus-report:
+	cd apps/api && uv run python -m opportunity_platform.corpus.cli report $(CORPUS_ARGS)
