@@ -1,0 +1,217 @@
+{
+  "label": "FICTIONAL only; no trained model. Training split reserved, held-out scoring frozen before benchmark.",
+  "training": [
+    {
+      "id": "training-12",
+      "query": "school",
+      "subjects": [
+        {
+          "key": "adult",
+          "kind": "person",
+          "facts": [
+            {
+              "key": "age",
+              "value": 12
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "training-19",
+      "query": "scholarships",
+      "subjects": [
+        {
+          "key": "adult",
+          "kind": "person",
+          "facts": [
+            {
+              "key": "age",
+              "value": 19
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "training-30",
+      "query": "school",
+      "subjects": [
+        {
+          "key": "adult",
+          "kind": "person",
+          "facts": [
+            {
+              "key": "age",
+              "value": 30
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "held_out": [
+    {
+      "id": "held_out-10",
+      "query": "school",
+      "subjects": [
+        {
+          "key": "adult",
+          "kind": "person",
+          "facts": [
+            {
+              "key": "age",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "held_out-17",
+      "query": "scholarships",
+      "subjects": [
+        {
+          "key": "adult",
+          "kind": "person",
+          "facts": [
+            {
+              "key": "age",
+              "value": 17
+            }
+          ]
+        },
+        {
+          "key": "child",
+          "kind": "person",
+          "facts": [
+            {
+              "key": "age",
+              "value": 9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "held_out-18",
+      "query": "school",
+      "subjects": [
+        {
+          "key": "adult",
+          "kind": "person",
+          "facts": [
+            {
+              "key": "age",
+              "value": 18
+            }
+          ]
+        },
+        {
+          "key": "business",
+          "kind": "business",
+          "facts": [
+            {
+              "key": "business_turnover",
+              "value": 1000000,
+              "context": {
+                "income_period": "2026-27",
+                "income_definition": "gross-turnover"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "held_out-23",
+      "query": "scholarships",
+      "subjects": [
+        {
+          "key": "adult",
+          "kind": "person",
+          "facts": [
+            {
+              "key": "age",
+              "value": 23
+            }
+          ]
+        },
+        {
+          "key": "child",
+          "kind": "person",
+          "facts": [
+            {
+              "key": "age",
+              "value": 9
+            }
+          ]
+        },
+        {
+          "key": "business",
+          "kind": "business",
+          "facts": [
+            {
+              "key": "business_turnover",
+              "value": 1000000,
+              "context": {
+                "income_period": "2026-27",
+                "income_definition": "gross-turnover"
+              }
+            }
+          ]
+        },
+        {
+          "key": "household",
+          "kind": "household",
+          "facts": []
+        }
+      ]
+    },
+    {
+      "id": "held_out-67",
+      "query": "scholarships",
+      "subjects": [
+        {
+          "key": "adult",
+          "kind": "person",
+          "facts": [
+            {
+              "key": "age",
+              "value": 67
+            }
+          ]
+        },
+        {
+          "key": "child",
+          "kind": "person",
+          "facts": [
+            {
+              "key": "age",
+              "value": 9
+            }
+          ]
+        },
+        {
+          "key": "business",
+          "kind": "business",
+          "facts": [
+            {
+              "key": "business_turnover",
+              "value": 1000000,
+              "context": {
+                "income_period": "2026-27",
+                "income_definition": "gross-turnover"
+              }
+            }
+          ]
+        },
+        {
+          "key": "household",
+          "kind": "household",
+          "facts": []
+        }
+      ]
+    }
+  ]
+}

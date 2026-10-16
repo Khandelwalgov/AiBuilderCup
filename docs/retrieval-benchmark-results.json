@@ -1,0 +1,434 @@
+{
+  "policies": 450,
+  "training_scenarios_used": 0,
+  "held_out_scenarios": 5,
+  "neural_model_used": false,
+  "summary": {
+    "hybrid_recall_at_50": 0.10608955223880598,
+    "hybrid_recall_at_150": 0.311044776119403,
+    "ilike_recall_at_50": 0.06492537313432836,
+    "ilike_recall_at_150": 0.06492537313432836,
+    "candidate_generation_50_p50_ms": 16.04191609658301,
+    "candidate_generation_50_p95_ms": 34.017208963632584,
+    "exact_evaluation_50_p50_ms": 1.1246250942349434,
+    "exact_evaluation_50_p95_ms": 1.7365829553455114,
+    "ranking_50_p50_ms": 0.7071669679135084,
+    "ranking_50_p95_ms": 0.8841250091791153,
+    "candidate_generation_150_p50_ms": 16.187750035896897,
+    "candidate_generation_150_p95_ms": 29.74254102446139,
+    "exact_evaluation_150_p50_ms": 3.2374169677495956,
+    "exact_evaluation_150_p95_ms": 16.799708013422787,
+    "ranking_150_p50_ms": 2.2200840758159757,
+    "ranking_150_p95_ms": 16.252290923148394
+  },
+  "cases": [
+    {
+      "case": "held_out-10",
+      "oracle_pairs": 200,
+      "hybrid_recall_at_50": 0.195,
+      "ilike_recall_at_50": 0.25,
+      "ilike_candidate_ms_at_50": 2.445416059345007,
+      "hybrid_recall_at_150": 0.52,
+      "ilike_recall_at_150": 0.25,
+      "ilike_candidate_ms_at_150": 1.6973339952528477,
+      "measurements_ms": [
+        {
+          "k": 50,
+          "candidate_generation": 17.642708029597998,
+          "exact_evaluation": 1.7365829553455114,
+          "ranking": 0.8841250091791153
+        },
+        {
+          "k": 50,
+          "candidate_generation": 15.840166946873069,
+          "exact_evaluation": 1.1036660289391875,
+          "ranking": 0.8489580359309912
+        },
+        {
+          "k": 50,
+          "candidate_generation": 15.897916979156435,
+          "exact_evaluation": 1.0709170019254088,
+          "ranking": 0.8157079573720694
+        },
+        {
+          "k": 150,
+          "candidate_generation": 15.64645895268768,
+          "exact_evaluation": 16.799708013422787,
+          "ranking": 2.7899169363081455
+        },
+        {
+          "k": 150,
+          "candidate_generation": 16.775500029325485,
+          "exact_evaluation": 3.315415931865573,
+          "ranking": 2.587165916338563
+        },
+        {
+          "k": 150,
+          "candidate_generation": 15.160458977334201,
+          "exact_evaluation": 3.2374169677495956,
+          "ranking": 2.681666985154152
+        }
+      ],
+      "coverage": {
+        "50": {
+          "subjects": {
+            "adult": 50
+          },
+          "categories": {
+            "school": 24,
+            "state_support": 5,
+            "documentary": 5,
+            "unknown": 5,
+            "higher_education": 11
+          }
+        },
+        "150": {
+          "subjects": {
+            "adult": 150
+          },
+          "categories": {
+            "school": 50,
+            "state_support": 18,
+            "documentary": 18,
+            "unknown": 18,
+            "higher_education": 46
+          }
+        }
+      }
+    },
+    {
+      "case": "held_out-17",
+      "oracle_pairs": 400,
+      "hybrid_recall_at_50": 0.085,
+      "ilike_recall_at_50": 0.0,
+      "ilike_candidate_ms_at_50": 1.5293329488486052,
+      "hybrid_recall_at_150": 0.26,
+      "ilike_recall_at_150": 0.0,
+      "ilike_candidate_ms_at_150": 1.145542017184198,
+      "measurements_ms": [
+        {
+          "k": 50,
+          "candidate_generation": 15.133584034629166,
+          "exact_evaluation": 1.0854169959202409,
+          "ranking": 0.5357910413295031
+        },
+        {
+          "k": 50,
+          "candidate_generation": 15.772207989357412,
+          "exact_evaluation": 1.1144999880343676,
+          "ranking": 0.5429999437183142
+        },
+        {
+          "k": 50,
+          "candidate_generation": 34.017208963632584,
+          "exact_evaluation": 1.1695419671013951,
+          "ranking": 0.5783340893685818
+        },
+        {
+          "k": 150,
+          "candidate_generation": 15.680750017054379,
+          "exact_evaluation": 3.1786670442670584,
+          "ranking": 1.5920839505270123
+        },
+        {
+          "k": 150,
+          "candidate_generation": 15.657374984584749,
+          "exact_evaluation": 3.324124962091446,
+          "ranking": 1.621540985070169
+        },
+        {
+          "k": 150,
+          "candidate_generation": 16.48008299525827,
+          "exact_evaluation": 3.0540419975295663,
+          "ranking": 1.5890829963609576
+        }
+      ],
+      "coverage": {
+        "50": {
+          "subjects": {
+            "adult": 25,
+            "child": 25
+          },
+          "categories": {
+            "school": 7,
+            "state_support": 3,
+            "documentary": 4,
+            "unknown": 3,
+            "higher_education": 8
+          }
+        },
+        "150": {
+          "subjects": {
+            "adult": 75,
+            "child": 75
+          },
+          "categories": {
+            "school": 24,
+            "state_support": 9,
+            "documentary": 10,
+            "unknown": 9,
+            "higher_education": 23
+          }
+        }
+      }
+    },
+    {
+      "case": "held_out-18",
+      "oracle_pairs": 335,
+      "hybrid_recall_at_50": 0.11044776119402985,
+      "ilike_recall_at_50": 0.07462686567164178,
+      "ilike_candidate_ms_at_50": 1.674500061199069,
+      "hybrid_recall_at_150": 0.35522388059701493,
+      "ilike_recall_at_150": 0.07462686567164178,
+      "ilike_candidate_ms_at_150": 1.9911250565201044,
+      "measurements_ms": [
+        {
+          "k": 50,
+          "candidate_generation": 15.280500054359436,
+          "exact_evaluation": 1.1501669650897384,
+          "ranking": 0.8259579772129655
+        },
+        {
+          "k": 50,
+          "candidate_generation": 29.59562500473112,
+          "exact_evaluation": 1.1296659940853715,
+          "ranking": 0.793042010627687
+        },
+        {
+          "k": 50,
+          "candidate_generation": 15.806999988853931,
+          "exact_evaluation": 1.1218329891562462,
+          "ranking": 0.8155000396072865
+        },
+        {
+          "k": 150,
+          "candidate_generation": 15.456375083886087,
+          "exact_evaluation": 3.2735420390963554,
+          "ranking": 2.385667059570551
+        },
+        {
+          "k": 150,
+          "candidate_generation": 19.93408298585564,
+          "exact_evaluation": 3.2181249698624015,
+          "ranking": 2.6717500295490026
+        },
+        {
+          "k": 150,
+          "candidate_generation": 16.187750035896897,
+          "exact_evaluation": 3.322542062960565,
+          "ranking": 2.3966250009834766
+        }
+      ],
+      "coverage": {
+        "50": {
+          "subjects": {
+            "adult": 25,
+            "business": 25
+          },
+          "categories": {
+            "school": 11,
+            "MSME": 10,
+            "procurement": 8,
+            "startup": 7,
+            "higher_education": 7,
+            "state_support": 2,
+            "documentary": 3,
+            "unknown": 2
+          }
+        },
+        "150": {
+          "subjects": {
+            "adult": 75,
+            "business": 75
+          },
+          "categories": {
+            "school": 36,
+            "MSME": 27,
+            "procurement": 24,
+            "startup": 24,
+            "higher_education": 17,
+            "state_support": 7,
+            "documentary": 8,
+            "unknown": 7
+          }
+        }
+      }
+    },
+    {
+      "case": "held_out-23",
+      "oracle_pairs": 600,
+      "hybrid_recall_at_50": 0.07,
+      "ilike_recall_at_50": 0.0,
+      "ilike_candidate_ms_at_50": 0.9845000458881259,
+      "hybrid_recall_at_150": 0.21,
+      "ilike_recall_at_150": 0.0,
+      "ilike_candidate_ms_at_150": 1.1268750531598926,
+      "measurements_ms": [
+        {
+          "k": 50,
+          "candidate_generation": 15.629541012458503,
+          "exact_evaluation": 1.1800830252468586,
+          "ranking": 0.7071669679135084
+        },
+        {
+          "k": 50,
+          "candidate_generation": 16.04191609658301,
+          "exact_evaluation": 1.1092079803347588,
+          "ranking": 0.6772499764338136
+        },
+        {
+          "k": 50,
+          "candidate_generation": 16.162874992005527,
+          "exact_evaluation": 1.165041932836175,
+          "ranking": 0.6984160281717777
+        },
+        {
+          "k": 150,
+          "candidate_generation": 16.02629094850272,
+          "exact_evaluation": 3.281624987721443,
+          "ranking": 2.0077909575775266
+        },
+        {
+          "k": 150,
+          "candidate_generation": 16.2408750038594,
+          "exact_evaluation": 3.195291035808623,
+          "ranking": 1.9753329688683152
+        },
+        {
+          "k": 150,
+          "candidate_generation": 29.74254102446139,
+          "exact_evaluation": 3.2565409783273935,
+          "ranking": 2.0129160257056355
+        }
+      ],
+      "coverage": {
+        "50": {
+          "subjects": {
+            "adult": 13,
+            "child": 13,
+            "business": 12,
+            "household": 12
+          },
+          "categories": {
+            "higher_education": 5,
+            "MSME": 4,
+            "school": 3,
+            "procurement": 5,
+            "startup": 3,
+            "household": 12,
+            "state_support": 2,
+            "documentary": 2,
+            "unknown": 1
+          }
+        },
+        "150": {
+          "subjects": {
+            "adult": 38,
+            "child": 38,
+            "business": 37,
+            "household": 37
+          },
+          "categories": {
+            "higher_education": 11,
+            "MSME": 15,
+            "school": 13,
+            "procurement": 11,
+            "startup": 11,
+            "household": 37,
+            "state_support": 5,
+            "documentary": 5,
+            "unknown": 4
+          }
+        }
+      }
+    },
+    {
+      "case": "held_out-67",
+      "oracle_pairs": 600,
+      "hybrid_recall_at_50": 0.07,
+      "ilike_recall_at_50": 0.0,
+      "ilike_candidate_ms_at_50": 1.0419579921290278,
+      "hybrid_recall_at_150": 0.21,
+      "ilike_recall_at_150": 0.0,
+      "ilike_candidate_ms_at_150": 1.0821669129654765,
+      "measurements_ms": [
+        {
+          "k": 50,
+          "candidate_generation": 21.509417099878192,
+          "exact_evaluation": 1.1413339525461197,
+          "ranking": 0.6969590904191136
+        },
+        {
+          "k": 50,
+          "candidate_generation": 16.230209032073617,
+          "exact_evaluation": 1.101791043765843,
+          "ranking": 0.6947499932721257
+        },
+        {
+          "k": 50,
+          "candidate_generation": 16.183749889023602,
+          "exact_evaluation": 1.1246250942349434,
+          "ranking": 0.8645000634714961
+        },
+        {
+          "k": 150,
+          "candidate_generation": 15.88999992236495,
+          "exact_evaluation": 3.142166999168694,
+          "ranking": 16.252290923148394
+        },
+        {
+          "k": 150,
+          "candidate_generation": 16.55179203953594,
+          "exact_evaluation": 3.2083329278975725,
+          "ranking": 2.0141249988228083
+        },
+        {
+          "k": 150,
+          "candidate_generation": 16.6060000192374,
+          "exact_evaluation": 3.1365000177174807,
+          "ranking": 2.2200840758159757
+        }
+      ],
+      "coverage": {
+        "50": {
+          "subjects": {
+            "adult": 13,
+            "child": 13,
+            "business": 12,
+            "household": 12
+          },
+          "categories": {
+            "higher_education": 5,
+            "MSME": 4,
+            "school": 3,
+            "procurement": 5,
+            "startup": 3,
+            "household": 12,
+            "state_support": 2,
+            "documentary": 2,
+            "unknown": 1
+          }
+        },
+        "150": {
+          "subjects": {
+            "adult": 38,
+            "child": 38,
+            "business": 37,
+            "household": 37
+          },
+          "categories": {
+            "higher_education": 11,
+            "MSME": 15,
+            "school": 13,
+            "procurement": 11,
+            "startup": 11,
+            "household": 37,
+            "state_support": 5,
+            "documentary": 5,
+            "unknown": 4
+          }
+        }
+      }
+    }
+  ]
+}
