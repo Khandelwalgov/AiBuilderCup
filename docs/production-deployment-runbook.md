@@ -1,36 +1,43 @@
-# First production release runbook — 17 October 2026
+# Unclaimed first release — Neon + Cloud Run + Firebase Hosting
 
-**Status: locally validated release tooling; no cloud resources created/changed and no hosted acceptance claimed.** Every provisioning/release command below is a future human-operator procedure requiring project, cost and deployment approval. The runner defaults to plan-only. Do not paste secret values into this file, JSON configs, shell command arguments or GitHub variables.
+Updated 17 October 2026. **No commands that change Google Cloud, billing, Hosting or Neon were executed during this adaptation.** The commands below are future human-operated steps, after cost/project approval. Do not repeat Neon initialization: the operator reports PostgreSQL 17 already at Alembic head `f24a1000abcd`.
 
-## 1. Choose and approve the public identifiers
+## Selected infrastructure
 
-Use one Firebase-enabled Google Cloud project. Pick Mumbai (`asia-south1`) for API/database/registry/build storage. Approve the database tradeoff and budget in [hosting-costs-and-risks.md](hosting-costs-and-risks.md). Billing/Blaze linkage, quotas, organization policy and database capacity require human confirmation. A trial is not the recommended release database.
+| Setting | Value |
+|---|---|
+| Google/Firebase project | `venuesignal` |
+| Cloud Run region/service | `asia-south1` / `opportunity-api` |
+| Firebase site/target | `unclaimed-ai-cup` / `unclaimed` |
+| Public frontend | `https://unclaimed-ai-cup.web.app` |
+| Existing Firebase Web app | `AiBuilderCup` in `venuesignal`; copy its public API key/app ID from Console |
+| Firebase Auth domain | `venuesignal.firebaseapp.com` (project auth domain, distinct from Hosting site) |
+| Database | Existing Neon Free PostgreSQL 17; no Cloud SQL instance/proxy/socket/VPC connector |
+| Release schema action | `verify`: SELECT existing Alembic revisions in a read-only transaction, no initialization/stamping/upgrade |
+| Cloud Run limits | Request-based CPU, 1 vCPU, 1 GiB, min 0/max 1, concurrency 4, 60-second request timeout |
+
+Billing was not linked to `venuesignal` at the last human check. This task did not check or change billing remotely. A billing-enabled Google project is needed for Run/build/registry/Secret Manager even when usage falls within free allowances. No Cloud SQL API, IAM client role, database, instance or attachment is required or created by this path.
+
+## 1. Billing and Google prerequisites — human only
+
+Inspect existing resources first; reuse them when already configured. Do not run create commands blindly against existing resources. Every command explicitly names `venuesignal`; no reliance on a gcloud default project.
 
 ```sh
-export OPPORTUNITY_PROJECT=YOUR_PROJECT_ID
+export OPPORTUNITY_PROJECT=venuesignal
 export OPPORTUNITY_REGION=asia-south1
-export OPPORTUNITY_SQL_INSTANCE=opportunity-db
 export OPPORTUNITY_REPOSITORY=opportunity
 export OPPORTUNITY_SERVICE=opportunity-api
-export OPPORTUNITY_SOURCE_BUCKET="$OPPORTUNITY_PROJECT-release-source"
-export OPPORTUNITY_REPO=OWNER/REPOSITORY
-export OPPORTUNITY_RELEASE_BRANCH=master
-```
+export OPPORTUNITY_SOURCE_BUCKET=venuesignal-release-source
+export OPPORTUNITY_BILLING_ACCOUNT=YOUR_BILLING_ACCOUNT_ID
 
-Use the repository's actual protected default branch (currently the local branch is `master`), not an assumed `main`. These variables contain only public identifiers. Confirm the selected project in Console; never rely on the gcloud default project.
+# Read the actual state first. Link only after explicit budget/billing authorization.
+gcloud billing projects describe "$OPPORTUNITY_PROJECT"
+gcloud billing projects link "$OPPORTUNITY_PROJECT" --billing-account "$OPPORTUNITY_BILLING_ACCOUNT"
+gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com secretmanager.googleapis.com identitytoolkit.googleapis.com iamcredentials.googleapis.com sts.googleapis.com firebasehosting.googleapis.com --project "$OPPORTUNITY_PROJECT"
 
-## 2. One-time infrastructure prerequisites — human only
-
-Enable billing and create/register the Firebase project/Web app in Console. Configure **Authentication → Google**, support email and Authorized domains: `PROJECT.web.app`, `PROJECT.firebaseapp.com`; the first-release CORS allows only these two standard Hosting origins. Custom domains require a separately reviewed CORS/config change, not just an Authorized domains entry. Use the Web app's matching public project ID, API key, auth domain and app ID. Google OAuth consent/supported users and organization restrictions must permit the intended test accounts. Do not create service-account JSON keys.
-
-After approval, provision the following once. Existing resources should be inspected/reused, not recreated blindly. These commands were **not run** during this assignment.
-
-```sh
-gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com sqladmin.googleapis.com secretmanager.googleapis.com identitytoolkit.googleapis.com iamcredentials.googleapis.com sts.googleapis.com firebasehosting.googleapis.com --project "$OPPORTUNITY_PROJECT"
+# Create only missing prerequisites; these are not invoked by deploy.py.
 gcloud artifacts repositories create "$OPPORTUNITY_REPOSITORY" --repository-format=docker --location "$OPPORTUNITY_REGION" --project "$OPPORTUNITY_PROJECT"
 gcloud storage buckets create "gs://$OPPORTUNITY_SOURCE_BUCKET" --location "$OPPORTUNITY_REGION" --uniform-bucket-level-access --public-access-prevention --project "$OPPORTUNITY_PROJECT"
-gcloud sql instances create "$OPPORTUNITY_SQL_INSTANCE" --project "$OPPORTUNITY_PROJECT" --region "$OPPORTUNITY_REGION" --database-version=POSTGRES_17 --edition=ENTERPRISE --tier=db-f1-micro --availability-type=ZONAL --storage-type=SSD --storage-size=10 --storage-auto-increase-limit=20 --backup-start-time=03:00 --enable-point-in-time-recovery --deletion-protection
-gcloud sql databases create opportunity --instance "$OPPORTUNITY_SQL_INSTANCE" --project "$OPPORTUNITY_PROJECT"
 for OPPORTUNITY_IDENTITY in opportunity-runtime opportunity-migrations opportunity-build opportunity-deploy; do
   gcloud iam service-accounts create "$OPPORTUNITY_IDENTITY" --project "$OPPORTUNITY_PROJECT"
 done
@@ -39,143 +46,144 @@ for OPPORTUNITY_SECRET in opportunity-database-url opportunity-migration-databas
 done
 ```
 
-Use the standard Cloud SQL Auth Proxy/Cloud Run connector over the instance's public IP **without authorized external networks**; never add `0.0.0.0/0`. IAM connector access and SQL login are separate. Private-IP-only networking would require a separately reviewed VPC configuration/cost; this runner does not add one. [Cloud Run–Cloud SQL connection guidance](https://docs.cloud.google.com/sql/docs/postgres/connect-run).
+Set a Google Cloud billing budget and 50/80/100% alerts in Console, inspect billing daily, and apply reviewed source/image/log retention policies. Alerts are not a hard spend cap. Neon remains Free; do not upgrade its plan or resize/move/reinitialize its existing database as part of this Google setup.
 
-## 3. SQL roles and secret values — Console/private input only
+## 2. Store existing Neon credentials securely
 
-Create two dedicated SQL users using Cloud SQL Console's password controls: `opportunity_migrator` and `opportunity_app`. Keep generated passwords in an approved password manager. Make the migrator owner of the `opportunity` database/schema and run these SQL privilege statements with an authorized SQL administrator. Do not put passwords in SQL scripts or terminal history.
+The runner never fetches or prints secret payloads. In Secret Manager Console, populate numeric versions for:
 
-```sql
--- Connect to the opportunity database; names are public, passwords are not present here.
-ALTER DATABASE opportunity OWNER TO opportunity_migrator;
-ALTER SCHEMA public OWNER TO opportunity_migrator;
-REVOKE CREATE ON SCHEMA public FROM PUBLIC;
-GRANT CONNECT ON DATABASE opportunity TO opportunity_app;
-GRANT USAGE ON SCHEMA public TO opportunity_app;
-ALTER DEFAULT PRIVILEGES FOR ROLE opportunity_migrator IN SCHEMA public
-  GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO opportunity_app;
-ALTER DEFAULT PRIVILEGES FOR ROLE opportunity_migrator IN SCHEMA public
-  GRANT USAGE, SELECT ON SEQUENCES TO opportunity_app;
--- If tables already exist, grant their DML privileges too; do not grant DDL/ownership to the API.
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO opportunity_app;
-GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO opportunity_app;
-```
+- `opportunity-database-url`: runtime app role, **pooled** Neon endpoint where available, SSL required.
+- `opportunity-migration-database-url`: **direct, non-pooler** Neon endpoint, separate migration role/credentials where practical. The current release uses this only to verify existing head read-only.
+- `opportunity-document-signing-key`: random stable signing key (at least 32 bytes of entropy), unchanged across instances/revisions unless deliberately rotated. Uploads remain disabled.
 
-In Secret Manager Console, add numeric versions of these values using private input. The DSN must URL-encode the username/password and use the Cloud SQL socket; never include a real DSN in the public JSON:
+Use SQLAlchemy/psycopg URLs: `postgresql+psycopg://ENCODED_USER:ENCODED_PASSWORD@NEON_ENDPOINT/DATABASE?sslmode=require&channel_binding=require`. Keep Neon-provided TLS options; `verify-full` is accepted when its root-certificate configuration is available. A pooled hostname contains `-pooler.`; do not use it for Alembic/schema jobs. Do not paste actual URLs into public config, terminal arguments or GitHub variables. Use Console private input or hidden stdin, never local `.env` overwrite.
 
-- `opportunity-database-url`: `postgresql+psycopg://ENCODED_APP_USER:ENCODED_PASSWORD@/opportunity?host=/cloudsql/PROJECT:REGION:INSTANCE`
-- `opportunity-migration-database-url`: same socket/database, **migrator** credentials.
-- `opportunity-document-signing-key`: cryptographically random, at least 32 bytes of entropy, kept stable across instances/revisions; record its numeric version. Rotate deliberately because old short-lived download tokens will stop validating.
+Runtime production settings validate the Neon host, driver and SSL mode and reject endpoint override parameters. The runtime can also use a direct SSL endpoint if pooling is unavailable. SQLAlchemy retains a 3-connection pool with no overflow and pre-ping; psycopg server-side prepared statements are disabled for conservative transaction-pooler compatibility. Migration/schema connections use NullPool and require direct Neon. The app's advisory locks are transaction scoped; it does not rely on session-level SET/LISTEN/temp-table state for normal API work. [Neon pooling](https://neon.com/docs/connect/connection-pooling), [TLS guidance](https://neon.com/docs/connect/connect-securely).
 
-No Gemini/OpenAI secret is needed for this first release: generation/paid ingestion are off. Production uploads remain off even though a stable signing key is supplied. Future private document storage must use durable scoped GCS, malware scanning and security acceptance; do not enable local uploads on Cloud Run.
+**Role gate:** verify existing runtime and migration roles are separate and the app role has only required DML/schema usage; the migration role owns/manages schema. Distinct Secret Manager names alone do not prove different users/privileges. If only an owner URL exists, resolve role separation explicitly with the Neon administrator before release. This assignment does not create users/grants or alter Neon. Do not rerun initialization, seed fixtures, stamp revisions, or apply migrations just to populate these secrets.
 
-## 4. Least-privilege cloud IAM
-
-All commands require an authorized IAM administrator. Runtime gets only database connectivity, Firebase user lookup/revocation checks and its specific secrets; migrations get only connectivity and their separate DDL credential. No account needs Owner/Editor.
+Optional hidden-input secret upload (future operator command; no value appears in arguments/output):
 
 ```sh
-for OPPORTUNITY_IDENTITY in opportunity-runtime opportunity-migrations; do
-  gcloud projects add-iam-policy-binding "$OPPORTUNITY_PROJECT" --member="serviceAccount:$OPPORTUNITY_IDENTITY@$OPPORTUNITY_PROJECT.iam.gserviceaccount.com" --role=roles/cloudsql.client --condition=None
+export OPPORTUNITY_SECRET=opportunity-database-url
+# Repeat for the direct migration URL and signing key, using the intended secret name.
+python3 - <<'PY'
+import getpass, os, subprocess
+value = getpass.getpass('Secret value (hidden; never logged): ')
+if not value: raise SystemExit('Empty secret rejected')
+result = subprocess.run(['gcloud','secrets','versions','add',os.environ['OPPORTUNITY_SECRET'],
+    '--project','venuesignal','--data-file=-','--quiet'], input=value, text=True, capture_output=True)
+if result.returncode: raise SystemExit('Secret upload failed; inspect restricted logs locally')
+print('Version added. Record its numeric version in the public deployment config.')
+PY
+```
+
+No Gemini/OpenAI secret is needed or injected. Synthetic catalogue, live paid ingestion, assistant generation and document uploads stay explicitly false. Never supply a service-account JSON key; Firebase Admin uses Cloud Run's runtime service-account ADC.
+
+## 3. Google IAM — no Cloud SQL permissions
+
+Run only with an authorized IAM administrator. Existing managed Cloud Build/Cloud Run service agents should retain their documented service-agent roles. Never grant Owner/Editor to application accounts.
+
+```sh
+gcloud projects add-iam-policy-binding venuesignal --member=serviceAccount:opportunity-runtime@venuesignal.iam.gserviceaccount.com --role=roles/firebaseauth.viewer --condition=None
+for OPPORTUNITY_SECRET in opportunity-database-url opportunity-document-signing-key; do
+  gcloud secrets add-iam-policy-binding "$OPPORTUNITY_SECRET" --project venuesignal --member=serviceAccount:opportunity-runtime@venuesignal.iam.gserviceaccount.com --role=roles/secretmanager.secretAccessor --condition=None
 done
-gcloud projects add-iam-policy-binding "$OPPORTUNITY_PROJECT" --member="serviceAccount:opportunity-runtime@$OPPORTUNITY_PROJECT.iam.gserviceaccount.com" --role=roles/firebaseauth.viewer --condition=None
-gcloud secrets add-iam-policy-binding opportunity-database-url --project "$OPPORTUNITY_PROJECT" --member="serviceAccount:opportunity-runtime@$OPPORTUNITY_PROJECT.iam.gserviceaccount.com" --role=roles/secretmanager.secretAccessor --condition=None
-gcloud secrets add-iam-policy-binding opportunity-document-signing-key --project "$OPPORTUNITY_PROJECT" --member="serviceAccount:opportunity-runtime@$OPPORTUNITY_PROJECT.iam.gserviceaccount.com" --role=roles/secretmanager.secretAccessor --condition=None
-gcloud secrets add-iam-policy-binding opportunity-migration-database-url --project "$OPPORTUNITY_PROJECT" --member="serviceAccount:opportunity-migrations@$OPPORTUNITY_PROJECT.iam.gserviceaccount.com" --role=roles/secretmanager.secretAccessor --condition=None
-gcloud artifacts repositories add-iam-policy-binding "$OPPORTUNITY_REPOSITORY" --location "$OPPORTUNITY_REGION" --project "$OPPORTUNITY_PROJECT" --member="serviceAccount:opportunity-build@$OPPORTUNITY_PROJECT.iam.gserviceaccount.com" --role=roles/artifactregistry.writer
-gcloud projects add-iam-policy-binding "$OPPORTUNITY_PROJECT" --member="serviceAccount:opportunity-build@$OPPORTUNITY_PROJECT.iam.gserviceaccount.com" --role=roles/logging.logWriter --condition=None
-gcloud storage buckets add-iam-policy-binding "gs://$OPPORTUNITY_SOURCE_BUCKET" --member="serviceAccount:opportunity-build@$OPPORTUNITY_PROJECT.iam.gserviceaccount.com" --role=roles/storage.objectViewer --project "$OPPORTUNITY_PROJECT"
-```
+gcloud secrets add-iam-policy-binding opportunity-migration-database-url --project venuesignal --member=serviceAccount:opportunity-migrations@venuesignal.iam.gserviceaccount.com --role=roles/secretmanager.secretAccessor --condition=None
+gcloud artifacts repositories add-iam-policy-binding opportunity --location asia-south1 --project venuesignal --member=serviceAccount:opportunity-build@venuesignal.iam.gserviceaccount.com --role=roles/artifactregistry.writer
+gcloud projects add-iam-policy-binding venuesignal --member=serviceAccount:opportunity-build@venuesignal.iam.gserviceaccount.com --role=roles/logging.logWriter --condition=None
+gcloud storage buckets add-iam-policy-binding gs://venuesignal-release-source --project venuesignal --member=serviceAccount:opportunity-build@venuesignal.iam.gserviceaccount.com --role=roles/storage.objectViewer
 
-The deployment service account (or explicitly authorized human CLI identity) needs `roles/cloudbuild.builds.editor`, `roles/run.admin`, `roles/firebasehosting.admin`, and `roles/serviceusage.serviceUsageConsumer` in this project; Artifact Registry reader on this repository; object creator/viewer plus bucket metadata read on the source bucket; and `roles/iam.serviceAccountUser` **on each of the three exact build/runtime/migration accounts**, not project-wide. It does **not** need secret payload access. `roles/run.admin` is needed for initial service/job creation and public invoker IAM; after first release, narrow its resource scope where possible. This project-level initial-release authority is not a promise of custom minimal permissions.
-
-```sh
+# Deployment identity: initial service/job creation and Hosting release, not billing or secret payloads.
 for OPPORTUNITY_ROLE in roles/cloudbuild.builds.editor roles/run.admin roles/firebasehosting.admin roles/serviceusage.serviceUsageConsumer; do
-  gcloud projects add-iam-policy-binding "$OPPORTUNITY_PROJECT" --member="serviceAccount:opportunity-deploy@$OPPORTUNITY_PROJECT.iam.gserviceaccount.com" --role="$OPPORTUNITY_ROLE" --condition=None
+  gcloud projects add-iam-policy-binding venuesignal --member=serviceAccount:opportunity-deploy@venuesignal.iam.gserviceaccount.com --role="$OPPORTUNITY_ROLE" --condition=None
 done
 for OPPORTUNITY_IDENTITY in opportunity-runtime opportunity-migrations opportunity-build; do
-  gcloud iam service-accounts add-iam-policy-binding "$OPPORTUNITY_IDENTITY@$OPPORTUNITY_PROJECT.iam.gserviceaccount.com" --project "$OPPORTUNITY_PROJECT" --member="serviceAccount:opportunity-deploy@$OPPORTUNITY_PROJECT.iam.gserviceaccount.com" --role=roles/iam.serviceAccountUser
+  gcloud iam service-accounts add-iam-policy-binding "$OPPORTUNITY_IDENTITY@venuesignal.iam.gserviceaccount.com" --project venuesignal --member=serviceAccount:opportunity-deploy@venuesignal.iam.gserviceaccount.com --role=roles/iam.serviceAccountUser
 done
-gcloud artifacts repositories add-iam-policy-binding "$OPPORTUNITY_REPOSITORY" --location "$OPPORTUNITY_REGION" --project "$OPPORTUNITY_PROJECT" --member="serviceAccount:opportunity-deploy@$OPPORTUNITY_PROJECT.iam.gserviceaccount.com" --role=roles/artifactregistry.reader
+gcloud artifacts repositories add-iam-policy-binding opportunity --location asia-south1 --project venuesignal --member=serviceAccount:opportunity-deploy@venuesignal.iam.gserviceaccount.com --role=roles/artifactregistry.reader
 for OPPORTUNITY_ROLE in roles/storage.objectCreator roles/storage.objectViewer roles/storage.legacyBucketReader; do
-  gcloud storage buckets add-iam-policy-binding "gs://$OPPORTUNITY_SOURCE_BUCKET" --project "$OPPORTUNITY_PROJECT" --member="serviceAccount:opportunity-deploy@$OPPORTUNITY_PROJECT.iam.gserviceaccount.com" --role="$OPPORTUNITY_ROLE"
+  gcloud storage buckets add-iam-policy-binding gs://venuesignal-release-source --project venuesignal --member=serviceAccount:opportunity-deploy@venuesignal.iam.gserviceaccount.com --role="$OPPORTUNITY_ROLE"
 done
 ```
 
-Confirm the managed Cloud Build/Run service agents exist and retain their documented service-agent roles after API enablement. The same-project Cloud Run service agent must be able to pull the Artifact Registry image; do not grant public registry access. Organization restrictions on public Run invocation must be resolved explicitly: the catalogue needs public HTTP while Firebase guards private routes. No organization-policy bypass is implemented.
+After initial creation, narrow deployment IAM to the actual Run service/job/Hosting resources where supported. Runtime/migration identities need no Google database IAM role: Neon authenticates its own SQL roles over TLS. No VPC/NAT/proxy is provisioned. If Neon network restrictions require fixed egress, stop for a separately approved design/cost decision; this release does not add static egress infrastructure. Actual Neon region, Cloud Run-to-Neon latency, quotas and external egress costs remain operator checks.
 
-## 5. GitHub manual release/WIF setup — operator action required
+## 4. Firebase app and exclusive Hosting target
 
-Configure repository default-branch protection/rulesets requiring successful `intelligence` CI. Configure a **production** GitHub environment with required human reviewers, prevent self-review, disable admin bypass and restrict deployment branches to the protected default branch. Verify your GitHub plan/repository visibility supports these protection rules; if it does not, the protected Actions release is blocked until the operator chooses a supported arrangement. Merely naming an environment in YAML does not create approval rules. [GitHub environment protections](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments).
+Use the **existing AiBuilderCup Web app**, not a guessed/new app. Fill its public API key and app ID in `infra/deploy.example.json`'s copied public config. Project remains `venuesignal`; Auth domain remains `venuesignal.firebaseapp.com`. Enable Google Sign-In/support email and authorize `unclaimed-ai-cup.web.app` and `unclaimed-ai-cup.firebaseapp.com` in Firebase Authentication settings. Verify OAuth consent/test-user/organization restrictions permit the testers.
 
-Use repository/owner **numeric IDs** and exact workflow/branch/environment conditions to scope WIF. Obtain these public IDs from GitHub and the project number from Google Console. Substitute only public identifiers below.
+The existing `infra/.firebaserc` maps `venuesignal → hosting → unclaimed → [unclaimed-ai-cup]`; `infra/firebase.json` has `target: unclaimed`. The runner checks both files before any cloud command and uses **only `--only hosting:unclaimed`**. It never deploys the project-default site or uses `venuesignal.web.app` as the frontend. Production CORS allows the two Unclaimed site origins. The project's Auth domain is not the frontend CORS origin. [Firebase multisite targets](https://firebase.google.com/docs/hosting/multisites).
+
+If the target mapping is already correct, do not reapply/create it. For a future clean checkout missing only that mapping, the operator can restore it from Git; the precise CLI equivalent is `firebase target:apply hosting unclaimed unclaimed-ai-cup --project venuesignal` from `infra/`. No Firebase site/app creation is required.
+
+## 5. Protected manual GitHub WIF release
+
+Keep `.github/workflows/deploy.yml` manual-only. It depends on CI, requires the protected repository default branch and `DEPLOY` input, targets the `production` environment and then authenticates with WIF. The human must configure required reviewers, prevent self-review/admin bypass and protected default-branch restrictions in GitHub; YAML cannot install these controls. A GitHub plan without supported approval rules blocks this protected workflow path.
+
+One-time WIF commands (only if not configured; public placeholders):
 
 ```sh
-export OPPORTUNITY_PROJECT_NUMBER=YOUR_NUMERIC_PROJECT_NUMBER
+export OPPORTUNITY_PROJECT_NUMBER=YOUR_VENUESIGNAL_PROJECT_NUMBER
+export OPPORTUNITY_REPO=OWNER/REPOSITORY
 export OPPORTUNITY_REPO_ID=YOUR_NUMERIC_REPOSITORY_ID
 export OPPORTUNITY_OWNER_ID=YOUR_NUMERIC_OWNER_ID
-gcloud iam workload-identity-pools create github-release --location=global --project "$OPPORTUNITY_PROJECT" --display-name='Manual GitHub release'
-gcloud iam workload-identity-pools providers create-oidc github --location=global --workload-identity-pool=github-release --project "$OPPORTUNITY_PROJECT" --issuer-uri=https://token.actions.githubusercontent.com --attribute-mapping='google.subject=assertion.sub,attribute.repository_id=assertion.repository_id' --attribute-condition="assertion.repository_id == '$OPPORTUNITY_REPO_ID' && assertion.repository_owner_id == '$OPPORTUNITY_OWNER_ID' && assertion.ref == 'refs/heads/$OPPORTUNITY_RELEASE_BRANCH' && assertion.sub == 'repo:$OPPORTUNITY_REPO:environment:production' && assertion.workflow_ref == '$OPPORTUNITY_REPO/.github/workflows/deploy.yml@refs/heads/$OPPORTUNITY_RELEASE_BRANCH'"
-gcloud iam service-accounts add-iam-policy-binding "opportunity-deploy@$OPPORTUNITY_PROJECT.iam.gserviceaccount.com" --project "$OPPORTUNITY_PROJECT" --role=roles/iam.workloadIdentityUser --member="principalSet://iam.googleapis.com/projects/$OPPORTUNITY_PROJECT_NUMBER/locations/global/workloadIdentityPools/github-release/attribute.repository_id/$OPPORTUNITY_REPO_ID"
+export OPPORTUNITY_RELEASE_BRANCH=YOUR_PROTECTED_DEFAULT_BRANCH
+
+gcloud iam workload-identity-pools create github-release --location global --project venuesignal --display-name='Manual Unclaimed release'
+gcloud iam workload-identity-pools providers create-oidc github --location global --workload-identity-pool github-release --project venuesignal --issuer-uri=https://token.actions.githubusercontent.com --attribute-mapping='google.subject=assertion.sub,attribute.repository_id=assertion.repository_id' --attribute-condition="assertion.repository_id == '$OPPORTUNITY_REPO_ID' && assertion.repository_owner_id == '$OPPORTUNITY_OWNER_ID' && assertion.ref == 'refs/heads/$OPPORTUNITY_RELEASE_BRANCH' && assertion.sub == 'repo:$OPPORTUNITY_REPO:environment:production' && assertion.workflow_ref == '$OPPORTUNITY_REPO/.github/workflows/deploy.yml@refs/heads/$OPPORTUNITY_RELEASE_BRANCH'"
+gcloud iam service-accounts add-iam-policy-binding opportunity-deploy@venuesignal.iam.gserviceaccount.com --project venuesignal --role roles/iam.workloadIdentityUser --member="principalSet://iam.googleapis.com/projects/$OPPORTUNITY_PROJECT_NUMBER/locations/global/workloadIdentityPools/github-release/attribute.repository_id/$OPPORTUNITY_REPO_ID"
 ```
 
-The manual workflow uses short-lived GitHub OIDC through service-account impersonation, never a long-lived service-account JSON or Firebase login token. Firebase CLI uses the generated ADC file, removed by the auth action afterward and ignored in Git. Only the deployment job has `id-token: write`; push/PR CI and the reusable validation job have no cloud auth/deploy steps. [Google WIF guidance](https://docs.cloud.google.com/iam/docs/workload-identity-federation-with-deployment-pipelines), [official auth action](https://github.com/google-github-actions/auth), [Firebase ADC support](https://firebase.google.com/docs/cli).
+Set production environment variables `GCP_PROJECT_ID=venuesignal`, `GCP_DEPLOY_SERVICE_ACCOUNT=opportunity-deploy@venuesignal.iam.gserviceaccount.com`, `GCP_WORKLOAD_IDENTITY_PROVIDER=projects/NUMBER/locations/global/workloadIdentityPools/github-release/providers/github`, and `DEPLOY_CONFIG_JSON` containing **only** the filled public template. Pin numeric secret versions. No database URL/password, token or JSON credential belongs in GitHub variables. Push needs separate authorization and was not performed in this adaptation.
 
-## 6. Fill public config, inspect plan, then explicitly release
+## 6. Plan, authorize release, verify actual hosted behavior
 
-Start from a **clean checkout** of the reviewed commit. The runner refuses frontend `.env`, `.env.local`, `.env.production` or `.env.production.local` files; it never overwrites them. All inherited `VITE_*` variables are discarded except the explicit public production values it supplies. API secrets are Cloud Run references, not local `.env` files.
+From the repository root in a clean reviewed checkout:
 
 ```sh
-cp -n infra/deploy.example.json /tmp/opportunity-production.json
-# Edit project/region/resource IDs, numeric secret versions and public Firebase Web values.
-# Leave real credentials out of this file.
-python3 infra/deploy.py --config /tmp/opportunity-production.json
+cp -n infra/deploy.example.json /tmp/unclaimed-production.json
+# Fill only the existing app's public Firebase key/app ID and actual numeric secret versions.
+# Keep database_provider=neon and migration_mode=verify.
+python3 infra/deploy.py --config /tmp/unclaimed-production.json
 ```
 
-The JSON contains a separate build account/source bucket and separate API/migration database secrets. Pin numeric secret versions; `latest` is rejected. Placeholder Firebase web values are allowed in a plan, but rejected for execution. The example's Gemini model is retained as configuration only; it is not called or injected with a key in this first release.
+Plan-only reads local public files and prints commands, with no cloud/network/Neon operation. Execution refuses placeholder Web config and existing frontend `.env*` files, preserving local environments. Use a clean checkout; all inherited `VITE_*` values are sanitized. Docker build resources/digests/locks remain pinned, with an allowlisted context excluding credentials, corpus blobs, private files and development fixtures.
 
-For Actions, configure these **production environment variables**, not JSON credentials:
-
-- `GCP_PROJECT_ID`
-- `GCP_WORKLOAD_IDENTITY_PROVIDER`: `projects/NUMBER/locations/global/workloadIdentityPools/github-release/providers/github`
-- `GCP_DEPLOY_SERVICE_ACCOUNT`: `opportunity-deploy@PROJECT.iam.gserviceaccount.com`
-- `DEPLOY_CONFIG_JSON`: the filled public configuration document.
-
-After local checks pass, the workflow is on the remote protected default branch (pushing needs separate user authorization), and infrastructure/approval protections are confirmed:
+Only after billing/IAM/secrets/review protections and deployment approval are ready, either dispatch the remote workflow (after authorized publication of code):
 
 ```sh
-gh workflow run deploy.yml --ref "$OPPORTUNITY_RELEASE_BRANCH" --field approved_project="$OPPORTUNITY_PROJECT" --field authorization=DEPLOY
+gh workflow run deploy.yml --ref "$OPPORTUNITY_RELEASE_BRANCH" --field approved_project=venuesignal --field authorization=DEPLOY
 ```
 
-The reusable CI job runs tests/builds first; the deployment job then waits for the configured production environment reviewer before WIF auth/cloud access. For an explicitly approved local alternative, first use `gcloud auth login` and `gcloud auth application-default login` **outside the repository**, with an identity granted the operator permissions above; Firebase CLI uses ADC. Then, from the clean checkout only:
+or use the approved local CLI identity (gcloud login + ADC outside Git, permissions equivalent to the deployment identity), from a clean checkout:
 
 ```sh
-python3 infra/deploy.py --config /tmp/opportunity-production.json --execute --approved-project "$OPPORTUNITY_PROJECT" --receipt /tmp/opportunity-release-receipt.json
+python3 infra/deploy.py --config /tmp/unclaimed-production.json --execute --approved-project venuesignal --receipt /tmp/unclaimed-release-receipt.json
 ```
 
-**Runner order:** check existing build-source bucket → record prior API traffic → allowlisted amd64 Cloud Build → deploy/execute single-task migration job (zero retries) → deploy tagged API with `--no-traffic` requested → candidate public/auth/CORS smoke → frozen web install/build → promote exact ready revision → stable API smoke → Firebase Hosting release → SPA-route smoke. It does not provision SQL, secrets, IAM, budgets or WIF. First-ever service creation has no previous revision to preserve; do not advertise its URL before acceptance. API and Hosting promotion are not atomic.
+**Order:** existing source-bucket check → prior traffic receipt → image build → single schema-gate job using direct Neon secret (**read-only head verification**) → no-traffic tagged API → candidate public/auth/CORS smoke → frozen web build with actual API URL/existing Firebase app → exact revision traffic promotion → stable API smoke → exclusive `hosting:unclaimed` release → `https://unclaimed-ai-cup.web.app/profile` SPA verification. The receipt records Unclaimed site/target/URL, Neon provider/schema mode and safe rollback metadata; no full service/env payload. First service creation has no old revision to protect; do not advertise it before acceptance. API/Hosting promotion is not atomic.
 
-All secrets use pinned versions. Build input fingerprint includes every regular runtime source/config file (not just Python), migration/template, `uv.lock`, Python package metadata, pinned Dockerfile, Cloud Build and ignore manifests. The web is independently rebuilt using its frozen `pnpm-lock.yaml`; frontend packages are not included in the API image. Cloud Build explicitly enables BuildKit for the Dockerfile cache mount. No private documents, root corpus downloads, credentials, local env, tests or development fixtures are uploaded. The application package includes collector **code**, but its separate registry/blob workspace is not packaged or modified and no collection command runs.
+For a later separately approved schema change only, set `migration_mode=upgrade` and invoke the runner with **both** project approval and `--approve-migrations`; the schema module also requires its explicit upgrade flag. Do not do this for the current already-applied `f24a1000abcd` release. Missing/mismatched metadata stops verification; it never initializes, stamps or seeds Neon.
 
-## 7. Hosted acceptance — required after public smoke
-
-Record the actual API/Hosting URLs and revision/digest only after successful release. Run the public check (an empty real catalogue is legitimate):
+Post-release commands (not run here):
 
 ```sh
-python3 infra/smoke.py --api-url https://YOUR_SERVICE.run.app --hosting-origin "https://$OPPORTUNITY_PROJECT.web.app" --hosting-origin "https://$OPPORTUNITY_PROJECT.firebaseapp.com"
+python3 infra/smoke.py --api-url https://ACTUAL_SERVICE.run.app --hosting-origin https://unclaimed-ai-cup.web.app --hosting-origin https://unclaimed-ai-cup.firebaseapp.com
+# Private token-file checks only after actual two-account hosted Google login:
+python3 infra/smoke.py --api-url https://ACTUAL_SERVICE.run.app --hosting-origin https://unclaimed-ai-cup.web.app --hosting-origin https://unclaimed-ai-cup.firebaseapp.com --token-file /PRIVATE_TEMP/account-a.token --second-token-file /PRIVATE_TEMP/account-b.token --expected-uid ACCOUNT_A_UID
 ```
 
-Complete [hosted-acceptance.md](hosted-acceptance.md), including two actual Google accounts, all five contexts, non-persistence and Hindi/mobile. The optional authenticated API smoke reads **private local token files**, not CLI tokens or GitHub secrets. Never claim Google Sign-In, hosted search/scenario acceptance or Gemini worked because local emulator/public smoke passed. Empty published data cannot demonstrate opportunity match quality; substantive opportunity review/publication remains a separate human task and is not part of deployment.
+Complete [hosted-acceptance.md](hosted-acceptance.md). Actual Google Sign-In/Cloud Run ADC/Neon TLS connectivity/hosted search and scenarios are unverified in this assignment. Current real drafts remain unpublished; empty catalogue health/auth acceptance is legitimate but not populated recommendation acceptance. No live AI success is claimed.
 
-## 8. Rollback, secrets and logs
+## 7. Rollback and remaining gates
 
-Before release, record the previous **Firebase Hosting live release ID** from Console and retain its assets; download the public API traffic receipt from Actions (14-day artifact retention). It contains only revision names, traffic percentages, tags, URLs and image tag, never full service/env metadata. Candidate smoke failure stops before API promotion/Hosting. Migration failure stops before candidate deployment. If failure happens after API promotion, use the receipt's prior positive-traffic revision(s), explicitly approved:
+Before release, record the current **Unclaimed site's** live Hosting release ID in Console. Keep current/previous images and the runner's public receipt. Failed schema verification or candidate smoke stops before traffic promotion/Hosting. If failure occurs after promotion, a human can restore prior positive traffic from the receipt:
 
 ```sh
-gcloud run services update-traffic "$OPPORTUNITY_SERVICE" --project "$OPPORTUNITY_PROJECT" --region "$OPPORTUNITY_REGION" --to-revisions=PREVIOUS_REVIEWED_REVISION=100
+gcloud run services update-traffic opportunity-api --project venuesignal --region asia-south1 --to-revisions=PREVIOUS_REVIEWED_REVISION=100
 ```
 
-Use Firebase Console → Hosting → release history → rollback to the recorded release; there is no invented CLI command or automatic rollback. First release has no previous revision: keep the site unannounced, investigate, and make a deliberate operator decision. Keep the current/previous images and remove unused tagged candidates only after investigation. Never delete the database to undo a release.
+Rollback Firebase Console → Hosting → **unclaimed-ai-cup** → release history, never the default venuesignal site. First release has no previous revision. Do not automatically downgrade/restore/drop/stamp Neon; current verification makes no schema changes. Future schema upgrades need backward-compatibility and recovery-window/export review under the actual Neon plan. Restrict logs/artifacts; never include DSNs, bearer tokens or profile bodies. Google egress/build/registry/log/secret charges and Neon Free quota/cold-start/availability risks are documented in [hosting-costs-and-risks.md](hosting-costs-and-risks.md).
 
-Migrations run before API traffic and must be backward compatible. `f24a1000abcd` is additive; local fresh upgrade and existing-data upgrade/downgrade tests pass. Adding its stored generated column/index can rewrite/lock a populated table: reserve a maintenance window and test representative data before later upgrades; additive does not mean lock-free. **Do not automatically downgrade production schemas.** Test the previous image with the expanded schema or approve a backup/PITR restoration with its data-loss/outage implications. Backups/PITR recovery must be rehearsed before relying on them.
-
-Logs and rollback artifacts are access-controlled. Deploy errors suppress raw CLI stderr; inspect restricted Cloud Build/Run/SQL logs as needed, never paste credentials or profile bodies into tickets. Bound log/source/image retention and monitor database connections, HTTP error rates, cold starts and billing daily. Secrets rotation should be an explicit config/version update and new release. No `.env` overwrite, real-policy publication, paid AI enablement or remote push is included in this runbook's current execution status.
+Remaining human gates: billing linkage, prerequisites/IAM, correct existing-app public config, pinned secrets/distinct SQL roles, protected environment/WIF, explicit deployment authorization and actual hosted acceptance. No Neon data, cloud resource, policy publication or local environment was changed by this task.

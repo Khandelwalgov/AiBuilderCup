@@ -1,4 +1,6 @@
-# Release readiness validation — 17 October 2026
+# Historical release readiness validation — 17 October 2026
+
+**Superseded architecture:** this report records the original Cloud SQL baseline. Current Neon/Unclaimed deployment instructions and validation are in [neon-deployment-adaptation.md](neon-deployment-adaptation.md) and [production-deployment-runbook.md](production-deployment-runbook.md). Do not provision Cloud SQL from this historical report.
 
 Ready for a **human-authorized first deployment after prerequisites**, not a deployed/accepted service. No cloud provisioning, deployment, paid API call, real-policy approval/publication or remote push ran. Existing `.env` files, separate corpus implementation and Phase 4 recommender/UI were preserved.
 

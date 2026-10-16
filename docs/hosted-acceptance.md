@@ -2,14 +2,16 @@
 
 **Not executed against hosted services in this sprint.** Local emulator, mocked tests, Docker validation and public health checks do not establish live Google Sign-In or hosted product acceptance. Paid generation/ingestion are off; no Gemini/OpenAI acceptance is claimed.
 
+Use project `venuesignal`, existing Firebase Web app `AiBuilderCup`, Hosting site `unclaimed-ai-cup` and region `asia-south1`. The project Auth domain remains `venuesignal.firebaseapp.com`; it is not the frontend URL.
+
 Record approved project, reviewed Git SHA, image digest, migration head, actual API/Hosting URLs, browser/device, timestamp, testers and result for each item below. Use two dedicated Google accounts with fictional profile values; do not upload real identity or financial documents. Keep tokens, UIDs, private screenshots and test-account details out of public GitHub artifacts. A source record may be inspected, but never publish/approve an opportunity as part of this checklist.
 
 ## Public deployment and safety checks
 
 1. Open the Hosting root, `/profile`, `/discover` and `/scenarios` directly and refresh each. SPA routing and TLS must work. An unauthenticated protected route asks for sign-in without leaking a cached prior account. Confirm the build points at the intended API/project, with no emulator banner/test login page.
-2. Run `python3 infra/smoke.py --api-url https://ACTUAL.run.app --hosting-origin https://PROJECT.web.app --hosting-origin https://PROJECT.firebaseapp.com`. It checks `/live`, DB `/health`, catalogue shape, no synthetic/unreviewed items, production `development=true` denial, unauthenticated identity/profile/workspace/admin/search/scenario denial (401), invalid bearer denial, allowed CORS and untrusted-origin rejection.
+2. Run `python3 infra/smoke.py --api-url https://ACTUAL.run.app --hosting-origin https://unclaimed-ai-cup.web.app --hosting-origin https://unclaimed-ai-cup.firebaseapp.com`. It checks `/live`, DB `/health`, catalogue shape, no synthetic/unreviewed items, production `development=true` denial, unauthenticated identity/profile/workspace/admin/search/scenario denial (401), invalid bearer denial, allowed CORS and untrusted-origin rejection.
 3. Inspect deployed revision environment/secret **references** in restricted Console. Confirm production, matching Firebase project/CORS, fictional catalogue false, document uploads false, ingestion false, assistant live generation false, Gemini provider default, numeric DB/signing secret versions and no emulator host/OpenAI/AI key. Never export full service metadata to a public report.
-4. Confirm SQL revision is `f24a1000abcd`, no synthetic seed was run, runtime DB role lacks DDL and migration identity differs. Cold-start `/health` after scale-to-zero should become healthy within the configured startup window. Observe connection counts/error logs while using search/scenarios; no billing/model call should occur.
+4. Confirm the default read-only Neon schema gate reports `f24a1000abcd`, no initialization/seed/upgrade ran, runtime SQL role lacks DDL and migration credentials differ. Cold-start `/health` after scale-to-zero should become healthy within the configured startup window. Observe connection counts/error logs while using search/scenarios; no billing/model call should occur.
 
 ## Actual Google Sign-In and persistence
 
@@ -55,7 +57,7 @@ After both dedicated accounts exist and A has a saved fictional profile, save fr
 
 ```sh
 chmod 600 /PRIVATE_TEMP/account-a.token /PRIVATE_TEMP/account-b.token
-python3 infra/smoke.py --api-url https://ACTUAL.run.app --hosting-origin https://PROJECT.web.app --hosting-origin https://PROJECT.firebaseapp.com --token-file /PRIVATE_TEMP/account-a.token --second-token-file /PRIVATE_TEMP/account-b.token --expected-uid ACCOUNT_A_EXPECTED_FIREBASE_UID
+python3 infra/smoke.py --api-url https://ACTUAL.run.app --hosting-origin https://unclaimed-ai-cup.web.app --hosting-origin https://unclaimed-ai-cup.firebaseapp.com --token-file /PRIVATE_TEMP/account-a.token --second-token-file /PRIVATE_TEMP/account-b.token --expected-uid ACCOUNT_A_EXPECTED_FIREBASE_UID
 rm /PRIVATE_TEMP/account-a.token /PRIVATE_TEMP/account-b.token
 ```
 
