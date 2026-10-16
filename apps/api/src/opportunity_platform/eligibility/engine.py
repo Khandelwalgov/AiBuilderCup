@@ -155,7 +155,12 @@ def evaluate(rule: Rule, facts: list[FactRecord], today: date) -> Result:
         and (f.valid_from is None or f.valid_from <= when)
         and (f.valid_until is None or f.valid_until >= when)
     ]
-    if c.fact in {"annual_personal_income", "annual_parental_income", "business_turnover"}:
+    if c.fact in {
+        "annual_personal_income",
+        "annual_parental_income",
+        "annual_household_income",
+        "business_turnover",
+    }:
         records = [
             f
             for f in records
@@ -233,7 +238,12 @@ def evaluate(rule: Rule, facts: list[FactRecord], today: date) -> Result:
         return unknown(
             "Conflicting facts require clarification; no value has been chosen automatically."
         )
-    if c.fact in {"annual_personal_income", "annual_parental_income", "business_turnover"} and any(
+    if c.fact in {
+        "annual_personal_income",
+        "annual_parental_income",
+        "annual_household_income",
+        "business_turnover",
+    } and any(
         f.context.get("income_period") != c.income_period
         or f.context.get("income_definition") != c.income_definition
         for f in known

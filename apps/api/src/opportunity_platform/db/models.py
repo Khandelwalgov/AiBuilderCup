@@ -7,6 +7,7 @@ from typing import Any
 from sqlalchemy import (
     JSON,
     CheckConstraint,
+    Computed,
     DateTime,
     ForeignKey,
     Index,
@@ -14,6 +15,7 @@ from sqlalchemy import (
     UniqueConstraint,
     func,
 )
+from sqlalchemy.dialects.postgresql import TSVECTOR
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -188,6 +190,16 @@ class Opportunity(Entity):
 
 class OpportunityVersion(Entity):
     __tablename__ = "opportunity_versions"
+    search_vector: Mapped[Any] = mapped_column(
+        TSVECTOR,
+        Computed(
+            "to_tsvector('english'::regconfig, coalesce(title, '') || ' ' || "
+            "coalesce(summary, '') || ' ' || coalesce(issuer, '') || ' ' || "
+            "coalesce(category, ''))",
+            persisted=True,
+        ),
+    )
+
     opportunity_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("opportunities.id"), index=True)
     version: Mapped[int]
     publication_state: Mapped[str] = mapped_column(default="draft", server_default="draft")
@@ -347,3 +359,6 @@ class AuditEvent(Entity):
     action: Mapped[str]
     object_id: Mapped[uuid.UUID]
     details: Mapped[dict] = mapped_column(JSON, default=dict)
+
+
+Index("ix_version_search_vector", OpportunityVersion.search_vector, postgresql_using="gin")

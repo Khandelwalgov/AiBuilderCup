@@ -624,6 +624,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Recommendations */
+        post: operations["recommendations_v1_search_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/scenarios/evaluate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Scenario */
+        post: operations["scenario_v1_scenarios_evaluate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -698,6 +732,22 @@ export interface components {
             documents: {
                 [key: string]: unknown;
             }[];
+        };
+        /** Assessment */
+        Assessment: {
+            /** Subject Key */
+            subject_key: string;
+            /** Subject Kind */
+            subject_kind: string;
+            /** Subject Id */
+            subject_id: string | null;
+            /** Subject Name */
+            subject_name: string;
+            /** Hypothetical */
+            hypothetical: boolean;
+            evaluation: components["schemas"]["EvaluationView"];
+            /** Reasons */
+            reasons: string[];
         };
         /** AssistantCapabilities */
         AssistantCapabilities: {
@@ -883,7 +933,7 @@ export interface components {
              */
             op: "eq" | "gte" | "lte" | "in" | "document" | "unknown";
             /** Fact */
-            fact?: ("age" | "annual_personal_income" | "annual_parental_income" | "disability_percentage" | "nationality" | "domicile_state" | "domicile_district" | "residence_state" | "residence_district" | "education_level" | "current_education_level" | "highest_completed_education" | "business_registration_state" | "business_registration_district" | "business_operating_status" | "enrollment_mode" | "school_recognized_or_government" | "student_status" | "employment_status" | "has_bank_account" | "auto_debit_consent" | "has_income_certificate" | "business_registered" | "business_turnover" | "has_registration_certificate" | "has_disability_certificate" | "has_udid_certificate") | null;
+            fact?: ("age" | "annual_personal_income" | "annual_parental_income" | "annual_household_income" | "disability_percentage" | "nationality" | "domicile_state" | "domicile_district" | "residence_state" | "residence_district" | "education_level" | "current_education_level" | "highest_completed_education" | "business_registration_state" | "business_registration_district" | "business_operating_status" | "enrollment_mode" | "school_recognized_or_government" | "student_status" | "employment_status" | "has_bank_account" | "auto_debit_consent" | "has_income_certificate" | "business_registered" | "business_turnover" | "has_registration_certificate" | "has_disability_certificate" | "has_udid_certificate") | null;
             /** Value */
             value?: string | number | boolean | (string | number | boolean)[] | null;
             /** Income Period */
@@ -1204,7 +1254,7 @@ export interface components {
              * Key
              * @enum {string}
              */
-            key: "age" | "annual_personal_income" | "annual_parental_income" | "disability_percentage" | "nationality" | "domicile_state" | "domicile_district" | "residence_state" | "residence_district" | "education_level" | "current_education_level" | "highest_completed_education" | "business_registration_state" | "business_registration_district" | "business_operating_status" | "enrollment_mode" | "school_recognized_or_government" | "student_status" | "employment_status" | "has_bank_account" | "auto_debit_consent" | "has_income_certificate" | "business_registered" | "business_turnover" | "has_registration_certificate" | "has_disability_certificate" | "has_udid_certificate";
+            key: "age" | "annual_personal_income" | "annual_parental_income" | "annual_household_income" | "disability_percentage" | "nationality" | "domicile_state" | "domicile_district" | "residence_state" | "residence_district" | "education_level" | "current_education_level" | "highest_completed_education" | "business_registration_state" | "business_registration_district" | "business_operating_status" | "enrollment_mode" | "school_recognized_or_government" | "student_status" | "employment_status" | "has_bank_account" | "auto_debit_consent" | "has_income_certificate" | "business_registered" | "business_turnover" | "has_registration_certificate" | "has_disability_certificate" | "has_udid_certificate";
             /** Value */
             value?: string | number | boolean | null;
             /** Valid From */
@@ -1245,6 +1295,20 @@ export interface components {
             context: {
                 [key: string]: unknown;
             };
+        };
+        /** FictionalPerson */
+        FictionalPerson: {
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /**
+             * Relationship
+             * @enum {string}
+             */
+            relationship: "spouse" | "child" | "dependent";
+            /** Facts */
+            facts?: components["schemas"]["FactInput"][];
         };
         /** FieldCitation */
         FieldCitation: {
@@ -1385,6 +1449,13 @@ export interface components {
             last_verified_at: string | null;
             source: components["schemas"]["SourceView"];
         };
+        /** Override */
+        Override: {
+            /** Subject Key */
+            subject_key: string;
+            /** Facts */
+            facts?: components["schemas"]["FactInput"][];
+        };
         /** PlanRequest */
         PlanRequest: {
             subject?: components["schemas"]["SubjectRef"];
@@ -1435,6 +1506,14 @@ export interface components {
             facts: components["schemas"]["FactInput"][];
             /** Expected Revision */
             expected_revision?: string | null;
+        };
+        /** Recommendation */
+        Recommendation: {
+            opportunity: components["schemas"]["OpportunityView"];
+            /** Assessments */
+            assessments: components["schemas"]["Assessment"][];
+            /** Channels */
+            channels: string[];
         };
         /** RequirementDocumentView */
         RequirementDocumentView: {
@@ -1741,6 +1820,117 @@ export interface components {
             finished_at: string | null;
             /** Http Status */
             http_status: number | null;
+        };
+        /** ScenarioRequest */
+        ScenarioRequest: {
+            base: components["schemas"]["SearchRequest"];
+            /** Overrides */
+            overrides?: components["schemas"]["Override"][];
+            /** People */
+            people?: components["schemas"]["FictionalPerson"][];
+            /** Excluded Subject Keys */
+            excluded_subject_keys?: string[];
+            /** Household Facts */
+            household_facts?: components["schemas"]["FactInput"][];
+        };
+        /** ScenarioResponse */
+        ScenarioResponse: {
+            actual: components["schemas"]["SearchResponse"];
+            hypothetical: components["schemas"]["SearchResponse"];
+            plan: components["schemas"]["PlanView"];
+            /** Changes */
+            changes: {
+                [key: string]: unknown;
+            }[];
+            /** Graph */
+            graph: {
+                [key: string]: unknown;
+            }[];
+            /**
+             * Persistence
+             * @default none
+             * @constant
+             */
+            persistence: "none";
+            /**
+             * Notice
+             * @default Fictional relationships grant no actual access. No profiles, evidence, evaluations or actions were saved.
+             */
+            notice: string;
+        };
+        /** SearchRequest */
+        SearchRequest: {
+            /**
+             * Mode
+             * @default me
+             * @enum {string}
+             */
+            mode: "me" | "family" | "member" | "business" | "explore";
+            /** Subject Id */
+            subject_id?: string | null;
+            /**
+             * Q
+             * @default
+             */
+            q: string;
+            /** Category */
+            category?: string | null;
+            /** State */
+            state?: string | null;
+            /** District */
+            district?: string | null;
+            /**
+             * Include National
+             * @default true
+             */
+            include_national: boolean;
+            /** Interests */
+            interests?: string[];
+            /**
+             * Development
+             * @default false
+             */
+            development: boolean;
+            /** Shortlist */
+            shortlist?: number | null;
+            /** Application Type */
+            application_type?: ("fresh" | "renewal") | null;
+        };
+        /** SearchResponse */
+        SearchResponse: {
+            /** Items */
+            items: components["schemas"]["Recommendation"][];
+            /** Subjects */
+            subjects: {
+                [key: string]: unknown;
+            }[];
+            /** Catalogue Count */
+            catalogue_count: number;
+            /** Eligible Pair Count */
+            eligible_pair_count: number;
+            /** Assessed Pair Count */
+            assessed_pair_count: number;
+            /** Truncated */
+            truncated: boolean;
+            /** Neural Status */
+            neural_status: string;
+            /** Timings Ms */
+            timings_ms: {
+                [key: string]: number;
+            };
+            /** Subject Coverage */
+            subject_coverage: {
+                [key: string]: number;
+            };
+            /** Category Coverage */
+            category_coverage: {
+                [key: string]: number;
+            };
+            /**
+             * Notice
+             * @default Preliminary cited assessments; shortlist coverage is not guaranteed complete.
+             */
+            notice: string;
         };
         /** SimulationRequest */
         SimulationRequest: {
@@ -5597,6 +5787,180 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AccessView"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    recommendations_v1_search_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SearchRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    scenario_v1_scenarios_evaluate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScenarioRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScenarioResponse"];
                 };
             };
             /** @description Unauthorized */

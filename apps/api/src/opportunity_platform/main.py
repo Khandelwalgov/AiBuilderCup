@@ -27,6 +27,7 @@ from opportunity_platform.opportunities.schemas import (
     Status,
 )
 from opportunity_platform.profiles.service import AccountView, account
+from opportunity_platform.retrieval.router import router as retrieval_router
 from opportunity_platform.workflows import router
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -211,3 +212,6 @@ def me(session: DB, uid: Annotated[str, Depends(current_uid)]):
 
 app.include_router(router)
 app.include_router(documents_router)
+
+
+app.include_router(retrieval_router)

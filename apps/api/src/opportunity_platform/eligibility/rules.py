@@ -9,6 +9,7 @@ FactKey = Literal[
     "age",
     "annual_personal_income",
     "annual_parental_income",
+    "annual_household_income",
     "disability_percentage",
     "nationality",
     "domicile_state",
@@ -59,6 +60,7 @@ class Condition(BaseModel):
             in {
                 "annual_personal_income",
                 "annual_parental_income",
+                "annual_household_income",
                 "business_turnover",
             }
             and self.op != "unknown"
@@ -89,6 +91,7 @@ class Condition(BaseModel):
                 "age",
                 "annual_personal_income",
                 "annual_parental_income",
+                "annual_household_income",
                 "disability_percentage",
                 "business_turnover",
             }:
@@ -170,6 +173,7 @@ class FactInput(BaseModel):
                 "age",
                 "annual_personal_income",
                 "annual_parental_income",
+                "annual_household_income",
                 "disability_percentage",
                 "business_turnover",
             }:

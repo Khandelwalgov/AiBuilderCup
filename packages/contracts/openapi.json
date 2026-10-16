@@ -4883,6 +4883,212 @@
           }
         }
       }
+    },
+    "/v1/search": {
+      "post": {
+        "summary": "Recommendations",
+        "operationId": "recommendations_v1_search_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/v1/scenarios/evaluate": {
+      "post": {
+        "summary": "Scenario",
+        "operationId": "scenario_v1_scenarios_evaluate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScenarioRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -5050,6 +5256,59 @@
           "explanation"
         ],
         "title": "ActionView"
+      },
+      "Assessment": {
+        "properties": {
+          "subject_key": {
+            "type": "string",
+            "title": "Subject Key"
+          },
+          "subject_kind": {
+            "type": "string",
+            "title": "Subject Kind"
+          },
+          "subject_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subject Id"
+          },
+          "subject_name": {
+            "type": "string",
+            "title": "Subject Name"
+          },
+          "hypothetical": {
+            "type": "boolean",
+            "title": "Hypothetical"
+          },
+          "evaluation": {
+            "$ref": "#/components/schemas/EvaluationView"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Reasons"
+          }
+        },
+        "type": "object",
+        "required": [
+          "subject_key",
+          "subject_kind",
+          "subject_id",
+          "subject_name",
+          "hypothetical",
+          "evaluation",
+          "reasons"
+        ],
+        "title": "Assessment"
       },
       "AssistantCapabilities": {
         "properties": {
@@ -5692,6 +5951,7 @@
                   "age",
                   "annual_personal_income",
                   "annual_parental_income",
+                  "annual_household_income",
                   "disability_percentage",
                   "nationality",
                   "domicile_state",
@@ -6613,6 +6873,7 @@
               "age",
               "annual_personal_income",
               "annual_parental_income",
+              "annual_household_income",
               "disability_percentage",
               "nationality",
               "domicile_state",
@@ -6792,6 +7053,46 @@
           "value"
         ],
         "title": "FactRecord"
+      },
+      "FictionalPerson": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]{1,30}$",
+            "title": "Key"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 60,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "relationship": {
+            "type": "string",
+            "enum": [
+              "spouse",
+              "child",
+              "dependent"
+            ],
+            "title": "Relationship"
+          },
+          "facts": {
+            "items": {
+              "$ref": "#/components/schemas/FactInput"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Facts"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "key",
+          "name",
+          "relationship"
+        ],
+        "title": "FictionalPerson"
       },
       "FieldCitation": {
         "properties": {
@@ -7232,6 +7533,29 @@
         ],
         "title": "OpportunityView"
       },
+      "Override": {
+        "properties": {
+          "subject_key": {
+            "type": "string",
+            "maxLength": 100,
+            "title": "Subject Key"
+          },
+          "facts": {
+            "items": {
+              "$ref": "#/components/schemas/FactInput"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Facts"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "subject_key"
+        ],
+        "title": "Override"
+      },
       "PlanRequest": {
         "properties": {
           "subject": {
@@ -7370,6 +7694,34 @@
           "facts"
         ],
         "title": "ProfileWrite"
+      },
+      "Recommendation": {
+        "properties": {
+          "opportunity": {
+            "$ref": "#/components/schemas/OpportunityView"
+          },
+          "assessments": {
+            "items": {
+              "$ref": "#/components/schemas/Assessment"
+            },
+            "type": "array",
+            "title": "Assessments"
+          },
+          "channels": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Channels"
+          }
+        },
+        "type": "object",
+        "required": [
+          "opportunity",
+          "assessments",
+          "channels"
+        ],
+        "title": "Recommendation"
       },
       "RequirementDocumentView": {
         "properties": {
@@ -8150,6 +8502,298 @@
           "http_status"
         ],
         "title": "RunView"
+      },
+      "ScenarioRequest": {
+        "properties": {
+          "base": {
+            "$ref": "#/components/schemas/SearchRequest"
+          },
+          "overrides": {
+            "items": {
+              "$ref": "#/components/schemas/Override"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Overrides"
+          },
+          "people": {
+            "items": {
+              "$ref": "#/components/schemas/FictionalPerson"
+            },
+            "type": "array",
+            "maxItems": 10,
+            "title": "People"
+          },
+          "excluded_subject_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Excluded Subject Keys"
+          },
+          "household_facts": {
+            "items": {
+              "$ref": "#/components/schemas/FactInput"
+            },
+            "type": "array",
+            "maxItems": 10,
+            "title": "Household Facts"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "base"
+        ],
+        "title": "ScenarioRequest"
+      },
+      "ScenarioResponse": {
+        "properties": {
+          "actual": {
+            "$ref": "#/components/schemas/SearchResponse"
+          },
+          "hypothetical": {
+            "$ref": "#/components/schemas/SearchResponse"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/PlanView"
+          },
+          "changes": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Changes"
+          },
+          "graph": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Graph"
+          },
+          "persistence": {
+            "type": "string",
+            "const": "none",
+            "title": "Persistence",
+            "default": "none"
+          },
+          "notice": {
+            "type": "string",
+            "title": "Notice",
+            "default": "Fictional relationships grant no actual access. No profiles, evidence, evaluations or actions were saved."
+          }
+        },
+        "type": "object",
+        "required": [
+          "actual",
+          "hypothetical",
+          "plan",
+          "changes",
+          "graph"
+        ],
+        "title": "ScenarioResponse"
+      },
+      "SearchRequest": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "me",
+              "family",
+              "member",
+              "business",
+              "explore"
+            ],
+            "title": "Mode",
+            "default": "me"
+          },
+          "subject_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subject Id"
+          },
+          "q": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "Q",
+            "default": ""
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "State"
+          },
+          "district": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "District"
+          },
+          "include_national": {
+            "type": "boolean",
+            "title": "Include National",
+            "default": true
+          },
+          "interests": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 10,
+            "title": "Interests"
+          },
+          "development": {
+            "type": "boolean",
+            "title": "Development",
+            "default": false
+          },
+          "shortlist": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 500.0,
+                "minimum": 50.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shortlist"
+          },
+          "application_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "fresh",
+                  "renewal"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Application Type"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "SearchRequest"
+      },
+      "SearchResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Recommendation"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "subjects": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Subjects"
+          },
+          "catalogue_count": {
+            "type": "integer",
+            "title": "Catalogue Count"
+          },
+          "eligible_pair_count": {
+            "type": "integer",
+            "title": "Eligible Pair Count"
+          },
+          "assessed_pair_count": {
+            "type": "integer",
+            "title": "Assessed Pair Count"
+          },
+          "truncated": {
+            "type": "boolean",
+            "title": "Truncated"
+          },
+          "neural_status": {
+            "type": "string",
+            "title": "Neural Status"
+          },
+          "timings_ms": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Timings Ms"
+          },
+          "subject_coverage": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Subject Coverage"
+          },
+          "category_coverage": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Category Coverage"
+          },
+          "notice": {
+            "type": "string",
+            "title": "Notice",
+            "default": "Preliminary cited assessments; shortlist coverage is not guaranteed complete."
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "subjects",
+          "catalogue_count",
+          "eligible_pair_count",
+          "assessed_pair_count",
+          "truncated",
+          "neural_status",
+          "timings_ms",
+          "subject_coverage",
+          "category_coverage"
+        ],
+        "title": "SearchResponse"
       },
       "SimulationRequest": {
         "properties": {

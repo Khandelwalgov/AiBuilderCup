@@ -62,7 +62,9 @@ def catalogue(development: bool = False):
     )
 
 
-def view(row, session: Session) -> OpportunityView:
+def view(
+    row, session: Session, prepared_requirements=None, prepared_evidence=None
+) -> OpportunityView:
     opportunity, version, source = row
     fields = {
         name: getattr(version, name)
@@ -86,13 +88,25 @@ def view(row, session: Session) -> OpportunityView:
             application_context=req.application_context,
             citations=[
                 CitationView(source_url=e.source_url, passage=e.passage, page=e.page)
-                for e in session.scalars(
-                    select(RequirementEvidence).where(RequirementEvidence.requirement_id == req.id)
+                for e in (
+                    prepared_evidence.get(req.id, [])
+                    if prepared_evidence is not None
+                    else session.scalars(
+                        select(RequirementEvidence).where(
+                            RequirementEvidence.requirement_id == req.id
+                        )
+                    )
                 )
             ],
         )
-        for req in session.scalars(
-            select(Requirement).where(Requirement.version_id == version.id).order_by(Requirement.id)
+        for req in (
+            prepared_requirements.get(version.id, [])
+            if prepared_requirements is not None
+            else session.scalars(
+                select(Requirement)
+                .where(Requirement.version_id == version.id)
+                .order_by(Requirement.id)
+            )
         )
     ]
     fields["field_evidence"] = (version.extraction or {}).get("field_evidence", [])
@@ -120,6 +134,7 @@ def browse(
         escaped = q.strip().replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
         query = query.where(
             or_(
+                OpportunityVersion.search_vector.op("@@")(func.websearch_to_tsquery("english", q)),
                 OpportunityVersion.title.ilike(f"%{escaped}%", escape="\\"),
                 OpportunityVersion.summary.ilike(f"%{escaped}%", escape="\\"),
             )

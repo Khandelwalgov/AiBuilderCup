@@ -51,6 +51,125 @@ class EvaluationView(BaseModel):
     changes: list[dict] = []
 
 
+def evaluate_requirements(
+    requirements,
+    facts,
+    subject_kind,
+    evidence_by_requirement=None,
+    documentary=None,
+    application_type=None,
+    today=None,
+):
+    """Pure assessment: no session, writes, permission inference or AI."""
+    evidence_by_requirement = evidence_by_requirement or {}
+    documentary = documentary or {}
+    results = []
+    for requirement in requirements:
+        rule = Rule.model_validate(requirement.rule)
+        result = (
+            evaluate(rule, facts, today or date.today())
+            if requirement.subject_context == subject_kind
+            else Result(
+                outcome="unknown",
+                reason="This condition needs a separately authorized household "
+                "or business context.",
+                blockers=["subject:" + requirement.subject_context],
+            )
+        )
+        if requirement.kind in {"procedure", "selection", "interpretation"}:
+            result = Result(
+                outcome="unknown",
+                reason=(
+                    "This is an administrative, selection or interpretation "
+                    "condition requiring clarification."
+                ),
+                blockers=["clarification:" + str(requirement.id)],
+            )
+        if requirement.application_context != "all":
+            if application_type and application_type != requirement.application_context:
+                result = Result(
+                    outcome="not_applicable",
+                    reason="This condition applies only to "
+                    + requirement.application_context
+                    + " applications.",
+                )
+            elif not application_type:
+                result = Result(
+                    outcome="unknown",
+                    reason="Clarify whether this opportunity application is fresh or renewal.",
+                    missing=["application_type"],
+                    blockers=["context:" + str(requirement.id)],
+                )
+        citations = [
+            CitationView(source_url=e.source_url, passage=e.passage, page=e.page)
+            for e in evidence_by_requirement.get(requirement.id, [])
+        ]
+        if (
+            requirement.description.startswith("Required document: ")
+            and result.outcome != "not_applicable"
+            and requirement.subject_context == subject_kind
+        ):
+            key = "document:" + hashlib.sha256(requirement.description.encode()).hexdigest()[:20]
+            result = Result(
+                outcome="unknown",
+                reason="Required documentary evidence has not been verified by this prototype.",
+                missing=[requirement.description],
+                blockers=[key],
+                kind="evidence_gap",
+            )
+        next_steps = [f"Provide or clarify: {key}." for key in result.missing]
+        if result.kind == "evidence_gap":
+            next_steps.append(
+                (
+                    "Obtain the required evidence and have it verified. Self-reporting a "
+                    "document is not verification."
+                )
+            )
+        if result.outcome == "unsatisfied":
+            next_steps.append(
+                (
+                    "Check the cited condition and correct inaccurate profile information; do "
+                    "not misrepresent facts."
+                )
+            )
+        results.append(
+            RequirementResult(
+                requirement_id=requirement.id,
+                requirement=requirement.description,
+                rule=rule,
+                kind=requirement.kind,
+                application_context=requirement.application_context,
+                document_dependency=requirement.document_dependency,
+                documentary_status=documentary[str(requirement.id)].documentary_status
+                if str(requirement.id) in documentary
+                else None,
+                documents=[
+                    d.model_dump(mode="json") for d in documentary[str(requirement.id)].documents
+                ]
+                if str(requirement.id) in documentary
+                else [],
+                result=result,
+                citations=citations,
+                next_steps=next_steps,
+            )
+        )
+    return results
+
+
+def overall_status(results):
+    if any(r.result.outcome == "unsatisfied" for r in results):
+        return "not_eligible_on_known_facts"
+    elif (
+        not results
+        or all(r.result.outcome == "not_applicable" for r in results)
+        or any(r.result.outcome == "unknown" for r in results)
+    ):
+        return "possibly_eligible_missing_information"
+    else:
+        # Satisfied self-reported conditions never imply document-verified readiness.
+        return "potential_match"
+
+
 def check(
     session: Session,
     uid: str,
@@ -148,106 +267,10 @@ def check(
             )
         ):
             evidence_by_requirement.setdefault(evidence.requirement_id, []).append(evidence)
-    for requirement in requirements:
-        rule = Rule.model_validate(requirement.rule)
-        result = (
-            evaluate(rule, facts, date.today())
-            if requirement.subject_context == subject.kind
-            else Result(
-                outcome="unknown",
-                reason="This condition needs a separately authorized household "
-                "or business context.",
-                blockers=["subject:" + requirement.subject_context],
-            )
-        )
-        if requirement.kind in {"procedure", "selection", "interpretation"}:
-            result = Result(
-                outcome="unknown",
-                reason=(
-                    "This is an administrative, selection or interpretation "
-                    "condition requiring clarification."
-                ),
-                blockers=["clarification:" + str(requirement.id)],
-            )
-        if requirement.application_context != "all":
-            if application_type and application_type != requirement.application_context:
-                result = Result(
-                    outcome="not_applicable",
-                    reason="This condition applies only to "
-                    + requirement.application_context
-                    + " applications.",
-                )
-            elif not application_type:
-                result = Result(
-                    outcome="unknown",
-                    reason="Clarify whether this opportunity application is fresh or renewal.",
-                    missing=["application_type"],
-                    blockers=["context:" + str(requirement.id)],
-                )
-        citations = [
-            CitationView(source_url=e.source_url, passage=e.passage, page=e.page)
-            for e in evidence_by_requirement.get(requirement.id, [])
-        ]
-        if (
-            requirement.description.startswith("Required document: ")
-            and result.outcome != "not_applicable"
-            and requirement.subject_context == subject.kind
-        ):
-            key = "document:" + hashlib.sha256(requirement.description.encode()).hexdigest()[:20]
-            result = Result(
-                outcome="unknown",
-                reason="Required documentary evidence has not been verified by this prototype.",
-                missing=[requirement.description],
-                blockers=[key],
-                kind="evidence_gap",
-            )
-        next_steps = [f"Provide or clarify: {key}." for key in result.missing]
-        if result.kind == "evidence_gap":
-            next_steps.append(
-                (
-                    "Obtain the required evidence and have it verified. Self-reporting a "
-                    "document is not verification."
-                )
-            )
-        if result.outcome == "unsatisfied":
-            next_steps.append(
-                (
-                    "Check the cited condition and correct inaccurate profile information; do "
-                    "not misrepresent facts."
-                )
-            )
-        results.append(
-            RequirementResult(
-                requirement_id=requirement.id,
-                requirement=requirement.description,
-                rule=rule,
-                kind=requirement.kind,
-                application_context=requirement.application_context,
-                document_dependency=requirement.document_dependency,
-                documentary_status=documentary[str(requirement.id)].documentary_status
-                if str(requirement.id) in documentary
-                else None,
-                documents=[
-                    d.model_dump(mode="json") for d in documentary[str(requirement.id)].documents
-                ]
-                if str(requirement.id) in documentary
-                else [],
-                result=result,
-                citations=citations,
-                next_steps=next_steps,
-            )
-        )
-    if any(r.result.outcome == "unsatisfied" for r in results):
-        status = "not_eligible_on_known_facts"
-    elif (
-        not results
-        or all(r.result.outcome == "not_applicable" for r in results)
-        or any(r.result.outcome == "unknown" for r in results)
-    ):
-        status = "possibly_eligible_missing_information"
-    else:
-        # Satisfied self-reported conditions never imply document-verified readiness.
-        status = "potential_match"
+    results = evaluate_requirements(
+        requirements, facts, subject.kind, evidence_by_requirement, documentary, application_type
+    )
+    status = overall_status(results)
     previous = session.scalar(
         select(MatchEvaluation)
         .join(OpportunityVersion, OpportunityVersion.id == MatchEvaluation.version_id)
