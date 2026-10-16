@@ -28,3 +28,6 @@ firebase-debug.log
 
 # Public source acquisition binaries, checkpoints and live run diagnostics.
 .corpus/
+
+# Ephemeral GitHub Workload Identity Federation ADC files.
+gha-creds-*.json

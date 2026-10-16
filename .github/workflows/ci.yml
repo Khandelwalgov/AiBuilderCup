@@ -1,5 +1,5 @@
 name: intelligence
-on: [push, pull_request]
+on: [push, pull_request, workflow_call]
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -30,3 +30,15 @@ jobs:
       - run: git diff --exit-code -- packages/contracts/openapi.json apps/web/src/lib/api/schema.d.ts
       - run: cd apps/web && pnpm exec playwright install --with-deps chromium
       - run: make test-e2e
+
+      - name: Production container build (local CI only, never push)
+        run: docker build --platform linux/amd64 -t opportunity-release-local:readiness apps/api
+      - name: Fresh PostgreSQL migrations and runtime image audit
+        run: python3 scripts/release_container_check.py
+      - name: Deployment plan only (fictional public identifiers)
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          Path('/tmp/deploy-plan.json').write_text(Path('infra/deploy.example.json').read_text().replace('YOUR_PROJECT_ID', 'ci-plan-project'))
+          PY
+          python3 infra/deploy.py --config /tmp/deploy-plan.json

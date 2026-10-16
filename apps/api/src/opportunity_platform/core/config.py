@@ -46,6 +46,10 @@ class Settings(BaseSettings):
         if self.environment == "production":
             if os.environ.get("FIREBASE_AUTH_EMULATOR_HOST"):
                 raise ValueError("Production must never use the Firebase Auth emulator")
+            if self.ai_ingestion_live_enabled:
+                raise ValueError(
+                    "Production ingestion requires a separate approved cost/review release"
+                )
             if self.document_uploads_enabled:
                 raise ValueError(
                     "Production uploads require malware scanning and security acceptance"

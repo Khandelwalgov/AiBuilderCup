@@ -8,13 +8,17 @@
   "migration_service_account": "opportunity-migrations@YOUR_PROJECT_ID.iam.gserviceaccount.com",
   "database_secret": "opportunity-database-url",
   "database_secret_version": "1",
-  "gemini_secret": "opportunity-gemini-key",
-  "gemini_secret_version": "1",
   "gemini_model": "gemini-3.8-flash",
   "firebase_web": {
     "project_id": "YOUR_PROJECT_ID",
     "api_key": "YOUR_PUBLIC_FIREBASE_WEB_API_KEY",
     "auth_domain": "YOUR_PROJECT_ID.firebaseapp.com",
     "app_id": "YOUR_FIREBASE_WEB_APP_ID"
-  }
+  },
+  "migration_database_secret": "opportunity-migration-database-url",
+  "migration_database_secret_version": "1",
+  "document_signing_secret": "opportunity-document-signing-key",
+  "document_signing_secret_version": "1",
+  "build_service_account": "opportunity-build@YOUR_PROJECT_ID.iam.gserviceaccount.com",
+  "build_source_bucket": "YOUR_PROJECT_ID-release-source"
 }

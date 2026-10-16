@@ -1,0 +1,81 @@
+name: manual-production-release
+on:
+  workflow_dispatch:
+    inputs:
+      approved_project:
+        description: Explicitly approved Google Cloud project (must match production variables)
+        required: true
+        type: string
+      authorization:
+        description: Type DEPLOY to authorize release to existing resources
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: production-release
+  cancel-in-progress: false
+jobs:
+  validate:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && inputs.authorization == 'DEPLOY'
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+  deploy:
+    needs: validate
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && inputs.authorization == 'DEPLOY'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    # REQUIRED operator setup: required reviewers, prevent self-review,
+    # protected default branch only, no administrator bypass. YAML cannot create these rules.
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      APPROVED_PROJECT: ${{ inputs.approved_project }}
+      PRODUCTION_PROJECT: ${{ vars.GCP_PROJECT_ID }}
+      DEPLOY_CONFIG_JSON: ${{ vars.DEPLOY_CONFIG_JSON }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate reviewed public configuration before authentication
+        run: |
+          test "$APPROVED_PROJECT" = "$PRODUCTION_PROJECT"
+          test -n "$PRODUCTION_PROJECT"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          from infra.deploy import validate
+          config = validate(json.loads(os.environ['DEPLOY_CONFIG_JSON']))
+          assert config['project_id'] == os.environ['PRODUCTION_PROJECT']
+          Path('/tmp/deploy-public.json').write_text(json.dumps(config))
+          PY
+          python3 infra/deploy.py --config /tmp/deploy-public.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '11.25.0'
+      - name: Install Firebase CLI (ADC, never firebase login:ci)
+        run: npm install --global firebase-tools@15.12.0
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
+          create_credentials_file: true
+      - uses: google-github-actions/setup-gcloud@v3
+      - name: Manually authorized release to existing infrastructure
+        run: |
+          python3 infra/deploy.py --config /tmp/deploy-public.json --execute \
+            --approved-project "$APPROVED_PROJECT" --receipt "$RUNNER_TEMP/release-receipt.json"
+      - name: Preserve rollback receipt (public metadata only)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-receipt
+          path: ${{ runner.temp }}/release-receipt.json
+          if-no-files-found: ignore
+          retention-days: 14

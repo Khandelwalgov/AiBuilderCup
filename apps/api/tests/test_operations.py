@@ -67,7 +67,10 @@ def test_deployment_plan_has_migration_before_traffic_and_pinned_secrets(tmp_pat
     commands = deploy.plan(config, "PUBLIC_ENV.json")
     assert [label for label, _ in commands] == ["build", "migration-job", "migrate", "api"]
     api = commands[-1][1]
-    assert "DATABASE_URL=opportunity-database-url:1,GEMINI_API_KEY=opportunity-gemini-key:1" in api
+    assert (
+        "DATABASE_URL=opportunity-database-url:1,DOCUMENT_SIGNING_KEY=opportunity-document-signing-key:1"
+        in api
+    )
     assert api[api.index("--max") + 1] == "2"
     assert deploy.backend_environment(config)["ENABLE_DEVELOPMENT_CATALOGUE"] == "false"
     config_path = tmp_path / "public.json"
