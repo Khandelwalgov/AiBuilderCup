@@ -193,6 +193,15 @@ def evaluate(rule: Rule, facts: list[FactRecord], today: date) -> Result:
         )
 
     if c.op == "document":
+        known = [
+            f
+            for f in known
+            if (c.income_period is None or f.context.get("income_period") == c.income_period)
+            and (
+                c.income_definition is None
+                or f.context.get("income_definition") == c.income_definition
+            )
+        ]
         verified = [
             f
             for f in known

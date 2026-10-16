@@ -341,3 +341,45 @@ def test_location_language_aliases_do_not_mix_residence_domicile_or_registration
         ).outcome
         == "unknown"
     )
+
+
+def test_zero_income_with_verified_evidence_requires_the_same_period_and_definition():
+    amount = Rule(
+        op="condition",
+        condition=Condition(
+            op="lte",
+            fact="annual_parental_income",
+            value=1000,
+            income_period="2026",
+            income_definition="parents",
+        ),
+    )
+    certificate = Rule(
+        op="condition",
+        condition=Condition(
+            op="document",
+            fact="has_income_certificate",
+            income_period="2026",
+            income_definition="parents",
+        ),
+    )
+    rule = Rule(op="all", children=[amount, certificate])
+    scope = {"income_period": "2026", "income_definition": "parents"}
+    facts = [
+        record("annual_parental_income", 0, context=scope),
+        record(
+            "has_income_certificate",
+            True,
+            origin="verified_document",
+            verification="verified",
+            context=scope,
+        ),
+    ]
+    assert evaluate(rule, facts, TODAY).outcome == "satisfied"
+    facts[-1].context = {"income_period": "2025", "income_definition": "parents"}
+    assert evaluate(rule, facts, TODAY).outcome == "unknown"
+    facts[-1].context = {"income_period": "2026", "income_definition": "household"}
+    assert evaluate(rule, facts, TODAY).outcome == "unknown"
+    facts[-1].context = scope
+    facts[-1].origin = "user_supplied"
+    assert evaluate(rule, facts, TODAY).outcome == "unknown"
