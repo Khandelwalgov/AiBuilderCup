@@ -23,6 +23,7 @@ The neural path was genuinely unavailable. It now runs pinned local ONNX weights
 | Original blob bytes | 193,031,267 |
 | Snapshots audited and checkpointed with extracted page/section text | 125 |
 | Unique documents with technical extraction completed | 120 |
+| Documents with nonempty original extracted text / no original text | 63 / 57 |
 | Documents flagged for OCR or encoding triage | 94 |
 | Documents with unresolved exact issuer/title attribution | 117 |
 | Classifications: guideline / tender / announcement / index / unclassified / irrelevant | 34 / 20 / 48 / 5 / 12 / 1 |
@@ -33,7 +34,7 @@ The neural path was genuinely unavailable. It now runs pinned local ONNX weights
 | Original pages selectively OCR'd locally | 28, from 5 documents |
 | Additional interactive triage packets / consequential findings | 4 / 19 |
 
-The 94 flags mean at least one page needs OCR/encoding review, not that all 94 PDFs are entirely scanned. The OCR checkpoints retain original page numbers, source/image/text hashes, tool/language identities and confidence measurements. They do not replace captured evidence or automatically clear review flags. The inspected scholarship FAQ pages contain portal troubleshooting; they are not converted into an entitlement.
+Technical extraction completion includes empty results: 63 unique documents contain nonempty original extracted text and 57 contain none. The 94 flags mean at least one page needs OCR/encoding review, not that all 94 PDFs are entirely scanned. The OCR checkpoints retain original page numbers, source/image/text hashes, tool/language identities and confidence measurements. They do not replace captured evidence or automatically clear review flags. The inspected scholarship FAQ pages contain portal troubleshooting; they are not converted into an entitlement.
 
 Three checkpointed candidates cover TEAM, LEAN and the individual-MSE trade-fair component of PMS. TEAM's similar-assistance, prior-network-onboarding, consent, payment-recipient and activity-window qualifiers are retained. LEAN explicitly limits captured financial provisions to **31 March 2026** and is flagged as unresolved/historical pending an official extension. Garbled PMS percentage text is not asserted as an amount. Scheme-specific conditions that the typed profile model cannot express remain unknown; they are not mapped to generic business registration or guessed income facts. Application URLs/dates absent from evidence remain null.
 
