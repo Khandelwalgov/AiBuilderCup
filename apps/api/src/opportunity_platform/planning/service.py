@@ -6,7 +6,7 @@ import uuid
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
-from sqlalchemy import delete, select
+from sqlalchemy import delete, select, text
 
 from opportunity_platform.core.errors import APIError
 from opportunity_platform.db.models import (
@@ -281,6 +281,8 @@ def build(session, uid, subject, hypothetical=None, development=False):
         )
     if hypothetical is None:
         for identity, record in existing.items():
+            if (identity or "").startswith("research:"):
+                continue
             if identity not in grouped and not truncated:
                 record.status = "resolved_or_superseded"
                 session.execute(
@@ -301,7 +303,7 @@ def build(session, uid, subject, hypothetical=None, development=False):
 
 class ActionProgressWrite(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    status: Literal["pending", "in_progress"]
+    status: Literal["pending", "in_progress", "completed"]
 
 
 class ActionProgressView(BaseModel):
@@ -318,6 +320,30 @@ def progress(session, uid, identifier, data):
     user, _, _ = resolve(
         session, uid, SubjectRef(kind=kind, id=getattr(record, kind + "_id")), True
     )
+    if (record.identity or "").startswith("research:"):
+        from opportunity_platform.research.guidance import GuidanceRequest
+
+        active = research_actions(
+            session,
+            uid,
+            GuidanceRequest(subject=SubjectRef(kind=kind, id=getattr(record, kind + "_id"))),
+            persist=False,
+        )
+        if not any(a.identity == record.identity for a in active):
+            raise APIError(
+                409, "action_outdated", "Refresh the research plan; this dependency changed."
+            )
+        record.status = data.status
+        session.add(
+            AuditEvent(
+                actor_id=user.id,
+                action="research_action_progress_updated",
+                object_id=record.id,
+                details={"status": data.status, "changes_evidence_verification": False},
+            )
+        )
+        session.commit()
+        return ActionProgressView(status=record.status)
     current = session.scalar(
         select(ActionDependency.id)
         .join(Requirement, Requirement.id == ActionDependency.requirement_id)
@@ -325,7 +351,11 @@ def progress(session, uid, identifier, data):
         .where(ActionDependency.action_id == record.id, Opportunity.is_synthetic.is_(False))
         .limit(1)
     )
-    if current is None or record.status not in {"pending", "in_progress"}:
+    if (
+        current is None
+        or record.status not in {"pending", "in_progress"}
+        or data.status == "completed"
+    ):
         raise APIError(
             409, "action_outdated", "Refresh the current plan before updating an action."
         )
@@ -340,3 +370,123 @@ def progress(session, uid, identifier, data):
     )
     session.commit()
     return ActionProgressView(status=record.status)
+
+
+def research_actions(session, uid, request, *, persist=False):
+    """Use existing subject-scoped actions for provisional, evidenced dependencies.
+
+    A progress write never changes facts or documentary verification. Hypotheses
+    produce ephemeral identities only. Shared semantics stay within one subject.
+    """
+    from opportunity_platform.research.guidance import guidance
+
+    persist = persist and not (
+        request.scenario
+        or request.overrides
+        or request.member_overrides
+        or request.people
+        or request.excluded_subject_keys
+    )
+    user, obj, _ = resolve(session, uid, request.subject, write=persist, read_only=not persist)
+    grouped = {}
+    offset = 0
+    while True:
+        result = guidance(session, uid, request.model_copy(update={"limit": 24, "offset": offset}))
+        for item in result.items:
+            for condition in item.conditions:
+                if not condition.action or not condition.evidence_available:
+                    continue
+                payload = {
+                    "subject": item.subject_id,
+                    "semantic": condition.semantic,
+                    "rule": condition.rule.model_dump(mode="json"),
+                }
+                identity = (
+                    "research:"
+                    + hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+                )
+                entry = grouped.setdefault(
+                    identity,
+                    {
+                        "title": condition.action,
+                        "kind": "provisional_research",
+                        "fact": condition.rule.condition.fact,
+                        "opportunities": [],
+                        "subject_id": item.subject_id,
+                        "subject_kind": item.subject_kind,
+                        "fictional": item.fictional,
+                    },
+                )
+                for listing in [item.listing, *item.components]:
+                    entry["opportunities"].append(
+                        {
+                            "id": str(listing.id),
+                            "title": listing.title,
+                            "requirement": condition.title,
+                            "snapshot_id": condition.snapshot_id,
+                            "page": condition.page,
+                            "passage": condition.passage,
+                        }
+                    )
+        offset += 24
+        if offset >= result.candidate_count:
+            break
+    actions = []
+    if persist:
+        session.execute(select(User).where(User.id == user.id).with_for_update())
+    for identity, entry in sorted(grouped.items()):
+        kind, identifier = entry["subject_kind"], uuid.UUID(entry["subject_id"])
+        # Family actions belong to the individual member whose facts produced them.
+        if not entry["fictional"]:
+            resolve(
+                session,
+                uid,
+                SubjectRef(kind=kind, id=identifier),
+                write=persist,
+                read_only=not persist,
+            )
+        if persist:
+            # Serialize a shared subject's dependency across different administrators.
+            session.execute(
+                text("SELECT pg_advisory_xact_lock(:key)"),
+                {"key": int(hashlib.sha256(identity.encode()).hexdigest()[:15], 16)},
+            )
+        record = (
+            None
+            if entry["fictional"]
+            else session.scalar(
+                select(ActionItem).where(
+                    ActionItem.identity == identity, getattr(ActionItem, kind + "_id") == identifier
+                )
+            )
+        )
+        if persist:
+            if record is None:
+                record = ActionItem(
+                    **{kind + "_id": identifier}, identity=identity, title=entry["title"]
+                )
+                session.add(record)
+                session.flush()
+            record.details = entry
+        actions.append(
+            ActionView(
+                id=record.id if record else uuid.uuid5(identifier, identity),
+                identity=identity,
+                title=entry["title"],
+                kind=entry["kind"],
+                fact=entry["fact"],
+                status="hypothetical"
+                if request.scenario or request.overrides or request.member_overrides
+                else record.status
+                if record
+                else "pending",
+                opportunities=entry["opportunities"],
+                explanation=(
+                    "Provisional research action. Completion does not verify evidence "
+                    "or establish eligibility, current funding or admission."
+                ),
+            )
+        )
+    if persist:
+        session.commit()
+    return sorted(actions, key=lambda a: (-len(a.opportunities), a.title))

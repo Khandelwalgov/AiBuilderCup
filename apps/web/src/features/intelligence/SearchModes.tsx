@@ -38,9 +38,9 @@ export function SearchModes({
       </label>
       {mode !== 'me' && mode !== 'explore' && (
         <label>
-          {hi ? 'अधिकृत संदर्भ चुनें' : 'Choose an authorized context'}
+          {hi ? 'प्रोफ़ाइल चुनें' : 'Choose a profile'}
           <select
-            aria-label="Authorized context"
+            aria-label="Selected profile"
             value={context.key}
             onChange={(e) => context.select(e.target.value)}
           >
@@ -52,6 +52,16 @@ export function SearchModes({
             ))}
           </select>
         </label>
+      )}
+      {mode !== 'me' && mode !== 'explore' && options.length === 0 && context.authenticated && (
+        <p role="status">
+          {hi
+            ? 'इस चयन के लिए अभी कोई रिकॉर्ड नहीं है। पहले उसे बनाएँ।'
+            : 'Nothing to select yet. Create a family or business profile first.'}{' '}
+          <ContextLink to={mode === 'business' ? '/businesses' : '/family'}>
+            {hi ? 'प्रोफ़ाइल बनाएँ' : 'Create a profile'}
+          </ContextLink>
+        </p>
       )}
       {mode !== 'explore' && !context.authenticated && (
         <ContextLink to="/">{hi ? 'पहले साइन इन करें' : 'Sign in first'}</ContextLink>

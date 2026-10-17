@@ -27,21 +27,21 @@ test('empty unpublished catalogue explains review coverage in English and Hindi 
   );
   await page.goto('/discover?mode=explore&q=TEAM');
   await expect(
-    page.getByRole('heading', { name: 'No reviewed opportunities published yet' }),
+    page.getByRole('heading', { name: 'Personalized eligibility matching' }),
   ).toBeVisible();
-  const empty = page.locator('.empty-state');
-  await expect(empty).toContainText('not a finding that you are ineligible');
+  const empty = page
+    .locator('section.notice')
+    .filter({ has: page.getByRole('heading', { name: 'Personalized eligibility matching' }) });
+  await expect(empty).toContainText('do not establish personal eligibility');
   await expect(empty).not.toContainText('Try another keyword');
-  await expect(empty.getByRole('link', { name: 'Browse government documents' })).toHaveAttribute(
-    'href',
-    /\/government-sources/,
-  );
   await expect(empty.getByRole('button', { name: 'Clear filters' })).toHaveCount(0);
   await page.getByRole('combobox', { name: 'Interface language' }).selectOption('hi');
+  await expect(page.getByRole('heading', { name: 'व्यक्तिगत पात्रता मिलान' })).toBeVisible();
   await expect(
-    page.getByRole('heading', { name: 'अभी कोई समीक्षित अवसर प्रकाशित नहीं हुआ है' }),
-  ).toBeVisible();
-  await expect(empty).toContainText('आपकी अपात्रता का निर्णय नहीं');
+    page
+      .locator('section.notice')
+      .filter({ has: page.getByRole('heading', { name: 'व्यक्तिगत पात्रता मिलान' }) }),
+  ).toContainText('पात्रता');
 });
 
 test('clearing catalogue filters retains authenticated Explore All (mocked)', async ({ page }) => {
@@ -107,20 +107,29 @@ test('automatic Discover explains a published catalogue with no applicable subje
     route.fulfill({ json: { id: person, display_name: 'Fictional One', facts: [] } }),
   );
   let requestBody: Record<string, unknown> | undefined;
-  await page.route('**/v1/search', (route) => {
+  await page.route('**/v1/research-opportunities/guidance', (route) => {
     requestBody = route.request().postDataJSON();
     return route.fulfill({
       json: {
         items: [],
-        subjects: [{ key: `person:${person}`, kind: 'person', id: person, name: 'Fictional One' }],
-        catalogue_count: 2,
-        eligible_pair_count: 0,
-        assessed_pair_count: 0,
-        truncated: false,
-        neural_status: 'disabled',
-        timings_ms: {},
-        subject_coverage: {},
-        category_coverage: {},
+        candidate_count: 0,
+        eligible_count: 0,
+        hypothetical: false,
+        actions: [],
+        reviewed: {
+          items: [],
+          subjects: [
+            { key: `person:${person}`, kind: 'person', id: person, name: 'Fictional One' },
+          ],
+          catalogue_count: 2,
+          eligible_pair_count: 0,
+          assessed_pair_count: 0,
+          truncated: false,
+          neural_status: 'disabled',
+          timings_ms: {},
+          subject_coverage: {},
+          category_coverage: {},
+        },
       },
     });
   });
@@ -130,10 +139,8 @@ test('automatic Discover explains a published catalogue with no applicable subje
       exact: false,
     }),
   ).toBeVisible();
-  expect(requestBody).toMatchObject({ mode: 'me', q: '' });
-  await expect(
-    page.getByRole('textbox', { name: 'Search opportunities, interests, or keywords' }),
-  ).toBeEmpty();
+  expect(requestBody).toMatchObject({ subject: { kind: 'person', id: null }, q: '' });
+  await expect(page.getByRole('textbox', { name: 'Search (optional)' })).toBeEmpty();
   await expect(page.getByText('This is a coverage gap', { exact: false })).toHaveCount(0);
 });
 
@@ -160,7 +167,7 @@ test('excluding national opportunities does not imply the published catalogue is
   await page.goto('/discover?mode=explore&national=false');
   await expect(page.getByRole('heading', { name: 'No opportunities found' })).toBeVisible();
   await expect(
-    page.getByRole('heading', { name: 'No reviewed opportunities published yet' }),
+    page.getByRole('heading', { name: 'Personalized eligibility matching' }),
   ).toHaveCount(0);
 });
 

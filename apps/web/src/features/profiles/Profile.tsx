@@ -225,6 +225,7 @@ function PersonProfile() {
         'plan',
         'hybrid-search',
         'scenario-base',
+        'research-guidance',
       ])
         void cache.invalidateQueries({ queryKey: [key] });
     },

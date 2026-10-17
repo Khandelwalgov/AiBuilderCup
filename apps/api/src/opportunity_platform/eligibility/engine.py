@@ -96,7 +96,12 @@ def evaluate(rule: Rule, facts: list[FactRecord], today: date) -> Result:
             missing=[],
             blockers=[identity],
         )
-    if c.fact in {"current_education_level", "enrollment_mode", "school_recognized_or_government"}:
+    if c.fact in {
+        "current_education_level",
+        "enrollment_mode",
+        "school_recognized_or_government",
+        "school_government",
+    }:
         enrollment = [
             f
             for f in facts

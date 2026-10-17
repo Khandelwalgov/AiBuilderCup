@@ -5843,6 +5843,219 @@
         }
       }
     },
+    "/v1/research-opportunities/guidance": {
+      "post": {
+        "tags": [
+          "source-backed research catalogue"
+        ],
+        "summary": "Personalized Research",
+        "description": "Private geographic research guidance, never an eligibility determination.",
+        "operationId": "personalized_research_v1_research_opportunities_guidance_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuidanceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/v1/research-opportunities/plan": {
+      "post": {
+        "tags": [
+          "source-backed research catalogue"
+        ],
+        "summary": "Research Plan",
+        "operationId": "research_plan_v1_research_opportunities_plan_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuidanceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/v1/research-opportunities/{identifier}": {
       "get": {
         "tags": [
@@ -6022,7 +6235,8 @@
             "type": "string",
             "enum": [
               "pending",
-              "in_progress"
+              "in_progress",
+              "completed"
             ],
             "title": "Status"
           }
@@ -6221,7 +6435,7 @@
               "$ref": "#/components/schemas/FactInput"
             },
             "type": "array",
-            "maxItems": 10,
+            "maxItems": 14,
             "title": "Facts"
           },
           "expected_revision": {
@@ -6785,6 +6999,88 @@
         ],
         "title": "CitationView"
       },
+      "Comparison": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "result": {
+            "$ref": "#/components/schemas/Result"
+          },
+          "baseline": {
+            "$ref": "#/components/schemas/Result"
+          },
+          "changed": {
+            "type": "boolean",
+            "title": "Changed"
+          },
+          "rule": {
+            "$ref": "#/components/schemas/Rule-Output"
+          },
+          "snapshot_id": {
+            "type": "string",
+            "title": "Snapshot Id"
+          },
+          "source_hash": {
+            "type": "string",
+            "title": "Source Hash"
+          },
+          "source_url": {
+            "type": "string",
+            "title": "Source Url"
+          },
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "passage": {
+            "type": "string",
+            "title": "Passage"
+          },
+          "action": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Action"
+          },
+          "semantic": {
+            "type": "string",
+            "title": "Semantic"
+          },
+          "evidence_available": {
+            "type": "boolean",
+            "title": "Evidence Available"
+          },
+          "gap_kind": {
+            "type": "string",
+            "title": "Gap Kind"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "result",
+          "baseline",
+          "changed",
+          "rule",
+          "snapshot_id",
+          "source_hash",
+          "source_url",
+          "page",
+          "passage",
+          "action",
+          "semantic",
+          "evidence_available",
+          "gap_kind"
+        ],
+        "title": "Comparison"
+      },
       "Condition": {
         "properties": {
           "op": {
@@ -6822,6 +7118,11 @@
                   "business_operating_status",
                   "enrollment_mode",
                   "school_recognized_or_government",
+                  "school_government",
+                  "business_udyam_registered",
+                  "business_size",
+                  "business_sector",
+                  "business_similar_assistance",
                   "student_status",
                   "employment_status",
                   "has_bank_account",
@@ -7046,6 +7347,65 @@
           "relationship"
         ],
         "title": "DependentWrite"
+      },
+      "DiscoveryResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/GuidanceItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "eligible_count": {
+            "type": "integer",
+            "const": 0,
+            "title": "Eligible Count",
+            "default": 0
+          },
+          "candidate_count": {
+            "type": "integer",
+            "title": "Candidate Count"
+          },
+          "hypothetical": {
+            "type": "boolean",
+            "title": "Hypothetical"
+          },
+          "neural_status": {
+            "type": "string",
+            "title": "Neural Status",
+            "default": "not_requested"
+          },
+          "actions": {
+            "items": {
+              "$ref": "#/components/schemas/ActionView"
+            },
+            "type": "array",
+            "title": "Actions",
+            "default": []
+          },
+          "supported_pair_count": {
+            "type": "integer",
+            "title": "Supported Pair Count",
+            "default": 0
+          },
+          "notice": {
+            "type": "string",
+            "title": "Notice",
+            "default": "Provisional source-backed comparisons, not reviewed eligibility. Current applications, funding and deadlines have NOT been verified."
+          },
+          "reviewed": {
+            "$ref": "#/components/schemas/SearchResponse"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "candidate_count",
+          "hypothetical",
+          "reviewed"
+        ],
+        "title": "DiscoveryResponse"
       },
       "DocumentCapabilities": {
         "properties": {
@@ -7744,6 +8104,11 @@
               "business_operating_status",
               "enrollment_mode",
               "school_recognized_or_government",
+              "school_government",
+              "business_udyam_registered",
+              "business_size",
+              "business_sector",
+              "business_similar_assistance",
               "student_status",
               "employment_status",
               "has_bank_account",
@@ -8450,6 +8815,166 @@
           "source_url"
         ],
         "title": "GovernmentTextPage"
+      },
+      "GuidanceItem": {
+        "properties": {
+          "listing": {
+            "$ref": "#/components/schemas/ResearchCard"
+          },
+          "geography_signal": {
+            "type": "string",
+            "enum": [
+              "saved_domicile",
+              "saved_business_registration",
+              "saved_residence",
+              "national_scope",
+              "needs_location_check"
+            ],
+            "title": "Geography Signal"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "next_steps": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Next Steps"
+          },
+          "eligibility_verified": {
+            "type": "boolean",
+            "const": false,
+            "title": "Eligibility Verified",
+            "default": false
+          },
+          "subject_id": {
+            "type": "string",
+            "title": "Subject Id",
+            "default": ""
+          },
+          "subject_name": {
+            "type": "string",
+            "title": "Subject Name",
+            "default": "Selected subject"
+          },
+          "subject_kind": {
+            "type": "string",
+            "title": "Subject Kind",
+            "default": "person"
+          },
+          "fictional": {
+            "type": "boolean",
+            "title": "Fictional",
+            "default": false
+          },
+          "parent_key": {
+            "type": "string",
+            "title": "Parent Key",
+            "default": ""
+          },
+          "components": {
+            "items": {
+              "$ref": "#/components/schemas/ResearchCard"
+            },
+            "type": "array",
+            "title": "Components",
+            "default": []
+          },
+          "conditions": {
+            "items": {
+              "$ref": "#/components/schemas/Comparison"
+            },
+            "type": "array",
+            "title": "Conditions",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "listing",
+          "geography_signal",
+          "reason",
+          "next_steps"
+        ],
+        "title": "GuidanceItem"
+      },
+      "GuidanceRequest": {
+        "properties": {
+          "subject": {
+            "$ref": "#/components/schemas/SubjectRef"
+          },
+          "overrides": {
+            "items": {
+              "$ref": "#/components/schemas/FactInput"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Overrides"
+          },
+          "scenario": {
+            "type": "boolean",
+            "title": "Scenario",
+            "default": false
+          },
+          "limit": {
+            "type": "integer",
+            "maximum": 24.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "default": 8
+          },
+          "offset": {
+            "type": "integer",
+            "maximum": 10000.0,
+            "minimum": 0.0,
+            "title": "Offset",
+            "default": 0
+          },
+          "q": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "Q",
+            "default": ""
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 80,
+            "title": "Category",
+            "default": ""
+          },
+          "member_overrides": {
+            "additionalProperties": {
+              "items": {
+                "$ref": "#/components/schemas/FactInput"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "maxProperties": 30,
+            "title": "Member Overrides"
+          },
+          "people": {
+            "items": {
+              "$ref": "#/components/schemas/FictionalPerson"
+            },
+            "type": "array",
+            "maxItems": 10,
+            "title": "People"
+          },
+          "excluded_subject_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Excluded Subject Keys"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "GuidanceRequest"
       },
       "Health": {
         "properties": {
@@ -9987,6 +10512,11 @@
       },
       "ResearchResults": {
         "properties": {
+          "neural_status": {
+            "type": "string",
+            "title": "Neural Status",
+            "default": "not_requested"
+          },
           "items": {
             "items": {
               "$ref": "#/components/schemas/ResearchCard"

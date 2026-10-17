@@ -1,3 +1,4 @@
+import { ResearchGuidance } from '../opportunities/ResearchGuidance';
 import { useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
@@ -19,6 +20,31 @@ const fields: Array<{
   options?: string[];
   income?: boolean;
 }> = [
+  { key: 'school_government', en: 'Government school', hi: 'सरकारी विद्यालय', type: 'boolean' },
+  {
+    key: 'business_udyam_registered',
+    en: 'Udyam registered',
+    hi: 'उद्यम पंजीकृत',
+    type: 'boolean',
+  },
+  {
+    key: 'business_size',
+    en: 'Udyam classification',
+    hi: 'उद्यम वर्ग',
+    options: ['micro', 'small', 'medium', 'other'],
+  },
+  {
+    key: 'business_sector',
+    en: 'Business sector',
+    hi: 'व्यवसाय क्षेत्र',
+    options: ['manufacturing', 'services', 'trading', 'other'],
+  },
+  {
+    key: 'business_similar_assistance',
+    en: 'Received similar government assistance',
+    hi: 'समान सरकारी सहायता प्राप्त',
+    type: 'boolean',
+  },
   { key: 'age', en: 'Age', hi: 'उम्र', type: 'number' },
   {
     key: 'annual_personal_income',
@@ -127,7 +153,9 @@ function FactEditor({
   kind: string;
 }) {
   const hi = useLanguage() === 'hi';
-  const [key, setKey] = useState<Fact['key']>('age');
+  const [key, setKey] = useState<Fact['key']>(
+    kind === 'business' ? 'business_registered' : kind === 'household' ? 'residence_state' : 'age',
+  );
   const available = fields.filter((f) =>
     kind === 'business'
       ? f.key.startsWith('business_') || f.key.startsWith('residence_')
@@ -352,10 +380,14 @@ function Studio() {
         mode={mode}
         explore={false}
         onChange={(value) => {
+          if (value === 'me') context.select('person:');
           setMode(value);
           reset();
         }}
       />
+      {!mutation.data && correct && context.available && params.get('development') !== 'true' && (
+        <ResearchGuidance variant="scenario" mode={mode} />
+      )}
       <section className="panel" style={{ padding: 20 }}>
         <h2>
           {hi ? 'वास्तविक आधार' : 'Actual base'} ·{' '}
@@ -363,8 +395,8 @@ function Studio() {
         </h2>
         <p>
           {hi
-            ? 'मौजूदा अधिकृत जानकारी सर्वर से ली जाएगी। केवल नीचे दिए बदलाव काल्पनिक हैं।'
-            : 'The server uses current authorized facts. Only the overrides below are hypothetical.'}
+            ? 'सहेजी गई अधिकृत जानकारी आधार है। बदलाव काल्पनिक हैं। शोध सूची केवल स्थान के बदलाव पर प्रतिक्रिया देती है; पात्रता सत्यापित नहीं है।'
+            : 'The server uses your saved facts as the starting point. Changes below are hypothetical. Research comparisons respond only to mapped, cited conditions. Unmapped conditions remain unknown and eligibility policies still require review.'}
         </p>
         <FactEditor
           kind={mode === 'business' ? 'business' : mode === 'family' ? 'household' : 'person'}
@@ -538,6 +570,17 @@ function Studio() {
       {mutation.error && <p role="alert">{mutation.error.message}</p>}
       {mutation.data && (
         <section aria-label="Scenario results">
+          {params.get('development') !== 'true' && (
+            <ResearchGuidance
+              variant="scenario"
+              mode={mode}
+              overrides={facts}
+              memberOverrides={memberFacts}
+              people={people}
+              excluded={excluded}
+              scenario
+            />
+          )}
           <h2>{hi ? 'वास्तविक बनाम काल्पनिक' : 'Actual versus hypothetical'}</h2>
           <p>
             {hi

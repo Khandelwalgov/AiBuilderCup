@@ -17,6 +17,29 @@ export async function sessionFixture(page: Page, signedIn = true) {
   await page.route('**/v1/documents?*', (r) => r.fulfill({ json: [] }));
   await page.route('**/v1/documents/requirements?*', (r) => r.fulfill({ json: [] }));
   await page.route('**/v1/workspaces', (r) => r.fulfill({ json: [] }));
+  await page.route(/\/v1\/research-opportunities\/(guidance|plan)$/, (r) =>
+    r.fulfill({
+      json: {
+        items: [],
+        actions: [],
+        candidate_count: 0,
+        eligible_count: 0,
+        hypothetical: false,
+        reviewed: {
+          items: [],
+          subjects: [],
+          catalogue_count: 0,
+          eligible_pair_count: 0,
+          assessed_pair_count: 0,
+          truncated: false,
+          neural_status: 'disabled',
+          timings_ms: {},
+          subject_coverage: {},
+          category_coverage: {},
+        },
+      },
+    }),
+  );
   await page.route('**/v1/dashboard', (r) =>
     r.fulfill({
       json: {

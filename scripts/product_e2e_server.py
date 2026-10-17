@@ -231,6 +231,33 @@ try:
             )
         except auth.UidAlreadyExistsError:
             pass
+        # Local-only public-document scaffold. No ingestion, providers, OCR or production DB.
+        import json
+        import sys
+
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "apps/api/tests"))
+        from test_research_catalogue import research_baseline
+
+        from opportunity_platform.db.models import SourceSnapshot
+        from opportunity_platform.research.importer import import_listings
+
+        research_data, listings, actor = research_baseline.__wrapped__(session)
+        import_listings(
+            session,
+            listings,
+            actor,
+            make_public=True,
+            captured_sources=research_data["captured_sources"],
+        )
+        dossier = json.loads(
+            (
+                Path(__file__).resolve().parents[1] / "data/policy-review/2026-10-17/team.json"
+            ).read_text()
+        )
+        snapshot = session.get(SourceSnapshot, dossier["baseline"]["snapshot_id"])
+        snapshot.pages = [*snapshot.pages, next(p for p in dossier["pages"] if p["page"] == 12)]
+        session.commit()
+
         corpus_root = os.environ.get("PRODUCT_E2E_CORPUS_ROOT")
         if corpus_root:
             import json

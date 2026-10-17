@@ -1,6 +1,6 @@
+import { ResearchGuidance } from '../features/opportunities/ResearchGuidance';
 import { ResearchDetail } from '../features/opportunities/ResearchCatalogue';
 import { ScenarioStudio } from '../features/intelligence/ScenarioStudio';
-import { Recommendations } from '../features/intelligence/Recommendations';
 import { GovernmentSources } from '../features/opportunities/GovernmentSources';
 import { DirtyFormsProvider, useDiscardGuard } from './dirty-forms';
 import { ContextLink as Link } from './subject-context';
@@ -41,7 +41,7 @@ export function useLanguage() {
 export function useStrings() {
   return strings[useContext(Locale)];
 }
-const brand = import.meta.env.VITE_APP_NAME || 'Unclaimed';
+const brand = 'Unclaimed';
 export function useFacets(development = false) {
   return useQuery({
     queryKey: ['facets', development],
@@ -440,8 +440,18 @@ export function Cockpit() {
       {plan.isError && <p role="alert">{plan.error.message}</p>}
       {overview.data?.profile_name && (
         <section aria-label={hi ? 'आपके लिए अवसर' : 'Personalized opportunities'}>
-          <h2>{hi ? 'आपके लिए अवसर' : 'Opportunities for you'}</h2>
-          <Recommendations mode="me" useFilters={false} />
+          <ResearchGuidance
+            variant="overview"
+            mode={
+              context.subject.kind === 'household'
+                ? 'family'
+                : context.subject.kind === 'business'
+                  ? 'business'
+                  : context.subject.id
+                    ? 'member'
+                    : 'me'
+            }
+          />
         </section>
       )}
       <div className="dashboard-actions">

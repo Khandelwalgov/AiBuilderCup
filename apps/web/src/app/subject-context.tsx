@@ -116,8 +116,21 @@ export function SubjectProvider({
         if (subject.id) target.searchParams.set('id', subject.id);
       }
     }
-    if (params.has('mode') && !target.searchParams.has('mode'))
-      target.searchParams.set('mode', params.get('mode')!);
+    if (params.has('mode') && !target.searchParams.has('mode')) {
+      const nextKind = target.searchParams.get('kind') || 'person';
+      target.searchParams.set(
+        'mode',
+        params.get('mode') === 'explore'
+          ? 'explore'
+          : nextKind === 'business'
+            ? 'business'
+            : nextKind === 'household'
+              ? 'family'
+              : target.searchParams.get('id')
+                ? 'member'
+                : 'me',
+      );
+    }
     if (params.get('development') === 'true' && !target.searchParams.has('development'))
       target.searchParams.set('development', 'true');
     return target.pathname + target.search + target.hash;
@@ -134,6 +147,11 @@ export function SubjectProvider({
       if (identifier) next.set('id', identifier);
       else next.delete('id');
     }
+    if (next.get('mode') !== 'explore')
+      next.set(
+        'mode',
+        k === 'person' ? (identifier ? 'member' : 'me') : k === 'household' ? 'family' : 'business',
+      );
     // Editing a dependent cannot silently retarget another person's form.
     const pathname = dependent ? '/profile' : location.pathname;
     navigate({ pathname, search: next.toString() });

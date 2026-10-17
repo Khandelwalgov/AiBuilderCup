@@ -1,0 +1,765 @@
+{
+  "version": "research-conditions-v1",
+  "verification": "provisional_source_comparisons_not_policy_publication",
+  "conditions": [
+    {
+      "listing_key": "post-matric-st",
+      "parent": "post-matric-st",
+      "source_hash": "0a198cda53699cce97f72c59608f63a5d282cee33e591ebb57b4d04b6efedc83",
+      "snapshot_id": "132c820f-cf6e-5e69-be30-12e0b53aa421",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "page": 3,
+      "passage": "The scholarships will be given for study of recognized post-matriculation/ post-\nsecondary courses, recognized by the concerned approving authority, pursued in",
+      "title": "Currently studying — course level and recognition remain separate checks",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "student_status",
+          "value": true
+        }
+      },
+      "action": "Confirm actual current enrollment; if planning further study, investigate qualifying admission. Record enrollment only after it occurs.",
+      "semantic": "student_status"
+    },
+    {
+      "listing_key": "post-matric-st",
+      "parent": "post-matric-st",
+      "source_hash": "0a198cda53699cce97f72c59608f63a5d282cee33e591ebb57b4d04b6efedc83",
+      "snapshot_id": "132c820f-cf6e-5e69-be30-12e0b53aa421",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "page": 3,
+      "passage": "Student should have passed the Matriculation or Higher Secondary or any higher \nexamination of a recognized University or Board of Secondary Education.",
+      "title": "Completed class X or higher — qualification recognition remains unassessed",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "highest_completed_education",
+          "value": [
+            "X",
+            "XI",
+            "XII",
+            "undergraduate",
+            "postgraduate"
+          ]
+        }
+      },
+      "action": "Provide your completed qualification; recognition still needs confirmation.",
+      "semantic": "highest_completed_education"
+    },
+    {
+      "listing_key": "post-matric-st",
+      "parent": "post-matric-st",
+      "source_hash": "0a198cda53699cce97f72c59608f63a5d282cee33e591ebb57b4d04b6efedc83",
+      "snapshot_id": "132c820f-cf6e-5e69-be30-12e0b53aa421",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "page": 3,
+      "passage": "The student should have a valid account in a Schedule Bank linked with Aadhar \nand Mobile number.",
+      "title": "Bank account present — scheduled-bank status and linkage remain unassessed",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "has_bank_account",
+          "value": true
+        }
+      },
+      "action": "Check whether you hold the specified bank account. Do not enter account or identity numbers here.",
+      "semantic": "has_bank_account"
+    },
+    {
+      "listing_key": "post-matric-st",
+      "parent": "post-matric-st",
+      "source_hash": "0a198cda53699cce97f72c59608f63a5d282cee33e591ebb57b4d04b6efedc83",
+      "snapshot_id": "132c820f-cf6e-5e69-be30-12e0b53aa421",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "page": 3,
+      "passage": "3  \n1. Introduction \n \nIt is a Centrally Sponsored Scheme implemented by Ministry of Tribal Affairs to grant \nscholarship to eligible ST students for pursuing higher education starting from class \nXI to Post Graduation courses in India. \n \n2. Objective \n \n \na. To enable eligible Scheduled Tribe students to undertake quality education \nfrom Post Matric to Post Graduate level by providing them financial \nassistance. \nb. To create an error free platform ensuring that the targeted beneficiaries \nreceive scholarship on time. \n \n3. Salient features of the Scheme \n \n3.1. Scope \n \nScholarship under the Scheme will be available to ST students for studies in India and \nwill be directly transferred to the account of students. The scholarship will be awarded \nby the Government of the State/Union Territory to which the applicant belongs as per \nthe terms of domicile decided by the State/UT. \n \n3.2. Conditions of eligibility  \n \n \na. The student should belong to Scheduled Tribe so specified in relation to the \nState/Union Territory to which he/she actually belongs (Domicile State). \nb. Student should have passed the Matriculation or Higher Secondary or any higher \nexamination of a recognized University or Board of Secondary Education. \nc. The family income of student from all sources should not exceed Rs.2.50 lakh per \nannum. \nd. The student should have a valid account in a Schedule Bank linked with Aadhar \nand Mobile number. \ne. The student should not be getting any other scholarship. \nf. The scholarships will be given for study of recognized post-matriculation/ post-\nsecondary courses, recognized by the concerned approving authority, pursued in \nfollowing category of Institutions/Universities/Colleges. \n \ni. All Government Institutes/Colleges/Universities \nii. Institutions of National Importance;",
+      "title": "ST domicile recognition, income definition, institution recognition, linkage and other-award exclusions remain unassessed",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "unknown",
+          "fact": null,
+          "value": null
+        }
+      },
+      "action": null,
+      "semantic": "ST domicile recognition, income definition, institution recognition, linkage and other-award exclusions remain unassessed"
+    },
+    {
+      "listing_key": "pm-yasasvi-pre-matric",
+      "parent": "pm-yasasvi-pre-matric",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 3,
+      "passage": "The scholarships are open to Nationals of India only.",
+      "title": "Indian nationality",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "nationality",
+          "value": "India"
+        }
+      },
+      "action": null,
+      "semantic": "nationality"
+    },
+    {
+      "listing_key": "pm-yasasvi-pre-matric",
+      "parent": "pm-yasasvi-pre-matric",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 3,
+      "passage": "The students should be studying in class IX and X on a full-time basis in Government \nSchools only.",
+      "title": "Currently studying class IX or X",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "current_education_level",
+          "value": [
+            "IX",
+            "X"
+          ]
+        }
+      },
+      "action": "Confirm actual current class and enrollment; completed qualifications do not establish current study.",
+      "semantic": "current_education_level"
+    },
+    {
+      "listing_key": "pm-yasasvi-pre-matric",
+      "parent": "pm-yasasvi-pre-matric",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 3,
+      "passage": "The students should be studying in class IX and X on a full-time basis in Government \nSchools only.",
+      "title": "Full-time enrollment",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "enrollment_mode",
+          "value": "full_time"
+        }
+      },
+      "action": "Provide the actual enrollment mode for the same current course.",
+      "semantic": "enrollment_mode"
+    },
+    {
+      "listing_key": "pm-yasasvi-pre-matric",
+      "parent": "pm-yasasvi-pre-matric",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 3,
+      "passage": "The scholarship will be provided for students studying in Government Schools only.",
+      "title": "Government school — recognition alone is insufficient",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "school_government",
+          "value": true
+        }
+      },
+      "action": "Confirm whether the current school is government-run. A recognized private school is different.",
+      "semantic": "school_government"
+    },
+    {
+      "listing_key": "pm-yasasvi-pre-matric",
+      "parent": "pm-yasasvi-pre-matric",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 3,
+      "passage": "3  \n(iii) Top Class School Education for OBC, EBC and DNT Students \n(iv) Top Class College Education for OBC, EBC and DNT Students \n(v)      Construction of Hostel for OBC Boys and Girls \n \n(A) CENTRALLY SPONSORED SCHEME OF PRE -MATRIC SCHOLARSHIPS TO \nOBC, EBC AND DNT STUDENTS \n \n1. OBJECTIVE \n \nThe objective of the Centrally Sponsored Scheme of Pre -Matric Scholarship for OBC, EBC \nand DNT students (who are not covered under SC, ST or OBC) is welfare and motivation to \nthe children of these categories by providing financial assistance at pre matricu lation or \nsecondary stage.  \n \n2. SCOPE \n \n2.1. Scholarship under the Scheme will be available for studies in India only and will be \nawarded by the Government of the State/Union Territory to which the applicant belongs i.e. \nwhere he is domiciled.  \n2.2. The scholarship will be provided for students studying in Government Schools only. \n \n3. CONDITIONS OF ELIGIBILITY \n \n3.1. The scholarships are open to Nationals of India only. \n \n3.2. Scholarship award will be sanctioned in the case of students whose parents/guardians \nincome from all sources does not exceed Rs.2,50,000/- per annum. \n \n3.3.  The students should be studying in class IX and X on a full-time basis in Government \nSchools only. \n \n3.4. They should belong to either of OBC, EBC and DNT (who are not covered under SC, \nST or OBC) categories through valid certificate.  \n \n3.5. A scholarship holder under this scheme will not hold any other educational scholarship \nfor the purpose of studying in class IX and X. If awarded any other educational scholarship \nfor studying in clas ses IX and X, the students can avail of either of the two scholarships as \nper his/her choice and should inform the awarding authority to the Head of the Institution \nabout the option made.",
+      "title": "Certified beneficiary category, parental/guardian income, domicile implementation and other-award exclusions remain unassessed",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "unknown",
+          "fact": null,
+          "value": null
+        }
+      },
+      "action": null,
+      "semantic": "Certified beneficiary category, parental/guardian income, domicile implementation and other-award exclusions remain unassessed"
+    },
+    {
+      "listing_key": "msme-team-catalogue",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Udyam registration — generic business registration is insufficient",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "business_udyam_registered",
+          "value": true
+        }
+      },
+      "action": "Check Udyam registration through the official authority; record only your actual status.",
+      "semantic": "udyam-registration"
+    },
+    {
+      "listing_key": "msme-team-catalogue",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Micro or small enterprise",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "business_size",
+          "value": [
+            "micro",
+            "small"
+          ]
+        }
+      },
+      "action": "Confirm your current Udyam classification; turnover alone does not establish it.",
+      "semantic": "business_size"
+    },
+    {
+      "listing_key": "msme-team-catalogue",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Manufacturing or services sector",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "business_sector",
+          "value": [
+            "manufacturing",
+            "services"
+          ]
+        }
+      },
+      "action": null,
+      "semantic": "business_sector"
+    },
+    {
+      "listing_key": "msme-team-catalogue",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "No similar Central or State scheme assistance",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "business_similar_assistance",
+          "value": false
+        }
+      },
+      "action": "Check prior assistance against this exact exclusion; do not omit previous support.",
+      "semantic": "business_similar_assistance"
+    },
+    {
+      "listing_key": "msme-team-catalogue",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "unknown",
+          "fact": null,
+          "value": null
+        }
+      },
+      "action": null,
+      "semantic": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed"
+    },
+    {
+      "listing_key": "msme-team-account-management",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Udyam registration — generic business registration is insufficient",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "business_udyam_registered",
+          "value": true
+        }
+      },
+      "action": "Check Udyam registration through the official authority; record only your actual status.",
+      "semantic": "udyam-registration"
+    },
+    {
+      "listing_key": "msme-team-account-management",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Micro or small enterprise",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "business_size",
+          "value": [
+            "micro",
+            "small"
+          ]
+        }
+      },
+      "action": "Confirm your current Udyam classification; turnover alone does not establish it.",
+      "semantic": "business_size"
+    },
+    {
+      "listing_key": "msme-team-account-management",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Manufacturing or services sector",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "business_sector",
+          "value": [
+            "manufacturing",
+            "services"
+          ]
+        }
+      },
+      "action": null,
+      "semantic": "business_sector"
+    },
+    {
+      "listing_key": "msme-team-account-management",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "No similar Central or State scheme assistance",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "business_similar_assistance",
+          "value": false
+        }
+      },
+      "action": "Check prior assistance against this exact exclusion; do not omit previous support.",
+      "semantic": "business_similar_assistance"
+    },
+    {
+      "listing_key": "msme-team-account-management",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "unknown",
+          "fact": null,
+          "value": null
+        }
+      },
+      "action": null,
+      "semantic": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed"
+    },
+    {
+      "listing_key": "msme-team-logistics",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Udyam registration — generic business registration is insufficient",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "business_udyam_registered",
+          "value": true
+        }
+      },
+      "action": "Check Udyam registration through the official authority; record only your actual status.",
+      "semantic": "udyam-registration"
+    },
+    {
+      "listing_key": "msme-team-logistics",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Micro or small enterprise",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "business_size",
+          "value": [
+            "micro",
+            "small"
+          ]
+        }
+      },
+      "action": "Confirm your current Udyam classification; turnover alone does not establish it.",
+      "semantic": "business_size"
+    },
+    {
+      "listing_key": "msme-team-logistics",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Manufacturing or services sector",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "business_sector",
+          "value": [
+            "manufacturing",
+            "services"
+          ]
+        }
+      },
+      "action": null,
+      "semantic": "business_sector"
+    },
+    {
+      "listing_key": "msme-team-logistics",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "No similar Central or State scheme assistance",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "business_similar_assistance",
+          "value": false
+        }
+      },
+      "action": "Check prior assistance against this exact exclusion; do not omit previous support.",
+      "semantic": "business_similar_assistance"
+    },
+    {
+      "listing_key": "msme-team-logistics",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "unknown",
+          "fact": null,
+          "value": null
+        }
+      },
+      "action": null,
+      "semantic": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed"
+    },
+    {
+      "listing_key": "msme-team-packaging-material",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Udyam registration — generic business registration is insufficient",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "business_udyam_registered",
+          "value": true
+        }
+      },
+      "action": "Check Udyam registration through the official authority; record only your actual status.",
+      "semantic": "udyam-registration"
+    },
+    {
+      "listing_key": "msme-team-packaging-material",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Micro or small enterprise",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "business_size",
+          "value": [
+            "micro",
+            "small"
+          ]
+        }
+      },
+      "action": "Confirm your current Udyam classification; turnover alone does not establish it.",
+      "semantic": "business_size"
+    },
+    {
+      "listing_key": "msme-team-packaging-material",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Manufacturing or services sector",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "business_sector",
+          "value": [
+            "manufacturing",
+            "services"
+          ]
+        }
+      },
+      "action": null,
+      "semantic": "business_sector"
+    },
+    {
+      "listing_key": "msme-team-packaging-material",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "No similar Central or State scheme assistance",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "business_similar_assistance",
+          "value": false
+        }
+      },
+      "action": "Check prior assistance against this exact exclusion; do not omit previous support.",
+      "semantic": "business_similar_assistance"
+    },
+    {
+      "listing_key": "msme-team-packaging-material",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "unknown",
+          "fact": null,
+          "value": null
+        }
+      },
+      "action": null,
+      "semantic": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed"
+    },
+    {
+      "listing_key": "msme-team-packaging-design",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Udyam registration — generic business registration is insufficient",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "business_udyam_registered",
+          "value": true
+        }
+      },
+      "action": "Check Udyam registration through the official authority; record only your actual status.",
+      "semantic": "udyam-registration"
+    },
+    {
+      "listing_key": "msme-team-packaging-design",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Micro or small enterprise",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "business_size",
+          "value": [
+            "micro",
+            "small"
+          ]
+        }
+      },
+      "action": "Confirm your current Udyam classification; turnover alone does not establish it.",
+      "semantic": "business_size"
+    },
+    {
+      "listing_key": "msme-team-packaging-design",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Manufacturing or services sector",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "business_sector",
+          "value": [
+            "manufacturing",
+            "services"
+          ]
+        }
+      },
+      "action": null,
+      "semantic": "business_sector"
+    },
+    {
+      "listing_key": "msme-team-packaging-design",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "No similar Central or State scheme assistance",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "business_similar_assistance",
+          "value": false
+        }
+      },
+      "action": "Check prior assistance against this exact exclusion; do not omit previous support.",
+      "semantic": "business_similar_assistance"
+    },
+    {
+      "listing_key": "msme-team-packaging-design",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws.",
+      "title": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "unknown",
+          "fact": null,
+          "value": null
+        }
+      },
+      "action": null,
+      "semantic": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed"
+    },
+    {
+      "listing_key": "pm-yasasvi-post-matric",
+      "parent": "pm-yasasvi-post-matric",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 12,
+      "passage": "The objective   of   the scheme is to provide financial assistance to the OBC, EBC and DNT \nstudents studying at post -matriculation or post-secondary stage to enable them to complete \ntheir education.",
+      "title": "Currently studying — course level and recognition remain separate checks",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "student_status",
+          "value": true
+        }
+      },
+      "action": "Confirm actual current enrollment; if planning further study, investigate qualifying admission. Record enrollment only after it occurs.",
+      "semantic": "student_status"
+    },
+    {
+      "listing_key": "pm-yasasvi-post-matric",
+      "parent": "pm-yasasvi-post-matric",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 12,
+      "passage": "The objective   of   the scheme is to provide financial assistance to the OBC, EBC and DNT \nstudents studying at post -matriculation or post-secondary stage to enable them to complete \ntheir education.",
+      "title": "Beneficiary category, course classification and remaining conditions are unassessed",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "unknown",
+          "fact": null,
+          "value": null
+        }
+      },
+      "action": null,
+      "semantic": "yasasvi-post-matric-unassessed"
+    }
+  ]
+}

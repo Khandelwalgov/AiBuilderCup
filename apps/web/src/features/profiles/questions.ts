@@ -30,6 +30,19 @@ export const documentKeys = new Set<Fact['key']>([
 const school = ['IX', 'X', 'XI', 'XII'];
 export const questions: Question[] = [
   {
+    key: 'school_government',
+    category: 'education',
+    label: ['Is your current school government-run?', 'क्या आपका वर्तमान विद्यालय सरकारी है?'],
+    type: 'boolean',
+    when: (v) =>
+      v.student_status === true &&
+      ['below_IX', 'IX', 'X', 'XI', 'XII'].includes(String(v.current_education_level)),
+    help: [
+      'A recognized private school is different from a government school.',
+      'मान्यता प्राप्त निजी विद्यालय सरकारी विद्यालय से अलग है।',
+    ],
+  },
+  {
     key: 'age',
     category: 'basics',
     label: ['How old are you?', 'आपकी उम्र क्या है?'],

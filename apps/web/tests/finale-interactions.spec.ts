@@ -11,9 +11,7 @@ test('Atlas landing stays illustrative and links to genuine discovery', async ({
   await page.getByRole('link', { name: 'Explore opportunities', exact: true }).click();
   await expect(page).toHaveURL(/\/discover$/);
   await expect(
-    page
-      .getByText('Public coverage includes only reviewed published records.', { exact: false })
-      .first(),
+    page.getByText('do not establish personal eligibility.', { exact: false }).first(),
   ).toBeVisible();
 });
 

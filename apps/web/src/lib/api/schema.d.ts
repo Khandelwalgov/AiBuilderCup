@@ -743,6 +743,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/research-opportunities/guidance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Personalized Research
+         * @description Private geographic research guidance, never an eligibility determination.
+         */
+        post: operations["personalized_research_v1_research_opportunities_guidance_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/research-opportunities/plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Research Plan */
+        post: operations["research_plan_v1_research_opportunities_plan_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/research-opportunities/{identifier}": {
         parameters: {
             query?: never;
@@ -800,7 +837,7 @@ export interface components {
              * Status
              * @enum {string}
              */
-            status: "pending" | "in_progress";
+            status: "pending" | "in_progress" | "completed";
         };
         /** ActionView */
         ActionView: {
@@ -1027,6 +1064,34 @@ export interface components {
             /** Page */
             page: string | null;
         };
+        /** Comparison */
+        Comparison: {
+            /** Title */
+            title: string;
+            result: components["schemas"]["Result"];
+            baseline: components["schemas"]["Result"];
+            /** Changed */
+            changed: boolean;
+            rule: components["schemas"]["Rule-Output"];
+            /** Snapshot Id */
+            snapshot_id: string;
+            /** Source Hash */
+            source_hash: string;
+            /** Source Url */
+            source_url: string;
+            /** Page */
+            page: number;
+            /** Passage */
+            passage: string;
+            /** Action */
+            action: string | null;
+            /** Semantic */
+            semantic: string;
+            /** Evidence Available */
+            evidence_available: boolean;
+            /** Gap Kind */
+            gap_kind: string;
+        };
         /** Condition */
         Condition: {
             /**
@@ -1035,7 +1100,7 @@ export interface components {
              */
             op: "eq" | "gte" | "lte" | "in" | "document" | "unknown";
             /** Fact */
-            fact?: ("age" | "annual_personal_income" | "annual_parental_income" | "annual_household_income" | "disability_percentage" | "nationality" | "domicile_state" | "domicile_district" | "residence_state" | "residence_district" | "education_level" | "current_education_level" | "highest_completed_education" | "business_registration_state" | "business_registration_district" | "business_operating_status" | "enrollment_mode" | "school_recognized_or_government" | "student_status" | "employment_status" | "has_bank_account" | "auto_debit_consent" | "has_income_certificate" | "business_registered" | "business_turnover" | "has_registration_certificate" | "has_disability_certificate" | "has_udid_certificate") | null;
+            fact?: ("age" | "annual_personal_income" | "annual_parental_income" | "annual_household_income" | "disability_percentage" | "nationality" | "domicile_state" | "domicile_district" | "residence_state" | "residence_district" | "education_level" | "current_education_level" | "highest_completed_education" | "business_registration_state" | "business_registration_district" | "business_operating_status" | "enrollment_mode" | "school_recognized_or_government" | "school_government" | "business_udyam_registered" | "business_size" | "business_sector" | "business_similar_assistance" | "student_status" | "employment_status" | "has_bank_account" | "auto_debit_consent" | "has_income_certificate" | "business_registered" | "business_turnover" | "has_registration_certificate" | "has_disability_certificate" | "has_udid_certificate") | null;
             /** Value */
             value?: string | number | boolean | (string | number | boolean)[] | null;
             /** Income Period */
@@ -1088,6 +1153,42 @@ export interface components {
              * Format: date
              */
             starts_on?: string;
+        };
+        /** DiscoveryResponse */
+        DiscoveryResponse: {
+            /** Items */
+            items: components["schemas"]["GuidanceItem"][];
+            /**
+             * Eligible Count
+             * @default 0
+             * @constant
+             */
+            eligible_count: 0;
+            /** Candidate Count */
+            candidate_count: number;
+            /** Hypothetical */
+            hypothetical: boolean;
+            /**
+             * Neural Status
+             * @default not_requested
+             */
+            neural_status: string;
+            /**
+             * Actions
+             * @default []
+             */
+            actions: components["schemas"]["ActionView"][];
+            /**
+             * Supported Pair Count
+             * @default 0
+             */
+            supported_pair_count: number;
+            /**
+             * Notice
+             * @default Provisional source-backed comparisons, not reviewed eligibility. Current applications, funding and deadlines have NOT been verified.
+             */
+            notice: string;
+            reviewed: components["schemas"]["SearchResponse"];
         };
         /** DocumentCapabilities */
         DocumentCapabilities: {
@@ -1356,7 +1457,7 @@ export interface components {
              * Key
              * @enum {string}
              */
-            key: "age" | "annual_personal_income" | "annual_parental_income" | "annual_household_income" | "disability_percentage" | "nationality" | "domicile_state" | "domicile_district" | "residence_state" | "residence_district" | "education_level" | "current_education_level" | "highest_completed_education" | "business_registration_state" | "business_registration_district" | "business_operating_status" | "enrollment_mode" | "school_recognized_or_government" | "student_status" | "employment_status" | "has_bank_account" | "auto_debit_consent" | "has_income_certificate" | "business_registered" | "business_turnover" | "has_registration_certificate" | "has_disability_certificate" | "has_udid_certificate";
+            key: "age" | "annual_personal_income" | "annual_parental_income" | "annual_household_income" | "disability_percentage" | "nationality" | "domicile_state" | "domicile_district" | "residence_state" | "residence_district" | "education_level" | "current_education_level" | "highest_completed_education" | "business_registration_state" | "business_registration_district" | "business_operating_status" | "enrollment_mode" | "school_recognized_or_government" | "school_government" | "business_udyam_registered" | "business_size" | "business_sector" | "business_similar_assistance" | "student_status" | "employment_status" | "has_bank_account" | "auto_debit_consent" | "has_income_certificate" | "business_registered" | "business_turnover" | "has_registration_certificate" | "has_disability_certificate" | "has_udid_certificate";
             /** Value */
             value?: string | number | boolean | null;
             /** Valid From */
@@ -1621,6 +1722,99 @@ export interface components {
             acquisition_snapshot_id?: string | null;
             /** Original Text */
             original_text?: string | null;
+        };
+        /** GuidanceItem */
+        GuidanceItem: {
+            listing: components["schemas"]["ResearchCard"];
+            /**
+             * Geography Signal
+             * @enum {string}
+             */
+            geography_signal: "saved_domicile" | "saved_business_registration" | "saved_residence" | "national_scope" | "needs_location_check";
+            /** Reason */
+            reason: string;
+            /** Next Steps */
+            next_steps: string[];
+            /**
+             * Eligibility Verified
+             * @default false
+             * @constant
+             */
+            eligibility_verified: false;
+            /**
+             * Subject Id
+             * @default
+             */
+            subject_id: string;
+            /**
+             * Subject Name
+             * @default Selected subject
+             */
+            subject_name: string;
+            /**
+             * Subject Kind
+             * @default person
+             */
+            subject_kind: string;
+            /**
+             * Fictional
+             * @default false
+             */
+            fictional: boolean;
+            /**
+             * Parent Key
+             * @default
+             */
+            parent_key: string;
+            /**
+             * Components
+             * @default []
+             */
+            components: components["schemas"]["ResearchCard"][];
+            /**
+             * Conditions
+             * @default []
+             */
+            conditions: components["schemas"]["Comparison"][];
+        };
+        /** GuidanceRequest */
+        GuidanceRequest: {
+            subject?: components["schemas"]["SubjectRef"];
+            /** Overrides */
+            overrides?: components["schemas"]["FactInput"][];
+            /**
+             * Scenario
+             * @default false
+             */
+            scenario: boolean;
+            /**
+             * Limit
+             * @default 8
+             */
+            limit: number;
+            /**
+             * Offset
+             * @default 0
+             */
+            offset: number;
+            /**
+             * Q
+             * @default
+             */
+            q: string;
+            /**
+             * Category
+             * @default
+             */
+            category: string;
+            /** Member Overrides */
+            member_overrides?: {
+                [key: string]: components["schemas"]["FactInput"][];
+            };
+            /** People */
+            people?: components["schemas"]["FictionalPerson"][];
+            /** Excluded Subject Keys */
+            excluded_subject_keys?: string[];
         };
         /** Health */
         Health: {
@@ -2249,6 +2443,11 @@ export interface components {
         };
         /** ResearchResults */
         ResearchResults: {
+            /**
+             * Neural Status
+             * @default not_requested
+             */
+            neural_status: string;
             /** Items */
             items: components["schemas"]["ResearchCard"][];
             /** Total */
@@ -7056,6 +7255,180 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResearchFacets"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    personalized_research_v1_research_opportunities_guidance_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GuidanceRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoveryResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    research_plan_v1_research_opportunities_plan_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GuidanceRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoveryResponse"];
                 };
             };
             /** @description Unauthorized */

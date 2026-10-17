@@ -67,12 +67,19 @@ class BusinessWrite(BaseModel):
     legal_status: Literal[
         "unknown", "unregistered", "sole_proprietor", "partnership", "company", "other"
     ]
-    facts: list[FactInput] = Field(default_factory=list, max_length=10)
+    facts: list[FactInput] = Field(default_factory=list, max_length=14)
     expected_revision: str | None = Field(default=None, min_length=64, max_length=64)
 
 
-def resolve(session: Session, uid: str, ref: SubjectRef, write=False):
-    user = account(session, uid)
+def resolve(session: Session, uid: str, ref: SubjectRef, write=False, *, read_only=False):
+    if read_only:
+        from opportunity_platform.db.models import User
+
+        user = session.scalar(select(User).where(User.firebase_uid == uid))
+        if user is None:
+            raise APIError(404, "profile_not_found", "Create your personal profile first.")
+    else:
+        user = account(session, uid)
     if ref.kind == "person":
         obj = session.get(Person, ref.id) if ref.id else person(session, user)
         authorized = obj is not None and obj.user_id == user.id
@@ -145,6 +152,10 @@ def replace_facts(session, kind, identifier, facts):
         f.key
         not in {
             "business_registered",
+            "business_udyam_registered",
+            "business_size",
+            "business_sector",
+            "business_similar_assistance",
             "business_registration_state",
             "business_registration_district",
             "business_operating_status",
@@ -165,8 +176,8 @@ def replace_facts(session, kind, identifier, facts):
     return reconcile(session, kind, identifier, facts)
 
 
-def view(session, uid, ref):
-    user, obj, role = resolve(session, uid, ref)
+def view(session, uid, ref, *, read_only=False):
+    user, obj, role = resolve(session, uid, ref, read_only=read_only)
     members = []
     if ref.kind == "household":
         for membership in session.scalars(
@@ -180,7 +191,12 @@ def view(session, uid, ref):
             )
         ):
             try:
-                _, p, _ = resolve(session, uid, SubjectRef(kind="person", id=membership.person_id))
+                _, p, _ = resolve(
+                    session,
+                    uid,
+                    SubjectRef(kind="person", id=membership.person_id),
+                    read_only=read_only,
+                )
                 members.append(
                     {
                         "id": str(p.id),

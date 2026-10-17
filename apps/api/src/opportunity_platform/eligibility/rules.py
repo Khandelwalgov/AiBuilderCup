@@ -24,6 +24,11 @@ FactKey = Literal[
     "business_operating_status",
     "enrollment_mode",
     "school_recognized_or_government",
+    "school_government",
+    "business_udyam_registered",
+    "business_size",
+    "business_sector",
+    "business_similar_assistance",
     "student_status",
     "employment_status",
     "has_bank_account",
@@ -134,6 +139,12 @@ class FactInput(BaseModel):
 
     @model_validator(mode="after")
     def valid(self):
+        choices = {
+            "business_size": {"micro", "small", "medium", "other"},
+            "business_sector": {"manufacturing", "services", "trading", "other"},
+        }
+        if self.key in choices and self.value is not None and self.value not in choices[self.key]:
+            raise ValueError("Choose a supported business classification")
         if self.valid_from and self.valid_until and self.valid_until < self.valid_from:
             raise ValueError("Invalid validity interval")
         if self.key == "enrollment_mode" and self.value not in {
@@ -186,6 +197,9 @@ class FactInput(BaseModel):
             elif self.key.startswith("has_") or self.key in {
                 "student_status",
                 "school_recognized_or_government",
+                "school_government",
+                "business_udyam_registered",
+                "business_similar_assistance",
                 "auto_debit_consent",
                 "business_registered",
             }:

@@ -58,7 +58,13 @@ function WorkspacePage({ kind }: { kind: Kind }) {
   });
   async function saved(data: Workspace) {
     await cache.invalidateQueries({ queryKey: ['workspaces'] });
-    for (const key of ['dashboard-summary', 'plan', 'hybrid-search', 'scenario-base'])
+    for (const key of [
+      'dashboard-summary',
+      'plan',
+      'hybrid-search',
+      'scenario-base',
+      'research-guidance',
+    ])
       void cache.invalidateQueries({ queryKey: [key] });
     setCreating(false);
     setEditing(false);
@@ -359,6 +365,10 @@ function initial(current?: Workspace) {
     description: current?.description ?? '',
     legal: current?.legal_status ?? 'unknown',
     registered: get('business_registered'),
+    udyam: get('business_udyam_registered'),
+    size: get('business_size'),
+    sector: get('business_sector'),
+    similar: get('business_similar_assistance'),
     state: get('residence_state'),
     district: get('residence_district'),
     registrationState: get('business_registration_state'),
@@ -435,6 +445,16 @@ function WorkspaceForm({
           ]),
       );
       const supplied: Fact[] = [
+        {
+          key: 'business_udyam_registered',
+          value: draft.udyam === '' ? null : draft.udyam === 'true',
+        },
+        { key: 'business_size', value: draft.size || null },
+        { key: 'business_sector', value: draft.sector || null },
+        {
+          key: 'business_similar_assistance',
+          value: draft.similar === '' ? null : draft.similar === 'true',
+        },
         {
           key: 'business_registered',
           value: draft.registered === '' ? null : draft.registered === 'true',
@@ -611,6 +631,53 @@ function WorkspaceForm({
                 </button>
                 {optional && (
                   <div className="business-optional">
+                    {(
+                      [
+                        ['udyam', 'Udyam registered', 'उद्यम पंजीकृत', ['true', 'false']],
+                        [
+                          'size',
+                          'Udyam classification',
+                          'उद्यम वर्ग',
+                          ['micro', 'small', 'medium', 'other'],
+                        ],
+                        [
+                          'sector',
+                          'Business sector',
+                          'व्यवसाय क्षेत्र',
+                          ['manufacturing', 'services', 'trading', 'other'],
+                        ],
+                        [
+                          'similar',
+                          'Received similar government assistance',
+                          'समान सरकारी सहायता प्राप्त',
+                          ['true', 'false'],
+                        ],
+                      ] as const
+                    ).map(([key, en, h, values]) => (
+                      <label className="field" key={key}>
+                        {hi ? h : en}
+                        <select
+                          value={draft[key]}
+                          onChange={(e) => change({ [key]: e.target.value })}
+                        >
+                          <option value="">{hi ? 'अज्ञात / छोड़ें' : 'Unknown / skip'}</option>
+                          {values.map((v) => (
+                            <option key={v} value={v}>
+                              {v === 'true'
+                                ? hi
+                                  ? 'हाँ'
+                                  : 'Yes'
+                                : v === 'false'
+                                  ? hi
+                                    ? 'नहीं'
+                                    : 'No'
+                                  : v}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    ))}
+
                     <label className="field">
                       {hi
                         ? 'व्यवसाय क्या करता है? (वैकल्पिक)'

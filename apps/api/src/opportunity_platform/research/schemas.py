@@ -193,6 +193,7 @@ class ResearchDetail(ResearchCard):
 
 
 class ResearchResults(ClosedModel):
+    neural_status: str = "not_requested"
     items: list[ResearchCard]
     total: int
     next_cursor: uuid.UUID | None

@@ -3,14 +3,17 @@ from collections import Counter
 from datetime import datetime, timedelta, timezone
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, Query
-from sqlalchemy import Date, and_, case, or_, select
+from fastapi import APIRouter, Depends, Query, Response
+from sqlalchemy import Date, and_, case, select
 from sqlalchemy.orm import Session
 
+from opportunity_platform.core.auth import current_uid
 from opportunity_platform.core.errors import APIError
 from opportunity_platform.db.models import ResearchListing
 from opportunity_platform.db.session import get_session
 
+from .discovery import DiscoveryResponse, discover
+from .guidance import GuidanceRequest
 from .integration import quality
 from .schemas import (
     ApplicationStatus,
@@ -99,21 +102,6 @@ def browse(
     limit: Annotated[int, Query(ge=1, le=100)] = 12,
 ):
     query = select(ResearchListing).where(ResearchListing.is_public.is_(True))
-    if q.strip():
-        term = "%" + q.strip().replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%"
-        query = query.where(
-            or_(
-                *(
-                    field.ilike(term, escape="\\")
-                    for field in [
-                        ResearchListing.title,
-                        ResearchListing.summary,
-                        ResearchListing.search_text,
-                        ResearchListing.authority,
-                    ]
-                )
-            )
-        )
     effective_availability, effective_application = effective_fields()
     for column, value in [
         (ResearchListing.category, category),
@@ -142,7 +130,12 @@ def browse(
             row.id.int,
         )
 
-    rows.sort(key=rank)
+    from .search import rank as search_rank
+
+    scores, neural_status = search_rank(rows, q)
+    if q.strip():
+        rows = [r for r in rows if str(r.id) in scores]
+    rows.sort(key=lambda row: (-scores.get(str(row.id), 0), *rank(row)))
     if view != "all":
         rows = [r for r in rows if card(r).archive == (view == "archive")]
     total = len(rows)
@@ -153,6 +146,7 @@ def browse(
         rows = rows[index + 1 :]
     return ResearchResults(
         items=[card(r) for r in rows[:limit]],
+        neural_status=neural_status,
         total=total,
         next_cursor=rows[limit - 1].id if len(rows) > limit else None,
     )
@@ -173,6 +167,36 @@ def facets(session: DB):
         application_status=dict(Counter(card(r).application_status for r in rows)),
         source_documents=len({str(s["snapshot_id"]) for r in rows for s in r.payload["sources"]}),
     )
+
+
+@router.post("/guidance", response_model=DiscoveryResponse)
+def personalized_research(
+    body: GuidanceRequest,
+    session: DB,
+    uid: Annotated[str, Depends(current_uid)],
+    response: Response,
+):
+    """Private geographic research guidance, never an eligibility determination."""
+
+    response.headers["Cache-Control"] = "private, no-store"
+    result = discover(session, uid, body)
+    session.rollback()
+    return result
+
+
+@router.post("/plan", response_model=DiscoveryResponse)
+def research_plan(
+    body: GuidanceRequest,
+    session: DB,
+    uid: Annotated[str, Depends(current_uid)],
+    response: Response,
+):
+    from opportunity_platform.planning.service import research_actions
+
+    response.headers["Cache-Control"] = "private, no-store"
+    result = discover(session, uid, body)
+    result.actions = research_actions(session, uid, body, persist=not result.hypothetical)
+    return result
 
 
 @router.get("/{identifier}", response_model=ResearchDetail)

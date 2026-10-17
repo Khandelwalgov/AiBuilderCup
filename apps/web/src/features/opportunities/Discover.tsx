@@ -1,3 +1,4 @@
+import { ResearchGuidance } from './ResearchGuidance';
 import { ResearchCatalogue } from './ResearchCatalogue';
 import { SearchModes, type Mode } from '../intelligence/SearchModes';
 import { Recommendations } from '../intelligence/Recommendations';
@@ -65,6 +66,10 @@ export function Discover() {
     if (value) next.set(key, value);
     else next.delete(key);
     if (key === 'state') next.delete('district');
+    if (key === 'mode' && value === 'me') {
+      next.delete('kind');
+      next.delete('id');
+    }
     setParams(next);
   }
   const query = useInfiniteQuery({
@@ -102,7 +107,7 @@ export function Discover() {
       next.delete(key);
     setParams(next);
   }
-  if (unpublishedCatalogue && !development) {
+  if (!development && (unpublishedCatalogue || (context.authenticated && mode !== 'explore'))) {
     return (
       <div className="page discovery">
         <header className="research-header">
@@ -118,16 +123,18 @@ export function Discover() {
             </p>
           </div>
         </header>
-        <ResearchCatalogue />
-        <section className="notice">
+        <SearchModes mode={mode} onChange={(value) => filter('mode', value)} />
+        {context.authenticated && mode !== 'explore' && (
+          <ResearchGuidance variant="discover" mode={mode} />
+        )}
+        {mode === 'explore' && <ResearchCatalogue />}
+        <section className="notice eligibility-coverage">
           <h2>{hi ? 'व्यक्तिगत पात्रता मिलान' : 'Personalized eligibility matching'}</h2>
           <p>
             {hi
-              ? 'अभी कोई पात्रता नीति प्रकाशित नहीं है। ऊपर के शोध रिकॉर्ड में स्रोत दस्तावेज़ पढ़ें; इन्हें पात्रता स्वीकृति न मानें।'
-              : 'No eligibility policies are published yet. Read the source documents above; research listings do not establish personal eligibility.'}
+              ? 'शोध रिकॉर्ड व्यक्तिगत पात्रता स्थापित नहीं करते। समीक्षित नीतियाँ प्रकाशित होने पर अलग दिखाई जाती हैं।'
+              : 'Research listings do not establish personal eligibility. Reviewed policies appear separately when published.'}
           </p>
-          <SearchModes mode={mode} onChange={(value) => filter('mode', value)} />
-          {mode !== 'explore' && <Recommendations mode={mode} />}
         </section>
       </div>
     );
@@ -327,6 +334,9 @@ export function Discover() {
         <ShieldCheck size={16} />
         <p>{t.coverageText}</p>
       </div>
+      {context.authenticated && mode !== 'explore' && !development && (
+        <ResearchGuidance variant="discover" mode={mode} />
+      )}
       <ResearchCatalogue />
     </div>
   );

@@ -1,3 +1,4 @@
+import { ResearchGuidance } from '../opportunities/ResearchGuidance';
 import { useSearchParams } from 'react-router-dom';
 import { documentStatus, documentsHref } from '../documents/Documents';
 import { ContextLink as Link } from '../../app/subject-context';
@@ -141,6 +142,7 @@ function SubjectPlan() {
           </Link>
         </section>
       )}
+      {context.available && !development && <ResearchGuidance variant="plan" />}
       {data && (
         <>
           {data.hypothetical && (
@@ -165,7 +167,7 @@ function SubjectPlan() {
               <p>
                 {hi
                   ? 'अभी कोई वास्तविक अवसर प्रकाशित नहीं है। मसौदे प्रशासक की समीक्षा में निजी रहते हैं।'
-                  : 'No real opportunities have been published yet. Drafts stay private until an administrator completes substantive review.'}
+                  : 'No fully reviewed eligibility policies are published yet. You can use the source-backed preparation steps above while detailed eligibility remains unverified.'}
               </p>
               <Link className="button" to="/discover">
                 {t.discover}

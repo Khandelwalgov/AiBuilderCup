@@ -43,3 +43,10 @@ test('auth-ready boundary never renders the guest landing while a session resolv
   ).toHaveCount(0);
   await expect(page.getByRole('heading', { name: /Welcome back/ })).toBeVisible();
 });
+
+test('public initial HTML and rendered browser title keep the Unclaimed name', async ({ page }) => {
+  const html = await page.request.get('/');
+  expect(await html.text()).toContain('<title>Unclaimed</title>');
+  await page.goto('/discover');
+  await expect(page).toHaveTitle(/Unclaimed/);
+});

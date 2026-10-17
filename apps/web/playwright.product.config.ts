@@ -3,6 +3,7 @@ export default defineConfig({
   testDir: './tests',
   testMatch: [
     'product-real.spec.ts',
+    'research-real.spec.ts',
     'common-sense.spec.ts',
     'intelligence-real.spec.ts',
     'corpus-real.spec.ts',

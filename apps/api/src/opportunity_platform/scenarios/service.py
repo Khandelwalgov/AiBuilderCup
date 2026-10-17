@@ -81,10 +81,15 @@ PERSON_KEYS = {
     "highest_completed_education",
     "enrollment_mode",
     "school_recognized_or_government",
+    "school_government",
     "student_status",
     "employment_status",
 }
 BUSINESS_KEYS = {
+    "business_udyam_registered",
+    "business_size",
+    "business_sector",
+    "business_similar_assistance",
     "business_registered",
     "business_turnover",
     "business_registration_state",

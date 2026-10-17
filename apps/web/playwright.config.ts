@@ -5,6 +5,7 @@ export default defineConfig({
   testDir: './tests',
   testIgnore: [
     'product-real.spec.ts',
+    'research-real.spec.ts',
     'common-sense.spec.ts',
     'intelligence-real.spec.ts',
     'corpus-real.spec.ts',

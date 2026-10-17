@@ -64,7 +64,7 @@ test('real Firebase/API/PostgreSQL search and ephemeral future family', async ({
   ).toBeVisible();
   await page.goto('/discover?development=true&mode=family');
   await page
-    .getByRole('combobox', { name: 'Authorized context' })
+    .getByRole('combobox', { name: 'Selected profile' })
     .selectOption({ label: 'Household · Fictional intelligence family' });
   await expect(
     page.getByRole('heading', { name: 'FICTIONAL household opportunity', exact: true }),
@@ -75,7 +75,7 @@ test('real Firebase/API/PostgreSQL search and ephemeral future family', async ({
   await productCapture(page, 'phase4-family-context');
   await page.getByRole('combobox', { name: 'Search context' }).selectOption('member');
   await page
-    .getByRole('combobox', { name: 'Authorized context' })
+    .getByRole('combobox', { name: 'Selected profile' })
     .selectOption({ label: 'Dependent · Fictional present dependent' });
   await expect(
     page.getByRole('heading', { name: 'Fictional present dependent', exact: true }).first(),
@@ -93,7 +93,7 @@ test('real Firebase/API/PostgreSQL search and ephemeral future family', async ({
   );
   await page.goto('/discover?development=true&mode=business');
   await page
-    .getByRole('combobox', { name: 'Authorized context' })
+    .getByRole('combobox', { name: 'Selected profile' })
     .selectOption({ label: 'Business · Fictional intelligence business' });
   await expect(
     page.getByRole('heading', { name: 'FICTIONAL business opportunity', exact: true }),

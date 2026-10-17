@@ -211,4 +211,9 @@ def neural_retriever(session=None):
     config = settings()
     if not config.neural_retrieval_enabled or not Path(config.neural_model_directory).is_dir():
         return UnavailableNeuralRetriever()
-    return LocalNeuralRetriever(encoder_for(config.neural_model_directory), session)
+    try:
+        return LocalNeuralRetriever(encoder_for(config.neural_model_directory), session)
+    except (OSError, ValueError, RuntimeError, ImportError):
+        # Missing/corrupt local artifacts must preserve deterministic discovery.
+        # No download or hosted-provider fallback is attempted here.
+        return UnavailableNeuralRetriever()

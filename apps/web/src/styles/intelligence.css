@@ -598,3 +598,36 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Source-backed comparisons remain readable as prose on desktop and mobile. */
+.research-guidance {
+  margin: 24px 0;
+}
+.research-guide-card {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.research-guide-card > p,
+.research-condition p {
+  margin: 12px 0;
+}
+.research-condition {
+  display: block;
+  background: var(--primary-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0;
+}
+.research-condition h4 {
+  margin: 0 0 8px;
+}
+.research-condition blockquote {
+  white-space: pre-wrap;
+  margin: 12px 0;
+  padding-left: 12px;
+  border-left: 3px solid var(--line);
+}
+.notice.eligibility-coverage {
+  display: block;
+}

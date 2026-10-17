@@ -111,6 +111,9 @@ assert not settings().paid_ai_worker_enabled
 assert settings().ai_global_budget_usd==0
 assert '/v1/government-sources' in app.openapi()['paths']
 assert '/v1/research-opportunities' in app.openapi()['paths']
+assert '/v1/research-opportunities/guidance' in app.openapi()['paths']
+from opportunity_platform.research.conditions import definitions
+assert len(definitions()) == 36
 from opportunity_platform.retrieval.neural import encoder_for
 start=time.perf_counter()
 encoder=encoder_for(settings().neural_model_directory)
