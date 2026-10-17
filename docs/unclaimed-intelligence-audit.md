@@ -30,13 +30,14 @@ The neural path was genuinely unavailable. It now runs pinned local ONNX weights
 | Actual-source candidates prepared in this Codex session | 3 |
 | Separate semantic verification passes actually performed | 0 |
 | New candidates requiring human/independent review | 3 |
-| Original pages selectively OCR'd locally | 2, from 1 document |
+| Original pages selectively OCR'd locally | 28, from 5 documents |
+| Additional interactive triage packets / consequential findings | 4 / 19 |
 
-The 94 flags mean at least one page needs OCR/encoding review, not that all 94 PDFs are entirely scanned. The two OCR checkpoints retain original page numbers, source/image/text hashes, tool/language identities and confidence measurements. They do not replace captured evidence or automatically clear review flags. The inspected scholarship FAQ pages contain portal troubleshooting; they are not converted into an entitlement.
+The 94 flags mean at least one page needs OCR/encoding review, not that all 94 PDFs are entirely scanned. The OCR checkpoints retain original page numbers, source/image/text hashes, tool/language identities and confidence measurements. They do not replace captured evidence or automatically clear review flags. The inspected scholarship FAQ pages contain portal troubleshooting; they are not converted into an entitlement.
 
 Three checkpointed candidates cover TEAM, LEAN and the individual-MSE trade-fair component of PMS. TEAM's similar-assistance, prior-network-onboarding, consent, payment-recipient and activity-window qualifiers are retained. LEAN explicitly limits captured financial provisions to **31 March 2026** and is flagged as unresolved/historical pending an official extension. Garbled PMS percentage text is not asserted as an amount. Scheme-specific conditions that the typed profile model cannot express remain unknown; they are not mapped to generic business registration or guessed income facts. Application URLs/dates absent from evidence remain null.
 
-Persistent artifacts are under ignored `.corpus/processing/packets`, `codex-v1`, `ocr-checkpoints` and `neural-benchmark`. Original binaries/manifests are untouched. The real-browser acceptance schema temporarily contained the three actual-source drafts and was cleaned up afterward. The JSON packets remain for authorized production staging; do not mistake the disposable test database for production persistence.
+Persistent artifacts are under ignored `.corpus/processing/packets`, `codex-v1`, `ocr-checkpoints`, `interactive-triage-v1` and `neural-benchmark`. Original binaries/manifests are untouched. The real-browser acceptance schema temporarily contained the three actual-source drafts and was cleaned up afterward. The JSON packets remain for authorized production staging; do not mistake the disposable test database for production persistence.
 
 ## Read-only production observations
 
@@ -89,3 +90,18 @@ Execution sequence and public-resource commands: [production deployment runbook]
 - Backend, Hosting-only, seven-batch corpus and direct-secret deployment plans validated without executing cloud commands.
 - **Remote CI passed for `8288be8`**: [run 38986222583](https://github.com/Khandelwalgov/AiBuilderCup/actions/runs/38986222583). Initial suite: 241 passed / 7 skipped (local corpus/model/live prerequisites absent); then the separate pinned-model stage ran 2 real inference tests successfully. Browser regression: 29 passed. Docker build and fresh PostgreSQL/model/runtime audit passed: head `f25b1000abcd`, 384 dimensions, 975 ms load/inference, 584 MiB peak on the GitHub runner. No cloud release/push or inference API call ran in CI.
 - **Follow-up `b72eb46` CI passed**: [run 38986455791](https://github.com/Khandelwalgov/AiBuilderCup/actions/runs/38986455791). This localizes the new source-review labels and corrects runbook wording. Relevant contracts/backend/frontend/browser/build/plan checks passed; container/model stages correctly skipped for the frontend/documentation-only diff. The latest actual-source Hindi/mobile test also passed locally (1 test).
+
+## Resumed public-source triage
+
+After the final evidence push, [documentation CI for `3fba0e1`](https://github.com/Khandelwalgov/AiBuilderCup/actions/runs/39006993372) passed. The earlier automatic approval-review usage failure was resolved by retrying the normal review after the user's continuation; it did not execute a production mutation.
+
+Local OCR now covers **28 pages from five source documents**, including all 17 pages of the MSE-SPICE bundle, four scanned pages each of MSE-GIFT and International Cooperation, the ODR cover and the earlier two FAQ pages. Original binaries and immutable captured pages remain unchanged. Source/image/text checksums passed. The measured durable metadata archive is **1,671,948 bytes / 187 members** and includes the four new triage JSON packets without PDFs, raster images, environment files or private documents. Stage validation remains plan-only: 125 snapshots / 120 blobs / 193,031,267 bytes; no object was uploaded.
+
+The four additional interactive packets contain **19 consequential review findings**, not four new opportunity candidates or independent verification passes:
+
+- **MSE-GIFT:** visually checked the scanned summary's ISF loan-sanction cutoff of 31 March 2026. This does not establish discontinuation of every component. Require current extension/existing-loan context, retain reimbursement to PFIs and distinguish risk-sharing from interest subvention.
+- **International Cooperation:** visually checked the 9 May 2023 amendment and 19 August 2021 baseline. English-only OCR mangled the Hindi month, demonstrating why OCR cannot establish legal dates automatically. Preserve ZED preference, MDA-only scope and the baseline's 2021-22–2025-26 cycle; current continuation remains unresolved.
+- **MSE-SPICE:** inspected selected circular imagery and read the full bounded OCR packet. Retain brownfield CE/Udyam-MSE scope, lender due diligence, new-machine conditions, reference date/TDR retention, loan tenure, relative claim window and other-subsidy/default restrictions. Human image comparison and current-amendment reconciliation remain prerequisites to a captured-text candidate.
+- **ODR:** read captured substantive clauses and visually checked the cover. Tesseract returned zero words on its dark artwork although the title is visible; zero OCR words is not proof of a blank page. Preserve UR/UAP alternatives, separate actual-cost assistance caps, jurisdiction and the case-conclusion dependency. The parser gate remains intact.
+
+Every packet says `candidate_created=false`, `human_verification=not_performed` and `independent_semantic_review=not_performed`. The reviewable prepared candidate count remains three. Production counts, publication and embedding counts remain unchanged. Paid inference remains ₹0. Further work requires OCR reconciliation/current-source review as well as the separately pending production authorization and first-admin decision.
