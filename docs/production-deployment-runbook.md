@@ -1,6 +1,6 @@
 # Unclaimed first release — Neon + Cloud Run + Firebase Hosting
 
-Updated 17 October 2026. **No commands that change Google Cloud, billing, Hosting or Neon were executed during this adaptation.** The commands below are future human-operated steps, after cost/project approval. Do not repeat Neon initialization: the operator reports PostgreSQL 17 already at Alembic head `f24a1000abcd`.
+Updated 17 October 2026. **The existing application is deployed; the intelligence integration below is not yet released.** Read-only checks confirmed billing enabled, a ready Cloud Run revision, Neon head `f24a1000abcd`, zero source/opportunity records and zero administrators. No Google Cloud/Hosting/production-role/Neon mutation was performed in this integration assignment. Do not rerun first-release provisioning or initialize Neon. Sections 1–7 retain first-release reference commands; follow section 8 for the new additive release/import.
 
 ## Selected infrastructure
 
@@ -16,7 +16,7 @@ Updated 17 October 2026. **No commands that change Google Cloud, billing, Hostin
 | Release schema action | `verify`: SELECT existing Alembic revisions in a read-only transaction, no initialization/stamping/upgrade |
 | Cloud Run limits | Request-based CPU, 1 vCPU, 1 GiB, min 0/max 1, concurrency 4, 60-second request timeout |
 
-Billing was not linked to `venuesignal` at the last human check. This task did not check or change billing remotely. A billing-enabled Google project is needed for Run/build/registry/Secret Manager even when usage falls within free allowances. No Cloud SQL API, IAM client role, database, instance or attachment is required or created by this path.
+Billing-enabled status now returns true. No billing linkage/change is needed for this follow-up. No Cloud SQL API, IAM client role, database, instance or attachment is required by either path.
 
 ## 1. Billing and Google prerequisites — human only
 
@@ -186,4 +186,87 @@ gcloud run services update-traffic opportunity-api --project venuesignal --regio
 
 Rollback Firebase Console → Hosting → **unclaimed-ai-cup** → release history, never the default venuesignal site. First release has no previous revision. Do not automatically downgrade/restore/drop/stamp Neon; current verification makes no schema changes. Future schema upgrades need backward-compatibility and recovery-window/export review under the actual Neon plan. Restrict logs/artifacts; never include DSNs, bearer tokens or profile bodies. Google egress/build/registry/log/secret charges and Neon Free quota/cold-start/availability risks are documented in [hosting-costs-and-risks.md](hosting-costs-and-risks.md).
 
-Remaining human gates: billing linkage, prerequisites/IAM, correct existing-app public config, pinned secrets/distinct SQL roles, protected environment/WIF, explicit deployment authorization and actual hosted acceptance. No Neon data, cloud resource, policy publication or local environment was changed by this task.
+Current gates: GitHub authentication, an explicit first-administrator decision, protected environment/WIF verification, approval for the additive schema/worker resources, substantive publication review and actual authenticated hosted acceptance. No production data/resource/policy or local environment file was changed by this task. Local development/disposable schemas were tested at the new head.
+
+## 8. Intelligence release and actual corpus import — pending authorization
+
+The agent should execute routine commands after the named approval boundaries; the human is not expected to edit code or paste SQL. **Current blocker:** the private Free-plan repository has zero deployment environments. Native reviewer approvals are unavailable there. Workflows deliberately fail closed before cloud authentication until real reviewer and exact default-branch protection exists. The human must select a supported native setup or explicitly approve one reviewed operator/Cloud Run Job release boundary; never make the repo public, purchase an upgrade or weaken protections automatically. [GitHub environment rules](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments). Git's existing credential helper now provides repository access. `infra/corpus.example.json` contains only public resource identifiers. Set the repository variable `CORPUS_CONFIG_JSON` to that reviewed JSON once GitHub access is available. Retain existing `DEPLOY_CONFIG_JSON` and WIF variables, required production reviewers, prevent self-review, default-branch restriction and no protection bypass. Never put credentials or Firebase bearer tokens in variables/artifacts.
+
+**Order:** CI → approved additive application release → approved worker bucket/identity/secret setup → archive staging → protected full dry run → explicit first-admin bootstrap → protected import → human policy review/publication → local-model index job → authenticated hosted acceptance. No paid AI provider is enabled by any command here.
+
+### Local checks and public plans (safe now)
+
+```sh
+python3 infra/deploy.py --config infra/deploy.example.json
+python3 infra/deploy_frontend.py --config infra/deploy.example.json
+python3 infra/corpus_job.py --config infra/corpus.example.json --all-batches
+apps/api/.venv/bin/python infra/worker_secret.py --deploy-config infra/deploy.example.json --corpus-config infra/corpus.example.json
+apps/api/.venv/bin/python -m opportunity_platform.corpus.production stage --project venuesignal --bucket venuesignal-public-corpus --root .corpus
+```
+
+The archive stage plan measures 125 snapshot records, 120 binary hashes and 193,031,267 bytes. One irrelevant document is excluded from database import: planned inserts are **124 source rows / 124 snapshot rows / 119 distinct document hashes**, plus three prepared drafts. Five repeated hashes retain different original URLs without repeating binary storage. These are planned counts, not production observations. The metadata checkpoint was measured at approximately 1.6 MB and contains no PDF binaries/private environment files.
+
+### Approved one-time worker setup (not executed)
+
+Reuse existing Run, Artifact Registry, Firebase, Neon and migration resources. The additional bucket is private despite containing public-source documents; browsers use official URLs or the public text API. The worker gets no AI-provider secrets and no migration credential.
+
+```sh
+gcloud iam service-accounts create opportunity-corpus --project venuesignal --display-name="Unclaimed public corpus worker"
+gcloud storage buckets create gs://venuesignal-public-corpus --project venuesignal --location=asia-south1 --default-storage-class=STANDARD --uniform-bucket-level-access --public-access-prevention
+
+# Explicit creation authorization: derive a direct TLS URL from the existing app secret in memory.
+# This creates one separate Secret Manager resource/version, not a Neon user/password/database.
+apps/api/.venv/bin/python infra/worker_secret.py --deploy-config infra/deploy.example.json --corpus-config infra/corpus.example.json --execute --approved-project venuesignal
+
+gcloud secrets add-iam-policy-binding opportunity-corpus-database-url --project venuesignal --member=serviceAccount:opportunity-corpus@venuesignal.iam.gserviceaccount.com --role=roles/secretmanager.secretAccessor
+gcloud storage buckets add-iam-policy-binding gs://venuesignal-public-corpus --member=serviceAccount:opportunity-corpus@venuesignal.iam.gserviceaccount.com --role=roles/storage.objectViewer
+gcloud storage buckets add-iam-policy-binding gs://venuesignal-public-corpus --member=serviceAccount:opportunity-corpus@venuesignal.iam.gserviceaccount.com --role=roles/storage.objectCreator
+gcloud storage buckets add-iam-policy-binding gs://venuesignal-public-corpus --member=serviceAccount:opportunity-corpus@venuesignal.iam.gserviceaccount.com --role=roles/storage.objectUser --condition="expression=resource.name.startsWith('projects/_/buckets/venuesignal-public-corpus/objects/public-corpus/state/'),title=corpus-state-only"
+
+# RELEASE_DEPLOYER_SA is the existing public service-account identifier in GCP_DEPLOY_SERVICE_ACCOUNT.
+gcloud iam service-accounts add-iam-policy-binding opportunity-corpus@venuesignal.iam.gserviceaccount.com --project venuesignal --member="serviceAccount:$RELEASE_DEPLOYER_SA" --role=roles/iam.serviceAccountUser
+gcloud artifacts repositories add-iam-policy-binding opportunity --project venuesignal --location=asia-south1 --member="serviceAccount:$RELEASE_DEPLOYER_SA" --role=roles/artifactregistry.reader
+```
+
+If any named resource already exists, inspect/reuse it; do not recreate/overwrite it. The secret helper refuses a pooled worker URL or conflicting existing secret. Worker credentials need ordinary source/draft/vector/audit writes, not DDL; review the actual Neon role grants. A separately provisioned least-privilege worker role is preferable if available; no role change is inferred or performed by the helper. Session advisory leases require the direct endpoint; the API may retain its pooled endpoint. [Neon pooling constraints](https://neon.com/docs/connect/connection-pooling).
+
+### Protected release, stage, dry run and import
+
+Authenticate GitHub with the existing authorized account (`gh auth login`); do not paste a token into chat. The remote default branch was verified as `master`; dispatch the reviewed default-branch commit. Every workflow below uses the protected `production` environment and must receive its real required approval. The schema flag authorizes only the reviewed additive `f25b1000abcd` migration; no initialization, seed or destructive restore is performed.
+
+```sh
+gh workflow run deploy.yml --ref master -f approved_project=venuesignal -f authorization=DEPLOY -f approve_schema_upgrade=true
+
+# After approved storage setup: one-time transfer from the captured local archive.
+apps/api/.venv/bin/python -m opportunity_platform.corpus.production stage --project venuesignal --bucket venuesignal-public-corpus --root .corpus --execute --approved-project venuesignal
+
+gh workflow run corpus-import.yml --ref master -f operation=dry-run -f approved_project=venuesignal -f authorization=RUN_CORPUS -f all_batches=true
+
+# Only after the human explicitly selects/authorizes this existing signed-in account:
+gh workflow run corpus-import.yml --ref master -f operation=bootstrap-admin -f approved_project=venuesignal -f authorization=BOOTSTRAP_ADMIN -f actor_uid="$REVIEWED_ADMIN_UID"
+
+gh workflow run corpus-import.yml --ref master -f operation=import -f approved_project=venuesignal -f authorization=RUN_CORPUS -f actor_uid="$REVIEWED_ADMIN_UID" -f all_batches=true
+
+# After substantive human review/publication, build public vectors with local CPU weights:
+gh workflow run corpus-import.yml --ref master -f operation=index -f approved_project=venuesignal -f authorization=RUN_CORPUS
+```
+
+The full initial run is seven sequential jobs of at most 20 records, with one task, zero task retries, 1 CPU/1 GiB and a 900-second timeout per job. The same content-addressed API image is reused. A malformed PDF or rejected record is isolated; retries are idempotent. Inspect each execution's sanitized result and query actual Neon counts afterward. GCS staging and protected job execution have not run in this assignment. A first administrator cannot be selected by the agent; bootstrap requires an existing saved profile, an explicit UID decision and a protected security approval.
+
+Manual collection uses `operation=collect` with the reviewed administrator UID. It fetches at most 10 documents/40 requests/50 MiB, restores and checkpoints durable state, uses validators for unchanged documents and queues changed captures without paid interpretation/publication. Scheduling remains optional and **not installed**. If enabled after approval, deploy a separate `opportunity-corpus-refresh` job using the same image/config and collect arguments, then grant a dedicated Scheduler identity `roles/run.invoker` only on that job. A separate job prevents later import/index/admin operations from being accidentally scheduled.
+
+Example future schedule after that manual job passes:
+
+```sh
+gcloud iam service-accounts create opportunity-corpus-scheduler --project venuesignal --display-name="Unclaimed bounded source schedule"
+gcloud run jobs add-iam-policy-binding opportunity-corpus-refresh --project venuesignal --region asia-south1 --member=serviceAccount:opportunity-corpus-scheduler@venuesignal.iam.gserviceaccount.com --role=roles/run.invoker
+gcloud scheduler jobs create http opportunity-corpus-weekly --project venuesignal --location asia-south1 --schedule="0 7 * * 1" --time-zone="Asia/Kolkata" --uri="https://run.googleapis.com/v2/projects/venuesignal/locations/asia-south1/jobs/opportunity-corpus-refresh:run" --http-method=POST --oauth-service-account-email=opportunity-corpus-scheduler@venuesignal.iam.gserviceaccount.com --headers="Content-Type=application/json" --message-body="{}" --max-retry-attempts=0
+```
+
+Enable Scheduler API only as part of that approval if not already enabled. The operator identity needs permission to attach the Scheduler service account. Changing a schedule/source/budget requires review; budget alerts alone are not spending caps. Jobs are billed separately from request-based serving. [Cloud Run job execution](https://docs.cloud.google.com/run/docs/execute/jobs), [job logging fields](https://docs.cloud.google.com/run/docs/logging).
+
+For a frontend-only release, use `deploy-frontend.yml` with `authorization=DEPLOY_FRONTEND`, or the plan-first `infra/deploy_frontend.py`. It never builds Docker, changes Cloud Run or touches Neon. Backend retries reuse a verified existing Artifact Registry digest. A failed classified cloud stage reports its label/exit/category without dumping credentials. Retain the prior API/Hosting receipt; additive tables permit rolling back application traffic without a database downgrade.
+
+Final acceptance requires actual production counts, a genuine draft in the review queue, a human-published current policy, stored vector retrieval and a dedicated signed-in profile opening `/discover` with no text/mode/search action. Until those pass, report production completion as blocked, not complete.
+
+The release runner also reuses its one-task job, after schema verification/upgrade, for a read-only application-credential privilege check. Missing grants on new vector/reservation/source tables stop before API promotion. No role grant is silently added, and actual runtime DDL privilege is reported rather than assumed absent. A one-time operator exception, if explicitly chosen by the human for the reviewed CI-passing SHA, uses the same runners from a clean checkout and records receipts/Cloud Audit; it is not described as native GitHub environment approval.

@@ -245,6 +245,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/intelligence-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Public Corpus Status */
+        get: operations["public_corpus_status_v1_admin_intelligence_status_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/admin/sources/{key}/ingest": {
         parameters: {
             query?: never;
@@ -652,6 +669,40 @@ export interface paths {
         put?: never;
         /** Scenario */
         post: operations["scenario_v1_scenarios_evaluate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/government-sources": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Browse */
+        get: operations["browse_v1_government_sources_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/government-sources/{identifier}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Detail */
+        get: operations["detail_v1_government_sources__identifier__get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1316,6 +1367,99 @@ export interface components {
             field: string;
             citation: components["schemas"]["Citation"];
         };
+        /** GovernmentSource */
+        GovernmentSource: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Title */
+            title: string;
+            /** Department */
+            department: string | null;
+            /** Source Url */
+            source_url: string;
+            /** Content Hash */
+            content_hash: string;
+            /** Format */
+            format: string;
+            /** Captured At */
+            captured_at: string | null;
+            /** Document Type */
+            document_type: string;
+            /** Categories */
+            categories: string[];
+            /** Jurisdictions */
+            jurisdictions: string[];
+            /** Review State */
+            review_state: string;
+            /** Needs Ocr */
+            needs_ocr: boolean;
+            /** Related Opportunities */
+            related_opportunities: string[];
+            /** Page Count */
+            page_count: number;
+        };
+        /** GovernmentSourceDetail */
+        GovernmentSourceDetail: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Title */
+            title: string;
+            /** Department */
+            department: string | null;
+            /** Source Url */
+            source_url: string;
+            /** Content Hash */
+            content_hash: string;
+            /** Format */
+            format: string;
+            /** Captured At */
+            captured_at: string | null;
+            /** Document Type */
+            document_type: string;
+            /** Categories */
+            categories: string[];
+            /** Jurisdictions */
+            jurisdictions: string[];
+            /** Review State */
+            review_state: string;
+            /** Needs Ocr */
+            needs_ocr: boolean;
+            /** Related Opportunities */
+            related_opportunities: string[];
+            /** Page Count */
+            page_count: number;
+            /** Pages */
+            pages: components["schemas"]["GovernmentTextPage"][];
+            /**
+             * Notice
+             * @default Captured public source, not an approved opportunity or entitlement.
+             */
+            notice: string;
+        };
+        /** GovernmentSourcePage */
+        GovernmentSourcePage: {
+            /** Items */
+            items: components["schemas"]["GovernmentSource"][];
+            /** Total */
+            total: number;
+            /** Next Cursor */
+            next_cursor: string | null;
+        };
+        /** GovernmentTextPage */
+        GovernmentTextPage: {
+            /** Page */
+            page: number;
+            /** Text */
+            text: string;
+            /** Source Url */
+            source_url: string;
+        };
         /** Health */
         Health: {
             /** Status */
@@ -1365,6 +1509,33 @@ export interface components {
              * @default false
              */
             estimate_available: boolean;
+        };
+        /** IntelligenceStatus */
+        IntelligenceStatus: {
+            /** Captured Snapshot Rows */
+            captured_snapshot_rows: number;
+            /** Unique Document Hashes */
+            unique_document_hashes: number;
+            /** Documents Requiring Ocr */
+            documents_requiring_ocr: number;
+            /** Processing Backlog */
+            processing_backlog: number;
+            /** Draft Opportunities */
+            draft_opportunities: number;
+            /** Human Escalations */
+            human_escalations: number;
+            /** Independently Verified Candidates */
+            independently_verified_candidates: number;
+            /** Published Real Opportunities */
+            published_real_opportunities: number;
+            /** Last Successful Collection */
+            last_successful_collection: string | null;
+            /** Reserved Inference Usd */
+            reserved_inference_usd: number;
+            /** Recorded Inference Usd */
+            recorded_inference_usd: number;
+            /** Inference Requests Reserved */
+            inference_requests_reserved: number;
         };
         /** LinkWrite */
         LinkWrite: {
@@ -1724,6 +1895,10 @@ export interface components {
             history: {
                 [key: string]: unknown;
             }[];
+            /** Processing Review */
+            processing_review?: {
+                [key: string]: unknown;
+            } | null;
         };
         /** ReviewWrite */
         ReviewWrite: {
@@ -3097,6 +3272,7 @@ export interface operations {
         parameters: {
             query?: {
                 limit?: number;
+                q?: string;
             };
             header?: never;
             path?: never;
@@ -3451,6 +3627,89 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["IngestionPermission"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    public_corpus_status_v1_admin_intelligence_status_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IntelligenceStatus"];
                 };
             };
             /** @description Unauthorized */
@@ -5966,6 +6225,185 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ScenarioResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    browse_v1_government_sources_get: {
+        parameters: {
+            query?: {
+                q?: string;
+                department?: string;
+                category?: string;
+                state?: string;
+                document_type?: string;
+                format?: string;
+                review_state?: "" | "processing_pending" | "needs_ocr" | "human_review_pending" | "reviewed_and_published";
+                opportunity_id?: string | null;
+                cursor?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GovernmentSourcePage"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    detail_v1_government_sources__identifier__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                identifier: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GovernmentSourceDetail"];
                 };
             };
             /** @description Unauthorized */

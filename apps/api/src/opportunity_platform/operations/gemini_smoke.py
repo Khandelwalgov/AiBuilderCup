@@ -9,6 +9,7 @@ from google import genai
 from google.genai import errors, types
 
 from opportunity_platform.core.config import settings
+from opportunity_platform.ingestion import budget
 
 OUTPUT_LIMIT = 256
 
@@ -27,6 +28,7 @@ def probe() -> dict:
         return {**report, "diagnostic_code": "gemini_not_configured", "attempts": 0}
     start = time.monotonic()
     try:
+        permit = budget.reserve("gemini", config.gemini_model, 1024, OUTPUT_LIMIT)
         with genai.Client(
             api_key=config.gemini_api_key,
             http_options=types.HttpOptions(
@@ -63,6 +65,19 @@ def probe() -> dict:
         report["diagnostic_code"] = "ok" if report["success"] else "gemini_smoke_invalid_response"
         if response.usage_metadata:
             report["total_tokens"] = response.usage_metadata.total_token_count
+        usage = response.usage_metadata
+        budget.settle(
+            permit,
+            {
+                "input_tokens": getattr(usage, "prompt_token_count", None),
+                "output_tokens": getattr(usage, "candidates_token_count", None),
+                "thinking_tokens": getattr(usage, "thoughts_token_count", None),
+            },
+        )
+    except budget.BudgetDenied:
+        report.update(
+            diagnostic_code="paid_inference_not_authorized", attempts=0, stage="cost_gate"
+        )
     except errors.APIError as error:
         report.update(
             http_status=error.code,

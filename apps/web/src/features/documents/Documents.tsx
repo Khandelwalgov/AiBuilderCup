@@ -120,7 +120,7 @@ function Vault() {
     }
   }, [requestedNeed, dirty]);
   function refresh() {
-    for (const key of ['documents', 'document-needs', 'plan'])
+    for (const key of ['documents', 'document-needs', 'plan', 'hybrid-search', 'scenario-base'])
       void cache.invalidateQueries({ queryKey: [key] });
   }
   function closePreview() {

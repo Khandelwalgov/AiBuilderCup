@@ -13,9 +13,26 @@ test('real Firebase/API/PostgreSQL search and ephemeral future family', async ({
   await page.getByRole('button', { name: 'Review your answers', exact: true }).click();
   await page.getByRole('button', { name: 'Finish setup', exact: true }).click();
   await page.goto('/discover?development=true');
-  await page.getByRole('combobox', { name: 'Search context' }).selectOption('me');
+  await expect(page.getByRole('combobox', { name: 'Search context' })).toHaveValue('me');
+  await expect(
+    page.getByRole('textbox', { name: 'Search opportunities, interests, or keywords' }),
+  ).toBeEmpty();
   await expect(page.getByText('Fictional scenario learner', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('Missing information', { exact: true }).first()).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'FICTIONAL scholarship 1', exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'Official source', exact: true }).first(),
+  ).toBeVisible();
+  await page.getByText('Cited conditions', { exact: true }).first().click();
+  await expect(
+    page
+      .getByText('FICTIONAL parental income certificate for the 2026 test period.', {
+        exact: false,
+      })
+      .first(),
+  ).toBeVisible();
   await productCapture(page, 'phase4-ranked-me');
   await page.goto('/scenarios?development=true');
   await page.getByRole('button', { name: 'Add fact override', exact: true }).first().click();

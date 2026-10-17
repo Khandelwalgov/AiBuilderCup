@@ -132,7 +132,7 @@ test('ingestion is a reviewable confirmation and disabled operator permission ma
   await page.getByRole('button', { name: 'Ingest source', exact: true }).click();
   const dialog = page.getByRole('dialog');
   await expect(dialog).toContainText('gemini / configured-flash');
-  await expect(dialog).toContainText('No reliable cost estimate');
+  await expect(dialog).toContainText('durable spending limits');
   await expect(dialog.getByRole('button', { name: 'Confirm source ingestion' })).toBeDisabled();
   await dialog.getByRole('button', { name: 'Cancel' }).click();
   expect(posts).toBe(0);

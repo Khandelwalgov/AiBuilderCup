@@ -103,7 +103,7 @@ class Fetcher:
         self.next_request = {}
         self.blocked_hosts = {}
 
-    def _request(self, url, source, *, robots=False):
+    def _request(self, url, source, *, robots=False, conditional=None):
         allowed(url, source, robots=robots)
         host = urlsplit(url).hostname
         if host in self.blocked_hosts:
@@ -115,7 +115,15 @@ class Fetcher:
             self.requests += 1
             self.progress(self.requests, self.bytes)
             try:
-                with self.client.stream("GET", url, headers={"User-Agent": USER_AGENT}) as r:
+                request_headers = {"User-Agent": USER_AGENT}
+                request_headers.update(
+                    {
+                        k: v
+                        for k, v in (conditional or {}).items()
+                        if k in {"If-None-Match", "If-Modified-Since"}
+                    }
+                )
+                with self.client.stream("GET", url, headers=request_headers) as r:
                     status = r.status_code
                     if status == 429:
                         self.blocked_hosts[host] = r.headers.get("retry-after", "next run")
@@ -194,17 +202,26 @@ class Fetcher:
             raise AcquisitionError("robots_disallowed")
         return policy
 
-    def fetch(self, url, source):
+    def fetch(self, url, source, *, conditional=None):
         redirects = []
         for _ in range(5):
             policy = self.policy(url, source)
-            status, headers, raw = self._request(url, source)
+            status, headers, raw = self._request(url, source, conditional=conditional)
             if status in (301, 302, 303, 307, 308):
                 target = canonical(urljoin(url, headers.get("location", "")))
                 allowed(target, source)
                 redirects.append({"url": url, "status": status, "location": target})
                 url = target
+                conditional = None  # Entity validators belong to the original resource.
                 continue
+            if status == 304 and conditional:
+                return Payload(
+                    b"",
+                    url,
+                    {k: headers.get(k) for k in ("etag", "last-modified", "date")},
+                    status,
+                    {**policy, "redirects": redirects},
+                )
             if status != 200:
                 code = "listing_unavailable" if status in (404, 410) else "http_error"
                 raise AcquisitionError(code, status)

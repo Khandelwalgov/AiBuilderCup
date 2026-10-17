@@ -38,12 +38,25 @@ class Settings(BaseSettings):
     document_max_count: int = Field(default=25, ge=1, le=100)
     document_max_total_bytes: int = Field(default=52_428_800, ge=1024, le=524_288_000)
     retrieval_shortlist_size: int = Field(default=150, ge=50, le=500)
+    neural_retrieval_enabled: bool = True
+    neural_model_directory: str = "/app/models/multilingual-minilm"
+    process_role: Literal["api", "ingestion_worker"] = "api"
+    paid_ai_worker_enabled: bool = False
+    ai_global_budget_usd: float = Field(default=0, ge=0, le=1000)
+    ai_run_budget_usd: float = Field(default=0, ge=0, le=100)
+    ai_max_requests_per_run: int = Field(default=4, ge=1, le=20)
+    ai_daily_call_limit: int = Field(default=10, ge=1, le=1000)
+    ai_monthly_call_limit: int = Field(default=100, ge=1, le=10000)
+    # Explicit, operator-reviewed USD ceilings per million tokens, keyed provider:model.
+    ai_price_ceilings: dict[str, dict[str, float]] = {}
     enable_development_catalogue: bool = False
     ingestion_min_interval_seconds: int = Field(default=30, ge=0, le=3600)
     model_config = SettingsConfigDict(env_file=".env", extra="ignore", hide_input_in_errors=True)
 
     @model_validator(mode="after")
     def production_configuration(self):
+        if self.paid_ai_worker_enabled and self.process_role != "ingestion_worker":
+            raise ValueError("Paid inference is restricted to an explicitly configured worker")
         if self.database_provider == "neon":
             from opportunity_platform.core.database import validate_neon_url
 

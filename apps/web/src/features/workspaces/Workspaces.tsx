@@ -58,7 +58,7 @@ function WorkspacePage({ kind }: { kind: Kind }) {
   });
   async function saved(data: Workspace) {
     await cache.invalidateQueries({ queryKey: ['workspaces'] });
-    for (const key of ['dashboard-summary', 'plan'])
+    for (const key of ['dashboard-summary', 'plan', 'hybrid-search', 'scenario-base'])
       void cache.invalidateQueries({ queryKey: [key] });
     setCreating(false);
     setEditing(false);

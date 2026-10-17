@@ -1,3 +1,4 @@
+import { artifactRoot } from './artifacts';
 import { sessionFixture } from './session-fixture';
 import { captureContract } from './capture';
 import { expect, test } from '@playwright/test';
@@ -98,7 +99,7 @@ test('profile → published opportunity → cited eligibility results (mocked au
   await expect(page.getByRole('button', { name: 'Save changes', exact: true })).toHaveCount(0);
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
-    path: '/Users/govind/Projects/AIBuildersCup/.live-validation/ui/profile-populated-contract-1440.png',
+    path: `${artifactRoot}/ui/profile-populated-contract-1440.png`,
     fullPage: true,
   });
   await captureContract(page, 'profile');
@@ -116,7 +117,7 @@ test('profile → published opportunity → cited eligibility results (mocked au
   );
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
-    path: '/Users/govind/Projects/AIBuildersCup/.live-validation/ui/eligibility-populated-contract-1440.png',
+    path: `${artifactRoot}/ui/eligibility-populated-contract-1440.png`,
     fullPage: true,
   });
   await captureContract(page, 'detail');
@@ -209,7 +210,7 @@ test('admin inspects evidence and publishes through the review API (mocked contr
   );
   await page.route('**/v1/admin/sources', (route) => route.fulfill({ json: [] }));
   await page.route('**/v1/admin/ingestion-runs', (route) => route.fulfill({ json: [] }));
-  await page.route('**/v1/admin/reviews', (route) =>
+  await page.route('**/v1/admin/reviews?*', (route) =>
     route.fulfill({ json: review.publication_state === 'draft' ? [review] : [] }),
   );
   await page.route(`**/v1/admin/reviews/${id}`, async (route) => {
@@ -236,7 +237,7 @@ test('admin inspects evidence and publishes through the review API (mocked contr
   await checkboxes.nth(1).check();
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
-    path: '/Users/govind/Projects/AIBuildersCup/.live-validation/ui/admin-populated-contract-1440.png',
+    path: `${artifactRoot}/ui/admin-populated-contract-1440.png`,
     fullPage: true,
   });
   await captureContract(page, 'admin');

@@ -1,5 +1,7 @@
 # Phase 4 implementation report — 16 October 2026
 
+Historical milestone report. The 17 October integration replaces the unavailable neural path and changes signed-in Discover to automatic personal recommendations. Current measurements and production gates are in [unclaimed-intelligence-audit.md](unclaimed-intelligence-audit.md); claims below describe the earlier milestone only.
+
 Five search contexts, explainable exact recommendations and an ephemeral Scenario Studio are implemented locally. A fictional future family triggers a fresh retrieval pass and retrieves household opportunities absent from the actual personal shortlist. Production deployment was not requested or performed.
 
 ## Delivered behavior

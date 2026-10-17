@@ -87,6 +87,58 @@ def date_supported(value, passage):
     return False
 
 
+def validate_claim_findings(review, candidate, audited):
+    """Real semantic providers must examine each material field, not just quote existence."""
+    data = candidate.candidate
+    expected = {f"requirements.{i}" for i in range(len(data.requirements))}
+    expected |= {
+        name
+        for name in [
+            "title",
+            "summary",
+            "issuer",
+            "category",
+            "country",
+            "state",
+            "district",
+            "benefits",
+            "restrictions",
+            "required_documents",
+            "opens_on",
+            "closes_on",
+            "apply_url",
+        ]
+        if getattr(data, name)
+    }
+    if {finding.field for finding in review.findings} != expected:
+        raise ValueError("Semantic findings must cover every material candidate field exactly")
+    if len(review.findings) != len(expected):
+        raise ValueError("Duplicate semantic claim findings")
+    disputed = False
+    for finding in review.findings:
+        if not cited(finding.evidence, audited.pages):
+            raise ValueError("Semantic finding lacks captured source evidence")
+        disputed |= finding.assessment != "supported"
+    if disputed and review.assessment != "issues_found":
+        raise ValueError("Disputed claims cannot be reported as no issues detected")
+    if disputed and not review.issues:
+        raise ValueError("Disputed claims require targeted discrepancy reports")
+    for finding in review.findings:
+        if finding.assessment != "supported":
+            review.issues.append(
+                issue(
+                    "semantic_claim_disputed",
+                    finding.field,
+                    finding.explanation,
+                    finding.evidence,
+                    severity="critical"
+                    if finding.assessment in {"contradicted", "outdated"}
+                    else "error",
+                    human=True,
+                )
+            )
+
+
 def validate(raw, audited):
     problems = []
     try:

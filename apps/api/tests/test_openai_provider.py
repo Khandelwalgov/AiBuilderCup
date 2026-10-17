@@ -62,6 +62,11 @@ def test_strict_transport_schema_preserves_application_contract():
 
 @pytest.mark.parametrize("mode", ["valid", "forged", "schema", "incomplete", "service"])
 def test_openai_validates_real_response_shape_and_never_falls_back(monkeypatch, mode):
+    from opportunity_platform.ingestion import budget
+
+    # These tests install MockTransport below and exercise only SDK/HTTP serialization.
+    monkeypatch.setattr(budget, "reserve", lambda *args: None)
+    monkeypatch.setattr(budget, "settle", lambda *args: None)
     monkeypatch.setattr(settings(), "ai_extraction_provider", "openai")
     monkeypatch.setattr(settings(), "openai_api_key", "synthetic-private-key")
     monkeypatch.setattr(providers.GeminiProvider, "extract", lambda *a: pytest.fail("No fallback"))

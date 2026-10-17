@@ -65,7 +65,14 @@ def test_deployment_plan_has_migration_before_traffic_and_pinned_secrets(tmp_pat
     )
     config = deploy.validate(json.loads(raw))
     commands = deploy.plan(config, "PUBLIC_ENV.json")
-    assert [label for label, _ in commands] == ["build", "migration-job", "migrate", "api"]
+    assert [label for label, _ in commands] == [
+        "build",
+        "migration-job",
+        "migrate",
+        "runtime-permission-job",
+        "runtime-permissions",
+        "api",
+    ]
     api = commands[-1][1]
     assert (
         "DATABASE_URL=opportunity-database-url:1,DOCUMENT_SIGNING_KEY=opportunity-document-signing-key:1"

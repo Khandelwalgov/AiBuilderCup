@@ -169,7 +169,47 @@ def collect(store, sources, options, client, resume=None):
                         if prior:
                             store.finish_task(task, "duplicate_link", {"snapshot_id": prior[0]})
                             continue
-                    payload = fetcher.fetch(task["url"], source)
+                    previous = None
+                    conditional = {}
+                    if phase == "document":
+                        previous = store.db.execute(
+                            "SELECT s.* FROM documents d JOIN snapshots s "
+                            "ON d.current_snapshot_id=s.id WHERE d.canonical_url=?",
+                            (task["url"],),
+                        ).fetchone()
+                        if previous:
+                            metadata = json.loads(previous["metadata"])
+                            conditional = {
+                                header: metadata[key]
+                                for header, key in [
+                                    ("If-None-Match", "etag"),
+                                    ("If-Modified-Since", "last-modified"),
+                                ]
+                                if metadata.get(key)
+                            }
+                    payload = fetcher.fetch(task["url"], source, conditional=conditional)
+                    if payload.status == 304 and previous:
+                        with store.db:
+                            store.event(
+                                run_id,
+                                identity(source.key),
+                                task["url"],
+                                "document",
+                                "unchanged",
+                                snapshot_id=previous["id"],
+                                detail={
+                                    "sha256": previous["sha256"],
+                                    "bytes": 0,
+                                    "format": previous["format"],
+                                    "http_status": 304,
+                                    "checked_at": now(),
+                                    "http_metadata": payload.headers,
+                                },
+                            )
+                            store.db.execute(
+                                "UPDATE tasks SET status='done' WHERE id=?", (task["id"],)
+                            )
+                        continue
                     if phase == "document":
                         fmt, validation = validate(
                             payload.raw, payload.headers.get("content-type") or "", task["url"]

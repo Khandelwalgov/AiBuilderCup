@@ -2,7 +2,7 @@ import { SearchModes, type Mode } from '../intelligence/SearchModes';
 import { Recommendations } from '../intelligence/Recommendations';
 import { documentStatus, documentsHref, useDocumentNeeds } from '../documents/Documents';
 import { displayLabel, displayDate } from '../../i18n/format';
-import { ContextLink as Link } from '../../app/subject-context';
+import { ContextLink as Link, useSubject } from '../../app/subject-context';
 import { Eligibility } from '../eligibility/Eligibility';
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
@@ -40,10 +40,13 @@ export function Discover() {
   const t = useStrings();
   const hi = useLanguage() === 'hi';
   const [params, setParams] = useSearchParams();
+  const context = useSubject();
   const mode = (
-    ['me', 'family', 'member', 'business'].includes(params.get('mode') || '')
+    ['me', 'family', 'member', 'business', 'explore'].includes(params.get('mode') || '')
       ? params.get('mode')
-      : 'explore'
+      : context.authenticated
+        ? 'me'
+        : 'explore'
   ) as Mode;
   const nationalParam = params.get('national');
   const [includeNational, setIncludeNational] = useState(nationalParam !== 'false');
@@ -96,8 +99,8 @@ export function Discover() {
           <h1>{hi ? 'अवसर खोजें' : 'Discover opportunities'}</h1>
           <p>
             {hi
-              ? 'वर्तमान प्रकाशित रिकॉर्ड खोजें। आवेदन की स्थिति अस्पष्ट हो तो उसे अज्ञात ही रखें।'
-              : 'Search the reviewed records we actually cover. An unknown application round stays unknown.'}
+              ? 'आपके सहेजे गए प्रोफ़ाइल के अनुसार समीक्षित अवसर अपने आप दिखते हैं। खोज और फ़िल्टर वैकल्पिक हैं।'
+              : 'Reviewed opportunities load automatically from your saved profile. Search and filters are optional.'}
           </p>
         </div>
         <span className="catalogue-state">
@@ -161,8 +164,16 @@ export function Discover() {
       )}
       <div className="catalogue-heading">
         <div>
-          <h2>{t.browseHeading}</h2>
-          <p>{t.browseSub}</p>
+          <h2>
+            {mode === 'explore' ? t.browseHeading : hi ? 'आपके लिए अवसर' : 'Opportunities for you'}
+          </h2>
+          <p>
+            {mode === 'explore'
+              ? t.browseSub
+              : hi
+                ? 'आपकी जानकारी और प्रकाशित शर्तों पर आधारित।'
+                : 'Based on your saved facts and published requirements.'}
+          </p>
         </div>
         <span className="result-count">
           {mode === 'explore'

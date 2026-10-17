@@ -67,8 +67,17 @@ def main():
             "--mode",
             "verify",
         )
+        run(
+            "run",
+            "--rm",
+            *environment,
+            image,
+            "python",
+            "-m",
+            "opportunity_platform.operations.runtime_gate",
+        )
         audit = """
-import json,os
+import json,os,time,resource
 from pathlib import Path
 from sqlalchemy import text
 from opportunity_platform.profiles import semantics
@@ -84,17 +93,28 @@ assert not settings().enable_development_catalogue
 assert not settings().document_uploads_enabled
 assert not settings().ai_ingestion_live_enabled
 assert not settings().ai_assistant_live_enabled
+assert not settings().paid_ai_worker_enabled
+assert settings().ai_global_budget_usd==0
+assert '/v1/government-sources' in app.openapi()['paths']
+from opportunity_platform.retrieval.neural import encoder_for
+start=time.perf_counter()
+encoder=encoder_for(settings().neural_model_directory)
+vector=encoder.encode('पढ़ाई के लिए आर्थिक सहायता')
+assert vector.shape==(384,)
+model_ms=round((time.perf_counter()-start)*1000)
+memory_mib=round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1024)
 root=Path('/app')
 for forbidden in ['.env','.env.local','.private-documents','.corpus','data','tests']:
  assert not (root/forbidden).exists(),forbidden
 assert not any(root.glob('**/*credentials*.json'))
 with engine.connect() as conn:
- assert conn.scalar(text('SELECT version_num FROM alembic_version'))=='f24a1000abcd'
+ assert conn.scalar(text('SELECT version_num FROM alembic_version'))=='f25b1000abcd'
  index_query="SELECT count(*) FROM pg_indexes WHERE indexname='ix_version_search_vector'"
  assert conn.scalar(text(index_query))==1
  assert conn.scalar(text('SELECT count(*) FROM opportunity_versions'))==0
-print(json.dumps({'runtime_json':'present','phase4_routes':'present','migration_head':'f24a1000abcd',
- 'fresh_database':'passed','fictional_seed':'absent','non_root':True}))
+print(json.dumps({'runtime_json':'present','phase4_routes':'present','migration_head':'f25b1000abcd',
+ 'fresh_database':'passed','fictional_seed':'absent','non_root':True,
+ 'local_model_dimensions':len(vector),'load_and_encode_ms':model_ms,'peak_memory_mib':memory_mib}))
 """
         result = run("run", "--rm", *environment, image, "python", "-c", audit)
         print(result.stdout.strip())

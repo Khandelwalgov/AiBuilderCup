@@ -1,3 +1,4 @@
+import { artifactRoot } from './artifacts';
 import { sessionFixture } from './session-fixture';
 import { test, expect } from '@playwright/test';
 
@@ -99,7 +100,7 @@ test('administrator reads actual 68-page public capture copy without any write (
   await page.setViewportSize({ width: 1440, height: 960 });
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
-    path: '/Users/govind/Projects/AIBuildersCup/.live-validation/reimagine-after/admin-public-capture-copy-1440.png',
+    path: `${artifactRoot}/reimagine-after/admin-public-capture-copy-1440.png`,
     fullPage: true,
   });
   expect(writes).toBe(0);

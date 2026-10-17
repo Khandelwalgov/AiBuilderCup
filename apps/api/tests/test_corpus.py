@@ -38,6 +38,37 @@ def spec(**kwargs):
     )
 
 
+def test_conditional_refresh_preserves_snapshot_and_skips_binary_download(tmp_path):
+    raw = pdf()
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        if request.url.path == "/robots.txt":
+            return httpx.Response(200, text="User-agent: *\nAllow: /\n")
+        if request.url.path == "/index":
+            return httpx.Response(
+                200, text='<a href="/a.pdf">Policy</a>', headers={"content-type": "text/html"}
+            )
+        if request.headers.get("If-None-Match") == '"version-one"':
+            return httpx.Response(304, headers={"etag": '"version-one"'})
+        return httpx.Response(
+            200, content=raw, headers={"content-type": "application/pdf", "etag": '"version-one"'}
+        )
+
+    store = Store(tmp_path)
+    try:
+        with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+            collect(store, [spec()], options(), client)
+            run = collect(store, [spec()], options(), client)
+        assert store.db.execute("SELECT count(*) FROM snapshots").fetchone()[0] == 1
+        assert metrics(store, run)["change_counts"] == {"unchanged": 1}
+        assert metrics(store, run)["distinct_content_in_run"] == 1
+        assert any(request.headers.get("If-None-Match") for request in calls)
+    finally:
+        store.close()
+
+
 def options(**kwargs):
     return {
         "max_documents": 10,

@@ -200,8 +200,9 @@ def test_authenticated_smoke_snapshot_and_cross_account(monkeypatch):
     )
 
 
+@pytest.mark.parametrize("reuse_image", [False, True])
 def test_execute_orders_candidate_smoke_build_promotion_and_hosting_without_cloud(
-    tmp_path, monkeypatch
+    tmp_path, monkeypatch, reuse_image
 ):
     deploy = module("deploy")
     c = config()
@@ -222,11 +223,13 @@ def test_execute_orders_candidate_smoke_build_promotion_and_hosting_without_clou
 
     def invoke(label, args, **kwargs):
         calls.append(label)
+        if label == "check-existing-image":
+            return "sha256:" + "a" * 64 if reuse_image else None
         if label == "hosting":
             assert args[args.index("--only") + 1] == "hosting:unclaimed"
             assert args[args.index("--project") + 1] == "venuesignal"
         if label == "migration-job":
-            assert "-m,opportunity_platform.operations.migration_gate,--mode,verify" in args
+            assert "--args=-m,opportunity_platform.operations.migration_gate,--mode,verify" in args
         if label == "record-existing-traffic":
             return json.dumps(
                 [
@@ -285,6 +288,7 @@ def test_execute_orders_candidate_smoke_build_promotion_and_hosting_without_clou
         < calls.index("hosting")
     )
     assert checked_urls == ["https://unclaimed-ai-cup.web.app/profile"]
+    assert ("build" in calls) is not reuse_image
     assert "NEVER_IN_RECEIPT" not in receipt.read_text()
     assert json.loads(receipt.read_text())["web"] == "https://unclaimed-ai-cup.web.app"
     assert json.loads(receipt.read_text())["migration_mode"] == "verify"
@@ -327,7 +331,9 @@ def test_neon_plan_and_hosting_are_explicit_and_exclusive(tmp_path, monkeypatch)
     assert not any(
         "cloudsql" in arg.lower() or "/cloudsql/" in arg for _, cmd in commands for arg in cmd
     )
-    assert "-m,opportunity_platform.operations.migration_gate,--mode,verify" in commands[1][1]
+    assert (
+        "--args=-m,opportunity_platform.operations.migration_gate,--mode,verify" in commands[1][1]
+    )
     assert "upgrade,head" not in commands[1][1]
     bad = {**c, "cloud_sql_connection": "not-allowed"}
     with pytest.raises(ValueError):
@@ -424,3 +430,107 @@ def test_upgrade_requires_separate_runner_authorization(tmp_path, monkeypatch, c
     assert any(
         "--approve-upgrade" in arg for _, cmd in deploy.plan(c, "public.json") for arg in cmd
     )
+
+
+def test_native_production_approval_fails_closed():
+    gate = module("production_gate")
+    environment = {
+        "protection_rules": [
+            {
+                "type": "required_reviewers",
+                "prevent_self_review": True,
+                "reviewers": [{"type": "User", "reviewer": {"id": 1}}],
+            }
+        ],
+        "deployment_branch_policy": {"custom_branch_policies": True, "protected_branches": False},
+        "can_admins_bypass": False,
+    }
+    policies = {"branch_policies": [{"name": "master", "type": "branch"}]}
+    gate.validate(environment, policies, "master", "refs/heads/master")
+    import copy
+
+    for change in [
+        {"protection_rules": []},
+        {"can_admins_bypass": True},
+        {"deployment_branch_policy": None},
+        {
+            "protection_rules": [
+                {"type": "required_reviewers", "reviewers": [1], "prevent_self_review": False}
+            ]
+        },
+    ]:
+        bad = copy.deepcopy(environment)
+        bad.update(change)
+        with pytest.raises(ValueError):
+            gate.validate(bad, policies, "master", "refs/heads/master")
+    with pytest.raises(ValueError):
+        gate.validate(environment, policies, "master", "refs/heads/other")
+    with pytest.raises(ValueError):
+        gate.validate(
+            environment, {"branch_policies": [{"name": "*"}]}, "master", "refs/heads/master"
+        )
+    for name in ["deploy.yml", "deploy-frontend.yml", "corpus-import.yml"]:
+        workflow = (ROOT / ".github/workflows" / name).read_text()
+        assert workflow.index("python3 infra/production_gate.py") < workflow.index(
+            "google-github-actions/auth@"
+        )
+
+
+def test_worker_direct_secret_plan_never_reads_or_writes_credentials(tmp_path, monkeypatch):
+    worker = module("worker_secret")
+    c = config()
+    corpus = json.loads((ROOT / "infra/corpus.example.json").read_text())
+    deploy_path = tmp_path / "deploy.json"
+    corpus_path = tmp_path / "corpus.json"
+    deploy_path.write_text(json.dumps(c))
+    corpus_path.write_text(json.dumps(corpus))
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("Unexpected credential/cloud operation")
+
+    monkeypatch.setattr(worker, "read_secret", forbidden)
+    monkeypatch.setattr(worker, "invoke", forbidden)
+    assert (
+        worker.main(["--deploy-config", str(deploy_path), "--corpus-config", str(corpus_path)]) == 0
+    )
+    with pytest.raises(SystemExit):
+        worker.main(
+            [
+                "--deploy-config",
+                str(deploy_path),
+                "--corpus-config",
+                str(corpus_path),
+                "--execute",
+                "--approved-project",
+                "wrong",
+            ]
+        )
+    direct = (
+        "postgresql+psycopg://app:fictional-password@ep-fictional.aws.neon.tech/db?sslmode=require"
+    )
+    assert worker.direct_url(direct.replace("ep-fictional.", "ep-fictional-pooler.")) == direct
+    for bad in [direct.replace("require", "disable"), direct.replace("neon.tech", "invalid")]:
+        with pytest.raises(ValueError) as error:
+            worker.direct_url(bad)
+        assert "fictional-password" not in str(error.value)
+
+
+def test_runtime_privilege_gate_is_read_only_and_rejects_missing_grants(db):
+    from sqlalchemy import text
+
+    from opportunity_platform.operations.runtime_gate import verify
+
+    with db.bind.connect() as connection:
+        assert verify(connection)["runtime_privileges"] == "passed"
+        assert connection.scalar(text("SHOW transaction_read_only")) == "on"
+
+    class Denied:
+        def execute(self, query):
+            assert str(query) == "SET TRANSACTION READ ONLY"
+
+        def scalar(self, query, params):
+            assert "has_table_privilege" in str(query)
+            return False
+
+    with pytest.raises(RuntimeError, match="lacks SELECT on policy_embeddings"):
+        verify(Denied())

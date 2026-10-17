@@ -33,7 +33,7 @@ from opportunity_platform.opportunities.service import catalogue, view
 from opportunity_platform.retrieval.neural import (
     PolicyRepresentation,
     SubjectRepresentation,
-    UnavailableNeuralRetriever,
+    neural_retriever,
 )
 from opportunity_platform.subjects.service import SubjectRef, resolve, subject_facts
 from opportunity_platform.subjects.service import view as workspace_view
@@ -203,7 +203,8 @@ def rule_keys(rule):
 
 def select_candidates(rows, reqs, subjects, request, fts, neural=None):
     """Round-robin subjects and channels, stratified coverage; no threshold exclusion."""
-    neural = neural or UnavailableNeuralRetriever()
+    neural = neural or neural_retriever()
+    neural.candidate_ranks = {}
     limit = request.shortlist or settings().retrieval_shortlist_size
     streams, annotations, total = [], defaultdict(set), 0
     policies = [
@@ -211,10 +212,11 @@ def select_candidates(rows, reqs, subjects, request, fts, neural=None):
             str(o.id),
             str(v.id),
             v.content_hash or "",
-            f"{v.title}\n{v.summary}",
+            f"{v.title}\n{v.summary}\nBenefits: {v.benefits or 'not established'}",
             [
                 {
                     "rule": r.rule,
+                    "description": r.description,
                     "subject_context": r.subject_context,
                     "kind": r.kind,
                     "application_context": r.application_context,
@@ -267,8 +269,14 @@ def select_candidates(rows, reqs, subjects, request, fts, neural=None):
             sorted(set(FactKey.__args__) - known),
             request.q,
         )
-        neural_ids = set(neural.retrieve(policies, representation, limit))
-        vectors = [row for row in applicable if str(row[0].id) in neural_ids]
+        applicable_ids = {str(row[0].id) for row in applicable}
+        neural_ids = neural.retrieve(
+            [p for p in policies if p.opportunity_id in applicable_ids], representation, limit
+        )
+        by_id = {str(row[0].id): row for row in applicable}
+        vectors = [by_id[key] for key in neural_ids if key in by_id]
+        for rank, row in enumerate(vectors, 1):
+            neural.candidate_ranks[(subject.key, row[0].id)] = rank
         channels = [
             ("coverage", coverage),
             ("full_text", text),
@@ -289,6 +297,11 @@ def select_candidates(rows, reqs, subjects, request, fts, neural=None):
                         merged.append((subject, row))
                         seen.add(row[0].id)
         streams.append(merged)
+    # Small catalogues are exhaustive across all authorized subjects. In particular,
+    # automatic discovery must not hide an eligible policy behind a vector/PAIR cap.
+    # At most 150 published versions × the existing 30-subject authorization limit.
+    if len(rows) <= 150:
+        limit = total
     pairs = []
     while any(streams) and len(pairs) < limit:
         for stream in streams:
@@ -301,7 +314,7 @@ def search(session: Session, uid: str, request: SearchRequest, subjects=None):
     start = perf_counter()
     subjects = authorized_subjects(session, uid, request) if subjects is None else subjects
     rows, reqs, evidence, fts = load_catalogue(session, request)
-    neural = UnavailableNeuralRetriever()
+    neural = neural_retriever(session)
     if request.mode == "explore":
         # Full browse remains paginated GET /opportunities; this endpoint is personalized only.
         raise APIError(
@@ -358,6 +371,10 @@ def search(session: Session, uid: str, request: SearchRequest, subjects=None):
             reasons.append(f"{r.requirement}: {r.result.reason}")
         if v.closes_on:
             reasons.append(f"Published closing date: {v.closes_on.isoformat()}.")
+            if v.closes_on < date.today():
+                reasons.append(
+                    "The published application deadline has passed; a new round is not established."
+                )
         if (v.category or o.category) in request.interests:
             reasons.append("Matches your selected category interest.")
         shared = sum(
@@ -369,8 +386,16 @@ def search(session: Session, uid: str, request: SearchRequest, subjects=None):
             )
         # Known failures are a separate last bucket; unknowns never become failures.
         score = (
+            bool(v.closes_on and v.closes_on < date.today()),
             evaluation.status == "not_eligible_on_known_facts",
-            -fts.get(o.id, 0),
+            -(
+                fts.get(o.id, 0)
+                + (
+                    1 / (60 + neural.candidate_ranks[(subject.key, o.id)])
+                    if (subject.key, o.id) in neural.candidate_ranks
+                    else 0
+                )
+            ),
             -(v.category in request.interests),
             -satisfied,
             -shared,

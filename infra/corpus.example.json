@@ -1,0 +1,12 @@
+{
+  "project_id": "venuesignal",
+  "region": "asia-south1",
+  "service": "opportunity-api",
+  "repository": "opportunity",
+  "bucket": "venuesignal-public-corpus",
+  "job": "opportunity-corpus",
+  "service_account": "opportunity-corpus@venuesignal.iam.gserviceaccount.com",
+  "database_secret": "opportunity-corpus-database-url",
+  "database_secret_version": "1",
+  "sources": ["msme-ramp", "rajasthan-scholarships", "rajasthan-tenders", "rajasthan-welfare"]
+}

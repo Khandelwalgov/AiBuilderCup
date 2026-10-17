@@ -195,6 +195,10 @@ def test_gemini_intent_receives_only_generic_concepts(monkeypatch):
 
     from opportunity_platform.assistant import service as assistant
     from opportunity_platform.core.config import settings
+    from opportunity_platform.ingestion import budget
+
+    monkeypatch.setattr(budget, "reserve", lambda *args: None)
+    monkeypatch.setattr(budget, "settle", lambda *args: None)
 
     received = {}
 

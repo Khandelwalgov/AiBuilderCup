@@ -16,7 +16,7 @@ contracts:
 	cd apps/api && uv run python ../../scripts/export_openapi.py
 	cd apps/web && pnpm generate
 check:
-	cd apps/api && uv run ruff check . ../../infra/deploy.py ../../infra/smoke.py ../../scripts/release_container_check.py ../../scripts/product_e2e_server.py && uv run ruff format --check . ../../infra/deploy.py ../../infra/smoke.py ../../scripts/release_container_check.py ../../scripts/product_e2e_server.py && uv run pytest && uv run alembic check
+	cd apps/api && uv run ruff check . ../../infra/deploy.py ../../infra/deploy_frontend.py ../../infra/corpus_job.py ../../infra/worker_secret.py ../../infra/production_gate.py ../../infra/smoke.py ../../scripts/release_container_check.py ../../scripts/product_e2e_server.py && uv run ruff format --check . ../../infra/deploy.py ../../infra/deploy_frontend.py ../../infra/corpus_job.py ../../infra/worker_secret.py ../../infra/production_gate.py ../../infra/smoke.py ../../scripts/release_container_check.py ../../scripts/product_e2e_server.py && uv run pytest && uv run alembic check
 	cd apps/web && pnpm lint && pnpm typecheck && pnpm build
 test-e2e:
 	cd apps/web && pnpm exec playwright test

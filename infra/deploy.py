@@ -50,9 +50,14 @@ def validate(config):
             raise ValueError("Invalid public deployment identifier")
     if not re.fullmatch(r"[a-z][a-z0-9.-]{1,100}", config["gemini_model"]):
         raise ValueError("Invalid model identifier")
-    for field in ["runtime_service_account", "migration_service_account", "build_service_account"]:
+    for field in [
+        "runtime_service_account",
+        "migration_service_account",
+        "build_service_account",
+    ]:
         if not re.fullmatch(
-            r"[a-z][a-z0-9-]+@" + re.escape(project) + r"\.iam\.gserviceaccount\.com", config[field]
+            r"[a-z][a-z0-9-]+@" + re.escape(project) + r"\.iam\.gserviceaccount\.com",
+            config[field],
         ):
             raise ValueError("Service accounts must belong to the selected project")
     if config["database_provider"] != "neon":
@@ -62,7 +67,11 @@ def validate(config):
     for field in ["hosting_site", "hosting_target"]:
         if not re.fullmatch(r"[a-z][a-z0-9-]{1,61}[a-z0-9]", config[field]):
             raise ValueError("Invalid Hosting identifier")
-    for field in ["database_secret", "migration_database_secret", "document_signing_secret"]:
+    for field in [
+        "database_secret",
+        "migration_database_secret",
+        "document_signing_secret",
+    ]:
         if not re.fullmatch(r"[a-zA-Z0-9_-]{1,255}", config[field]):
             raise ValueError("Use Secret Manager names, never secret values")
     for field in [
@@ -197,6 +206,9 @@ def backend_environment(c):
         "AI_EXTRACTION_PROVIDER": "gemini",
         "AI_INGESTION_LIVE_ENABLED": "false",
         "AI_ASSISTANT_LIVE_ENABLED": "false",
+        "PAID_AI_WORKER_ENABLED": "false",
+        "AI_GLOBAL_BUDGET_USD": "0",
+        "AI_RUN_BUDGET_USD": "0",
         "DOCUMENT_UPLOADS_ENABLED": "false",
         "RETRIEVAL_SHORTLIST_SIZE": "150",
         "GEMINI_MODEL": c["gemini_model"],
@@ -263,8 +275,8 @@ def plan(c, env_file):
                 str(env_file),
                 "--command",
                 "/app/.venv/bin/python",
-                "--args",
-                "-m,opportunity_platform.operations.migration_gate,--mode,"
+                "--args="
+                + "-m,opportunity_platform.operations.migration_gate,--mode,"
                 + c["migration_mode"]
                 + (",--approve-upgrade" if c["migration_mode"] == "upgrade" else ""),
                 "--tasks",
@@ -281,7 +293,56 @@ def plan(c, env_file):
                 "512Mi",
             ],
         ),
-        ("migrate", ["gcloud", "run", "jobs", "execute", service + "-migrate", *common, "--wait"]),
+        (
+            "migrate",
+            [
+                "gcloud",
+                "run",
+                "jobs",
+                "execute",
+                service + "-migrate",
+                *common,
+                "--wait",
+            ],
+        ),
+        (
+            "runtime-permission-job",
+            [
+                "gcloud",
+                "run",
+                "jobs",
+                "deploy",
+                service + "-migrate",
+                *common,
+                "--image",
+                image,
+                "--service-account",
+                c["runtime_service_account"],
+                "--set-secrets",
+                db,
+                "--env-vars-file",
+                str(env_file),
+                "--command",
+                "/app/.venv/bin/python",
+                "--args=-m,opportunity_platform.operations.runtime_gate",
+                "--tasks",
+                "1",
+                "--parallelism",
+                "1",
+                "--max-retries",
+                "0",
+                "--task-timeout",
+                "120s",
+                "--cpu",
+                "1",
+                "--memory",
+                "512Mi",
+            ],
+        ),
+        (
+            "runtime-permissions",
+            ["gcloud", "run", "jobs", "execute", service + "-migrate", *common, "--wait"],
+        ),
         (
             "api",
             [
@@ -329,12 +390,30 @@ def plan(c, env_file):
     return commands
 
 
-def invoke(label, args, **kwargs):
+def invoke(label, args, *, allow_not_found=False, **kwargs):
     print("Running " + label + "...", flush=True)
     result = subprocess.run(args, cwd=ROOT, capture_output=True, text=True, **kwargs)
     if result.returncode:
-        # Keep possible CLI credential/error content out of application validation logs.
-        raise RuntimeError(label + " failed; inspect authorized provider logs locally")
+        # Expose useful allowlisted classifications, never raw CLI output/credentials.
+        categories = [
+            code
+            for code in [
+                "NOT_FOUND",
+                "PERMISSION_DENIED",
+                "UNAUTHENTICATED",
+                "INVALID_ARGUMENT",
+                "FAILED_PRECONDITION",
+                "RESOURCE_EXHAUSTED",
+                "DEADLINE_EXCEEDED",
+            ]
+            if code in result.stderr
+        ]
+        if allow_not_found and categories == ["NOT_FOUND"]:
+            return None
+        raise RuntimeError(
+            f"{label} failed (exit {result.returncode}; "
+            f"{','.join(categories) or 'unclassified'}). Inspect authorized operation logs."
+        )
     return result.stdout.strip()
 
 
@@ -488,8 +567,37 @@ def main(argv=None):
         env_file = Path(directory) / "backend-env.json"
         env_file.write_text(json.dumps(backend_environment(config)))
         for label, command in plan(config, env_file):
+            if label == "build":
+                image = (
+                    f"{region}-docker.pkg.dev/{project}/{config['repository']}/"
+                    f"{service}:{image_tag()}"
+                )
+                digest = invoke(
+                    "check-existing-image",
+                    [
+                        "gcloud",
+                        "artifacts",
+                        "docker",
+                        "images",
+                        "describe",
+                        image,
+                        "--project",
+                        project,
+                        "--format=value(image_summary.digest)",
+                    ],
+                    allow_not_found=True,
+                )
+                if digest:
+                    if not re.fullmatch(r"sha256:[a-f0-9]{64}", digest):
+                        raise RuntimeError("Artifact Registry returned an invalid image digest")
+                    print("Reusing the existing content-addressed image.", flush=True)
+                    continue
             invoke(label, command)
-        project, region, service = config["project_id"], config["region"], config["service"]
+        project, region, service = (
+            config["project_id"],
+            config["region"],
+            config["service"],
+        )
         status = json.loads(
             invoke(
                 "read-candidate",
@@ -516,6 +624,7 @@ def main(argv=None):
                 candidate_revision=status["latestReadyRevisionName"],
                 candidate_url=candidate,
                 api_url=url,
+                runtime_privileges_verified=True,
             )
             args.receipt.write_text(json.dumps(receipt, indent=2))
         environment = web_environment(config, url)
@@ -558,7 +667,9 @@ def main(argv=None):
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except (ValueError, RuntimeError, OSError, KeyError):
+    except RuntimeError as error:
+        raise SystemExit("Deployment stopped: " + str(error)) from None
+    except (ValueError, OSError, KeyError) as error:
         raise SystemExit(
-            "Deployment stopped. Check prerequisites locally; details withheld."
+            "Deployment stopped during local validation: " + type(error).__name__
         ) from None

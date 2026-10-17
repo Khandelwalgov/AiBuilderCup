@@ -10,6 +10,10 @@ on:
         description: Type DEPLOY to authorize release to existing resources
         required: true
         type: string
+      approve_schema_upgrade:
+        description: Explicitly approve additive Alembic upgrade after reviewing migrations
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -31,15 +35,21 @@ jobs:
     environment: production
     permissions:
       contents: read
+      actions: read
       id-token: write
     env:
       APPROVED_PROJECT: ${{ inputs.approved_project }}
       PRODUCTION_PROJECT: ${{ vars.GCP_PROJECT_ID }}
       DEPLOY_CONFIG_JSON: ${{ vars.DEPLOY_CONFIG_JSON }}
+      APPROVE_SCHEMA_UPGRADE: ${{ inputs.approve_schema_upgrade }}
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Verify actual native production approval protections
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 infra/production_gate.py
       - name: Validate reviewed public configuration before authentication
         run: |
           test "$APPROVED_PROJECT" = "$PRODUCTION_PROJECT"
@@ -49,6 +59,8 @@ jobs:
           from pathlib import Path
           from infra.deploy import validate
           config = validate(json.loads(os.environ['DEPLOY_CONFIG_JSON']))
+          if os.environ['APPROVE_SCHEMA_UPGRADE'] == 'true':
+              config['migration_mode'] = 'upgrade'
           assert config['project_id'] == os.environ['PRODUCTION_PROJECT']
           Path('/tmp/deploy-public.json').write_text(json.dumps(config))
           PY
@@ -69,8 +81,13 @@ jobs:
       - uses: google-github-actions/setup-gcloud@v3
       - name: Manually authorized release to existing infrastructure
         run: |
+          schema_args=()
+          if [ "$APPROVE_SCHEMA_UPGRADE" = true ]; then
+            schema_args+=(--approve-migrations)
+          fi
           python3 infra/deploy.py --config /tmp/deploy-public.json --execute \
-            --approved-project "$APPROVED_PROJECT" --receipt "$RUNNER_TEMP/release-receipt.json"
+            --approved-project "$APPROVED_PROJECT" --receipt "$RUNNER_TEMP/release-receipt.json" \
+            "${schema_args[@]}"
       - name: Preserve rollback receipt (public metadata only)
         if: always()
         uses: actions/upload-artifact@v4

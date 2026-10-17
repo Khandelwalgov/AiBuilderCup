@@ -147,7 +147,10 @@ def ingest(session: Session, key: str, actor: User) -> IngestionRun:
             run.status = "unchanged"
         else:
             with session.begin_nested():
-                result = extract(snapshot.pages, adapter.focus)
+                from opportunity_platform.ingestion.budget import scope
+
+                with scope(run.id):
+                    result = extract(snapshot.pages, adapter.focus)
                 run.usage = result.usage
                 candidate = CandidateData.model_validate(result.candidate)
                 try:

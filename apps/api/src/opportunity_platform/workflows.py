@@ -9,6 +9,12 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from opportunity_platform.admin import service as admin
+from opportunity_platform.admin.intelligence import (
+    IntelligenceStatus,
+)
+from opportunity_platform.admin.intelligence import (
+    status as intelligence_status,
+)
 from opportunity_platform.assistant import service as assistant
 from opportunity_platform.core.auth import current_uid
 from opportunity_platform.core.config import settings
@@ -92,18 +98,25 @@ def evaluate(identifier: uuid.UUID, session: DB, uid: UID, data: EvaluationReque
 
 
 @router.get("/admin/reviews", response_model=list[admin.ReviewSummary])
-def reviews(session: DB, actor: ADMIN, limit: Annotated[int, Query(ge=1, le=100)] = 50):
+def reviews(
+    session: DB,
+    actor: ADMIN,
+    limit: Annotated[int, Query(ge=1, le=100)] = 50,
+    q: Annotated[str, Query(max_length=200)] = "",
+):
+    query = select(OpportunityVersion).where(
+        OpportunityVersion.publication_state == "draft",
+        OpportunityVersion.extraction.is_not(None),
+    )
+    if q.strip():
+        term = "%" + q.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%"
+        query = query.where(
+            OpportunityVersion.title.ilike(term, escape="\\")
+            | OpportunityVersion.issuer.ilike(term, escape="\\")
+        )
     return [
         admin.summary(v)
-        for v in session.scalars(
-            select(OpportunityVersion)
-            .where(
-                OpportunityVersion.publication_state == "draft",
-                OpportunityVersion.extraction.is_not(None),
-            )
-            .order_by(OpportunityVersion.created_at)
-            .limit(limit)
-        )
+        for v in session.scalars(query.order_by(OpportunityVersion.created_at).limit(limit))
     ]
 
 
@@ -199,9 +212,17 @@ def ingestion_settings(actor: ADMIN):
         model=config.openai_model
         if config.ai_extraction_provider == "openai"
         else config.gemini_model,
-        live_enabled=config.ai_ingestion_live_enabled,
+        live_enabled=config.ai_ingestion_live_enabled
+        and config.paid_ai_worker_enabled
+        and config.process_role == "ingestion_worker"
+        and config.ai_global_budget_usd > 0,
         test_budget_usd=config.ai_ingestion_test_budget_usd,
     )
+
+
+@router.get("/admin/intelligence-status", response_model=IntelligenceStatus)
+def public_corpus_status(session: DB, actor: ADMIN):
+    return intelligence_status(session)
 
 
 class IngestionConfirmation(BaseModel):

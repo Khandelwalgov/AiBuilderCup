@@ -20,6 +20,9 @@ from opportunity_platform.operations import gemini_smoke
 def test_smoke_bounds_one_generation_and_sanitizes_provider_failures(
     monkeypatch, status, finish, response_text, success
 ):
+    # Only the mocked transport is exercised in this serialization test.
+    monkeypatch.setattr(gemini_smoke.budget, "reserve", lambda *args: None)
+    monkeypatch.setattr(gemini_smoke.budget, "settle", lambda *args: None)
     monkeypatch.setattr(settings(), "gemini_api_key", "synthetic-private-key")
     real_client = genai.Client
     calls = []

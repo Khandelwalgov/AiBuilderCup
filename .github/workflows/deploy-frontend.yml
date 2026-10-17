@@ -1,0 +1,77 @@
+name: manual-frontend-release
+on:
+  workflow_dispatch:
+    inputs:
+      approved_project:
+        description: Approved existing project
+        type: string
+        required: true
+      authorization:
+        description: Type DEPLOY_FRONTEND
+        type: string
+        required: true
+permissions:
+  contents: read
+concurrency:
+  group: production-release
+  cancel-in-progress: false
+jobs:
+  validate:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && inputs.authorization == 'DEPLOY_FRONTEND'
+    uses: ./.github/workflows/ci.yml
+    with:
+      build_container: false
+  deploy:
+    needs: validate
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && inputs.authorization == 'DEPLOY_FRONTEND'
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    env:
+      APPROVED_PROJECT: ${{ inputs.approved_project }}
+      PRODUCTION_PROJECT: ${{ vars.GCP_PROJECT_ID }}
+      DEPLOY_CONFIG_JSON: ${{ vars.DEPLOY_CONFIG_JSON }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify actual native production approval protections
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 infra/production_gate.py
+      - name: Validate public configuration
+        run: |
+          test "$APPROVED_PROJECT" = "$PRODUCTION_PROJECT"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          from infra.deploy import validate
+          config = validate(json.loads(os.environ['DEPLOY_CONFIG_JSON']))
+          assert config['project_id'] == os.environ['PRODUCTION_PROJECT']
+          Path('/tmp/deploy-public.json').write_text(json.dumps(config))
+          PY
+          python3 infra/deploy_frontend.py --config /tmp/deploy-public.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '11.25.0'
+      - run: npm install --global firebase-tools@15.12.0
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
+          create_credentials_file: true
+      - uses: google-github-actions/setup-gcloud@v3
+      - name: Approved Hosting-only release
+        run: python3 infra/deploy_frontend.py --config /tmp/deploy-public.json --execute --approved-project "$APPROVED_PROJECT" --receipt "$RUNNER_TEMP/frontend-receipt.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frontend-release-receipt
+          path: ${{ runner.temp }}/frontend-receipt.json
+          retention-days: 14

@@ -43,6 +43,11 @@ def payload():
 
 @pytest.fixture
 def sdk(monkeypatch):
+    from opportunity_platform.ingestion import budget
+
+    # Transport below is explicitly mocked; serialization tests never acquire a paid permit.
+    monkeypatch.setattr(budget, "reserve", lambda *args: None)
+    monkeypatch.setattr(budget, "settle", lambda *args: None)
     real_client = genai.Client
     monkeypatch.setattr(settings(), "gemini_api_key", "synthetic-test-key")
     requests = []

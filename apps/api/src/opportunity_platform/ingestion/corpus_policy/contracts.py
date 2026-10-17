@@ -53,6 +53,22 @@ class Issue(Strict):
     human_required: bool = False
 
 
+class ClaimFinding(Strict):
+    field: str = Field(min_length=1, max_length=200)
+    assessment: Literal[
+        "supported",
+        "contradicted",
+        "incomplete",
+        "ambiguous",
+        "outdated",
+        "unsupported",
+        "requires_human_review",
+    ]
+    explanation: str = Field(min_length=5, max_length=2000)
+    evidence: Citation
+    human_required: bool = True
+
+
 class AIReview(Strict):
     # No approve/verified/publication field exists in the AI contract.
     assessment: Literal["no_issues_detected", "issues_found"]
@@ -60,6 +76,7 @@ class AIReview(Strict):
     source_hash: str = Field(pattern=r"^[a-f0-9]{64}$")
     examined_clause_ids: list[str] = Field(max_length=2000)
     issues: list[Issue] = Field(max_length=100)
+    findings: list[ClaimFinding] = Field(default_factory=list, max_length=100)
 
 
 class Stage(Strict):

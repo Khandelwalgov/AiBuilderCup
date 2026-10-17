@@ -19,6 +19,7 @@ from opportunity_platform.core.config import settings
 from opportunity_platform.core.errors import APIError, ErrorEnvelope, response
 from opportunity_platform.db.session import get_session
 from opportunity_platform.documents.router import router as documents_router
+from opportunity_platform.ingestion.corpus_policy.library import router as government_sources_router
 from opportunity_platform.opportunities import service
 from opportunity_platform.opportunities.schemas import (
     Facets,
@@ -215,3 +216,4 @@ app.include_router(documents_router)
 
 
 app.include_router(retrieval_router)
+app.include_router(government_sources_router)

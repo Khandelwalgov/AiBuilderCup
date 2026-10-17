@@ -12,6 +12,7 @@ from opportunity_platform.core.errors import APIError
 from opportunity_platform.db.models import (
     AuditEvent,
     CandidateReview,
+    IngestionRun,
     Opportunity,
     OpportunityVersion,
     Requirement,
@@ -49,6 +50,7 @@ class ReviewView(ReviewSummary):
     candidate_hash: str
     changes: list[str]
     history: list[dict]
+    processing_review: dict | None = None
 
 
 class ReviewWrite(BaseModel):
@@ -85,6 +87,15 @@ def read(session: Session, identifier: uuid.UUID) -> ReviewView:
     changes = sorted(
         key for key in fields if version.extraction.get(key) != (previous or {}).get(key)
     )
+    processing = session.scalar(
+        select(IngestionRun)
+        .where(
+            IngestionRun.snapshot_id == version.snapshot_id,
+            IngestionRun.diagnostics["draft_id"].as_string() == str(version.id),
+        )
+        .order_by(IngestionRun.created_at.desc())
+        .limit(1)
+    )
     return ReviewView(
         **summary(version).model_dump(),
         candidate=CandidateData.model_validate(version.extraction),
@@ -97,6 +108,7 @@ def read(session: Session, identifier: uuid.UUID) -> ReviewView:
         content_hash=snapshot.content_hash,
         candidate_hash=digest(version.extraction),
         changes=changes,
+        processing_review=processing.diagnostics if processing else None,
         history=[
             {
                 "decision": r.decision,

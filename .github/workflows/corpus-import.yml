@@ -1,0 +1,94 @@
+name: protected-corpus-import
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Dry run first; import persists drafts and sources only
+        type: choice
+        options: [dry-run, import, collect, bootstrap-admin, index]
+        default: dry-run
+      approved_project:
+        type: string
+        required: true
+      authorization:
+        description: Type RUN_CORPUS, or BOOTSTRAP_ADMIN for the explicit first administrator security decision
+        type: string
+        required: true
+      actor_uid:
+        description: Existing explicitly approved administrator Firebase UID (required for import)
+        type: string
+      offset:
+        description: First snapshot offset, 20 snapshots per bounded execution
+        type: number
+        default: 0
+      all_batches:
+        description: Initial 125 snapshots, seven sequential bounded jobs under this approval
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: production-corpus
+  cancel-in-progress: false
+jobs:
+  run:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && ((inputs.operation == 'bootstrap-admin' && inputs.authorization == 'BOOTSTRAP_ADMIN') || (inputs.operation != 'bootstrap-admin' && inputs.authorization == 'RUN_CORPUS'))
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    env:
+      APPROVED_PROJECT: ${{ inputs.approved_project }}
+      PROJECT: ${{ vars.GCP_PROJECT_ID }}
+      CORPUS_CONFIG_JSON: ${{ vars.CORPUS_CONFIG_JSON }}
+      OPERATION: ${{ inputs.operation }}
+      ACTOR_UID: ${{ inputs.actor_uid }}
+      OFFSET: ${{ inputs.offset }}
+      ALL_BATCHES: ${{ inputs.all_batches }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify actual native production approval protections
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 infra/production_gate.py
+      - name: Validate reviewed public configuration
+        run: |
+          test "$APPROVED_PROJECT" = "$PROJECT"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          from infra.corpus_job import validate
+          config=validate(json.loads(os.environ['CORPUS_CONFIG_JSON']))
+          assert config['project_id']==os.environ['PROJECT']
+          Path('/tmp/corpus-public.json').write_text(json.dumps(config))
+          PY
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
+          create_credentials_file: true
+      - uses: google-github-actions/setup-gcloud@v3
+      - name: Bounded authorized job with zero paid inference
+        run: |
+          args=(--config /tmp/corpus-public.json --execute --approved-project "$PROJECT" --offset "$OFFSET")
+          if [ "$ALL_BATCHES" = true ]; then
+            args+=(--all-batches)
+          fi
+          if [ "$OPERATION" = import ]; then
+            test -n "$ACTOR_UID"
+            args+=(--authorize-data-import --actor-uid "$ACTOR_UID")
+          elif [ "$OPERATION" = bootstrap-admin ]; then
+            test -n "$ACTOR_UID"
+            args+=(--operation bootstrap-admin --authorize-admin-bootstrap --actor-uid "$ACTOR_UID")
+          elif [ "$OPERATION" = collect ]; then
+            test -n "$ACTOR_UID"
+            args+=(--operation collect --actor-uid "$ACTOR_UID")
+          elif [ "$OPERATION" = index ]; then
+            args+=(--operation index --authorize-embedding-index)
+          fi
+          python3 infra/corpus_job.py "${args[@]}"

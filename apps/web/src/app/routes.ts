@@ -23,6 +23,14 @@ export const routeMetadata = [
     icon: Compass,
   },
   {
+    id: 'government-sources',
+    path: '/government-sources',
+    titleKey: 'sources',
+    nav: 'government-sources',
+    access: 'public',
+    icon: Files,
+  },
+  {
     id: 'detail',
     path: '/opportunities/:id',
     titleKey: 'detail',
@@ -122,6 +130,7 @@ export function routeTitle(
 ) {
   if (!meta) return hi ? 'पृष्ठ नहीं मिला' : 'Page not found';
   if (meta.id === 'home' && !authenticated) return hi ? 'होम' : 'Home';
+  if (meta.id === 'government-sources') return hi ? 'सरकारी स्रोत' : 'Government Sources';
   if (meta.id === 'dependent') return hi ? 'आश्रित का प्रोफ़ाइल' : 'Dependent profile';
   if (meta.id === 'candidate') return hi ? 'उम्मीदवार की समीक्षा' : 'Candidate review';
   if (meta.id === 'scenarios') return hi ? 'परिदृश्य स्टूडियो' : 'Scenario Studio';

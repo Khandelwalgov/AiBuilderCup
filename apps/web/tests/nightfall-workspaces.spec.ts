@@ -1,10 +1,11 @@
+import { artifactRoot } from './artifacts';
 import { sessionFixture } from './session-fixture';
 import { captureContract } from './capture';
 import { expect, test } from '@playwright/test';
 import type { components } from '../src/lib/api/schema';
 const id = '11111111-1111-4111-8111-111111111111';
 const second = '22222222-2222-4222-8222-222222222222';
-const artifacts = '/Users/govind/Projects/AIBuildersCup/.live-validation/ui';
+const artifacts = `${artifactRoot}/ui`;
 // All identities and policy data in these UI contracts are fictional. No auth bypass is shipped.
 test('household and unregistered business creation controls (mocked API)', async ({ page }) => {
   await sessionFixture(page);

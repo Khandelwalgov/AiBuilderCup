@@ -20,8 +20,8 @@ class ProviderFailure(ExtractionFailure):
         self.issues = issues or []
 
 
-def structured_schema() -> dict:
-    schema = copy.deepcopy(Extraction.model_json_schema())
+def structured_schema(model=Extraction) -> dict:
+    schema = copy.deepcopy(model.model_json_schema())
 
     def visit(node):
         if isinstance(node, dict):
@@ -41,11 +41,25 @@ def structured_schema() -> dict:
 
 
 def request(payload: dict) -> dict:
+    from opportunity_platform.ingestion import budget
+
     config = settings()
     if config.openai_api_key.startswith("AIza"):
         raise ProviderFailure("openai_provider_key_mismatch", stage="configuration")
     if not config.openai_api_key:
         raise ProviderFailure("openai_not_configured", stage="configuration")
+    model = payload.get("model")
+    if not isinstance(model, str) or not model:
+        raise ProviderFailure("openai_model_not_configured", stage="configuration")
+    try:
+        permit = budget.reserve(
+            "openai",
+            model,
+            len(json.dumps(payload, ensure_ascii=False).encode()) + 1024,
+            payload.get("max_output_tokens", config.openai_max_output_tokens),
+        )
+    except budget.BudgetDenied:
+        raise ProviderFailure("paid_inference_not_authorized", stage="cost_gate") from None
     try:
         with httpx.Client(timeout=config.openai_timeout_seconds, follow_redirects=False) as client:
             response = client.post(
@@ -66,7 +80,9 @@ def request(payload: dict) -> dict:
                 stage="generate_content",
                 http_status=response.status_code,
             )
-        return response.json()
+        result = response.json()
+        budget.settle(permit, result.get("usage") or {})
+        return result
     except ProviderFailure:
         raise
     except httpx.TimeoutException:
@@ -102,6 +118,8 @@ def response_text(response: dict) -> tuple[str, dict]:
 
 class OpenAIProvider:
     def extract(self, pages: list[dict], focus: str) -> ExtractionResult:
+        if len(pages) > 20:
+            raise ProviderFailure("worker_page_budget_exceeded", stage="input_budget")
         config = settings()
         contents = json.dumps({"task": focus, "untrusted_source_pages": pages}, ensure_ascii=False)
         schema = structured_schema()

@@ -219,7 +219,13 @@ function PersonProfile() {
       setEditing(false);
       setSection(null);
       cache.setQueryData(['personal-profile', personId], data);
-      for (const key of ['workspaces', 'dashboard-summary', 'plan'])
+      for (const key of [
+        'workspaces',
+        'dashboard-summary',
+        'plan',
+        'hybrid-search',
+        'scenario-base',
+      ])
         void cache.invalidateQueries({ queryKey: [key] });
     },
   });

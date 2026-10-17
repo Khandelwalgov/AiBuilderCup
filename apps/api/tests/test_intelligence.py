@@ -303,6 +303,21 @@ def test_large_fair_shortlist_and_national(db, monkeypatch):
     }
 
 
+def test_small_catalogue_empty_query_evaluates_all_family_pairs(db, monkeypatch):
+    from opportunity_platform.core.config import settings
+
+    monkeypatch.setattr(settings(), "enable_development_catalogue", True)
+    fictional_catalogue(db, 90)
+    request = SearchRequest(development=True, shortlist=50)
+    subjects = [
+        SearchSubject(str(i), "person", f"Fictional member {i}", None, []) for i in range(5)
+    ]
+    result = search(db, "unused", request, subjects)
+    assert result.assessed_pair_count == result.eligible_pair_count == 250
+    assert not result.truncated
+    assert result.subject_coverage == {str(i): 50 for i in range(5)}
+
+
 def test_private_routes_require_firebase(client):
     assert client.post("/v1/search", json={"mode": "me"}).status_code == 401
     assert client.post("/v1/scenarios/evaluate", json={"base": {"mode": "me"}}).status_code == 401

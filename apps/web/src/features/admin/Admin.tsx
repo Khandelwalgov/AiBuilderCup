@@ -22,6 +22,7 @@ export function Admin() {
   const { candidateId } = useParams();
   const navigate = useNavigate();
   const selected = candidateId ?? null;
+  const [reviewSearch, setReviewSearch] = useState('');
   const account = useQuery({
     queryKey: ['admin-account'],
     retry: false,
@@ -31,6 +32,15 @@ export function Admin() {
     },
   });
   const enabled = account.data?.is_admin === true;
+  const intelligence = useQuery({
+    queryKey: ['admin-intelligence-status'],
+    enabled,
+    retry: false,
+    queryFn: async () => {
+      const { data, error } = await api.GET('/v1/admin/intelligence-status');
+      return data ?? fail(error);
+    },
+  });
   const sources = useQuery({
     queryKey: ['admin-sources'],
     enabled,
@@ -40,10 +50,12 @@ export function Admin() {
     },
   });
   const reviews = useQuery({
-    queryKey: ['admin-reviews'],
+    queryKey: ['admin-reviews', reviewSearch],
     enabled,
     queryFn: async () => {
-      const { data, error } = await api.GET('/v1/admin/reviews');
+      const { data, error } = await api.GET('/v1/admin/reviews', {
+        params: { query: { q: reviewSearch, limit: 100 } },
+      });
       return data ?? fail(error);
     },
   });
@@ -81,6 +93,7 @@ export function Admin() {
       void cache.invalidateQueries({ queryKey: ['admin-reviews'] });
       void cache.invalidateQueries({ queryKey: ['admin-runs'] });
       void cache.invalidateQueries({ queryKey: ['admin-sources'] });
+      void cache.invalidateQueries({ queryKey: ['admin-intelligence-status'] });
     },
   });
   return (
@@ -126,8 +139,8 @@ export function Admin() {
           </dl>
           <p>
             {hi
-              ? 'मॉडल कॉल का शुल्क लग सकता है। विश्वसनीय खर्च अनुमान उपलब्ध नहीं है। कॉन्फ़िगर बजट स्वचालित खर्च सीमा नहीं है।'
-              : 'Model calls may incur charges. No reliable cost estimate is available. A configured budget is not an automatic spending cap.'}
+              ? 'भुगतान वाली AI केवल स्पष्ट रूप से अधिकृत, बजट-सीमित पृष्ठभूमि कार्यों में उपलब्ध है। इस पृष्ठ से खर्च की अनुमति नहीं दी जा सकती।'
+              : 'Paid AI requires an explicitly authorized background worker with durable spending limits. This page cannot authorize paid inference.'}
           </p>
           <p>
             {hi
@@ -154,11 +167,64 @@ export function Admin() {
         </section>
       ) : (
         <>
+          {intelligence.data && (
+            <section
+              className="panel"
+              aria-label={hi ? 'स्रोत प्रसंस्करण स्थिति' : 'Corpus processing status'}
+            >
+              <dl>
+                <dt>
+                  {hi
+                    ? 'संग्रहित दस्तावेज़ / मसौदे / प्रकाशित अवसर'
+                    : 'Captured documents / drafts / published opportunities'}
+                </dt>
+                <dd>
+                  {intelligence.data.unique_document_hashes} /{' '}
+                  {intelligence.data.draft_opportunities} /{' '}
+                  {intelligence.data.published_real_opportunities}
+                </dd>
+                <dt>
+                  {hi
+                    ? 'OCR / प्रसंस्करण बाकी / मानव समीक्षा'
+                    : 'OCR / processing backlog / human escalations'}
+                </dt>
+                <dd>
+                  {intelligence.data.documents_requiring_ocr} /{' '}
+                  {intelligence.data.processing_backlog} / {intelligence.data.human_escalations}
+                </dd>
+                <dt>
+                  {hi ? 'स्वतंत्र रूप से सत्यापित उम्मीदवार' : 'Independently verified candidates'}
+                </dt>
+                <dd>{intelligence.data.independently_verified_candidates}</dd>
+                <dt>{hi ? 'अंतिम सफल संग्रहण' : 'Last successful collection'}</dt>
+                <dd>
+                  {displayDate(
+                    intelligence.data.last_successful_collection,
+                    hi,
+                    hi ? 'अभी नहीं चला' : 'Not run',
+                  )}
+                </dd>
+                <dt>{hi ? 'AI आरक्षण / दर्ज खर्च' : 'AI reserved / recorded expenditure'}</dt>
+                <dd>
+                  US${intelligence.data.reserved_inference_usd} / US$
+                  {intelligence.data.recorded_inference_usd}
+                </dd>
+              </dl>
+            </section>
+          )}
+          {intelligence.error && <p role="alert">{intelligence.error.message}</p>}
           <div className="review-console">
             <aside className="review-queue">
               {' '}
               <section className="panel">
                 <h2>{t.reviewQueue}</h2>
+                <label>
+                  {hi ? 'शीर्षक या जारीकर्ता से मसौदे छाँटें' : 'Filter drafts by title or issuer'}
+                  <input
+                    value={reviewSearch}
+                    onChange={(event) => setReviewSearch(event.target.value)}
+                  />
+                </label>
                 {reviews.isError && <p role="alert">{reviews.error.message}</p>}
                 {reviews.isPending ? (
                   <p>{t.loading}</p>
@@ -317,6 +383,9 @@ function CandidateEditor({ id }: { id: string }) {
       void cache.invalidateQueries({ queryKey: ['facets'] });
       void cache.invalidateQueries({ queryKey: ['plan'] });
       void cache.invalidateQueries({ queryKey: ['dashboard-summary'] });
+      void cache.invalidateQueries({ queryKey: ['hybrid-search'] });
+      void cache.invalidateQueries({ queryKey: ['scenario-base'] });
+      void cache.invalidateQueries({ queryKey: ['admin-intelligence-status'] });
     },
   });
   useEffect(() => {
@@ -393,6 +462,18 @@ function CandidateEditor({ id }: { id: string }) {
       <p>
         {t.tokenUsage}: {JSON.stringify(candidate.extraction_usage ?? {})}
       </p>
+      {candidate.processing_review && (
+        <details>
+          <summary>
+            {hi
+              ? 'प्रसंस्करण और स्वतंत्र समीक्षा का विवरण'
+              : 'Processing and independent review findings'}
+          </summary>
+          <pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>
+            {JSON.stringify(candidate.processing_review, null, 2)}
+          </pre>
+        </details>
+      )}
       <span className="eyebrow">
         {displayLabel(candidate.publication_state, hi)} · v{candidate.version}
       </span>

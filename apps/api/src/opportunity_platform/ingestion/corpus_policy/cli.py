@@ -12,7 +12,7 @@ REPO = Path(__file__).resolve().parents[6]
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=["audit", "import", "live-test"])
+    parser.add_argument("command", choices=["audit", "prepare", "import", "stage", "live-test"])
     parser.add_argument(
         "--manifest", type=Path, default=REPO / "data/corpus/acquired-manifest.jsonl"
     )
@@ -20,7 +20,8 @@ def main():
     parser.add_argument("--corpus-root", type=Path, required=True)
     parser.add_argument("--document-id", action="append")
     parser.add_argument("--snapshot-id", action="append")
-    parser.add_argument("--provider", choices=["gemini"])
+    parser.add_argument("--provider", choices=["gemini", "openai"])
+    parser.add_argument("--review-provider", choices=["gemini", "openai"])
     parser.add_argument("--limit", type=int, default=8)
     parser.add_argument("--output", type=Path, help="New report path, exclusively created")
     parser.add_argument(
@@ -31,7 +32,8 @@ def main():
     parser.add_argument("--model")
     parser.add_argument("--review-model")
     parser.add_argument("--focus")
-    parser.add_argument("--max-repairs", type=int, choices=[0, 1, 2], default=0)
+    parser.add_argument("--candidate-json", type=Path)
+    parser.add_argument("--max-repairs", type=int, choices=[0, 1], default=0)
     parser.add_argument("--max-input-tokens", type=int, default=20000)
     parser.add_argument("--max-output-tokens", type=int, default=8192)
     args = parser.parse_args()
@@ -39,11 +41,19 @@ def main():
         parser.error("Import/test limit must be between 1 and 20")
     if args.execute and not args.actor_uid:
         parser.error("An existing administrator actor UID is required for writes")
+    if args.command == "stage" and not (
+        args.candidate_json
+        and args.focus
+        and args.snapshot_id
+        and len(args.snapshot_id) == 1
+        and args.limit == 1
+    ):
+        parser.error("Staging requires one --snapshot-id, --limit 1, --focus and --candidate-json")
     if args.command == "live-test" and args.execute:
         if not (
             args.authorize_paid
             and (args.document_id or args.snapshot_id)
-            and args.provider == "gemini"
+            and args.provider in {"gemini", "openai"}
             and args.focus
             and args.model
             and args.review_model
@@ -59,8 +69,15 @@ def main():
         from opportunity_platform.core.config import settings
 
         config = settings()
-        if not config.ai_ingestion_live_enabled or not config.gemini_api_key:
-            parser.error("Live Gemini ingestion is disabled or unconfigured; no database writes")
+        if not (
+            config.process_role == "ingestion_worker"
+            and config.paid_ai_worker_enabled
+            and config.ai_global_budget_usd > 0
+            and config.ai_run_budget_usd > 0
+        ):
+            parser.error(
+                "Paid worker permission and positive budgets are required; no database writes"
+            )
     records = load_manifest(args.manifest)
     if args.document_id:
         unknown = set(args.document_id) - {r.document_id for r in records}
@@ -73,7 +90,7 @@ def main():
         records = [r for r in records if r.snapshot_id in args.snapshot_id]
     if args.command == "live-test" and args.execute and len(records) != 1:
         parser.error("Select one exact snapshot; document identity has multiple archived versions")
-    if args.command != "audit":
+    if args.command not in {"audit", "prepare"}:
         # Distinct source URL/hash, with chronological snapshot order retained.
         records = records[: args.limit]
     registry = registry_from(args.registry)
@@ -85,7 +102,29 @@ def main():
         "original_manifest_modified": False,
         "immutable_manifest_sha256": hashlib.sha256(args.manifest.read_bytes()).hexdigest(),
     }
-    if args.command != "audit" and args.execute:
+    if args.command == "prepare":
+        from .packets import checkpoint
+
+        results = [
+            checkpoint(item, args.corpus_root / "processing" / "packets") for item in audited
+        ]
+        report["checkpoints"] = {
+            "created": sum(created for _, created in results),
+            "reused": sum(not created for _, created in results),
+        }
+    if args.command == "stage":
+        from .prepared import PendingIndependentReview, PreparedExtractor
+        from .validation import validate
+
+        prepared = PreparedExtractor(
+            json.loads(args.candidate_json.read_text()), audited[0].record.sha256
+        )
+        _, findings = validate(prepared.candidate.model_dump(mode="json"), audited[0])
+        report["deterministic_findings"] = [p.model_dump(mode="json") for p in findings]
+        report["independent_semantic_review"] = "pending; this session cannot self-verify"
+        if any(p.severity in {"error", "critical"} for p in findings):
+            parser.error("Prepared candidate failed deterministic checks; no database writes")
+    if args.command not in {"audit", "prepare"} and args.execute:
         from sqlalchemy.orm import Session
 
         from opportunity_platform.db.session import engine
@@ -110,20 +149,24 @@ def main():
                         }
                     )
                 else:
-                    from .live import GeminiRole
+                    if args.command == "stage":
+                        extractor, reviewer = prepared, PendingIndependentReview()
+                    else:
+                        from .live import GeminiRole, OpenAIRole
 
-                    extractor = GeminiRole(
-                        "extractor",
-                        args.model,
-                        max_input_tokens=args.max_input_tokens,
-                        max_output_tokens=args.max_output_tokens,
-                    )
-                    reviewer = GeminiRole(
-                        "reviewer",
-                        args.review_model,
-                        max_input_tokens=args.max_input_tokens,
-                        max_output_tokens=args.max_output_tokens,
-                    )
+                        roles = {"gemini": GeminiRole, "openai": OpenAIRole}
+                        extractor = roles[args.provider](
+                            "extractor",
+                            args.model,
+                            max_input_tokens=args.max_input_tokens,
+                            max_output_tokens=args.max_output_tokens,
+                        )
+                        reviewer = roles[args.review_provider or args.provider](
+                            "reviewer",
+                            args.review_model,
+                            max_input_tokens=args.max_input_tokens,
+                            max_output_tokens=args.max_output_tokens,
+                        )
                     run = extract_candidate(
                         session,
                         item,

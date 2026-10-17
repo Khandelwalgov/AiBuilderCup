@@ -1,4 +1,6 @@
 import { ScenarioStudio } from '../features/intelligence/ScenarioStudio';
+import { Recommendations } from '../features/intelligence/Recommendations';
+import { GovernmentSources } from '../features/opportunities/GovernmentSources';
 import { DirtyFormsProvider, useDiscardGuard } from './dirty-forms';
 import { ContextLink as Link } from './subject-context';
 import { ContextNavLink as NavLink, SubjectProvider, useSubject } from './subject-context';
@@ -151,9 +153,11 @@ export function ApplicationFrame({ session }: { session: SessionState }) {
                 </button>
                 <p className="nav-caption">{t.discoverNav}</p>
                 <nav aria-label="Main navigation">
-                  {navigation.map(({ to, label, icon: Icon, id }, i) => (
+                  {navigation.map(({ to, label, icon: Icon, id }) => (
                     <div key={to}>
-                      {i === 2 && <p className="nav-caption workspace-caption">{t.workspaceNav}</p>}
+                      {id === 'profile' && (
+                        <p className="nav-caption workspace-caption">{t.workspaceNav}</p>
+                      )}
                       <NavLink
                         to={to}
                         end={to === '/'}
@@ -210,6 +214,9 @@ export function ApplicationFrame({ session }: { session: SessionState }) {
                       {hi ? 'होम' : 'Home'}
                     </NavLink>
                     <NavLink to="/discover">{t.discover}</NavLink>
+                    <NavLink to="/government-sources">
+                      {hi ? 'सरकारी स्रोत' : 'Government Sources'}
+                    </NavLink>
                     <Link to="/#how-it-works">{hi ? 'कैसे काम करता है' : 'How it works'}</Link>
                   </nav>
                 )}
@@ -302,6 +309,7 @@ export function ApplicationFrame({ session }: { session: SessionState }) {
                             {
                               home: user ? <Cockpit /> : <Landing />,
                               discover: <Discover />,
+                              'government-sources': <GovernmentSources />,
                               detail: <Detail />,
                               profile: <Profile />,
                               documents: <Documents />,
@@ -428,6 +436,12 @@ export function Cockpit() {
         </section>
       )}
       {plan.isError && <p role="alert">{plan.error.message}</p>}
+      {overview.data?.profile_name && (
+        <section aria-label={hi ? 'आपके लिए अवसर' : 'Personalized opportunities'}>
+          <h2>{hi ? 'आपके लिए अवसर' : 'Opportunities for you'}</h2>
+          <Recommendations mode="me" useFilters={false} />
+        </section>
+      )}
       <div className="dashboard-actions">
         <Link className="dashboard-primary" to={overview.data?.profile_name ? '/plan' : '/profile'}>
           <span className="eyebrow">

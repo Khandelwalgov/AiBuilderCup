@@ -71,6 +71,12 @@ def import_archive(session, audited, actor):
     snapshot_id = identifier(f"snapshot:{record.document_id}:{record.sha256}")
     snapshot = session.get(SourceSnapshot, snapshot_id)
     if snapshot is None:
+        if source.last_checked_at is None or record.downloaded_at > source.last_checked_at:
+            source.last_checked_at = record.downloaded_at
+            source.last_successful_check_at = record.downloaded_at
+        source.status = (
+            "needs_review"  # keep any previously published version; never auto-publish change
+        )
         previous = session.scalar(
             select(SourceSnapshot)
             .where(SourceSnapshot.source_id == source_id)
@@ -156,7 +162,7 @@ def import_archive(session, audited, actor):
     return snapshot, run
 
 
-def extract_candidate(session, audited, actor, focus, extractor, reviewer, *, max_repairs=2):
+def extract_candidate(session, audited, actor, focus, extractor, reviewer, *, max_repairs=1):
     snapshot, _ = import_archive(session, audited, actor)
     # Idempotent within explicit focus/provider/version/budget; no repeated model calls.
     key = digest(
@@ -168,6 +174,7 @@ def extract_candidate(session, audited, actor, focus, extractor, reviewer, *, ma
             "extractor": extractor.identity,
             "reviewer": reviewer.identity,
             "max_repairs": max_repairs,
+            "prepared_candidate_hash": getattr(extractor, "input_hash", None),
         }
     )
     run_id = identifier("workflow:" + key)
@@ -187,14 +194,28 @@ def extract_candidate(session, audited, actor, focus, extractor, reviewer, *, ma
     )
     session.add(run)
     session.flush()
-    outcome = run_pipeline(audited, focus, extractor, reviewer, max_repairs=max_repairs)
+    from opportunity_platform.ingestion.budget import scope
+
+    with scope(run.id):
+        outcome = run_pipeline(audited, focus, extractor, reviewer, max_repairs=max_repairs)
     run.status = outcome.status
     run.finished_at = datetime.now(UTC)
-    run.usage = {"calls": outcome.model_calls, "per_call": outcome.usage}
+    run.usage = {
+        "calls": sum(u.get("external_api_calls", 0) for u in outcome.usage),
+        "attempted_role_calls": outcome.model_calls,
+        "per_call": outcome.usage,
+    }
     run.diagnostics = {
         "origin": VERSION,
         "focus": focus,
         "reviewer": reviewer.identity,
+        "independence": "not_performed"
+        if not getattr(reviewer, "invokes_model", True)
+        else (
+            "separate_requests_same_model"
+            if getattr(extractor, "model", None) == getattr(reviewer, "model", None)
+            else "separate_provider_or_model_requests"
+        ),
         "workflow": outcome.model_dump(mode="json"),
     }
     if outcome.candidate:

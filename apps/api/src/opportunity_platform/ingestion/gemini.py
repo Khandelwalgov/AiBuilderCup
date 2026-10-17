@@ -48,16 +48,26 @@ class ExtractionFailure(Exception):
 
 
 def extract(pages: list[dict], focus: str, *, usage_sink=None):
+    from opportunity_platform.ingestion import budget
+
     config = settings()
     if config.gemini_api_key.startswith("sk-"):
         raise ExtractionFailure("gemini_provider_key_mismatch")
     if not config.gemini_api_key:
         raise ExtractionFailure("gemini_not_configured")
+    if len(pages) > 20:
+        raise ExtractionFailure("worker_page_budget_exceeded")
     contents = json.dumps({"task": focus, "untrusted_source_pages": pages}, ensure_ascii=False)
     stage = "count_tokens"
     measured_input_tokens = None
     usage_details = {}
     try:
+        counted_permit = budget.reserve(
+            "gemini",
+            config.gemini_model,
+            len((SYSTEM + contents + json.dumps(Extraction.model_json_schema())).encode()) + 1024,
+            0,
+        )
         # One attempt per API call bounds cost and avoids hidden SDK retries.
         # No user facts, external tools, sampling overrides or automatic function calls.
         with genai.Client(
@@ -74,6 +84,7 @@ def extract(pages: list[dict], focus: str, *, usage_sink=None):
                 contents=[SYSTEM, json.dumps(Extraction.model_json_schema()), contents],
             )
             measured_input_tokens = counted.total_tokens
+            budget.settle(counted_permit, {"input_tokens": 0, "output_tokens": 0})
             if counted.total_tokens is None:
                 raise ExtractionFailure("gemini_token_count_unavailable")
             if counted.total_tokens + 1024 > config.gemini_max_input_tokens:
@@ -90,6 +101,12 @@ def extract(pages: list[dict], focus: str, *, usage_sink=None):
                 )
             )
             stage = "generate_content"
+            permit = budget.reserve(
+                "gemini",
+                config.gemini_model,
+                counted.total_tokens + 1024,
+                config.gemini_max_output_tokens,
+            )
             result = client.models.generate_content(
                 model=config.gemini_model,
                 contents=contents,
@@ -113,6 +130,7 @@ def extract(pages: list[dict], focus: str, *, usage_sink=None):
         }
         if usage_sink is not None:
             usage_sink.update(usage_details)
+        budget.settle(permit, usage_details)
         candidates = result.candidates or []
         if not candidates:
             raise ExtractionFailure("gemini_no_candidate")
@@ -144,6 +162,8 @@ def extract(pages: list[dict], focus: str, *, usage_sink=None):
             )
         )
         return candidate
+    except budget.BudgetDenied:
+        raise ExtractionFailure("paid_inference_not_authorized", stage="cost_gate") from None
     except ExtractionFailure as error:
         error.stage = error.stage or stage
         error.input_tokens = measured_input_tokens

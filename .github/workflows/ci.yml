@@ -1,5 +1,12 @@
 name: intelligence
-on: [push, pull_request, workflow_call]
+on:
+  push:
+  pull_request:
+  workflow_call:
+    inputs:
+      build_container:
+        type: boolean
+        default: true
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -16,6 +23,22 @@ jobs:
           --health-timeout 3s --health-retries 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Detect runtime changes
+        id: runtime
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+          with open(os.environ['GITHUB_EVENT_PATH']) as stream:
+              event = json.load(stream)
+          base = event.get('pull_request', {}).get('base', {}).get('sha') or event.get('before') or 'HEAD^'
+          result = subprocess.run(['git', 'diff', '--name-only', base, 'HEAD'], capture_output=True, text=True)
+          changed = result.stdout.splitlines()
+          required = result.returncode != 0 or any(p.startswith(('apps/api/', 'infra/', 'scripts/release_container_check.py')) for p in changed)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('container_required=' + str(required).lower() + '\n')
+          PY
       - uses: astral-sh/setup-uv@v6
         with:
           version: "0.11.28"
@@ -27,13 +50,21 @@ jobs:
         with:
           node-version: "24"
       - run: make setup migrate seed contracts check
+      - name: Real local multilingual embedding inference (no paid API)
+        if: (inputs.build_container == true || github.event_name == 'push' || github.event_name == 'pull_request') && steps.runtime.outputs.container_required == 'true'
+        run: |
+          cd apps/api
+          uv run python -m opportunity_platform.retrieval.model_artifact --directory /tmp/embedding-model
+          NEURAL_TEST_MODEL_DIRECTORY=/tmp/embedding-model uv run pytest tests/test_neural.py -q
       - run: git diff --exit-code -- packages/contracts/openapi.json apps/web/src/lib/api/schema.d.ts
       - run: cd apps/web && pnpm exec playwright install --with-deps chromium
       - run: make test-e2e
 
       - name: Production container build (local CI only, never push)
+        if: (inputs.build_container == true || github.event_name == 'push' || github.event_name == 'pull_request') && steps.runtime.outputs.container_required == 'true'
         run: docker build --platform linux/amd64 -t opportunity-release-local:readiness apps/api
       - name: Fresh PostgreSQL migrations and runtime image audit
+        if: (inputs.build_container == true || github.event_name == 'push' || github.event_name == 'pull_request') && steps.runtime.outputs.container_required == 'true'
         run: python3 scripts/release_container_check.py
       - name: Deployment plan only (public venuesignal / Unclaimed config, no cloud calls)
         run: python3 infra/deploy.py --config infra/deploy.example.json

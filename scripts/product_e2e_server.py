@@ -231,6 +231,51 @@ try:
             )
         except auth.UidAlreadyExistsError:
             pass
+        corpus_root = os.environ.get("PRODUCT_E2E_CORPUS_ROOT")
+        if corpus_root:
+            import json
+
+            from opportunity_platform.ingestion.corpus_policy.archive import (
+                audit_record,
+                load_manifest,
+                registry_from,
+            )
+            from opportunity_platform.ingestion.corpus_policy.prepared import (
+                PendingIndependentReview,
+                PreparedExtractor,
+            )
+            from opportunity_platform.ingestion.corpus_policy.service import extract_candidate
+
+            repo = Path(__file__).resolve().parents[1]
+            public_root = Path(corpus_root).resolve()
+            if public_root != repo / ".corpus":
+                raise ValueError("Only this repository's captured public corpus is allowed")
+            registry = registry_from(repo / "data/corpus/sources.json")
+            for record in load_manifest(repo / "data/corpus/acquired-manifest.jsonl"):
+                packet = (
+                    public_root / "processing/codex-v1" / (record.snapshot_id + ".candidate.json")
+                )
+                if packet.exists():
+                    audited = audit_record(record, public_root, registry)
+                    extractor = PreparedExtractor(json.loads(packet.read_text()), record.sha256)
+                    extract_candidate(
+                        session,
+                        audited,
+                        reviewer,
+                        extractor.candidate.candidate.title,
+                        extractor,
+                        PendingIndependentReview(),
+                        max_repairs=0,
+                    )
+            try:
+                auth.create_user(
+                    uid=reviewer.firebase_uid,
+                    email="corpus-reviewer@example.invalid",
+                    password="Fictional-Only-123",
+                    app=firebase_app,
+                )
+            except auth.UidAlreadyExistsError:
+                pass
         legacy_user = User(firebase_uid="fictional-legacy-education")
         session.add(legacy_user)
         session.flush()

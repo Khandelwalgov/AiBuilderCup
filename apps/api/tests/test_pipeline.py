@@ -395,7 +395,10 @@ def test_development_view_is_opt_in_and_cors_mutations_are_supported(client, mon
 def test_document_prompt_injection_cannot_supply_tools_or_roles(monkeypatch):
     from types import SimpleNamespace
 
-    from opportunity_platform.ingestion import gemini
+    from opportunity_platform.ingestion import budget, gemini
+
+    monkeypatch.setattr(budget, "reserve", lambda *args: None)
+    monkeypatch.setattr(budget, "settle", lambda *args: None)
 
     monkeypatch.setattr(settings(), "gemini_api_key", "synthetic-api-key-never-a-real-secret")
     calls = []

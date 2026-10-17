@@ -1,6 +1,7 @@
+import { artifactRoot } from './artifacts';
 import { expect, test } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
-const artifacts = '/Users/govind/Projects/AIBuildersCup/.live-validation/ui';
+const artifacts = `${artifactRoot}/ui`;
 for (const width of [1440, 1024, 390, 320]) {
   test(`Nightfall real public and protected empty states: ${width}px EN/HI`, async ({ page }) => {
     await mkdir(artifacts, { recursive: true });

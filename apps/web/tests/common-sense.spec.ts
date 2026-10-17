@@ -134,7 +134,7 @@ test('fictional current-course source maps to the exact enrollment/course questi
 }) => {
   await minimal(page);
   await page.getByRole('button', { name: 'Cancel', exact: true }).click();
-  await page.goto('/discover?development=true');
+  await page.goto('/discover?development=true&mode=explore');
   await page.getByRole('link', { name: 'FICTIONAL scholarship 3', exact: true }).click();
   const opportunity = page.url();
   await page.getByRole('button', { name: 'Check my eligibility', exact: true }).click();

@@ -23,3 +23,11 @@ python3 scripts/release_container_check.py
 ```
 
 The container checker creates fresh **local disposable** PostgreSQL 17, applies migrations there, verifies the read-only gate and runtime package, then removes task resources. It never reads a Neon URL or uses the application database. Do not run `make migrate`, `make seed` or generic `alembic upgrade head` against Neon for this adaptation. Existing `.env` files must remain untouched.
+
+## Current intelligence release
+
+The new image adds pinned CPU multilingual weights and additive migration `f25b1000abcd` (public policy vectors and durable inference reservations). Existing production remains at `f24a1000abcd`; an upgrade needs explicit approval. After schema verification/upgrade, the runner checks runtime-role table privileges read-only before API promotion. It never assumes that the migration role's grants apply to the application role.
+
+[Corpus worker configuration](corpus.example.json) and [manual worker runner](corpus_job.py) preserve the archive in private GCS and import metadata/drafts into Neon. Workers use a separate **direct application-role** secret, not the pooler or schema-owner credential; the session lease needs a direct connection. [Worker secret preparation](worker_secret.py) is plan-only by default and keeps values in memory/stdin. External AI remains disabled with zero budgets even when provider keys exist. Local embeddings make no inference API calls. See the [measured audit](../docs/unclaimed-intelligence-audit.md) for unprocessed OCR/semantic-review work.
+
+Backend, frontend-only and corpus workflows remain manual and use WIF. Their approval gate fails before cloud authentication when native reviewer/default-branch restrictions are absent. Actual inspection found this repository private on GitHub Free with no production environment: a supported native approval setup or explicitly authorized one-time operator boundary is required. No workflow dispatch is assumed to constitute protected approval by itself. See runbook §8 for the proposed resources and exact release/import sequence.

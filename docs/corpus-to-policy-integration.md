@@ -1,10 +1,12 @@
+> 17 October follow-up: paid worker execution now additionally requires an explicit worker role, paid-worker permission, positive global/per-run budgets and reviewed provider/model price ceilings. Defaults remain zero. Interactive Codex packets can be staged without API calls; missing separate semantic review is escalated, never fabricated. Current evidence: [intelligence audit](unclaimed-intelligence-audit.md).
+
 # Corpus-to-policy integration — phase 2
 
 Verified 17 October 2026 (Asia/Kolkata). Work is isolated on `codex/corpus-policy-integration` in `/Users/govind/.codex/worktrees/corpus-policy/AIBuildersCup`. The shared checkout, deployment infrastructure, retrieval, Scenario Studio and frontend are unchanged. No paid model call, public-source fetch, publication, cloud operation or product-database import was performed. Database writes in verification used disposable PostgreSQL schemas only.
 
 ## Outcome and scope
 
-The corpus can now enter an offline source/snapshot import, bounded text extraction, deterministic candidate validation, independent AI review, at most two feedback-driven repairs, and a private draft or human escalation. Every outcome requires a human decision. The implementation reuses existing records and publication controls without modifying the existing ingestion/provider behavior or DEPwD drafts.
+The corpus can now enter an offline source/snapshot import, bounded text extraction, deterministic candidate validation, independent AI review, at most one feedback-driven repair, and a private draft or human escalation. Every outcome requires a human decision. The implementation reuses existing records and publication controls without modifying the existing ingestion/provider behavior or DEPwD drafts.
 
 The quality audit read all archived records to establish counts. Candidate workflow tests use a small representative set and mocked models. There was no attempt to extract or publish all 120 documents. Only three unique documents currently pass the conservative automatic extraction gate; the other files remain preserved for triage, OCR/encoding remediation or scope/metadata review.
 
@@ -55,7 +57,7 @@ Implementation: `apps/api/src/opportunity_platform/ingestion/corpus_policy/`.
 - `archive.py`: manifest/schema validation, official host/path and source-policy checks, byte/hash/size validation, PDF/HTML text extraction, source-type/title/issuer triage and material-clause inventory.
 - `contracts.py`: strict candidate/coverage, review issue, independent review, stage trace and outcome contracts. AI output has no approval or publication field.
 - `validation.py`: source checks described below; it uses the existing `CandidateData`, typed `Rule`/`Condition` and exact-evidence validator.
-- `workflow.py`: fresh independent review and 0–2 feedback repair cycles, with explicit human outcomes and no provider fallback.
+- `workflow.py`: fresh independent review and 0–1 feedback repair cycles, with explicit human outcomes and no provider fallback.
 - `service.py`: administrator-only, append-only corpus namespace mapping into `Source`, `SourceSnapshot`, `IngestionRun` and private draft `OpportunityVersion` records.
 - `live.py`: explicit future Gemini role clients with bounded tokens/timeout/retry behavior; never invoked by audit/import or these tests.
 - `cli.py`: read-only audit/import plans by default; database writes require `--execute` and an existing administrator UID; live tests require additional explicit authorization.
@@ -99,7 +101,7 @@ Extraction produces a typed candidate plus clause-disposition mapping. Review is
 
 Each review returns `assessment`, source/candidate hashes, all examined clause IDs and issues with code, severity (`info`/`warning`/`error`/`critical`), field, exact source evidence, suggested correction and a human-required flag. Hash mismatch, incomplete coverage, inconsistent assessment, fabricated evidence, missing consequential issue evidence or malformed review output forces escalation.
 
-The workflow makes one initial extraction and permits at most two feedback repairs. A valid candidate is independently re-reviewed after each repair. At most three extraction/repair role calls and three review role calls occur. Provider failures, invalid independent reviews, critical issues, unreadable sources and unresolved amendment context stop for a human. Remaining invalid candidates after the second repair are retained only as privileged unvalidated diagnostics.
+The workflow makes one initial extraction and permits at most one feedback repair. A valid candidate is independently re-reviewed after each repair. At most two extraction/repair role calls and two review role calls occur. Provider failures, invalid independent reviews, critical issues, unreadable sources and unresolved amendment context stop for a human. Remaining invalid candidates after the single repair are retained only as privileged unvalidated diagnostics.
 
 Success means `draft_for_human_review`, not approval. Every outcome has `human_required=true`. Every saved draft has a mandatory completeness/consequential-criteria flag, `publication_state=draft`, `status=needs_review`, no published pointer and no executable published requirements. Administrative safety flags are added after the reviewed candidate; both the reviewed-stage hash and final stored-candidate hash are retained.
 
@@ -109,7 +111,7 @@ The AI stage never calls the existing approval service, creates a human `Candida
 
 24 scoped tests passed with the real archive enabled. The complete backend suite passed **217 passed, 1 skipped**. Backend lint and format checks passed. Existing deprecation warnings remain. An additional Ruff invocation from the repository root reported eight pre-existing findings in infra/scripts under the root lint context; those out-of-scope files were left unchanged. The API-configured lint and format checks passed. There was no frontend test or deployment change.
 
-Tests cover exact citations; unsupported schemas/rules; lakh conversion; invented amounts; income definitions/periods; publication-vs-deadline confusion; material-block coverage; reversed comparison caught by independent review; feedback-driven repairs; the two-cycle cap; critical/reviewer failure escalation; unknown-income preservation; source policy/path/hash/size failures; scanned PDFs; PDF pages and HTML sections; link-index rejection; substantive HTML support; disabled model client protection; administrator permissions; duplicate/version/reversion identities; immutable text conflict; persistence/idempotency; unchanged published catalogue queries; and representative real scholarship, welfare, MSME and tender files.
+Tests cover exact citations; unsupported schemas/rules; lakh conversion; invented amounts; income definitions/periods; publication-vs-deadline confusion; material-block coverage; reversed comparison caught by independent review; feedback-driven repairs; the one-cycle cap; critical/reviewer failure escalation; unknown-income preservation; source policy/path/hash/size failures; scanned PDFs; PDF pages and HTML sections; link-index rejection; substantive HTML support; disabled model client protection; administrator permissions; duplicate/version/reversion identities; immutable text conflict; persistence/idempotency; unchanged published catalogue queries; and representative real scholarship, welfare, MSME and tender files.
 
 Real-archive tests use mocked responses, with unsupported source conditions deliberately represented as unknown. They verify technical integration and escalation, not AI extraction accuracy. The current scholarship/welfare/tender specimens escalate rather than forcing models to interpret unreadable text or link labels. MSME specimens exercise the private candidate workflow; synthetic source cases exercise semantic repair and rejection boundaries. Tests create/drop isolated random PostgreSQL schemas and do not truncate application tables.
 
@@ -149,7 +151,7 @@ AI_INGESTION_LIVE_ENABLED=true PYTHONPATH="$PWD/src" \
   --execute --authorize-paid
 ```
 
-Do not execute this as part of ordinary validation. Without `--execute` it is a read-only plan. Preflight rejects a disabled or unconfigured model before any database append. Execution additionally requires `--authorize-paid`, an explicit provider/model pair, one exact selected snapshot and the live-ingestion configuration flag. Multi-version document selections must resolve to one exact snapshot. SDK requests have a 60-second timeout, one attempt, no tools, no automatic function calls and no fallback. Input-token limits are checked before generation; oversized context escalates without truncation. At most six generation and six token-count requests are possible. These are token/request bounds, not a dollar-price guarantee; no live model behavior or cost was measured.
+Do not execute this as part of ordinary validation. Without `--execute` it is a read-only plan. Preflight rejects a disabled or unconfigured model before any database append. Execution additionally requires `--authorize-paid`, an explicit provider/model pair, one exact selected snapshot and the live-ingestion configuration flag. Multi-version document selections must resolve to one exact snapshot. SDK requests have a 60-second timeout, one attempt, no tools, no automatic function calls and no fallback. Input-token limits are checked before generation; oversized context escalates without truncation. At most four generation and four token-count requests are structurally possible, further restricted by durable run/day/month/spending reservations. These are token/request bounds, not a dollar-price guarantee; no live model behavior or cost was measured.
 
 ## Remaining work
 

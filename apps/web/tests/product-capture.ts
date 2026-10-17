@@ -1,3 +1,4 @@
+import { artifactRoot } from './artifacts';
 import { expect, type Page } from '@playwright/test';
 export async function productCapture(page: Page, name: string) {
   await expect(page.locator('main h1').first()).toBeVisible();
@@ -12,7 +13,7 @@ export async function productCapture(page: Page, name: string) {
   await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({
-    path: `/Users/govind/Projects/AIBuildersCup/.live-validation/${name}.png`,
+    path: `${artifactRoot}/${name}.png`,
     fullPage: true,
     animations: 'disabled',
   });

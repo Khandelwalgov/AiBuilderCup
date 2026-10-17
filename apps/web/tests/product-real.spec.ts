@@ -49,7 +49,7 @@ test('real emulator + API/PostgreSQL/private file journey, compatible reuse, dow
   await login(page, 'learner');
   await profile(page, 'Fictional real-flow learner');
   const onboardingMs = Date.now() - started;
-  await page.goto('/discover?development=true');
+  await page.goto('/discover?development=true&mode=explore');
   await page.getByRole('link', { name: 'FICTIONAL scholarship 1', exact: true }).click();
   await page.getByRole('button', { name: 'Check my eligibility', exact: true }).click();
   await expect(

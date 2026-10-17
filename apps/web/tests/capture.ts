@@ -1,7 +1,8 @@
+import { artifactRoot } from './artifacts';
 import { expect, type Page } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
 export async function captureContract(page: Page, name: string) {
-  const directory = '/Users/govind/Projects/AIBuildersCup/.live-validation/reimagine-after';
+  const directory = `${artifactRoot}/reimagine-after`;
   await mkdir(directory, { recursive: true });
   for (const width of [1440, 1024, 390, 320]) {
     await page.setViewportSize({ width, height: 960 });

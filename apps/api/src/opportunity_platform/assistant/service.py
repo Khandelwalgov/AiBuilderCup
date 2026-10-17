@@ -77,6 +77,9 @@ def intent(question, use_ai):
             "cited local explanation.",
         )
     try:
+        from opportunity_platform.ingestion import budget
+
+        permit = budget.reserve("gemini", config.gemini_model, 2048, 256)
         with genai.Client(
             api_key=config.gemini_api_key,
             http_options=types.HttpOptions(
@@ -96,6 +99,15 @@ def intent(question, use_ai):
                     automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
                 ),
             )
+        usage = getattr(result, "usage_metadata", None)
+        budget.settle(
+            permit,
+            {
+                "input_tokens": getattr(usage, "prompt_token_count", None),
+                "output_tokens": getattr(usage, "candidates_token_count", None),
+                "thinking_tokens": getattr(usage, "thoughts_token_count", None),
+            },
+        )
         return IntentResult.model_validate_json(result.text).intent, config.gemini_model
     except Exception:
         raise APIError(

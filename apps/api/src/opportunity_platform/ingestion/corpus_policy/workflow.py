@@ -1,4 +1,4 @@
-"""Independent review and at most two feedback repairs; final authority is human."""
+"""Independent review and at most one feedback repair; final authority is human."""
 
 from typing import Protocol
 
@@ -18,14 +18,15 @@ class Reviewer(Protocol):
     def review(self, audited, candidate): ...
 
 
-def run_pipeline(audited, focus, extractor, reviewer, *, max_repairs=2):
-    if not 0 <= max_repairs <= 2:
-        raise ValueError("At most two repair cycles are permitted")
+def run_pipeline(audited, focus, extractor, reviewer, *, max_repairs=1):
+    if not 0 <= max_repairs <= 1:
+        raise ValueError("At most one repair cycle are permitted")
     if extractor is reviewer:
         raise ValueError("Extraction and independent review require separate role instances")
     if not focus.strip() or len(focus) > 2000:
         raise ValueError("An explicit bounded opportunity focus is required")
     stages, usage, calls, candidate, feedback, previous = [], [], 0, None, [], None
+    reviewable = None
     # No model is invoked for unreadable/irrelevant/amendment-without-context sources.
     if not audited.suitable_for_extraction:
         problem = issue(
@@ -46,7 +47,7 @@ def run_pipeline(audited, focus, extractor, reviewer, *, max_repairs=2):
         )
     for attempt in range(max_repairs + 1):
         try:
-            calls += 1
+            calls += int(getattr(extractor, "invokes_model", True))
             raw, consumed = extractor.extract(audited, focus, feedback, previous)
             usage.append({"role": "extract" if attempt == 0 else "repair", **consumed})
         except Exception:
@@ -69,13 +70,20 @@ def run_pipeline(audited, focus, extractor, reviewer, *, max_repairs=2):
             raw = raw.model_dump(mode="json")
         previous = raw
         candidate, problems = validate(raw, audited)
+        reviewable = (
+            candidate if not any(p.severity in {"error", "critical"} for p in problems) else None
+        )
         review = None
         if candidate:
             try:
-                calls += 1
+                calls += int(getattr(reviewer, "invokes_model", True))
                 output, consumed = reviewer.review(audited, candidate)
                 usage.append({"role": "independent_review", **consumed})
                 review = validate_review(output, candidate, audited)
+                if getattr(reviewer, "semantic_findings_required", False):
+                    from .validation import validate_claim_findings
+
+                    validate_claim_findings(review, candidate, audited)
                 problems.extend(review.issues)
             except Exception:
                 problems.append(
@@ -127,9 +135,20 @@ def run_pipeline(audited, focus, extractor, reviewer, *, max_repairs=2):
         ):
             break
         feedback = [p.model_dump(mode="json") for p in problems]
+    if reviewable:
+        reviewable.candidate.review_flags = list(
+            dict.fromkeys(
+                [
+                    "Independent semantic verification incomplete or disputed; "
+                    "substantive human review required",
+                    *reviewable.candidate.review_flags,
+                    *[f"{p.code}: {p.message}"[:500] for p in stages[-1].issues],
+                ]
+            )
+        )[:50]
     return Outcome(
         status="human_escalation",
-        candidate=None,
+        candidate=reviewable,
         stages=stages,
         repair_cycles=max(0, len(stages) - 1),
         model_calls=calls,

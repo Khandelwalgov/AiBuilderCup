@@ -158,12 +158,12 @@ class Reviewer:
         }, {"mock": True}
 
 
-def test_numeric_feedback_repairs_at_most_twice():
+def test_numeric_feedback_repairs_at_most_once():
     a = audited()
-    extractor, reviewer = Extractor([envelope(a, 19), envelope(a, 20), envelope(a)]), Reviewer()
+    extractor, reviewer = Extractor([envelope(a, 19), envelope(a)]), Reviewer()
     out = run_pipeline(a, "Learner scholarship", extractor, reviewer)
     assert out.status == "draft_for_human_review"
-    assert out.repair_cycles == 2 and out.model_calls == 6
+    assert out.repair_cycles == 1 and out.model_calls == 4
     assert extractor.feedback[1][0]["code"] == "numerical_value_not_in_clause"
     assert out.human_required
     assert "human" in out.candidate.candidate.review_flags[0]
@@ -174,9 +174,9 @@ def test_persistent_failure_escalates_and_never_mutates_source():
     before = copy.deepcopy(a.pages)
     out = run_pipeline(a, "Learner scholarship", Extractor([envelope(a, 99)]), Reviewer())
     assert out.status == "human_escalation" and out.candidate is None
-    assert out.model_calls == 6 and out.repair_cycles == 2
+    assert out.model_calls == 4 and out.repair_cycles == 1
     assert a.pages == before
-    with pytest.raises(ValueError, match="At most two"):
+    with pytest.raises(ValueError, match="At most one"):
         run_pipeline(a, "Focus", Extractor([]), Reviewer(), max_repairs=3)
 
 
@@ -184,6 +184,7 @@ def test_independent_review_failure_and_critical_issue_stop_repairs():
     a = audited()
     out = run_pipeline(a, "Learner scholarship", Extractor([envelope(a)]), Reviewer(fail=True))
     assert out.status == "human_escalation" and out.model_calls == 2
+    assert out.candidate is not None  # cited draft remains reviewable, never self-approved
     citation = envelope(a)["candidate"]["requirements"][0]["evidence"]
     problem = {
         "code": "wrong_interpretation",
@@ -196,6 +197,122 @@ def test_independent_review_failure_and_critical_issue_stop_repairs():
     }
     out = run_pipeline(a, "Learner scholarship", Extractor([envelope(a)]), Reviewer([problem]))
     assert out.status == "human_escalation" and out.repair_cycles == 0
+
+
+def test_prepared_interactive_draft_is_not_independently_verified(db):
+    from opportunity_platform.ingestion.corpus_policy.prepared import (
+        PendingIndependentReview,
+        PreparedExtractor,
+    )
+
+    a = audited()
+    actor = User(firebase_uid="interactive-stage-admin", is_admin=True)
+    db.add(actor)
+    db.commit()
+    extractor = PreparedExtractor(
+        {"source_hash": a.record.sha256, "candidate": envelope(a)}, a.record.sha256
+    )
+    run = extract_candidate(
+        db, a, actor, "Learner scholarship", extractor, PendingIndependentReview(), max_repairs=0
+    )
+    db.commit()
+    assert run.status == "human_escalation"
+    assert run.usage["calls"] == 0
+    draft = db.get(OpportunityVersion, uuid.UUID(run.diagnostics["draft_id"]))
+    assert draft.publication_state == "draft" and draft.status == "needs_review"
+    assert draft.extraction_provider.startswith("codex:interactive")
+    assert db.get(Opportunity, draft.opportunity_id).published_version_id is None
+    assert "Independent semantic" in str(draft.extraction["review_flags"])
+    repeated = extract_candidate(
+        db, a, actor, "Learner scholarship", extractor, PendingIndependentReview(), max_repairs=0
+    )
+    assert repeated.id == run.id
+
+
+def test_real_semantic_reviewer_must_cover_claims_and_cannot_soften_contradictions():
+    class SemanticReviewer(Reviewer):
+        semantic_findings_required = True
+
+        def review(self, source, candidate):
+            raw, usage = super().review(source, candidate)
+            data = candidate.candidate
+            fields = {f"requirements.{i}" for i in range(len(data.requirements))}
+            fields |= {
+                name
+                for name in [
+                    "title",
+                    "summary",
+                    "issuer",
+                    "category",
+                    "country",
+                    "state",
+                    "district",
+                    "benefits",
+                    "restrictions",
+                    "required_documents",
+                    "opens_on",
+                    "closes_on",
+                    "apply_url",
+                ]
+                if getattr(data, name)
+            }
+            citation = data.requirements[0].evidence.model_dump(mode="json")
+            raw["findings"] = [
+                {
+                    "field": name,
+                    "assessment": "supported",
+                    "explanation": "Synthetic test claim is supported by the fixture.",
+                    "evidence": citation,
+                    "human_required": True,
+                }
+                for name in sorted(fields)
+            ]
+            raw["findings"][0]["assessment"] = "contradicted"
+            raw["assessment"] = "issues_found"
+            raw["issues"] = [
+                {
+                    "code": "contradiction",
+                    "severity": "warning",
+                    "field": raw["findings"][0]["field"],
+                    "message": "Synthetic substantive contradiction for verification test.",
+                    "evidence": citation,
+                    "suggested_correction": "Correct the claim against the original source.",
+                    "human_required": True,
+                }
+            ]
+            return raw, usage
+
+    source = audited()
+    out = run_pipeline(
+        source, "Learner scholarship", Extractor([envelope(source)]), SemanticReviewer()
+    )
+    assert out.status == "human_escalation" and out.repair_cycles == 0
+    assert any(
+        issue.code == "semantic_claim_disputed" and issue.severity == "critical"
+        for issue in out.stages[0].issues
+    )
+
+
+def test_public_government_library_never_reads_private_documents(client, db):
+    actor = User(firebase_uid="library-admin", is_admin=True)
+    db.add(actor)
+    db.commit()
+    a = audited()
+    a.record.discoveries[0]["document_category"] = "scholarships"
+    a.record.discoveries[0]["jurisdiction"] = "India"
+    snapshot, _ = import_archive(db, a, actor)
+    db.commit()
+    page = client.get(
+        "/v1/government-sources",
+        params={"category": "scholarships", "state": "India", "q": "parents"},
+    )
+    assert page.status_code == 200 and page.json()["total"] == 1
+    assert "blob_path" not in page.text and "actor_id" not in page.text
+    detail = client.get("/v1/government-sources/" + str(snapshot.id))
+    assert detail.status_code == 200
+    assert detail.json()["pages"][0]["text"] == a.pages[0]["text"]
+    assert client.get("/v1/government-sources/" + str(uuid.uuid4())).status_code == 404
+    assert client.get("/v1/government-sources", params={"format": "pdf"}).json()["total"] == 1
 
 
 @pytest.mark.parametrize(
@@ -525,7 +642,7 @@ def test_pipeline_failure_saves_diagnostics_without_draft(db):
         db, a, actor, "Learner scholarship", Extractor([envelope(a, 99)]), Reviewer()
     )
     assert result.status == "human_escalation"
-    assert len(result.diagnostics["workflow"]["stages"]) == 3
+    assert len(result.diagnostics["workflow"]["stages"]) == 2
     assert db.scalar(select(func.count()).select_from(OpportunityVersion)) == before
 
 

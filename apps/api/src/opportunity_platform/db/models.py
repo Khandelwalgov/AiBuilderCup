@@ -11,6 +11,7 @@ from sqlalchemy import (
     DateTime,
     ForeignKey,
     Index,
+    Numeric,
     String,
     UniqueConstraint,
     func,
@@ -359,6 +360,40 @@ class AuditEvent(Entity):
     action: Mapped[str]
     object_id: Mapped[uuid.UUID]
     details: Mapped[dict] = mapped_column(JSON, default=dict)
+
+
+class PolicyEmbedding(Entity):
+    """Public policy vectors only; private profile/query vectors are never stored."""
+
+    __tablename__ = "policy_embeddings"
+    version_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("opportunity_versions.id"), index=True)
+    model: Mapped[str]
+    model_revision: Mapped[str]
+    representation_version: Mapped[str]
+    source_hash: Mapped[str]
+    text_hash: Mapped[str]
+    dimensions: Mapped[int]
+    vector: Mapped[list] = mapped_column(JSON)
+    __table_args__ = (
+        UniqueConstraint("version_id", "model_revision", "representation_version"),
+        CheckConstraint("dimensions = 384"),
+    )
+
+
+class InferenceReservation(Entity):
+    """Conservative, durable reservations; failed/ambiguous calls are never refunded."""
+
+    __tablename__ = "inference_reservations"
+    run_key: Mapped[str] = mapped_column(index=True)
+    provider: Mapped[str]
+    model: Mapped[str]
+    input_bound: Mapped[int]
+    output_bound: Mapped[int]
+    reserved_usd: Mapped[Any] = mapped_column(Numeric(20, 8))
+    recorded_usd: Mapped[Any | None] = mapped_column(Numeric(20, 8))
+    prices: Mapped[dict] = mapped_column(JSON)
+    usage: Mapped[dict | None] = mapped_column(JSON)
+    status: Mapped[str] = mapped_column(default="reserved")
 
 
 Index("ix_version_search_vector", OpportunityVersion.search_vector, postgresql_using="gin")
