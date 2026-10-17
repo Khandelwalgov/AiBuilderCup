@@ -163,3 +163,36 @@ test('excluding national opportunities does not imply the published catalogue is
     page.getByRole('heading', { name: 'No reviewed opportunities published yet' }),
   ).toHaveCount(0);
 });
+
+test('saved age and its explanation remain visually separate on mobile (mocked)', async ({
+  page,
+}) => {
+  await sessionFixture(page);
+  await page.route('**/v1/profile/me', (route) =>
+    route.fulfill({
+      json: {
+        id: person,
+        display_name: 'Fictional One',
+        facts: [
+          {
+            key: 'age',
+            value: 22,
+            origin: 'user_supplied',
+            context: { recorded_at: '2026-10-17' },
+          },
+        ],
+      },
+    }),
+  );
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/profile');
+  const answer = page.locator('.profile-section dd').filter({ hasText: 'Age recorded on:' });
+  await expect(answer).toContainText('22');
+  await expect(answer.locator('small')).toBeVisible();
+  const answerBox = await answer.boundingBox();
+  const noteBox = await answer.locator('small').boundingBox();
+  expect(answerBox).not.toBeNull();
+  expect(noteBox).not.toBeNull();
+  expect(noteBox!.y).toBeGreaterThan(answerBox!.y + 10);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
