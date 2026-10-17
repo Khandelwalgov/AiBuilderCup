@@ -6,7 +6,7 @@
   "runtime_service_account": "opportunity-runtime@venuesignal.iam.gserviceaccount.com",
   "migration_service_account": "opportunity-migrations@venuesignal.iam.gserviceaccount.com",
   "database_secret": "opportunity-database-url",
-  "database_secret_version": "1",
+  "database_secret_version": "2",
   "gemini_model": "gemini-3.8-flash",
   "firebase_web": {
     "project_id": "venuesignal",

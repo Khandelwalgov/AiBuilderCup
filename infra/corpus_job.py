@@ -66,7 +66,17 @@ def environment(config):
     }
 
 
-def plan(config, operation, env_file, actor_uid=None, execute_import=False, offset=0):
+def plan(
+    config,
+    operation,
+    env_file,
+    actor_uid=None,
+    execute_import=False,
+    offset=0,
+    state_name="current",
+):
+    if not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", state_name):
+        raise ValueError("Invalid reviewed corpus state name")
     project, region = config["project_id"], config["region"]
     image = (
         f"{region}-docker.pkg.dev/{project}/{config['repository']}/"
@@ -82,6 +92,8 @@ def plan(config, operation, env_file, actor_uid=None, execute_import=False, offs
         config["bucket"],
         "--offset",
         str(offset),
+        "--state-name",
+        state_name,
     ]
     if execute_import or operation == "collect":
         arguments += ["--execute", "--approved-project", project]
@@ -109,6 +121,8 @@ def plan(config, operation, env_file, actor_uid=None, execute_import=False, offs
         arguments = ["-m", "opportunity_platform.retrieval.index"]
         if execute_import:
             arguments.append("--execute")
+    if operation == "probe":
+        arguments = ["-m", "opportunity_platform.operations.neural_probe"]
     common = ["--project", project, "--region", region, "--quiet"]
     return [
         (
@@ -145,7 +159,10 @@ def plan(config, operation, env_file, actor_uid=None, execute_import=False, offs
                 "--args=" + ",".join(arguments),
             ],
         ),
-        ("run-corpus-job", ["gcloud", "run", "jobs", "execute", config["job"], *common, "--wait"]),
+        (
+            "run-corpus-job",
+            ["gcloud", "run", "jobs", "execute", config["job"], *common, "--wait"],
+        ),
     ]
 
 
@@ -153,7 +170,9 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument(
-        "--operation", choices=["import", "collect", "bootstrap-admin", "index"], default="import"
+        "--operation",
+        choices=["import", "collect", "bootstrap-admin", "index", "probe"],
+        default="import",
     )
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--approved-project")
@@ -165,9 +184,22 @@ def main(argv=None):
     parser.add_argument(
         "--all-batches",
         action="store_true",
-        help="Seven sequential 20-record jobs for the initial 125-record manifest",
+        help="Sequential 20-record jobs for the explicitly reviewed manifest record count",
     )
+    parser.add_argument(
+        "--record-count",
+        type=int,
+        default=125,
+        help="Exact verified handoff manifest size; default initial 125 records",
+    )
+    parser.add_argument("--state-name", default="current")
     args = parser.parse_args(argv)
+    if not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", args.state_name):
+        parser.error("Invalid reviewed corpus state name")
+    if args.state_name != "current" and args.operation not in {"import", "collect"}:
+        parser.error("Named corpus state is only used by import/collect")
+    if not 1 <= args.record_count <= 10000:
+        parser.error("Reviewed manifest record count must be between 1 and 10000")
     config = validate(json.loads(args.config.read_text()))
     if args.offset < 0 or args.offset > 10000:
         parser.error("Invalid bounded batch offset")
@@ -186,7 +218,7 @@ def main(argv=None):
     )
     if args.all_batches and args.operation != "import":
         parser.error("All-batches is restricted to the initial archive import or dry run")
-    offsets = list(range(0, 125, 20)) if args.all_batches else [args.offset]
+    offsets = list(range(0, args.record_count, 20)) if args.all_batches else [args.offset]
     if args.authorize_admin_bootstrap and args.operation != "bootstrap-admin":
         parser.error("Administrator authorization is only valid for bootstrap-admin")
     if args.authorize_data_import and args.operation != "import":
@@ -206,6 +238,7 @@ def main(argv=None):
                 args.actor_uid,
                 authorized_write,
                 offset,
+                args.state_name,
             ):
                 safe_command = (
                     [part.replace(args.actor_uid, "<REVIEWED_ADMIN_UID>") for part in command]
@@ -222,7 +255,13 @@ def main(argv=None):
         env_file.write_text(json.dumps(environment(config)))
         for offset in offsets:
             for label, command in plan(
-                config, args.operation, env_file, args.actor_uid, authorized_write, offset
+                config,
+                args.operation,
+                env_file,
+                args.actor_uid,
+                authorized_write,
+                offset,
+                args.state_name,
             ):
                 invoke(label, command)
     return 0

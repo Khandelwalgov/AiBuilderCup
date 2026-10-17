@@ -190,9 +190,19 @@ class LocalNeuralRetriever:
         return [key for _, key in sorted(scores, key=lambda item: (-item[0], item[1]))[:limit]]
 
 
+_encoder_load_lock = threading.Lock()
+
+
 @lru_cache(maxsize=2)
-def encoder_for(directory: str):
+def _load_encoder(directory: str):
     return LocalEncoder(Path(directory))
+
+
+def encoder_for(directory: str):
+    # lru_cache alone can initialize multiple models on simultaneous cold misses.
+    # Serialize the cache lookup as well as construction to stay within 1 GiB.
+    with _encoder_load_lock:
+        return _load_encoder(directory)
 
 
 def neural_retriever(session=None):

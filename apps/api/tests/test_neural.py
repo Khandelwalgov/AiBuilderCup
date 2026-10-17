@@ -87,3 +87,43 @@ def test_real_encoder_shape_and_trailing_policy_sections(encoder):
         ("Business registration requirements. " * 130) + " Student tuition assistance."
     )
     assert not np.allclose(vector, long)
+
+
+def test_deployed_public_text_probe_uses_real_cpu_model(encoder):
+    from opportunity_platform.operations.neural_probe import probe
+
+    result = probe(encoder)
+    assert result["actual_local_inference"] and result["dimensions"] == 384
+    assert result["external_api_calls"] == 0 and not result["private_data_used"]
+    assert not result["government_policy_quality_measured"]
+    assert len(result["controlled_public_text_probe"]) == 2
+
+
+def test_concurrent_cold_requests_load_only_one_model(monkeypatch):
+    import threading
+    import time
+    from concurrent.futures import ThreadPoolExecutor
+
+    from opportunity_platform.retrieval import neural
+
+    calls = []
+    barrier = threading.Barrier(4)
+
+    def factory(path):
+        calls.append(path)
+        time.sleep(0.02)
+        return object()
+
+    neural._load_encoder.cache_clear()
+    monkeypatch.setattr(neural, "LocalEncoder", factory)
+
+    def request(_):
+        barrier.wait()
+        return neural.encoder_for("fictional-model-path")
+
+    try:
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            results = list(executor.map(request, range(4)))
+        assert len(calls) == 1 and len({id(value) for value in results}) == 1
+    finally:
+        neural._load_encoder.cache_clear()

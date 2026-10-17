@@ -75,7 +75,7 @@ def test_deployment_plan_has_migration_before_traffic_and_pinned_secrets(tmp_pat
     ]
     api = commands[-1][1]
     assert (
-        "DATABASE_URL=opportunity-database-url:1,DOCUMENT_SIGNING_KEY=opportunity-document-signing-key:1"
+        "DATABASE_URL=opportunity-database-url:2,DOCUMENT_SIGNING_KEY=opportunity-document-signing-key:1"
         in api
     )
     assert api[api.index("--max") + 1] == "1"

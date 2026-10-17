@@ -180,7 +180,10 @@ def import_batch(connection, bucket, root, args, records=None):
         records = load_manifest(root / "manifest.jsonl")[
             args.offset : args.offset + args.max_documents
         ]
+    from opportunity_platform.corpus.prepared_import import packets, selection
+
     registry = registry_from(REGISTRY)
+    selected = selection(root)
     result = {
         "planned": len(records),
         "would_insert": 0,
@@ -189,6 +192,7 @@ def import_batch(connection, bucket, root, args, records=None):
         "excluded": 0,
         "failures": 0,
         "drafts_present": 0,
+        "prepared_candidates_validated": 0,
         "paid_calls": 0,
         "errors": [],
     }
@@ -203,6 +207,21 @@ def import_batch(connection, bucket, root, args, records=None):
                 sid = identifier(f"snapshot:{record.document_id}:{record.sha256}")
                 existing = session.get(SourceSnapshot, sid)
                 result["duplicates" if existing else "would_insert"] += 1
+                from opportunity_platform.ingestion.corpus_policy.validation import validate
+
+                prepared = []
+                for item in packets(root, record, selected):
+                    extractor = PreparedExtractor(item["packet"], record.sha256)
+                    focus = item["focus"] or extractor.candidate.candidate.title
+                    if not isinstance(focus, str) or not 1 <= len(focus.strip()) <= 2000:
+                        raise ValueError("Invalid prepared component focus")
+                    candidate, problems = validate(extractor.candidate, audited)
+                    if candidate is None or any(
+                        issue.severity in {"error", "critical"} for issue in problems
+                    ):
+                        raise ValueError("Prepared candidate failed captured-evidence validation")
+                    prepared.append((extractor, focus))
+                    result["prepared_candidates_validated"] += 1
                 if not args.execute:
                     session.rollback()
                     continue
@@ -212,17 +231,12 @@ def import_batch(connection, bucket, root, args, records=None):
                 if snapshot.response_metadata.get("object_uri") not in {None, pointer}:
                     raise ValueError("Immutable object pointer conflict")
                 snapshot.response_metadata = {**snapshot.response_metadata, "object_uri": pointer}
-                prepared = (
-                    root / "processing" / "codex-v1" / (record.snapshot_id + ".candidate.json")
-                )
-                if prepared.exists():
-                    packet = json.loads(prepared.read_text())
-                    extractor = PreparedExtractor(packet, record.sha256)
+                for extractor, focus in prepared:
                     run = extract_candidate(
                         session,
                         audited,
                         actor,
-                        extractor.candidate.candidate.title,
+                        focus,
                         extractor,
                         PendingIndependentReview(),
                         max_repairs=0,
@@ -316,6 +330,7 @@ def main(argv=None):
     parser.add_argument("operation", choices=["stage", "import", "collect"])
     parser.add_argument("--project", required=True)
     parser.add_argument("--bucket", required=True)
+    parser.add_argument("--state-name", default="current")
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--approved-project")
     parser.add_argument("--actor-uid")
@@ -324,6 +339,9 @@ def main(argv=None):
     parser.add_argument("--max-documents", type=int, default=20)
     parser.add_argument("--source", action="append")
     args = parser.parse_args(argv)
+    if not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", args.state_name):
+        parser.error("Use a reviewed bounded corpus state name")
+    state_key = f"public-corpus/state/{args.state_name}.tar.gz"
     if not 0 <= args.offset <= 10000 or not 1 <= args.max_documents <= 20:
         parser.error("Bounded import offset/size required")
     if args.execute and args.approved_project != args.project:
@@ -346,7 +364,7 @@ def main(argv=None):
                     "snapshot_records": len(records),
                     "unique_blobs": len(unique),
                     "blob_bytes": sum(unique.values()),
-                    "state_object": f"gs://{args.bucket}/{STATE}",
+                    "state_object": f"gs://{args.bucket}/{state_key}",
                     "paid_calls": 0,
                 }
             )
@@ -377,7 +395,7 @@ def main(argv=None):
                 uploaded = upload_blobs(bucket, root)
                 archive = temporary / "state.tar.gz"
                 pack_state(root, archive)
-                state = bucket.blob(STATE)
+                state = bucket.blob(state_key)
                 state.metadata = {"manifest_sha256": hash_file(root / "manifest.jsonl")}
                 try:
                     state.upload_from_filename(str(archive), if_generation_match=0, timeout=120)
@@ -399,7 +417,7 @@ def main(argv=None):
                 )
             )
             return 0
-        state = bucket.get_blob(STATE, timeout=30)
+        state = bucket.get_blob(state_key, timeout=30)
         if state is None or state.size > MAX_STATE:
             raise ValueError("Staged public corpus checkpoint is missing or oversized")
         archive = temporary / "state.tar.gz"
@@ -452,7 +470,7 @@ def main(argv=None):
                     child = subprocess.run(command, check=False)
                     uploaded = upload_blobs(bucket, root)
                     pack_state(root, archive)
-                    updated = bucket.blob(STATE)
+                    updated = bucket.blob(state_key)
                     updated.metadata = {"manifest_sha256": hash_file(root / "manifest.jsonl")}
                     updated.upload_from_filename(
                         str(archive), if_generation_match=state.generation, timeout=120

@@ -219,7 +219,7 @@ def backend_environment(c):
     }
 
 
-def plan(c, env_file):
+def plan(c, env_file, runtime_role=None):
     project, region, service = c["project_id"], c["region"], c["service"]
     common = ["--project", project, "--region", region, "--quiet"]
     image = f"{region}-docker.pkg.dev/{project}/{c['repository']}/{service}:{image_tag()}"
@@ -341,7 +341,15 @@ def plan(c, env_file):
         ),
         (
             "runtime-permissions",
-            ["gcloud", "run", "jobs", "execute", service + "-migrate", *common, "--wait"],
+            [
+                "gcloud",
+                "run",
+                "jobs",
+                "execute",
+                service + "-migrate",
+                *common,
+                "--wait",
+            ],
         ),
         (
             "api",
@@ -387,6 +395,23 @@ def plan(c, env_file):
             ],
         ),
     ]
+    if runtime_role:
+        if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,62}", runtime_role):
+            raise ValueError("Invalid explicit runtime SQL role")
+        grant_job = list(commands[1][1])
+        argument = next(i for i, value in enumerate(grant_job) if value.startswith("--args="))
+        grant_job[argument] = (
+            "--args=-m,opportunity_platform.operations.runtime_grants,--runtime-role,"
+            + runtime_role
+            + ",--project,"
+            + project
+            + ",--execute,--approved-project,"
+            + project
+        )
+        commands[3:3] = [
+            ("runtime-grants-job", grant_job),
+            ("runtime-grants", list(commands[2][1])),
+        ]
     return commands
 
 
@@ -408,7 +433,12 @@ def invoke(label, args, *, allow_not_found=False, **kwargs):
             ]
             if code in result.stderr
         ]
-        if allow_not_found and categories == ["NOT_FOUND"]:
+        first_line = result.stderr.splitlines()[0].strip() if result.stderr else ""
+        missing_image = (
+            args[:5] == ["gcloud", "artifacts", "docker", "images", "describe"]
+            and first_line == "ERROR: (gcloud.artifacts.docker.images.describe) Image not found."
+        )
+        if allow_not_found and (categories == ["NOT_FOUND"] or (not categories and missing_image)):
             return None
         raise RuntimeError(
             f"{label} failed (exit {result.returncode}; "
@@ -449,11 +479,21 @@ def main(argv=None):
     parser.add_argument("--approved-project")
     parser.add_argument("--receipt", type=Path)
     parser.add_argument("--approve-migrations", action="store_true")
+    parser.add_argument("--grant-runtime-role", help="Explicit existing ordinary SQL app role")
+    parser.add_argument("--approve-runtime-dml", action="store_true")
     args = parser.parse_args(argv)
+    if args.grant_runtime_role and not re.fullmatch(
+        r"[A-Za-z_][A-Za-z0-9_]{0,62}", args.grant_runtime_role
+    ):
+        parser.error("Invalid explicit runtime SQL role")
+    if args.approve_runtime_dml and not args.grant_runtime_role:
+        parser.error("Runtime DML approval requires the exact existing SQL role")
+    if args.execute and args.grant_runtime_role and not args.approve_runtime_dml:
+        parser.error("New-table DML grants require separate --approve-runtime-dml authorization")
     config = validate(json.loads(args.config.read_text()))
     validate_hosting(config)
     if not args.execute:
-        for label, command in plan(config, "TEMP_PUBLIC_ENV.json"):
+        for label, command in plan(config, "TEMP_PUBLIC_ENV.json", args.grant_runtime_role):
             print(label + ": " + shlex.join(command))
         print("Then smoke the tagged candidate; build web; promote API traffic; deploy Hosting.")
         print("Authenticated hosted acceptance is a separate gate, not inferred from public smoke.")
@@ -556,6 +596,8 @@ def main(argv=None):
                     "image_tag": image_tag(),
                     "database_provider": config["database_provider"],
                     "migration_mode": config["migration_mode"],
+                    "runtime_dml_role": args.grant_runtime_role,
+                    "runtime_dml_separately_approved": args.approve_runtime_dml,
                     "hosting_site": config["hosting_site"],
                     "hosting_target": config["hosting_target"],
                     "web": hosting_origin(config),
@@ -566,7 +608,7 @@ def main(argv=None):
     with tempfile.TemporaryDirectory(prefix="opportunity-deploy-") as directory:
         env_file = Path(directory) / "backend-env.json"
         env_file.write_text(json.dumps(backend_environment(config)))
-        for label, command in plan(config, env_file):
+        for label, command in plan(config, env_file, args.grant_runtime_role):
             if label == "build":
                 image = (
                     f"{region}-docker.pkg.dev/{project}/{config['repository']}/"

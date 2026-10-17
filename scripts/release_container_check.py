@@ -81,9 +81,23 @@ import json,os,time,resource
 from pathlib import Path
 from sqlalchemy import text
 from opportunity_platform.profiles import semantics
+from opportunity_platform.operations.runtime_grants import grant
 from opportunity_platform.main import app
 from opportunity_platform.db.session import engine
 from opportunity_platform.core.config import settings
+with engine.begin() as connection:
+    connection.execute(text("CREATE ROLE release_probe_app "
+                            "NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT"))
+    connection.execute(text("GRANT USAGE ON SCHEMA public TO release_probe_app"))
+    granted=grant(connection,"release_probe_app")
+    assert not granted['ddl_granted']
+    for table in ['policy_embeddings','inference_reservations']:
+        for privilege in ['SELECT','INSERT','UPDATE']:
+            assert connection.scalar(
+                text("SELECT has_table_privilege('release_probe_app',:t,:p)"),
+                {'t':table,'p':privilege})
+    ddl_query="SELECT has_schema_privilege('release_probe_app','public','CREATE')"
+    assert not connection.scalar(text(ddl_query))
 assert os.getuid()!=0
 assert Path(semantics.__file__).with_name('semantics.json').is_file()
 assert len(semantics.SPEC['rules'])>0
@@ -114,7 +128,7 @@ with engine.connect() as conn:
  assert conn.scalar(text('SELECT count(*) FROM opportunity_versions'))==0
 print(json.dumps({'runtime_json':'present','phase4_routes':'present','migration_head':'f25b1000abcd',
  'fresh_database':'passed','fictional_seed':'absent','non_root':True,
- 'local_model_dimensions':len(vector),'load_and_encode_ms':model_ms,'peak_memory_mib':memory_mib}))
+ 'runtime_new_table_grants':'passed','local_model_dimensions':len(vector),'load_and_encode_ms':model_ms,'peak_memory_mib':memory_mib}))
 """
         result = run("run", "--rm", *environment, image, "python", "-c", audit)
         print(result.stdout.strip())

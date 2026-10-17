@@ -534,3 +534,141 @@ def test_runtime_privilege_gate_is_read_only_and_rejects_missing_grants(db):
 
     with pytest.raises(RuntimeError, match="lacks SELECT on policy_embeddings"):
         verify(Denied())
+
+
+def test_explicit_runtime_grants_precede_privilege_gate_and_need_separate_approval(
+    tmp_path, monkeypatch
+):
+    deploy = module("deploy")
+    config_path = tmp_path / "public.json"
+    config_path.write_text(json.dumps(config()))
+    monkeypatch.setattr(
+        deploy, "invoke", lambda *a, **k: pytest.fail("Cloud operation before authorization")
+    )
+    with pytest.raises(SystemExit):
+        deploy.main(
+            [
+                "--config",
+                str(config_path),
+                "--execute",
+                "--approved-project",
+                "venuesignal",
+                "--grant-runtime-role",
+                "fictional_app",
+            ]
+        )
+    commands = deploy.plan(deploy.validate(config()), "public-env.json", "fictional_app")
+    labels = [label for label, _ in commands]
+    assert (
+        labels.index("migrate")
+        < labels.index("runtime-grants")
+        < labels.index("runtime-permissions")
+        < labels.index("api")
+    )
+    grant_job = next(cmd for label, cmd in commands if label == "runtime-grants-job")
+    assert "opportunity-migrations@venuesignal.iam.gserviceaccount.com" in grant_job
+    assert any("runtime_grants" in arg and "fictional_app" in arg for arg in grant_job)
+    for bad in ["owner,other", "app;DROP TABLE users", ""]:
+        if bad:
+            with pytest.raises(ValueError):
+                deploy.plan(deploy.validate(config()), "env.json", bad)
+
+
+def test_corpus_batches_use_exact_reviewed_manifest_size(tmp_path, monkeypatch, capsys):
+    job = module("corpus_job")
+    path = tmp_path / "corpus.json"
+    path.write_text((ROOT / "infra/corpus.example.json").read_text())
+    monkeypatch.setattr(
+        job, "invoke", lambda *a, **k: pytest.fail("Plan attempted a cloud mutation")
+    )
+    assert job.main(["--config", str(path), "--all-batches", "--record-count", "42"]) == 0
+    output = capsys.readouterr().out
+    assert sum(line.startswith("corpus-job:") for line in output.splitlines()) == 3
+    assert "--offset,40" in output and "--offset,60" not in output
+    assert job.main(["--config", str(path), "--operation", "probe"]) == 0
+    assert "neural_probe" in capsys.readouterr().out
+    assert (
+        job.main(
+            [
+                "--config",
+                str(path),
+                "--all-batches",
+                "--record-count",
+                "3",
+                "--state-name",
+                "rajasthan-supplement-20261017",
+            ]
+        )
+        == 0
+    )
+    output = capsys.readouterr().out
+    assert sum(line.startswith("corpus-job:") for line in output.splitlines()) == 1
+    assert "--state-name,rajasthan-supplement-20261017" in output
+    with pytest.raises(SystemExit):
+        job.main(["--config", str(path), "--state-name", "../private"])
+    with pytest.raises(SystemExit):
+        job.main(["--config", str(path), "--record-count", "10001"])
+
+
+def test_runtime_grants_plan_has_no_connection_and_does_not_grant_ddl(monkeypatch, capsys):
+    from opportunity_platform.operations import runtime_grants as grants
+
+    monkeypatch.setattr(
+        grants, "create_engine", lambda *a, **k: pytest.fail("Plan opened a database")
+    )
+    assert grants.main(["--project", "venuesignal", "--runtime-role", "fictional_app"]) == 0
+    assert json.loads(capsys.readouterr().out)["ddl_granted"] is False
+    with pytest.raises(SystemExit):
+        grants.main(["--project", "venuesignal", "--runtime-role", "fictional_app", "--execute"])
+    for role in ["app,owner", "app;owner", "x" * 64]:
+        with pytest.raises(ValueError):
+            grants.validate_role(role)
+
+    class FakeConnection:
+        dialect = type(
+            "Dialect",
+            (),
+            {
+                "identifier_preparer": type(
+                    "Q", (), {"quote": lambda self, value: '"' + value + '"'}
+                )()
+            },
+        )()
+        statements = []
+
+        def scalar(self, query, params):
+            return True
+
+        def execute(self, query):
+            self.statements.append(str(query))
+
+    connection = FakeConnection()
+    result = grants.grant(connection, "fictional_app")
+    assert result["tables"] == ["policy_embeddings", "inference_reservations"]
+    assert all("GRANT SELECT, INSERT, UPDATE ON TABLE" in q for q in connection.statements)
+    assert not any("DELETE" in q or "CREATE" in q for q in connection.statements)
+    connection.scalar = lambda *a, **k: False
+    with pytest.raises(ValueError):
+        grants.grant(connection, "fictional_owner")
+
+
+def test_exact_gcloud_missing_image_allows_build_but_auth_errors_do_not(monkeypatch):
+    from types import SimpleNamespace
+
+    deploy = module("deploy")
+    args = ["gcloud", "artifacts", "docker", "images", "describe", "fictional:image"]
+    message = "ERROR: (gcloud.artifacts.docker.images.describe) Image not found.\n"
+    monkeypatch.setattr(
+        deploy.subprocess,
+        "run",
+        lambda *a, **k: SimpleNamespace(
+            returncode=1, stderr=message, stdout="NEVER_PRINT_PROVIDER_OUTPUT"
+        ),
+    )
+    assert deploy.invoke("check-existing-image", args, allow_not_found=True) is None
+    message += "PERMISSION_DENIED: private diagnostic"
+    with pytest.raises(RuntimeError, match="PERMISSION_DENIED"):
+        deploy.invoke("check-existing-image", args, allow_not_found=True)
+    message = "UNAUTHENTICATED: private diagnostic"
+    with pytest.raises(RuntimeError, match="UNAUTHENTICATED"):
+        deploy.invoke("check-existing-image", args, allow_not_found=True)

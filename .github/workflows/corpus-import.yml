@@ -5,7 +5,7 @@ on:
       operation:
         description: Dry run first; import persists drafts and sources only
         type: choice
-        options: [dry-run, import, collect, bootstrap-admin, index]
+        options: [dry-run, import, collect, bootstrap-admin, index, probe]
         default: dry-run
       approved_project:
         type: string
@@ -22,9 +22,17 @@ on:
         type: number
         default: 0
       all_batches:
-        description: Initial 125 snapshots, seven sequential bounded jobs under this approval
+        description: All reviewed manifest records, 20 per bounded execution
         type: boolean
         default: false
+      state_name:
+        description: Reviewed corpus state name, current or explicit supplemental snapshot
+        type: string
+        default: current
+      record_count:
+        description: Exact checksum-validated handoff manifest record count
+        type: number
+        default: 125
 permissions:
   contents: read
 concurrency:
@@ -48,6 +56,8 @@ jobs:
       ACTOR_UID: ${{ inputs.actor_uid }}
       OFFSET: ${{ inputs.offset }}
       ALL_BATCHES: ${{ inputs.all_batches }}
+      RECORD_COUNT: ${{ inputs.record_count }}
+      STATE_NAME: ${{ inputs.state_name }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -75,9 +85,9 @@ jobs:
       - uses: google-github-actions/setup-gcloud@v3
       - name: Bounded authorized job with zero paid inference
         run: |
-          args=(--config /tmp/corpus-public.json --execute --approved-project "$PROJECT" --offset "$OFFSET")
+          args=(--config /tmp/corpus-public.json --execute --approved-project "$PROJECT" --offset "$OFFSET" --state-name "$STATE_NAME")
           if [ "$ALL_BATCHES" = true ]; then
-            args+=(--all-batches)
+            args+=(--all-batches --record-count "$RECORD_COUNT")
           fi
           if [ "$OPERATION" = import ]; then
             test -n "$ACTOR_UID"
@@ -88,6 +98,8 @@ jobs:
           elif [ "$OPERATION" = collect ]; then
             test -n "$ACTOR_UID"
             args+=(--operation collect --actor-uid "$ACTOR_UID")
+          elif [ "$OPERATION" = probe ]; then
+            args+=(--operation probe)
           elif [ "$OPERATION" = index ]; then
             args+=(--operation index --authorize-embedding-index)
           fi
