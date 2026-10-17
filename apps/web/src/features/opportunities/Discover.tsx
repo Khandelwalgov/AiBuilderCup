@@ -1,3 +1,4 @@
+import { ResearchCatalogue } from './ResearchCatalogue';
 import { SearchModes, type Mode } from '../intelligence/SearchModes';
 import { Recommendations } from '../intelligence/Recommendations';
 import { documentStatus, documentsHref, useDocumentNeeds } from '../documents/Documents';
@@ -118,6 +119,7 @@ export function Discover() {
           {development ? t.synthetic : t.publishedCatalogue}
         </span>
       </header>
+      <h2>{hi ? 'आपके लिए अवसर' : 'Opportunities for You'}</h2>
       <SearchModes mode={mode} onChange={(value) => filter('mode', value)} />
       <form
         className="research-search search-box"
@@ -249,14 +251,20 @@ export function Discover() {
       ) : query.isError ? (
         <ErrorState message={query.error.message} retry={() => void query.refetch()} />
       ) : items.length === 0 ? (
-        <div className="empty-state" role="status">
-          <Search size={30} />
+        <div className={unpublishedCatalogue ? 'notice' : 'empty-state'} role="status">
+          {!unpublishedCatalogue && <Search size={30} />}
           <h2>{unpublishedCatalogue ? t.unpublishedCatalogue : t.empty}</h2>
-          <p>{unpublishedCatalogue ? t.unpublishedCatalogueText : t.emptyText}</p>
+          <p>
+            {unpublishedCatalogue
+              ? hi
+                ? 'नीचे आधिकारिक स्रोत पर आधारित शोध अवसर देखें। उनकी पात्रता अभी सत्यापित नहीं है।'
+                : 'Browse source-backed research opportunities below. Their eligibility has not yet been verified.'
+              : t.emptyText}
+          </p>
           {unpublishedCatalogue ? (
-            <Link className="button" to="/government-sources">
-              {t.browseSourceDocuments}
-            </Link>
+            <a href="#government-opportunities">
+              {hi ? 'सरकारी शोध अवसर देखें' : 'Explore government research opportunities'}
+            </a>
           ) : (
             <button className="button" onClick={clearFilters}>
               {t.reset}
@@ -289,6 +297,7 @@ export function Discover() {
         <ShieldCheck size={16} />
         <p>{t.coverageText}</p>
       </div>
+      <ResearchCatalogue />
     </div>
   );
 }

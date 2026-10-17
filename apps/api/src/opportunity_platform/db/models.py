@@ -397,3 +397,29 @@ class InferenceReservation(Entity):
 
 
 Index("ix_version_search_vector", OpportunityVersion.search_vector, postgresql_using="gin")
+
+
+class ResearchListing(Entity):
+    """Public informational listing. Never a policy version or an eligibility input."""
+
+    __tablename__ = "research_listings"
+    search_text: Mapped[str]
+    identity_key: Mapped[str] = mapped_column(unique=True)
+    title: Mapped[str]
+    summary: Mapped[str]
+    authority: Mapped[str | None]
+    category: Mapped[str] = mapped_column(index=True)
+    jurisdiction: Mapped[str] = mapped_column(index=True)
+    availability: Mapped[str] = mapped_column(index=True)
+    application_status: Mapped[str] = mapped_column(index=True)
+    source_snapshot_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("source_snapshots.id"))
+    source_hash: Mapped[str]
+    payload_hash: Mapped[str]
+    payload: Mapped[dict] = mapped_column(JSON)
+    is_public: Mapped[bool] = mapped_column(default=False, server_default="false")
+    __table_args__ = (
+        CheckConstraint(
+            "availability IN ('verified_current','historical','unknown','potentially_expired')"
+        ),
+        CheckConstraint("application_status IN ('open','closed','not_established')"),
+    )

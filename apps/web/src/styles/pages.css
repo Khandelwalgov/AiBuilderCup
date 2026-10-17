@@ -1883,3 +1883,61 @@
     gap: 5px;
   }
 }
+
+.research-catalogue {
+  margin-top: 48px;
+  border-top: 1px solid var(--line);
+  padding-top: 32px;
+  scroll-margin-top: 100px;
+}
+.research-opportunity-card {
+  padding: 24px;
+}
+.research-opportunity-card h3 {
+  font-size: 21px;
+  line-height: 1.4;
+}
+.research-verification {
+  color: var(--muted);
+  font-size: 13px;
+}
+.research-card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 20px;
+}
+.research-card-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.research-catalogue .filters {
+  flex-wrap: wrap;
+}
+.research-catalogue .filters select {
+  max-width: 100%;
+}
+.research-detail .panel {
+  padding: 24px;
+  margin-top: 24px;
+}
+.research-detail blockquote {
+  border-left: 3px solid var(--line);
+  padding-left: 16px;
+  margin: 24px 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.research-source-hash {
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  color: var(--muted);
+}
+.research-source-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+  max-height: 480px;
+  overflow-y: auto;
+}

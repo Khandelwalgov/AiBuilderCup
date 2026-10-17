@@ -64,7 +64,9 @@ def base_query():
         .join(Source)
         .where(
             Source.is_synthetic.is_(False),
-            SourceSnapshot.response_metadata["origin"].as_string() == VERSION,
+            SourceSnapshot.response_metadata["origin"]
+            .as_string()
+            .in_([VERSION, "research-catalogue-v1"]),
         )
     )
 

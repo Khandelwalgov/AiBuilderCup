@@ -1,3 +1,4 @@
+import { ResearchDetail } from '../features/opportunities/ResearchCatalogue';
 import { ScenarioStudio } from '../features/intelligence/ScenarioStudio';
 import { Recommendations } from '../features/intelligence/Recommendations';
 import { GovernmentSources } from '../features/opportunities/GovernmentSources';
@@ -311,6 +312,7 @@ export function ApplicationFrame({ session }: { session: SessionState }) {
                               discover: <Discover />,
                               'government-sources': <GovernmentSources />,
                               detail: <Detail />,
+                              'research-detail': <ResearchDetail />,
                               profile: <Profile />,
                               documents: <Documents />,
                               dependent: <Profile />,

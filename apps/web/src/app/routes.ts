@@ -39,6 +39,14 @@ export const routeMetadata = [
     access: 'public',
   },
   {
+    id: 'research-detail',
+    path: '/research-opportunities/:id',
+    titleKey: 'detail',
+    nav: 'discover',
+    parent: 'discover',
+    access: 'public',
+  },
+  {
     id: 'profile',
     path: '/profile',
     titleKey: 'profile',

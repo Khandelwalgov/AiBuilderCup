@@ -110,6 +110,7 @@ assert not settings().ai_assistant_live_enabled
 assert not settings().paid_ai_worker_enabled
 assert settings().ai_global_budget_usd==0
 assert '/v1/government-sources' in app.openapi()['paths']
+assert '/v1/research-opportunities' in app.openapi()['paths']
 from opportunity_platform.retrieval.neural import encoder_for
 start=time.perf_counter()
 encoder=encoder_for(settings().neural_model_directory)
@@ -122,11 +123,11 @@ for forbidden in ['.env','.env.local','.private-documents','.corpus','data','tes
  assert not (root/forbidden).exists(),forbidden
 assert not any(root.glob('**/*credentials*.json'))
 with engine.connect() as conn:
- assert conn.scalar(text('SELECT version_num FROM alembic_version'))=='f25b1000abcd'
+ assert conn.scalar(text('SELECT version_num FROM alembic_version'))=='f26c1000abcd'
  index_query="SELECT count(*) FROM pg_indexes WHERE indexname='ix_version_search_vector'"
  assert conn.scalar(text(index_query))==1
  assert conn.scalar(text('SELECT count(*) FROM opportunity_versions'))==0
-print(json.dumps({'runtime_json':'present','phase4_routes':'present','migration_head':'f25b1000abcd',
+print(json.dumps({'runtime_json':'present','phase4_routes':'present','migration_head':'f26c1000abcd',
  'fresh_database':'passed','fictional_seed':'absent','non_root':True,
  'runtime_new_table_grants':'passed','local_model_dimensions':len(vector),'load_and_encode_ms':model_ms,'peak_memory_mib':memory_mib}))
 """

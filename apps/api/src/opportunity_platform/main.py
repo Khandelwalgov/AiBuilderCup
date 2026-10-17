@@ -28,6 +28,7 @@ from opportunity_platform.opportunities.schemas import (
     Status,
 )
 from opportunity_platform.profiles.service import AccountView, account
+from opportunity_platform.research.router import router as research_router
 from opportunity_platform.retrieval.router import router as retrieval_router
 from opportunity_platform.workflows import router
 
@@ -217,3 +218,5 @@ app.include_router(documents_router)
 
 app.include_router(retrieval_router)
 app.include_router(government_sources_router)
+
+app.include_router(research_router)

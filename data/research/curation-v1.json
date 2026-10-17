@@ -1,0 +1,890 @@
+[
+  {
+    "key": "post-matric-sc",
+    "source_documents": [
+      121
+    ],
+    "kind": "scheme",
+    "interpretation": "National scholarship for post-matriculation and post-secondary study in India. The captured guideline describes financial assistance selected through States and Union Territories; a current round is not established.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "post-matric-st",
+    "source_documents": [
+      122
+    ],
+    "kind": "scheme",
+    "interpretation": "A national post-matric scholarship described in Ministry of Tribal Affairs guidelines. The source covers course fees, stipends and State/UT administration; current application rounds and individual eligibility remain unverified.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "pm-yasasvi-pre-matric",
+    "source_documents": [
+      89
+    ],
+    "kind": "scheme_component",
+    "interpretation": "Pre-matric education assistance for the OBC, EBC and DNT groups described in the guideline. The captured scheme has its own school and study-stage conditions; these are not verified against a user profile.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "pm-yasasvi-post-matric",
+    "source_documents": [
+      89
+    ],
+    "kind": "scheme_component",
+    "interpretation": "Financial assistance for OBC, EBC and DNT students studying at post-matriculation or post-secondary level in India. Predecessor OBC/EBC/DNT documents are grouped here rather than counted as new schemes.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "pm-yasasvi-top-class-school",
+    "source_documents": [
+      89
+    ],
+    "kind": "scheme_component",
+    "interpretation": "Support for school education of meritorious students from the groups named in the guideline. The listing does not establish a current selection exercise, school list or scholarship slot.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "pm-yasasvi-top-class-college",
+    "source_documents": [
+      89
+    ],
+    "kind": "scheme_component",
+    "interpretation": "Financial support for higher education in the institutions covered by this component. Institution lists, scholarship slots and current application arrangements need separate confirmation.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "pm-yasasvi-hostel-construction",
+    "source_documents": [
+      89
+    ],
+    "kind": "scheme_component",
+    "interpretation": "An institutional assistance component for construction of hostels supporting secondary and higher education. This is a construction programme, not an individual hostel-admission application.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-mirasi-bhishti-post-matric",
+    "source_documents": [
+      100
+    ],
+    "kind": "scheme",
+    "interpretation": "Rajasthan guidelines describe post-matric study assistance for students of the Mirasi and Bhishti communities. The record concerns education after passing Class 10; current applications and the full operative conditions remain unverified.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-ews-development-fund-post-matric",
+    "source_documents": [
+      96
+    ],
+    "kind": "scheme",
+    "interpretation": "The State order establishes a post-matric scholarship under the Economically Weaker Section Development Fund, aligned with the cited Dr Ambedkar/PM-YASASVI provisions. It is kept distinct from the national umbrella programme because the source describes a State fund.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-mbc-post-matric",
+    "source_documents": [
+      12
+    ],
+    "kind": "scheme",
+    "interpretation": "The Rajasthan 2026–27 application order names a post-matric scholarship route for Most Backward Classes. Earlier SBC/special-group references are treated as related history, not additional programmes.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "mukhyamantri-sarvjan-higher-education",
+    "source_documents": [
+      12,
+      92
+    ],
+    "kind": "scheme",
+    "interpretation": "The State scholarship order identifies this route for study in listed national-level institutions. The historical guideline discusses fee reimbursement; the current institution list and an open round are not established here.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "ambedkar-international-scholarship-sc",
+    "source_documents": [
+      13
+    ],
+    "kind": "scheme",
+    "interpretation": "The Rajasthan official scholarship directory lists an Ambedkar International Scholarship scheme for SC category students. This is a directory-supported research entry; the captured page does not establish award amounts, destinations, deadlines or complete conditions.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "ambedkar-fellowship-sc",
+    "source_documents": [
+      13
+    ],
+    "kind": "scheme",
+    "interpretation": "The Rajasthan official scholarship directory lists an Ambedkar Fellowship scheme for SC category students. The source establishes the programme name; current fellowship terms, funding and application dates remain unknown.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "mukhyamantri-anuprati-coaching",
+    "source_documents": [
+      107
+    ],
+    "kind": "scheme",
+    "interpretation": "A Rajasthan payment-process order describes coaching support through empanelled institutions and accommodation allowance for selected students moving to another city. It documents an earlier session, not a currently open selection round.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-disability-scholarship-support",
+    "source_documents": [
+      59
+    ],
+    "kind": "scheme",
+    "interpretation": "The State disability-welfare overview describes school and further-education scholarship routes, including maintenance support and fee reimbursement. It refers to both State and Central routes; it must not be read as one universal eligibility rule.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-residential-ambedkar",
+    "source_documents": [
+      123
+    ],
+    "kind": "scheme_component",
+    "interpretation": "Government residential schooling described in the Rajasthan source, with education and boarding arrangements. Individual schools, vacancies and a current admission round require confirmation.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-residential-devnarayan",
+    "source_documents": [
+      123
+    ],
+    "kind": "scheme_component",
+    "interpretation": "A named residential-school track in the Rajasthan scheme document. It has its own target-group and admission provisions; no current vacancy or admission offer is implied.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-residential-pastoralist",
+    "source_documents": [
+      123
+    ],
+    "kind": "scheme_component",
+    "interpretation": "A specialised residential-school track described for children of nomadic pastoralist families. The captured source gives programme-specific evidence requirements, not a verified assessment of a visitor.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-residential-begging-affected-families",
+    "source_documents": [
+      123
+    ],
+    "kind": "scheme_component",
+    "interpretation": "A specialised Rajasthan residential-school track for children from the family circumstances named in the original document. Current institutions, admission processes and available places remain unverified.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-residential-sarvjan",
+    "source_documents": [
+      123
+    ],
+    "kind": "scheme_component",
+    "interpretation": "The captured Rajasthan residential-school document names a Mukhyamantri Sarvjan school track and describes its admission allocation. Current school operation, places and application dates need confirmation.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-government-student-hostels",
+    "source_documents": [
+      20
+    ],
+    "kind": "scheme",
+    "interpretation": "The State hostel-scheme directory links hostel operation rules and student mess-allowance provisions. It also lists admission information for students with disabilities. Current hostel vacancies, costs and applications are not established by the captured index.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-disability-pension",
+    "source_documents": [
+      59
+    ],
+    "kind": "scheme",
+    "interpretation": "The official disability-welfare overview describes pension assistance for persons with disabilities. Its age, income and payment tables are historical and have not been reconciled with current orders.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-disability-self-employment",
+    "source_documents": [
+      59
+    ],
+    "kind": "scheme",
+    "interpretation": "The State overview describes loan-linked help for persons with disabilities starting self-employment. Current lending arrangements, subsidies and programme-specific conditions need confirmation.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-sukhad-dampatya",
+    "source_documents": [
+      59
+    ],
+    "kind": "scheme",
+    "interpretation": "A State disability-welfare overview describes marriage-related financial assistance under this named scheme. Old income and payment figures are not presented as current entitlements.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-disability-aids-assistance",
+    "source_documents": [
+      59
+    ],
+    "kind": "scheme",
+    "interpretation": "The official overview describes assistance for artificial limbs and assistive devices for persons with disabilities. The scanned monetary text is inconsistent, so no amount is asserted.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-disability-anuprati",
+    "source_documents": [
+      59
+    ],
+    "kind": "scheme",
+    "interpretation": "The State overview describes educational and competitive-examination incentive routes for persons with disabilities. This is distinct from the coaching-payment scheme; current awards and claim arrangements remain unverified.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-palanhar",
+    "source_documents": [
+      59
+    ],
+    "kind": "scheme",
+    "interpretation": "The captured State sources describe child-care and education-linked Palanhar support for the family circumstances listed in the programme, including a parent-disability route. Current amounts and applicant-specific conditions remain unverified.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-aastha",
+    "source_documents": [
+      59
+    ],
+    "kind": "scheme",
+    "interpretation": "The State overview describes Aastha cards for families with multiple persons with disabilities and access to BPL-equivalent facilities through the relevant departments. Current card rules and available services need confirmation.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "mukhyamantri-punarvas-grih",
+    "source_documents": [
+      38
+    ],
+    "kind": "scheme",
+    "interpretation": "Rajasthan guidelines describe residential care through voluntary organisations for homeless, older, destitute and other persons identified in the source. The document also covers arrangements for operating organisations.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "antyeshti-funeral-grant",
+    "source_documents": [
+      44
+    ],
+    "kind": "scheme",
+    "interpretation": "The captured guideline describes reimbursement assistance to voluntary organisations performing dignified last rites for unclaimed or destitute deceased persons in Rajasthan. It is not a general cash payment to every bereaved family.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-silicosis-rehabilitation",
+    "source_documents": [
+      47
+    ],
+    "kind": "scheme",
+    "interpretation": "The State policy addresses detection, prevention, control and rehabilitation for pneumoconiosis, including silicosis. It describes relief arrangements for affected persons; current assistance amounts and case-specific eligibility remain unverified.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "working-women-residence-rajasthan",
+    "source_documents": [
+      35
+    ],
+    "kind": "scheme",
+    "interpretation": "The State notice describes safe accommodation for working women through organisations, trusts, local bodies and service providers. Its attached expression of interest concerns operating residences, not an open individual grant.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-disability-identification-camps-2017",
+    "source_documents": [
+      50
+    ],
+    "kind": "scheme",
+    "interpretation": "The 2017 campaign document describes identification and registration camps, disability certificates, assistive devices and linkage to disability-related services. It is retained as programme history, not a current camp schedule.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "sambal-gram",
+    "source_documents": [
+      30
+    ],
+    "kind": "scheme",
+    "interpretation": "The State departmental directory lists the Sambal Gram scheme and links village-list and expenditure information. The captured index does not establish an individual benefit, funding entitlement or current application process.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-ambedkar-award-social-service",
+    "source_documents": [
+      5,
+      9
+    ],
+    "kind": "award",
+    "interpretation": "Recognition for social-service work described in the Rajasthan award guidelines. State and district documents are grouped as variants of this award category; current nominations and applicable recognition terms require confirmation.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-ambedkar-award-women",
+    "source_documents": [
+      5,
+      9
+    ],
+    "kind": "award",
+    "interpretation": "Recognition of work supporting women from the communities named in the source. State and district award variants are grouped rather than counted twice.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-ambedkar-award-education",
+    "source_documents": [
+      5,
+      9
+    ],
+    "kind": "award",
+    "interpretation": "An award category recognising educational achievement under the Rajasthan Ambedkar award guidelines. The historic source describes school-examination achievement; current nomination arrangements remain unverified.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-ambedkar-award-justice",
+    "source_documents": [
+      5,
+      9
+    ],
+    "kind": "award",
+    "interpretation": "An award category recognising legal-service contributions under the Rajasthan guidelines. Current nominations, selection and the distinction between State and district recognition need confirmation.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "msme-team-catalogue",
+    "source_documents": [
+      3
+    ],
+    "kind": "scheme_component",
+    "interpretation": "Support through Seller Network Participants for onboarding micro and small enterprises and preparing ONDC-compliant digital catalogues. The support is not an unconditional cash grant paid to the enterprise.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "msme-team-account-management",
+    "source_documents": [
+      3
+    ],
+    "kind": "scheme_component",
+    "interpretation": "A TEAM component supports online-business account management through Seller Network Participants, including order fulfilment, operations and training. The source places a total per-enterprise cap; it is not a new monthly allowance.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "msme-team-logistics",
+    "source_documents": [
+      3
+    ],
+    "kind": "scheme_component",
+    "interpretation": "A TEAM component describes transportation and logistics support through Seller Network Participants for qualifying ONDC transactions. Transaction, time-window and prior-assistance conditions remain unverified for any applicant.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "msme-team-packaging-material",
+    "source_documents": [
+      3
+    ],
+    "kind": "scheme_component",
+    "interpretation": "A TEAM component supports packaging material through Seller Network Participants for qualifying transactions. Current funding, admissible transactions and the application route need confirmation.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "msme-team-packaging-design",
+    "source_documents": [
+      3
+    ],
+    "kind": "scheme_component",
+    "interpretation": "The TEAM source describes packaging-design assistance involving the Indian Institute of Packaging. The guideline says IIP claims this support from the implementing agency; it is not a promised direct cash payment to an applicant.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "mse-gift",
+    "source_documents": [
+      7
+    ],
+    "kind": "scheme",
+    "interpretation": "The captured financing package describes concessional green-investment finance for micro and small enterprises, with interest-subvention and risk-sharing facilities. New-loan availability after the captured sanction window is not established.",
+    "disposition": "quarantined_ocr_checkpoint_mismatch"
+  },
+  {
+    "key": "mse-spice",
+    "source_documents": [
+      11
+    ],
+    "kind": "scheme",
+    "interpretation": "The source describes capital-subsidy support for upgrading or expanding brownfield circular-economy projects. SIDBI is identified as implementing agency; eligible sectors, approvals and current availability require confirmation.",
+    "disposition": "quarantined_ocr_checkpoint_mismatch"
+  },
+  {
+    "key": "mse-odr-delayed-payments",
+    "source_documents": [
+      15
+    ],
+    "kind": "scheme",
+    "interpretation": "The scheme document describes digital dispute-resolution mechanisms for delayed payments to micro and small enterprises, alongside financial assistance for documentation and application costs. It does not guarantee payment recovery or a case outcome.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "msme-competitive-lean",
+    "source_documents": [
+      118
+    ],
+    "kind": "scheme",
+    "interpretation": "The guideline describes a staged lean-management programme intended to improve productivity, resource use and competitiveness. Its captured financial-support validity ended in March 2026, so it is not presented as a currently funded offer.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "pms-trade-fairs",
+    "source_documents": [
+      119
+    ],
+    "kind": "scheme_component",
+    "interpretation": "The captured Procurement and Marketing Support guideline describes support for individual MSE participation in trade fairs and exhibitions. Later eligibility amendments are not consolidated in this listing.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "pms-vendor-development",
+    "source_documents": [
+      119
+    ],
+    "kind": "scheme_component",
+    "interpretation": "A PMS component describes vendor-development programmes linking MSEs with public procurement and CPSE buyers, including GeM-related training. No currently scheduled event is established.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "pms-packaging",
+    "source_documents": [
+      119
+    ],
+    "kind": "scheme_component",
+    "interpretation": "The captured PMS guideline describes cluster-based packaging and branding interventions through empanelled expert organisations. It is not a general packaging cash grant for every business.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "pms-barcodes",
+    "source_documents": [
+      119
+    ],
+    "kind": "scheme_component",
+    "interpretation": "A PMS component describes assistance toward bar-code registration and recurring fees for micro enterprises. Current claim rules and availability need confirmation against later official instructions.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "pms-ecommerce",
+    "source_documents": [
+      119
+    ],
+    "kind": "scheme_component",
+    "interpretation": "The captured PMS guideline describes assistance toward e-commerce membership/subscription and related expenses on the NSIC-operated MSME Global Mart portal. This listing does not verify a current reimbursement claim.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "pms-workshops",
+    "source_documents": [
+      119
+    ],
+    "kind": "scheme_component",
+    "interpretation": "The captured guideline describes support for organisations conducting MSME business-development workshops and seminars. It is an organising-support component, not a scholarship or a guaranteed payment to attendees.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "pms-gi-retail",
+    "source_documents": [
+      119
+    ],
+    "kind": "scheme_component",
+    "interpretation": "The PMS guideline describes infrastructure support for retail outlets promoting products with valid Geographical Indications, subject to retailer contribution and scheme conditions. Current funding and applications are unverified.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "msme-international-cooperation",
+    "source_documents": [
+      120
+    ],
+    "kind": "scheme",
+    "interpretation": "The captured amended guideline describes international market-development assistance and names first-time-exporter capacity-building and market-intelligence sub-components. It supports export-market participation; the separate sub-components are not counted as duplicate listings.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-pension-national-old-age",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The Rajasthan Citizen Charter describes the national old-age pension route and its local administrative channel. Current entitlement amounts, eligibility and applications require confirmation.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-pension-national-widow",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The Citizen Charter describes a national widow-pension route administered through the State. It is distinct from the State single-woman pension entry; the routes must not be assumed to produce additive payments.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-pension-national-disability",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The State Citizen Charter describes the national disability-pension route and local processing arrangements. It is not a verified disability assessment or an entitlement decision.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-pension-state-old-age",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The Citizen Charter describes Rajasthan old-age pension support under this named State scheme. Current amounts and individual eligibility remain unverified.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-pension-state-single-woman",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The charter describes the State single-woman pension route, including the circumstances named in the source. No marital, income or other facts are inferred about a visitor.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-pension-small-marginal-farmer",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The State Citizen Charter describes a pension route for older persons from small and marginal farmer families. Current administrative arrangements and scheme-specific conditions need confirmation.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "ambedkar-dbt-voucher",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The Citizen Charter describes accommodation-related DBT voucher support for students in the college and residence circumstances stated in the source. It is distinct from admission to a government hostel.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-widow-remarriage-gift",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The Citizen Charter describes financial support associated with widow remarriage under the named State scheme. Current grant terms, application timing and eligibility require confirmation.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "mukhyamantri-kanyadan",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The Citizen Charter describes marriage-related financial assistance under Mukhyamantri Kanyadan Yojana and records its earlier Sahyog/Upahar name. Those names are treated as aliases, not additional programmes.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-disability-sports",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The Citizen Charter lists a dedicated sports scheme for persons with disabilities interested in sports or cultural competitions. Current events, services and application arrangements are not established.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-disability-state-awards",
+    "source_documents": [
+      1
+    ],
+    "kind": "award",
+    "interpretation": "The disability-support section of the Citizen Charter lists a State-level award scheme and selection-committee process. It is separate from the Ambedkar social-service award categories.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-sc-special-central-assistance",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The Citizen Charter describes a special-central-assistance programme with banking and non-banking self-employment routes for the source-described SC applicants. Individual loan products are grouped within this one programme listing.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-national-corporation-nsfdc",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme_component",
+    "interpretation": "The State Citizen Charter identifies the NSFDC institutional finance and assistance channel. Current products, funding availability and applicant-specific eligibility are not established by this capture.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-national-corporation-nstfdc",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme_component",
+    "interpretation": "The State Citizen Charter identifies the NSTFDC institutional finance and assistance channel. Current products, funding availability and applicant-specific eligibility are not established by this capture.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-national-corporation-nskfdc",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme_component",
+    "interpretation": "The State Citizen Charter identifies the NSKFDC institutional finance and assistance channel. Current products, funding availability and applicant-specific eligibility are not established by this capture.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-national-corporation-nhfdc",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme_component",
+    "interpretation": "The State Citizen Charter identifies the NHFDC institutional finance and assistance channel. Current products, funding availability and applicant-specific eligibility are not established by this capture.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-national-corporation-nbcfdc",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme_component",
+    "interpretation": "The State Citizen Charter identifies the NBCFDC institutional finance and assistance channel. Current products, funding availability and applicant-specific eligibility are not established by this capture.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "rajasthan-st-pop-banking",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The Citizen Charter describes a banking-assistance route for the source-described Scheduled Tribe applicants, with processing through the State corporation channel. Current financing and individual eligibility remain unverified.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "maharana-pratap-housing",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The charter describes an application route for house-construction assistance to Gadiya Lohar families under the named scheme. Land, housing and other evidence conditions must be checked against current rules.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "gadiya-lohar-raw-material",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The Citizen Charter describes a separate grant-assistance route for purchase of raw materials by Gadiya Lohar applicants. Current funding, documents and application arrangements require confirmation.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "devnarayan-pre-matric",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The Citizen Charter describes a Devnarayan pre-matric scholarship route for the communities and school circumstances stated in the source. Current scholarship amounts and the application round are not established.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "devnarayan-gurukul",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The charter describes a separate Gurukul route involving selection for admission to designated schools after the source-described school stage. It is kept distinct from Devnarayan residential schools and post-matric scholarships.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "devnarayan-scooty-incentive",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The Citizen Charter describes scooter distribution and educational incentives for girls under the named Devnarayan scheme. Current selections, marks requirements and benefits remain unverified.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "kalibai-bhil-scooty",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The charter describes the Kalibai Bhil meritorious-girls scooter programme in its SC-student section and discusses linked education conditions. This listing does not establish a current selection round or eligibility.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "savita-ben-ambedkar-intercaste-marriage",
+    "source_documents": [
+      1
+    ],
+    "kind": "scheme",
+    "interpretation": "The Citizen Charter describes the named inter-caste marriage incentive and distinguishes earlier and later marriage-date provisions. No benefit amount or current applicant eligibility is inferred from this research entry.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-jhunjhunu-beds-bedding-2026-27",
+    "source_documents": [
+      2
+    ],
+    "kind": "tender",
+    "interpretation": "Procurement notice for iron beds, mattresses, pillows, blankets, sheets and utensils. The source gives a technical-bid opening date; that is not treated as a bid-submission deadline.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-bharatpur-nari-niketan-staff-2026-27",
+    "source_documents": [
+      6
+    ],
+    "kind": "tender",
+    "interpretation": "A procurement notice for job-based services including cooks, guards, cleaning, caretaking and counselling at the government Nari Niketan. The captured bid window has passed.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-jaipur-mahila-sadan-counsellors-03-2026-27",
+    "source_documents": [
+      10
+    ],
+    "kind": "tender",
+    "interpretation": "The notice invites job-based counsellor-service provision for the State women residence. This is a contractor procurement record, not an individual employment appointment.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-jhunjhunu-college-girls-hostel-goods-2026-27",
+    "source_documents": [
+      14
+    ],
+    "kind": "tender",
+    "interpretation": "The captured departmental letter records an invitation for non-recurring goods for the government college-level girls hostel. The detailed bid-submission schedule is not established by this covering letter.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-beawar-hostel-cook-security-2026-27",
+    "source_documents": [
+      18
+    ],
+    "kind": "tender",
+    "interpretation": "A procurement notice for job-based cooking and security services for departmental government hostels. This concerns labour-supply contracts, not a guaranteed government job.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-alwar-hostel-security-mess-soc2627slrc00046",
+    "source_documents": [
+      21
+    ],
+    "kind": "tender",
+    "interpretation": "The e-bid notice seeks hostel building-security and student-mess services. The cited bid-submission end date is in June 2026 and has passed.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-deeg-hostel-security-mess-01-2026-27",
+    "source_documents": [
+      23
+    ],
+    "kind": "tender",
+    "interpretation": "The source invites service bids for building security and mess arrangements in government hostels. Current bidding and any replacement tender are not established.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-dungarpur-hostel-food-2026",
+    "source_documents": [
+      25
+    ],
+    "kind": "tender",
+    "interpretation": "The departmental notice concerns food-material procurement for students residing in government hostels. Detailed specifications and the operative bid schedule must be checked in the original notice.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-dausa-manpower-03-2025-26",
+    "source_documents": [
+      28
+    ],
+    "kind": "tender",
+    "interpretation": "A two-stage e-procurement notice seeks manpower services for departmental work. The captured exercise belongs to FY 2025–26 and is not advertised as open.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-bayana-peepra-furniture-08-2025-26",
+    "source_documents": [
+      31
+    ],
+    "kind": "tender",
+    "interpretation": "The school notice invites furniture-supply bids for the Devnarayan government boys residential school at Peepra, Bayana. This is a historical procurement exercise.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-bayana-peepra-kitchen-07-2025-26",
+    "source_documents": [
+      33
+    ],
+    "kind": "tender",
+    "interpretation": "The notice seeks kitchen-related equipment including water-purification and food-preparation items for the residential school. It is distinct from the furniture notice.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-deeg-hostel-nonrecurring-goods-2025-26",
+    "source_documents": [
+      36
+    ],
+    "kind": "tender",
+    "interpretation": "The notice invites rate proposals for non-recurring goods for departmental hostels. It belongs to the earlier FY 2025–26 procurement record; a current bid window is not established.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-atun-bhilwara-mattresses-pillows-04-2025-26",
+    "source_documents": [
+      39
+    ],
+    "kind": "tender",
+    "interpretation": "The school notice concerns foam mattresses, pillows and related supplies for resident students at Atun, Bhilwara. It is retained as a historical procurement record.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-jhalawar-hostel-goods-soc2526glrc00400",
+    "source_documents": [
+      45
+    ],
+    "kind": "tender",
+    "interpretation": "The captured e-tender concerns non-recurring supplies for government hostels. The notice describes a February 2026 procurement exercise, not a currently open offer.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-kota-hostel-bedding-04-2025-26",
+    "source_documents": [
+      48,
+      42
+    ],
+    "kind": "tender",
+    "interpretation": "The e-tender seeks bedsheets, pillows, pillow covers and related hostel bedding. Its correction order is grouped with the original notice rather than counted as another opportunity.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-beawar-hostel-bedding-03-2025-26",
+    "source_documents": [
+      51
+    ],
+    "kind": "tender",
+    "interpretation": "The recovered notice seeks bedding and non-recurring goods for government hostels. The cited submission date is 9 February 2026 and has passed.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-deeg-office-furniture-03-2025-26",
+    "source_documents": [
+      57
+    ],
+    "kind": "tender",
+    "interpretation": "The captured notice concerns furniture and fixtures for the district welfare office. It is separate from hostel-supply procurements and is not advertised as a current bid.",
+    "disposition": "source_backed_research"
+  },
+  {
+    "key": "tender-mandana-kota-dairy-04-2025-26",
+    "source_documents": [
+      60
+    ],
+    "kind": "tender",
+    "interpretation": "The rate-contract notice invites supply of milk, curd and buttermilk for resident students at the government school in Mandana. It is a historical procurement record.",
+    "disposition": "source_backed_research"
+  }
+]
