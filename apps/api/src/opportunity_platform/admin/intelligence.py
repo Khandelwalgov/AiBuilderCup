@@ -10,12 +10,18 @@ from opportunity_platform.db.models import (
     IngestionRun,
     Opportunity,
     OpportunityVersion,
-    SourceSnapshot,
+    ResearchListing,
 )
 from opportunity_platform.ingestion.corpus_policy.contracts import VERSION
+from opportunity_platform.ingestion.corpus_policy.library import catalogue_entries
 
 
 class IntelligenceStatus(BaseModel):
+    public_research_listings: int = 0
+    draft_opportunity_identities: int = 0
+    documents_with_ocr: int = 0
+    text_states: dict[str, int] = {}
+    review_states: dict[str, int] = {}
     captured_snapshot_rows: int
     unique_document_hashes: int
     documents_requiring_ocr: int
@@ -31,15 +37,8 @@ class IntelligenceStatus(BaseModel):
 
 
 def status(session):
-    snapshots = list(
-        session.execute(
-            select(
-                SourceSnapshot.id, SourceSnapshot.content_hash, SourceSnapshot.response_metadata
-            ).where(
-                SourceSnapshot.response_metadata["origin"].as_string() == VERSION,
-            )
-        )
-    )
+    entries = catalogue_entries(session)
+    snapshots = [snapshot for snapshot, _, _ in entries]
     versions = list(
         session.execute(
             select(OpportunityVersion.snapshot_id, OpportunityVersion.publication_state).where(
@@ -96,15 +95,31 @@ def status(session):
             func.count(InferenceReservation.id),
         )
     ).one()
+    from collections import Counter
+
     return IntelligenceStatus(
+        public_research_listings=session.scalar(
+            select(func.count())
+            .select_from(ResearchListing)
+            .where(ResearchListing.is_public.is_(True))
+        )
+        or 0,
+        draft_opportunity_identities=session.scalar(
+            select(func.count(func.distinct(OpportunityVersion.opportunity_id))).where(
+                OpportunityVersion.publication_state == "draft",
+                OpportunityVersion.snapshot_id.in_([s.id for s in snapshots]),
+            )
+        )
+        or 0,
+        documents_with_ocr=len(
+            {snapshot.content_hash for snapshot, _, item in entries if item.ocr_pages}
+        ),
+        text_states=dict(Counter(item.text_state for _, _, item in entries)),
+        review_states=dict(Counter(item.review_state for _, _, item in entries)),
         captured_snapshot_rows=len(snapshots),
         unique_document_hashes=len({s.content_hash for s in snapshots}),
         documents_requiring_ocr=len(
-            {
-                s.content_hash
-                for s in snapshots
-                if s.response_metadata.get("quality_audit", {}).get("needs_ocr")
-            }
+            {snapshot.content_hash for snapshot, _, item in entries if item.unreadable_pages}
         ),
         processing_backlog=len({s.content_hash for s in snapshots} - processed_hashes),
         draft_opportunities=sum(v.publication_state == "draft" for v in versions),

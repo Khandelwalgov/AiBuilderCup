@@ -1451,6 +1451,39 @@ export interface components {
             related_opportunities: string[];
             /** Page Count */
             page_count: number;
+            /**
+             * Ocr Pages
+             * @default 0
+             */
+            ocr_pages: number;
+            /**
+             * Unreadable Pages
+             * @default []
+             */
+            unreadable_pages: number[];
+            /**
+             * Review Required Pages
+             * @default []
+             */
+            review_required_pages: number[];
+            /**
+             * Text State
+             * @default text_available
+             */
+            text_state: string;
+            /**
+             * Related Research
+             * @default []
+             */
+            related_research: string[];
+            /** Attribution Evidence */
+            attribution_evidence?: {
+                [key: string]: unknown;
+            } | null;
+            /** Title Evidence */
+            title_evidence?: {
+                [key: string]: unknown;
+            } | null;
         };
         /** GovernmentSourceDetail */
         GovernmentSourceDetail: {
@@ -1485,6 +1518,39 @@ export interface components {
             related_opportunities: string[];
             /** Page Count */
             page_count: number;
+            /**
+             * Ocr Pages
+             * @default 0
+             */
+            ocr_pages: number;
+            /**
+             * Unreadable Pages
+             * @default []
+             */
+            unreadable_pages: number[];
+            /**
+             * Review Required Pages
+             * @default []
+             */
+            review_required_pages: number[];
+            /**
+             * Text State
+             * @default text_available
+             */
+            text_state: string;
+            /**
+             * Related Research
+             * @default []
+             */
+            related_research: string[];
+            /** Attribution Evidence */
+            attribution_evidence?: {
+                [key: string]: unknown;
+            } | null;
+            /** Title Evidence */
+            title_evidence?: {
+                [key: string]: unknown;
+            } | null;
             /** Pages */
             pages: components["schemas"]["GovernmentTextPage"][];
             /**
@@ -1495,6 +1561,31 @@ export interface components {
         };
         /** GovernmentSourcePage */
         GovernmentSourcePage: {
+            /**
+             * All Capture Records
+             * @default 0
+             */
+            all_capture_records: number;
+            /**
+             * All Unique Document Hashes
+             * @default 0
+             */
+            all_unique_document_hashes: number;
+            /**
+             * Public Research Listings
+             * @default 0
+             */
+            public_research_listings: number;
+            /**
+             * Unpublished Eligibility Versions
+             * @default 0
+             */
+            unpublished_eligibility_versions: number;
+            /**
+             * Published Eligibility Policies
+             * @default 0
+             */
+            published_eligibility_policies: number;
             /** Items */
             items: components["schemas"]["GovernmentSource"][];
             /** Total */
@@ -1510,6 +1601,26 @@ export interface components {
             text: string;
             /** Source Url */
             source_url: string;
+            /**
+             * Basis
+             * @default original_extracted_text
+             */
+            basis: string;
+            /**
+             * Readability
+             * @default readable
+             */
+            readability: string;
+            /** Text Sha256 */
+            text_sha256?: string | null;
+            /** Image Sha256 */
+            image_sha256?: string | null;
+            /** Mean Word Confidence */
+            mean_word_confidence?: number | null;
+            /** Acquisition Snapshot Id */
+            acquisition_snapshot_id?: string | null;
+            /** Original Text */
+            original_text?: string | null;
         };
         /** Health */
         Health: {
@@ -1563,6 +1674,35 @@ export interface components {
         };
         /** IntelligenceStatus */
         IntelligenceStatus: {
+            /**
+             * Public Research Listings
+             * @default 0
+             */
+            public_research_listings: number;
+            /**
+             * Draft Opportunity Identities
+             * @default 0
+             */
+            draft_opportunity_identities: number;
+            /**
+             * Documents With Ocr
+             * @default 0
+             */
+            documents_with_ocr: number;
+            /**
+             * Text States
+             * @default {}
+             */
+            text_states: {
+                [key: string]: number;
+            };
+            /**
+             * Review States
+             * @default {}
+             */
+            review_states: {
+                [key: string]: number;
+            };
             /** Captured Snapshot Rows */
             captured_snapshot_rows: number;
             /** Unique Document Hashes */
@@ -1848,6 +1988,21 @@ export interface components {
         /** ResearchCard */
         ResearchCard: {
             /**
+             * Evidence Strength
+             * @default unassessed
+             */
+            evidence_strength: string;
+            /**
+             * Archive
+             * @default false
+             */
+            archive: boolean;
+            /**
+             * Documents
+             * @default []
+             */
+            documents: components["schemas"]["ResearchDocumentLink"][];
+            /**
              * Id
              * Format: uuid
              */
@@ -1931,6 +2086,21 @@ export interface components {
         /** ResearchDetail */
         ResearchDetail: {
             /**
+             * Evidence Strength
+             * @default unassessed
+             */
+            evidence_strength: string;
+            /**
+             * Archive
+             * @default false
+             */
+            archive: boolean;
+            /**
+             * Documents
+             * @default []
+             */
+            documents: components["schemas"]["ResearchDocumentLink"][];
+            /**
              * Id
              * Format: uuid
              */
@@ -2000,8 +2170,50 @@ export interface components {
             /** Citations */
             citations: components["schemas"]["ResearchCitation"][];
         };
+        /** ResearchDocumentLink */
+        ResearchDocumentLink: {
+            /**
+             * Snapshot Id
+             * Format: uuid
+             */
+            snapshot_id: string;
+            /** Source Url */
+            source_url: string;
+            /** Content Hash */
+            content_hash: string;
+            /** Pages */
+            pages: number[];
+            /** Excerpt */
+            excerpt: string;
+            /** Basis */
+            basis: string;
+        };
         /** ResearchFacets */
         ResearchFacets: {
+            /**
+             * Catalogue Total
+             * @default 0
+             */
+            catalogue_total: number;
+            /**
+             * Archive Total
+             * @default 0
+             */
+            archive_total: number;
+            /**
+             * Evidence Strengths
+             * @default {}
+             */
+            evidence_strengths: {
+                [key: string]: number;
+            };
+            /**
+             * Kinds
+             * @default {}
+             */
+            kinds: {
+                [key: string]: number;
+            };
             /** Total */
             total: number;
             /** Categories */
@@ -6564,8 +6776,9 @@ export interface operations {
                 category?: string;
                 state?: string;
                 document_type?: string;
-                format?: string;
+                format?: "" | "pdf" | "html";
                 review_state?: "" | "processing_pending" | "needs_ocr" | "human_review_pending" | "reviewed_and_published";
+                text_state?: "" | "text_available" | "partial_text" | "unreadable";
                 opportunity_id?: string | null;
                 cursor?: string | null;
                 limit?: number;
@@ -6738,6 +6951,7 @@ export interface operations {
     browse_v1_research_opportunities_get: {
         parameters: {
             query?: {
+                view?: "catalogue" | "archive" | "all";
                 q?: string;
                 category?: string;
                 jurisdiction?: string;

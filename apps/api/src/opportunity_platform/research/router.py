@@ -1,16 +1,17 @@
 import uuid
 from collections import Counter
 from datetime import datetime, timedelta, timezone
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, Query
-from sqlalchemy import Date, and_, case, func, or_, select
+from sqlalchemy import Date, and_, case, or_, select
 from sqlalchemy.orm import Session
 
 from opportunity_platform.core.errors import APIError
 from opportunity_platform.db.models import ResearchListing
 from opportunity_platform.db.session import get_session
 
+from .integration import quality
 from .schemas import (
     ApplicationStatus,
     Availability,
@@ -57,13 +58,38 @@ def card(row):
     if data.closes_on and data.closes_on < current_day() and data.application_status == "open":
         values.update(application_status="closed", availability="historical")
     return ResearchCard(
-        id=row.id, source_url=data.sources[0].source_url, source_count=len(data.sources), **values
+        id=row.id,
+        source_url=data.sources[0].source_url,
+        source_count=len(data.sources),
+        evidence_strength=quality(row).get("evidence_strength", "unassessed"),
+        archive=quality(row).get(
+            "archive", data.kind == "tender" or data.availability == "historical"
+        ),
+        documents=[
+            {
+                "snapshot_id": source.snapshot_id,
+                "source_url": source.source_url,
+                "content_hash": source.content_hash,
+                "pages": sorted(
+                    {c.page for c in data.citations if c.snapshot_id == source.snapshot_id}
+                ),
+                "excerpt": next(
+                    c.passage for c in data.citations if c.snapshot_id == source.snapshot_id
+                )[:320],
+                "basis": "offline_ocr"
+                if any(p.basis == "offline_ocr" for p in source.pages)
+                else "original_extracted_text",
+            }
+            for source in data.sources
+        ],
+        **values,
     )
 
 
 @router.get("", response_model=ResearchResults)
 def browse(
     session: DB,
+    view: Literal["catalogue", "archive", "all"] = "catalogue",
     q: Annotated[str, Query(max_length=200)] = "",
     category: Annotated[str, Query(max_length=80)] = "",
     jurisdiction: Annotated[str, Query(max_length=80)] = "",
@@ -89,7 +115,6 @@ def browse(
             )
         )
     effective_availability, effective_application = effective_fields()
-    category_rank = case(CATEGORY_ORDER, value=ResearchListing.category, else_=9)
     for column, value in [
         (ResearchListing.category, category),
         (ResearchListing.jurisdiction, jurisdiction),
@@ -98,36 +123,36 @@ def browse(
     ]:
         if value:
             query = query.where(column == value)
-    total = session.scalar(select(func.count()).select_from(query.subquery())) or 0
+    rows = list(session.scalars(query))
+
+    def rank(row):
+        audit = quality(row)
+        strength = {
+            "substantive_document": 0,
+            "source_overview": 1,
+            "procurement_notice": 1,
+            "charter_summary": 2,
+            "directory_reference": 3,
+        }.get(audit.get("evidence_strength"), 4)
+        return (
+            strength,
+            row.payload.get("kind") != "scheme",
+            CATEGORY_ORDER.get(row.category, 9),
+            row.title,
+            row.id.int,
+        )
+
+    rows.sort(key=rank)
+    if view != "all":
+        rows = [r for r in rows if card(r).archive == (view == "archive")]
+    total = len(rows)
     if cursor:
-        previous = session.scalar(
-            select(ResearchListing).where(
-                ResearchListing.id == cursor, ResearchListing.is_public.is_(True)
-            )
-        )
-        if previous is None:
+        index = next((i for i, row in enumerate(rows) if row.id == cursor), None)
+        if index is None:
             raise APIError(422, "invalid_research_cursor", "This catalogue cursor is unavailable.")
-        rank = CATEGORY_ORDER.get(previous.category, 9)
-        query = query.where(
-            or_(
-                category_rank > rank,
-                and_(category_rank == rank, ResearchListing.title > previous.title),
-                and_(
-                    category_rank == rank,
-                    ResearchListing.title == previous.title,
-                    ResearchListing.id > cursor,
-                ),
-            )
-        )
-    rows = list(
-        session.scalars(
-            query.order_by(category_rank, ResearchListing.title, ResearchListing.id).limit(
-                limit + 1
-            )
-        )
-    )
+        rows = rows[index + 1 :]
     return ResearchResults(
-        items=[card(row) for row in rows[:limit]],
+        items=[card(r) for r in rows[:limit]],
         total=total,
         next_cursor=rows[limit - 1].id if len(rows) > limit else None,
     )
@@ -138,6 +163,10 @@ def facets(session: DB):
     rows = list(session.scalars(select(ResearchListing).where(ResearchListing.is_public.is_(True))))
     return ResearchFacets(
         total=len(rows),
+        catalogue_total=sum(not card(r).archive for r in rows),
+        archive_total=sum(card(r).archive for r in rows),
+        evidence_strengths=dict(Counter(card(r).evidence_strength for r in rows)),
+        kinds=dict(Counter(r.payload["kind"] for r in rows)),
         categories=sorted({r.category for r in rows}),
         jurisdictions=sorted({r.jurisdiction for r in rows}),
         availability=dict(Counter(card(r).availability for r in rows)),

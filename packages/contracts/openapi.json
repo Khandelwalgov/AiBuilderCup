@@ -5262,8 +5262,12 @@
             "in": "query",
             "required": false,
             "schema": {
+              "enum": [
+                "",
+                "pdf",
+                "html"
+              ],
               "type": "string",
-              "pattern": "^(pdf|html)?$",
               "default": "",
               "title": "Format"
             }
@@ -5283,6 +5287,22 @@
               "type": "string",
               "default": "",
               "title": "Review State"
+            }
+          },
+          {
+            "name": "text_state",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "",
+                "text_available",
+                "partial_text",
+                "unreadable"
+              ],
+              "type": "string",
+              "default": "",
+              "title": "Text State"
             }
           },
           {
@@ -5527,6 +5547,21 @@
         "summary": "Browse",
         "operationId": "browse_v1_research_opportunities_get",
         "parameters": [
+          {
+            "name": "view",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "catalogue",
+                "archive",
+                "all"
+              ],
+              "type": "string",
+              "default": "catalogue",
+              "title": "View"
+            }
+          },
           {
             "name": "q",
             "in": "query",
@@ -8014,6 +8049,65 @@
           "page_count": {
             "type": "integer",
             "title": "Page Count"
+          },
+          "ocr_pages": {
+            "type": "integer",
+            "title": "Ocr Pages",
+            "default": 0
+          },
+          "unreadable_pages": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Unreadable Pages",
+            "default": []
+          },
+          "review_required_pages": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Review Required Pages",
+            "default": []
+          },
+          "text_state": {
+            "type": "string",
+            "title": "Text State",
+            "default": "text_available"
+          },
+          "related_research": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "title": "Related Research",
+            "default": []
+          },
+          "attribution_evidence": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Attribution Evidence"
+          },
+          "title_evidence": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title Evidence"
           }
         },
         "type": "object",
@@ -8118,6 +8212,65 @@
             "type": "integer",
             "title": "Page Count"
           },
+          "ocr_pages": {
+            "type": "integer",
+            "title": "Ocr Pages",
+            "default": 0
+          },
+          "unreadable_pages": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Unreadable Pages",
+            "default": []
+          },
+          "review_required_pages": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Review Required Pages",
+            "default": []
+          },
+          "text_state": {
+            "type": "string",
+            "title": "Text State",
+            "default": "text_available"
+          },
+          "related_research": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "title": "Related Research",
+            "default": []
+          },
+          "attribution_evidence": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Attribution Evidence"
+          },
+          "title_evidence": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title Evidence"
+          },
           "pages": {
             "items": {
               "$ref": "#/components/schemas/GovernmentTextPage"
@@ -8153,6 +8306,31 @@
       },
       "GovernmentSourcePage": {
         "properties": {
+          "all_capture_records": {
+            "type": "integer",
+            "title": "All Capture Records",
+            "default": 0
+          },
+          "all_unique_document_hashes": {
+            "type": "integer",
+            "title": "All Unique Document Hashes",
+            "default": 0
+          },
+          "public_research_listings": {
+            "type": "integer",
+            "title": "Public Research Listings",
+            "default": 0
+          },
+          "unpublished_eligibility_versions": {
+            "type": "integer",
+            "title": "Unpublished Eligibility Versions",
+            "default": 0
+          },
+          "published_eligibility_policies": {
+            "type": "integer",
+            "title": "Published Eligibility Policies",
+            "default": 0
+          },
           "items": {
             "items": {
               "$ref": "#/components/schemas/GovernmentSource"
@@ -8198,6 +8376,71 @@
           "source_url": {
             "type": "string",
             "title": "Source Url"
+          },
+          "basis": {
+            "type": "string",
+            "title": "Basis",
+            "default": "original_extracted_text"
+          },
+          "readability": {
+            "type": "string",
+            "title": "Readability",
+            "default": "readable"
+          },
+          "text_sha256": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text Sha256"
+          },
+          "image_sha256": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Sha256"
+          },
+          "mean_word_confidence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mean Word Confidence"
+          },
+          "acquisition_snapshot_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Acquisition Snapshot Id"
+          },
+          "original_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Text"
           }
         },
         "type": "object",
@@ -8331,6 +8574,37 @@
       },
       "IntelligenceStatus": {
         "properties": {
+          "public_research_listings": {
+            "type": "integer",
+            "title": "Public Research Listings",
+            "default": 0
+          },
+          "draft_opportunity_identities": {
+            "type": "integer",
+            "title": "Draft Opportunity Identities",
+            "default": 0
+          },
+          "documents_with_ocr": {
+            "type": "integer",
+            "title": "Documents With Ocr",
+            "default": 0
+          },
+          "text_states": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Text States",
+            "default": {}
+          },
+          "review_states": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Review States",
+            "default": {}
+          },
           "captured_snapshot_rows": {
             "type": "integer",
             "title": "Captured Snapshot Rows"
@@ -9104,6 +9378,24 @@
       },
       "ResearchCard": {
         "properties": {
+          "evidence_strength": {
+            "type": "string",
+            "title": "Evidence Strength",
+            "default": "unassessed"
+          },
+          "archive": {
+            "type": "boolean",
+            "title": "Archive",
+            "default": false
+          },
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/ResearchDocumentLink"
+            },
+            "type": "array",
+            "title": "Documents",
+            "default": []
+          },
           "id": {
             "type": "string",
             "format": "uuid",
@@ -9315,6 +9607,24 @@
       },
       "ResearchDetail": {
         "properties": {
+          "evidence_strength": {
+            "type": "string",
+            "title": "Evidence Strength",
+            "default": "unassessed"
+          },
+          "archive": {
+            "type": "boolean",
+            "title": "Archive",
+            "default": false
+          },
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/ResearchDocumentLink"
+            },
+            "type": "array",
+            "title": "Documents",
+            "default": []
+          },
           "id": {
             "type": "string",
             "format": "uuid",
@@ -9505,8 +9815,77 @@
         ],
         "title": "ResearchDetail"
       },
+      "ResearchDocumentLink": {
+        "properties": {
+          "snapshot_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Snapshot Id"
+          },
+          "source_url": {
+            "type": "string",
+            "title": "Source Url"
+          },
+          "content_hash": {
+            "type": "string",
+            "title": "Content Hash"
+          },
+          "pages": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Pages"
+          },
+          "excerpt": {
+            "type": "string",
+            "title": "Excerpt"
+          },
+          "basis": {
+            "type": "string",
+            "title": "Basis"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "snapshot_id",
+          "source_url",
+          "content_hash",
+          "pages",
+          "excerpt",
+          "basis"
+        ],
+        "title": "ResearchDocumentLink"
+      },
       "ResearchFacets": {
         "properties": {
+          "catalogue_total": {
+            "type": "integer",
+            "title": "Catalogue Total",
+            "default": 0
+          },
+          "archive_total": {
+            "type": "integer",
+            "title": "Archive Total",
+            "default": 0
+          },
+          "evidence_strengths": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Evidence Strengths",
+            "default": {}
+          },
+          "kinds": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Kinds",
+            "default": {}
+          },
           "total": {
             "type": "integer",
             "title": "Total"

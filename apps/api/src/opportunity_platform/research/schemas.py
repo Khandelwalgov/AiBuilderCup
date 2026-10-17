@@ -151,7 +151,19 @@ class ResearchInput(ClosedModel):
         return self
 
 
+class ResearchDocumentLink(ClosedModel):
+    snapshot_id: uuid.UUID
+    source_url: str
+    content_hash: str
+    pages: list[int]
+    excerpt: str
+    basis: str
+
+
 class ResearchCard(ClosedModel):
+    evidence_strength: str = "unassessed"
+    archive: bool = False
+    documents: list[ResearchDocumentLink] = []
     id: uuid.UUID
     key: str
     title: str
@@ -187,6 +199,10 @@ class ResearchResults(ClosedModel):
 
 
 class ResearchFacets(ClosedModel):
+    catalogue_total: int = 0
+    archive_total: int = 0
+    evidence_strengths: dict[str, int] = {}
+    kinds: dict[str, int] = {}
     total: int
     categories: list[str]
     jurisdictions: list[str]

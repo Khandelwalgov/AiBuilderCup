@@ -5,7 +5,7 @@ from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel
-from sqlalchemy import Text, func, select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from opportunity_platform.core.errors import APIError
@@ -13,10 +13,12 @@ from opportunity_platform.db.models import (
     IngestionRun,
     Opportunity,
     OpportunityVersion,
+    ResearchListing,
     Source,
     SourceSnapshot,
 )
 from opportunity_platform.db.session import get_session
+from opportunity_platform.research.integration import integrated_pages, source_overlays
 
 from .contracts import VERSION
 
@@ -39,9 +41,21 @@ class GovernmentSource(BaseModel):
     needs_ocr: bool
     related_opportunities: list[uuid.UUID]
     page_count: int
+    ocr_pages: int = 0
+    unreadable_pages: list[int] = []
+    review_required_pages: list[int] = []
+    text_state: str = "text_available"
+    related_research: list[uuid.UUID] = []
+    attribution_evidence: dict | None = None
+    title_evidence: dict | None = None
 
 
 class GovernmentSourcePage(BaseModel):
+    all_capture_records: int = 0
+    all_unique_document_hashes: int = 0
+    public_research_listings: int = 0
+    unpublished_eligibility_versions: int = 0
+    published_eligibility_policies: int = 0
     items: list[GovernmentSource]
     total: int
     next_cursor: uuid.UUID | None
@@ -51,6 +65,13 @@ class GovernmentTextPage(BaseModel):
     page: int
     text: str
     source_url: str
+    basis: str = "original_extracted_text"
+    readability: str = "readable"
+    text_sha256: str | None = None
+    image_sha256: str | None = None
+    mean_word_confidence: float | None = None
+    acquisition_snapshot_id: str | None = None
+    original_text: str | None = None
 
 
 class GovernmentSourceDetail(GovernmentSource):
@@ -71,19 +92,32 @@ def base_query():
     )
 
 
-def entry(snapshot, source, related, processing_status=None):
+def entry(snapshot, source, related, processing_status=None, research=None):
     metadata = snapshot.response_metadata
     audit = metadata.get("quality_audit", {})
     discoveries = metadata.get("discoveries", [])
+    overlay = source_overlays().get(snapshot.content_hash, {})
+    pages = integrated_pages(snapshot)
+    unreadable = [p["page"] for p in pages if p["readability"] == "unreadable"]
+    flagged = [p["page"] for p in pages if p["readability"] == "needs_review"]
+    text_state = (
+        "unreadable"
+        if len(unreadable) == len(pages)
+        else "partial_text"
+        if unreadable or flagged
+        else "text_available"
+    )
+    issuer = overlay.get("issuer")
+    title = overlay.get("title")
     return GovernmentSource(
         id=snapshot.id,
-        title=source.name,
-        department=source.authority,
+        title=title["value"] if title else source.name,
+        department=issuer["value"] if issuer else source.authority,
         source_url=snapshot.source_url,
         content_hash=snapshot.content_hash,
         format="pdf" if snapshot.media_type == "application/pdf" else "html",
         captured_at=metadata.get("captured_at"),
-        document_type=audit.get("document_type", "unclassified"),
+        document_type=overlay.get("document_type", audit.get("document_type", "unclassified")),
         categories=sorted(
             {d["document_category"] for d in discoveries if d.get("document_category")}
         ),
@@ -96,12 +130,19 @@ def entry(snapshot, source, related, processing_status=None):
             "human_review_pending"
             if processing_status in {"human_escalation", "draft_for_human_review"}
             else "needs_ocr"
-            if audit.get("needs_ocr")
+            if unreadable
             else "processing_pending"
         ),
-        needs_ocr=bool(audit.get("needs_ocr")),
+        needs_ocr=bool(unreadable),
         related_opportunities=related,
         page_count=len(snapshot.pages),
+        ocr_pages=sum(p["basis"] == "offline_ocr" for p in pages),
+        unreadable_pages=unreadable,
+        review_required_pages=flagged,
+        text_state=text_state,
+        related_research=research or [],
+        attribution_evidence=issuer,
+        title_evidence=title,
     )
 
 
@@ -124,6 +165,45 @@ def published_relations(session, ids):
     return result
 
 
+def catalogue_entries(session):
+    rows = session.execute(base_query().order_by(SourceSnapshot.id)).all()
+    ids = [row[0].id for row in rows]
+    relations = published_relations(session, ids)
+    statuses = {
+        run.snapshot_id: run.status
+        for run in session.scalars(
+            select(IngestionRun)
+            .where(IngestionRun.snapshot_id.in_(ids))
+            .order_by(IngestionRun.created_at, IngestionRun.id)
+        )
+    }
+    for snapshot_id in session.scalars(
+        select(OpportunityVersion.snapshot_id).where(
+            OpportunityVersion.snapshot_id.in_(ids),
+            OpportunityVersion.publication_state == "draft",
+        )
+    ):
+        statuses[snapshot_id] = "draft_for_human_review"
+    research = {}
+    for row in session.scalars(select(ResearchListing).where(ResearchListing.is_public.is_(True))):
+        for source in row.payload["sources"]:
+            research.setdefault(uuid.UUID(source["snapshot_id"]), []).append(row.id)
+    return [
+        (
+            snapshot,
+            source,
+            entry(
+                snapshot,
+                source,
+                relations.get(snapshot.id, []),
+                statuses.get(snapshot.id),
+                research.get(snapshot.id, []),
+            ),
+        )
+        for snapshot, source in rows
+    ]
+
+
 @router.get("", response_model=GovernmentSourcePage)
 def browse(
     session: DB,
@@ -132,98 +212,75 @@ def browse(
     category: Annotated[str, Query(max_length=80)] = "",
     state: Annotated[str, Query(max_length=80)] = "",
     document_type: Annotated[str, Query(max_length=80)] = "",
-    format: Annotated[str, Query(pattern="^(pdf|html)?$")] = "",
+    format: Literal["", "pdf", "html"] = "",
     review_state: Literal[
         "", "processing_pending", "needs_ocr", "human_review_pending", "reviewed_and_published"
     ] = "",
+    text_state: Literal["", "text_available", "partial_text", "unreadable"] = "",
     opportunity_id: uuid.UUID | None = None,
     cursor: uuid.UUID | None = None,
     limit: Annotated[int, Query(ge=1, le=50)] = 12,
 ):
-    query = base_query()
-    published = (
-        select(OpportunityVersion.id)
-        .join(Opportunity, Opportunity.published_version_id == OpportunityVersion.id)
-        .where(
-            OpportunityVersion.snapshot_id == SourceSnapshot.id,
-            OpportunityVersion.publication_state == "published",
-            OpportunityVersion.status == "verified",
-            Opportunity.is_synthetic.is_(False),
-        )
-    )
-    pending = (
-        select(IngestionRun.id)
-        .where(
-            IngestionRun.snapshot_id == SourceSnapshot.id,
-            IngestionRun.status.in_(["human_escalation", "draft_for_human_review"]),
-        )
-        .exists()
-    )
-    needs_ocr = (
-        SourceSnapshot.response_metadata["quality_audit"]["needs_ocr"].as_boolean().is_(True)
-    )
-    if opportunity_id:
-        query = query.where(published.where(Opportunity.id == opportunity_id).exists())
-    if review_state:
-        if review_state == "reviewed_and_published":
-            query = query.where(published.exists())
-        else:
-            query = query.where(~published.exists())
-            if review_state == "human_review_pending":
-                query = query.where(pending)
-            elif review_state == "needs_ocr":
-                query = query.where(~pending, needs_ocr)
-            else:
-                query = query.where(~pending, ~needs_ocr)
-    if q.strip():
-        # Literal escaped terms; public normalized text only, never user documents.
-        term = "%" + q.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%"
-        query = query.where(
-            Source.name.ilike(term, escape="\\")
-            | SourceSnapshot.pages.cast(Text).ilike(term, escape="\\")
-        )
-    if department:
-        query = query.where(Source.authority == department)
-    if document_type:
-        query = query.where(
-            SourceSnapshot.response_metadata["quality_audit"]["document_type"].as_string()
-            == document_type
-        )
-    if format:
-        query = query.where(
-            SourceSnapshot.media_type == ("application/pdf" if format == "pdf" else "text/html")
-        )
-    if category or state:
-        # Registry discovery metadata is captured provenance, not verified applicability.
-        from sqlalchemy.dialects.postgresql import JSONB
-
-        for key, value in [("document_category", category), ("jurisdiction", state)]:
-            if value:
-                query = query.where(
-                    SourceSnapshot.response_metadata["discoveries"]
-                    .cast(JSONB)
-                    .contains([{key: value}])
-                )
-    total = session.scalar(select(func.count()).select_from(query.subquery())) or 0
+    # This small captured corpus uses exactly the same display values for filters and cards.
+    values = []
+    entries = catalogue_entries(session)
+    for snapshot, source, item in entries:
+        if department and department.casefold() not in (item.department or "").casefold():
+            continue
+        if any(
+            value and actual != value
+            for actual, value in [
+                (item.document_type, document_type),
+                (item.format, format),
+                (item.review_state, review_state),
+                (item.text_state, text_state),
+            ]
+        ):
+            continue
+        if (
+            category
+            and category not in item.categories
+            or state
+            and state not in item.jurisdictions
+        ):
+            continue
+        if opportunity_id and opportunity_id not in item.related_opportunities:
+            continue
+        if q.strip():
+            haystack = "\n".join(
+                [
+                    item.title,
+                    item.department or "",
+                    *(p["text"] for p in integrated_pages(snapshot)),
+                ]
+            )
+            if q.strip().casefold() not in haystack.casefold():
+                continue
+        values.append(item)
+    total = len(values)
     if cursor:
-        query = query.where(SourceSnapshot.id > cursor)
-    rows = session.execute(query.order_by(SourceSnapshot.id).limit(limit + 1)).all()
-    relations = published_relations(session, [snapshot.id for snapshot, _ in rows])
-    statuses = {
-        run.snapshot_id: run.status
-        for run in session.scalars(
-            select(IngestionRun)
-            .where(IngestionRun.snapshot_id.in_([snapshot.id for snapshot, _ in rows]))
-            .order_by(IngestionRun.created_at)
-        )
-    }
+        values = [item for item in values if item.id.int > cursor.int]
     return GovernmentSourcePage(
-        items=[
-            entry(s, source, relations.get(s.id, []), statuses.get(s.id))
-            for s, source in rows[:limit]
-        ],
+        all_capture_records=len(entries),
+        all_unique_document_hashes=len({snapshot.content_hash for snapshot, _, _ in entries}),
+        public_research_listings=len(
+            {identifier for _, _, item in entries for identifier in item.related_research}
+        ),
+        unpublished_eligibility_versions=session.scalar(
+            select(func.count())
+            .select_from(OpportunityVersion)
+            .where(
+                OpportunityVersion.snapshot_id.in_([snapshot.id for snapshot, _, _ in entries]),
+                OpportunityVersion.publication_state == "draft",
+            )
+        )
+        or 0,
+        published_eligibility_policies=len(
+            {identifier for _, _, item in entries for identifier in item.related_opportunities}
+        ),
+        items=values[:limit],
         total=total,
-        next_cursor=rows[limit - 1][0].id if len(rows) > limit else None,
+        next_cursor=values[limit - 1].id if len(values) > limit else None,
     )
 
 
@@ -233,19 +290,8 @@ def detail(identifier: uuid.UUID, session: DB):
     if row is None:
         raise APIError(404, "government_source_not_found", "Public government source not found.")
     snapshot, source = row
-    status = session.scalar(
-        select(IngestionRun.status)
-        .where(IngestionRun.snapshot_id == identifier)
-        .order_by(IngestionRun.created_at.desc())
-        .limit(1)
-    )
-    value = entry(
-        snapshot, source, published_relations(session, [identifier]).get(identifier, []), status
-    )
+    value = next(item for _, _, item in catalogue_entries(session) if item.id == identifier)
     return GovernmentSourceDetail(
         **value.model_dump(),
-        pages=[
-            GovernmentTextPage(page=p["page"], text=p["text"], source_url=p["source_url"])
-            for p in snapshot.pages
-        ],
+        pages=[GovernmentTextPage(**p) for p in integrated_pages(snapshot)],
     )

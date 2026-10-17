@@ -1941,3 +1941,32 @@
   max-height: 480px;
   overflow-y: auto;
 }
+
+/* Keep source documents visible without a large empty-policy banner or stacked desktop filters. */
+.discovery > .research-header + .research-catalogue {
+  margin-top: 12px;
+  padding-top: 0;
+  border-top: 0;
+}
+.research-catalogue .filters select {
+  flex: 1 1 190px;
+  width: auto;
+  min-width: 0;
+}
+.research-catalogue > .research-card-links {
+  margin: 10px 0;
+}
+.research-documents {
+  border-left: 3px solid var(--line);
+  padding-left: 12px;
+  margin: 14px 0;
+}
+.research-documents a {
+  font-weight: 650;
+}
+.research-documents blockquote {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 6px 0 14px;
+  overflow-wrap: anywhere;
+}

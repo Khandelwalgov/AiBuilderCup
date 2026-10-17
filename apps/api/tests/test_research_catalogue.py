@@ -136,13 +136,16 @@ def test_full_research_import_visibility_idempotency_and_policy_separation(
         == 0
     )
     db.commit()
-    response = client.get("/v1/research-opportunities?limit=100")
+    response = client.get("/v1/research-opportunities?view=all&limit=100")
     assert response.status_code == 200 and response.json()["total"] == len(listings)
     assert all(not item["eligibility_verified"] for item in response.json()["items"])
     facets = client.get("/v1/research-opportunities/facets").json()
     assert facets["total"] == len(listings) and "education" in facets["categories"]
-    assert client.get("/v1/research-opportunities?category=procurement").json()["total"] == 18
-    assert client.get("/v1/research-opportunities?q=GIFT").json()["total"] >= 1
+    assert (
+        client.get("/v1/research-opportunities?view=archive&category=procurement").json()["total"]
+        == 18
+    )
+    assert client.get("/v1/research-opportunities?q=TEAM").json()["total"] >= 1
     assert client.get("/v1/research-opportunities?q=योजना").json()["total"] >= 1
     assert client.get("/v1/research-opportunities?q=%25").json()["total"] < len(listings)
     assert client.get("/v1/research-opportunities?application_status=open").json()["total"] == 0
@@ -189,3 +192,55 @@ def test_import_rejects_changed_source_and_non_admin_before_insert(db, research_
         )
     db.rollback()
     assert db.scalar(select(func.count()).select_from(ResearchListing)) == 0
+
+
+def test_source_overlays_archive_and_review_filters_are_consistent(client, db, research_baseline):
+    import copy
+
+    data, listings, actor = research_baseline
+    import_listings(
+        db, listings, actor, make_public=True, captured_sources=data["captured_sources"]
+    )
+    db.commit()
+    main = client.get("/v1/research-opportunities?limit=100").json()
+    archive = client.get("/v1/research-opportunities?view=archive&limit=100").json()
+    assert main["total"] == 74 and archive["total"] == 22
+    assert all(not item["archive"] and item["kind"] != "tender" for item in main["items"])
+    assert main["items"][0]["evidence_strength"] == "substantive_document"
+    assert len({v["id"] for v in main["items"] + archive["items"]}) == 96
+    facets = client.get("/v1/research-opportunities/facets").json()
+    assert facets["catalogue_total"] == 74 and facets["archive_total"] == 22
+    charter = next(v for v in listings if v.key == "ambedkar-dbt-voucher").sources[0]
+    snapshot = db.get(SourceSnapshot, charter.snapshot_id)
+    original = copy.deepcopy(snapshot.pages)
+    detail = client.get("/v1/government-sources/" + str(snapshot.id)).json()
+    page = next(p for p in detail["pages"] if p["page"] == 13)
+    assert page["basis"] == "offline_ocr" and page["image_sha256"] and page["text_sha256"]
+    assert page["original_text"] == next(p["text"] for p in original if p["page"] == 13)
+    assert any(v["id"] in detail["related_research"] for v in main["items"])
+    assert snapshot.pages == original
+    all_sources = client.get("/v1/government-sources?limit=50").json()
+    total = 0
+    for state in [
+        "processing_pending",
+        "needs_ocr",
+        "human_review_pending",
+        "reviewed_and_published",
+    ]:
+        subset = client.get(
+            "/v1/government-sources", params={"review_state": state, "limit": 50}
+        ).json()
+        assert all(item["review_state"] == state for item in subset["items"])
+        total += subset["total"]
+    assert total == all_sources["total"]
+    assert client.get("/v1/government-sources?department=no-such-issuer").json()["total"] == 0
+    subset = client.get("/v1/government-sources?department=Ministry&limit=50").json()
+    assert all("ministry" in item["department"].casefold() for item in subset["items"])
+    assert all_sources["all_unique_document_hashes"] <= all_sources["all_capture_records"]
+    assert all_sources["public_research_listings"] == 96
+    for state in ["text_available", "partial_text", "unreadable"]:
+        subset = client.get(
+            "/v1/government-sources", params={"text_state": state, "limit": 50}
+        ).json()
+        assert all(item["text_state"] == state for item in subset["items"])
+    assert client.get("/v1/search", params={"mode": "me"}).status_code in [401, 405]

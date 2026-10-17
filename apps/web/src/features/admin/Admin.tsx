@@ -176,7 +176,7 @@ export function Admin() {
                 <dt>
                   {hi
                     ? 'संग्रहित दस्तावेज़ / मसौदे / प्रकाशित अवसर'
-                    : 'Captured documents / drafts / published opportunities'}
+                    : 'Unique captured document hashes / unpublished eligibility versions / published eligibility policies'}
                 </dt>
                 <dd>
                   {intelligence.data.unique_document_hashes} /{' '}
@@ -185,8 +185,36 @@ export function Admin() {
                 </dd>
                 <dt>
                   {hi
+                    ? 'संग्रहित रिकॉर्ड / OCR वाले अलग दस्तावेज़ / सार्वजनिक शोध अवसर'
+                    : 'Capture records / unique documents with OCR / public research listings'}
+                </dt>
+                <dd>
+                  {intelligence.data.captured_snapshot_rows} /{' '}
+                  {intelligence.data.documents_with_ocr} /{' '}
+                  {intelligence.data.public_research_listings}
+                </dd>
+                <dt>
+                  {hi
+                    ? 'मसौदा नीतियों वाले अलग अवसर'
+                    : 'Distinct opportunities with unpublished versions'}
+                </dt>
+                <dd>{intelligence.data.draft_opportunity_identities}</dd>
+                <dt>{hi ? 'स्रोत अवस्था (रिकॉर्ड)' : 'Source review states (capture records)'}</dt>
+                <dd>
+                  {Object.entries(intelligence.data.review_states || {})
+                    .map(([state, count]) => `${state}: ${count}`)
+                    .join(' · ')}
+                </dd>
+                <dt>{hi ? 'पाठ उपलब्धता (रिकॉर्ड)' : 'Text availability (capture records)'}</dt>
+                <dd>
+                  {Object.entries(intelligence.data.text_states || {})
+                    .map(([state, count]) => `${state}: ${count}`)
+                    .join(' · ')}
+                </dd>
+                <dt>
+                  {hi
                     ? 'OCR / प्रसंस्करण बाकी / मानव समीक्षा'
-                    : 'OCR / processing backlog / human escalations'}
+                    : 'Documents with unreadable pages / documents without eligibility drafts / historical escalation runs'}
                 </dt>
                 <dd>
                   {intelligence.data.documents_requiring_ocr} /{' '}

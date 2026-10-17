@@ -8,6 +8,23 @@ const card = {
   id,
   source_url: listing.sources[0].source_url,
   source_count: listing.sources.length,
+  evidence_strength: 'substantive_document',
+  archive: false,
+  documents: listing.sources.map(
+    (source: {
+      snapshot_id: string;
+      source_url: string;
+      content_hash: string;
+      pages: { page: number; basis: string }[];
+    }) => ({
+      snapshot_id: source.snapshot_id,
+      source_url: source.source_url,
+      content_hash: source.content_hash,
+      pages: source.pages.map((p) => p.page),
+      excerpt: listing.citations[0].passage.slice(0, 320),
+      basis: source.pages[0].basis,
+    }),
+  ),
 };
 
 test.beforeEach(async ({ page }) => {
@@ -16,11 +33,13 @@ test.beforeEach(async ({ page }) => {
     if (url.pathname.endsWith('/facets')) {
       await route.fulfill({
         json: {
-          total: 98,
+          total: 1,
+          catalogue_total: 1,
+          archive_total: 0,
           categories: ['education', 'procurement'],
           jurisdictions: ['India'],
-          availability: { unknown: 98 },
-          application_status: { not_established: 98 },
+          availability: { unknown: 1 },
+          application_status: { not_established: 1 },
           source_documents: 1,
         },
       });
@@ -30,7 +49,7 @@ test.beforeEach(async ({ page }) => {
       const matches =
         !url.searchParams.get('category') || url.searchParams.get('category') === listing.category;
       await route.fulfill({
-        json: { items: matches ? [card] : [], total: matches ? 98 : 0, next_cursor: null },
+        json: { items: matches ? [card] : [], total: matches ? 1 : 0, next_cursor: null },
       });
     }
   });
@@ -49,6 +68,10 @@ test('guest Discover automatically loads research, filters, and opens actual cap
   await expect(
     catalogue.getByText('Source-backed research · Eligibility not yet verified').first(),
   ).toBeVisible();
+  await expect(catalogue.getByRole('link', { name: /Read captured document/ })).toHaveAttribute(
+    'href',
+    `/government-sources?source=${listing.sources[0].snapshot_id}&page=${listing.sources[0].pages[0].page}`,
+  );
   await expect(catalogue.getByRole('link', { name: 'Original official source' })).toHaveAttribute(
     'href',
     listing.sources[0].source_url,

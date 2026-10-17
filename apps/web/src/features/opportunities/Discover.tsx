@@ -102,6 +102,36 @@ export function Discover() {
       next.delete(key);
     setParams(next);
   }
+  if (unpublishedCatalogue && !development) {
+    return (
+      <div className="page discovery">
+        <header className="research-header">
+          <div>
+            <span className="eyebrow">
+              {hi ? 'आधिकारिक दस्तावेज़ और शोध' : 'OFFICIAL DOCUMENTS AND RESEARCH'}
+            </span>
+            <h1>{hi ? 'अवसर खोजें' : 'Discover opportunities'}</h1>
+            <p>
+              {hi
+                ? 'विस्तृत सरकारी दस्तावेज़ पहले दिखते हैं। पात्रता और वर्तमान आवेदन की पुष्टि अलग है।'
+                : 'Substantively documented programmes appear first. Eligibility and current application availability are separate checks.'}
+            </p>
+          </div>
+        </header>
+        <ResearchCatalogue />
+        <section className="notice">
+          <h2>{hi ? 'व्यक्तिगत पात्रता मिलान' : 'Personalized eligibility matching'}</h2>
+          <p>
+            {hi
+              ? 'अभी कोई पात्रता नीति प्रकाशित नहीं है। ऊपर के शोध रिकॉर्ड में स्रोत दस्तावेज़ पढ़ें; इन्हें पात्रता स्वीकृति न मानें।'
+              : 'No eligibility policies are published yet. Read the source documents above; research listings do not establish personal eligibility.'}
+          </p>
+          <SearchModes mode={mode} onChange={(value) => filter('mode', value)} />
+          {mode !== 'explore' && <Recommendations mode={mode} />}
+        </section>
+      </div>
+    );
+  }
   return (
     <div className="page discovery">
       <header className="research-header">

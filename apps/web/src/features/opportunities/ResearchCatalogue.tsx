@@ -11,6 +11,24 @@ type Card = components['schemas']['ResearchCard'];
 const copy = {
   en: {
     title: 'Explore Government Opportunities',
+    catalogue: 'Programmes and awards',
+    archive: 'Historical and procurement archive',
+    substantive_document: 'Substantive official document',
+    procurement_notice: 'Procurement notice · open round not established',
+    source_overview: 'Official overview · details need confirmation',
+    charter_summary: 'Citizen Charter summary · later rules unverified',
+    directory_reference: 'Directory name only · terms unavailable',
+    unassessed: 'Source strength not assessed',
+    scheme: 'Programme',
+    scheme_component: 'Programme component',
+    award: 'Award',
+    tender: 'Procurement notice',
+    institutional_admission: 'Institutional admission',
+    document: 'Read captured document',
+    pages: 'Pages',
+    researchCountNote:
+      'Programme components are counted separately. These are research records, not approved eligibility policies.',
+
     notice: 'Source-backed research · Eligibility not yet verified',
     explanation:
       'Browse real programmes and procurement notices without completing a profile. These informational listings do not establish eligibility, available funding or an open application round.',
@@ -53,6 +71,24 @@ const copy = {
   },
   hi: {
     title: 'सरकारी अवसर देखें',
+    catalogue: 'योजनाएँ और पुरस्कार',
+    archive: 'पुरानी और खरीद सूचनाओं का अभिलेख',
+    substantive_document: 'विस्तृत आधिकारिक दस्तावेज़',
+    procurement_notice: 'खरीद सूचना · खुले आवेदन की पुष्टि नहीं',
+    source_overview: 'आधिकारिक सारांश · विवरण की पुष्टि बाकी',
+    charter_summary: 'नागरिक चार्टर सारांश · बाद के नियम असत्यापित',
+    directory_reference: 'केवल निर्देशिका का नाम · शर्तें उपलब्ध नहीं',
+    unassessed: 'स्रोत का आकलन बाकी',
+    scheme: 'योजना',
+    scheme_component: 'योजना का घटक',
+    award: 'पुरस्कार',
+    tender: 'खरीद सूचना',
+    institutional_admission: 'संस्थागत प्रवेश',
+    document: 'संग्रहित दस्तावेज़ पढ़ें',
+    pages: 'पृष्ठ',
+    researchCountNote:
+      'योजना के घटक अलग गिने जाते हैं। ये शोध रिकॉर्ड हैं, स्वीकृत पात्रता नीतियाँ नहीं।',
+
     notice: 'आधिकारिक स्रोत पर आधारित शोध · पात्रता अभी सत्यापित नहीं',
     explanation:
       'प्रोफ़ाइल पूरा किए बिना वास्तविक योजनाएँ और खरीद सूचनाएँ देखें। ये शोध रिकॉर्ड पात्रता, उपलब्ध बजट या खुले आवेदन की पुष्टि नहीं करते।',
@@ -110,7 +146,20 @@ function ResearchCard({ item }: { item: Card }) {
         <ContextLink to={`/research-opportunities/${item.id}`}>{item.title}</ContextLink>
       </h3>
       <p className="research-verification">{t.notice}</p>
+      <p>
+        {labels(t, item.kind)} · {labels(t, item.evidence_strength || 'unassessed')}
+      </p>
       <p>{item.summary}</p>
+      <div className="research-documents">
+        {(item.documents || []).map((doc) => (
+          <div key={doc.snapshot_id}>
+            <ContextLink to={`/government-sources?source=${doc.snapshot_id}&page=${doc.pages[0]}`}>
+              {t.document} · {t.pages} {doc.pages.join(', ')}
+            </ContextLink>
+            <blockquote>{doc.excerpt}…</blockquote>
+          </div>
+        ))}
+      </div>
       {item.benefit && <p>{item.benefit}</p>}
       <p>
         <strong>
@@ -139,6 +188,7 @@ export function ResearchCatalogue() {
   const t = useCopy();
   const [params, setParams] = useSearchParams();
   const q = params.get('research_q') || '';
+  const view = params.get('research_view') === 'archive' ? 'archive' : 'catalogue';
   const [text, setText] = useState(q);
   useEffect(() => setText(q), [q]);
   const category = params.get('research_category') || '';
@@ -153,13 +203,22 @@ export function ResearchCatalogue() {
     },
   });
   const query = useInfiniteQuery({
-    queryKey: ['research-opportunities', q, category, jurisdiction, availability, applications],
+    queryKey: [
+      'research-opportunities',
+      view,
+      q,
+      category,
+      jurisdiction,
+      availability,
+      applications,
+    ],
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {
       const { data, error } = await api.GET('/v1/research-opportunities', {
         params: {
           query: {
             q,
+            view,
             category,
             jurisdiction,
             availability: availability ? (availability as Card['availability']) : undefined,
@@ -177,6 +236,12 @@ export function ResearchCatalogue() {
   });
   function filter(key: string, value: string) {
     const next = new URLSearchParams(params);
+    if (
+      (key === 'research_category' && value === 'procurement') ||
+      (key === 'research_availability' && value === 'historical') ||
+      (key === 'research_applications' && value === 'closed')
+    )
+      next.set('research_view', 'archive');
     if (value) next.set(key, value);
     else next.delete(key);
     setParams(next);
@@ -194,6 +259,18 @@ export function ResearchCatalogue() {
         </span>
       </div>
       <p className="notice">{t.notice}</p>
+      <div className="research-card-links" role="group" aria-label={t.title}>
+        <button aria-pressed={view === 'catalogue'} onClick={() => filter('research_view', '')}>
+          {t.catalogue} ({filters.data?.catalogue_total ?? '—'})
+        </button>
+        <button
+          aria-pressed={view === 'archive'}
+          onClick={() => filter('research_view', 'archive')}
+        >
+          {t.archive} ({filters.data?.archive_total ?? '—'})
+        </button>
+      </div>
+      <p>{t.researchCountNote}</p>
       <form
         className="research-search search-box"
         onSubmit={(e) => {
@@ -362,7 +439,15 @@ export function ResearchDetail() {
           return (
             <blockquote key={i}>
               <p>{c.passage}</p>
-              <a href={`${source.source_url}#page=${c.page}`} target="_blank" rel="noreferrer">
+              <a
+                href={
+                  source.source_url.toLowerCase().includes('.pdf')
+                    ? `${source.source_url}#page=${c.page}`
+                    : source.source_url
+                }
+                target="_blank"
+                rel="noreferrer"
+              >
                 {t.source} · {c.page}
               </a>
             </blockquote>
