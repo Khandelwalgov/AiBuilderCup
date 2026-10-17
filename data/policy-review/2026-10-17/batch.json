@@ -1,0 +1,47 @@
+{
+  "schema_version": "policy-review-batch-v1",
+  "as_of": "2026-10-17",
+  "publication_authorized": false,
+  "policies": [
+    {
+      "key": "lean",
+      "path": "lean.json",
+      "sha256": "a872a83c8c361e72a97f9e5d455d349d84cfadbe9a83cb24683a518339b0a4be",
+      "candidate_hash": "511f6fb815717a9fcd4ca72fb02847aee8b030c318c3b445c6813ec1f4d80ae4",
+      "approval_hash": "7130a49e934b0e93fee4846d5b653ee98d56fdd10770b15f0d14f62d2d09342a",
+      "disposition": "blocked_do_not_publish",
+      "baseline_version_id": "163321ed-32e2-5e1f-a9a0-cd64b05f9d26",
+      "baseline_hash": "2eda8266f3d732fe16fcd9d59300734fb5e1fe5a199f01a2e02ec84f3e28b18e"
+    },
+    {
+      "key": "team",
+      "path": "team.json",
+      "sha256": "c41310c2dd0cf05acfc9b734450c646247995feaa0f0fe09f55db56fe95ee0d6",
+      "candidate_hash": "8ff5be5ef2769dd64fdcfc9e12cc701c32f2c1ce3fc985a94a24503eb13fa976",
+      "approval_hash": "82103128dcf5d831660a0b371f82707d698531d13d78446673638fad7bbb0d7f",
+      "disposition": "human_approval_candidate",
+      "baseline_version_id": "bb60c1a7-53ba-5657-8930-699f2f457acb",
+      "baseline_hash": "ec0a52108503e75540eaa7b70fe4d0375819ce66f285c99f0e2a37b9079aa635"
+    },
+    {
+      "key": "st-post-matric",
+      "path": "st-post-matric.json",
+      "sha256": "cb43c57986d40b24e57376c5261c4f76f47cf2f1e2ff54ab2bfd7d67e01a9707",
+      "candidate_hash": "a84828d1ac2e3726b15ceef448b53483d6bb0bdac496cec58e539e46596f342b",
+      "approval_hash": "392f8a7e86fe50b6f6bf22f24e095ec2e802b770233fbf9a8b15338be1bc48c5",
+      "disposition": "human_approval_candidate",
+      "baseline_version_id": "2045fb1a-f8eb-503b-a058-742ea55d41af",
+      "baseline_hash": "fbb358598f86d05238ab99b27075dfe7e6dfb56fd147d35f79656cd9dc033e20"
+    },
+    {
+      "key": "pms",
+      "path": "pms.json",
+      "sha256": "8ae5f8f016582893cd4482a5bc4f49e38933b171e0a22d6d05ac6f785c0482dd",
+      "candidate_hash": "3353c1d861b223085d1d88af40ce98334d725afb906b753307dfd6a9516e61c7",
+      "approval_hash": "aa63be51bb68a75a7653672052cab00ca9221741c74710f8133f239d887c243f",
+      "disposition": "blocked_do_not_publish",
+      "baseline_version_id": "c1e886d4-a2d1-5447-8141-f6c54f59746e",
+      "baseline_hash": "f27127943e420a1a07a6b601188a69850d73111f0dc2408b2e4a8faf831fb929"
+    }
+  ]
+}

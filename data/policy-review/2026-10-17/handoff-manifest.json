@@ -1,0 +1,43 @@
+{
+  "schema_version": "policy-review-handoff-v1",
+  "as_of": "2026-10-17",
+  "external_paid_ai_calls": 0,
+  "publication_authorized": false,
+  "files": [
+    {
+      "path": "additional-sc-post-matric.json",
+      "sha256": "f1f4c1a8b6eb919a39ea3af969f3556c1a2f094408c5bd0ba9c0941b08a45b5f",
+      "bytes": 33889
+    },
+    {
+      "path": "batch.json",
+      "sha256": "fcbe5d358d45c5ac276836fc52b70ea2992d42ab5e79474d0c3781dcaec6ee84",
+      "bytes": 2287
+    },
+    {
+      "path": "lean.json",
+      "sha256": "a872a83c8c361e72a97f9e5d455d349d84cfadbe9a83cb24683a518339b0a4be",
+      "bytes": 95512
+    },
+    {
+      "path": "ocr-corrections.json",
+      "sha256": "54dbb937a13ec637d010c05d9816a100a140fcb8bdc5be3db3551b60a71bc666",
+      "bytes": 777
+    },
+    {
+      "path": "pms.json",
+      "sha256": "8ae5f8f016582893cd4482a5bc4f49e38933b171e0a22d6d05ac6f785c0482dd",
+      "bytes": 57213
+    },
+    {
+      "path": "st-post-matric.json",
+      "sha256": "cb43c57986d40b24e57376c5261c4f76f47cf2f1e2ff54ab2bfd7d67e01a9707",
+      "bytes": 144268
+    },
+    {
+      "path": "team.json",
+      "sha256": "c41310c2dd0cf05acfc9b734450c646247995feaa0f0fe09f55db56fe95ee0d6",
+      "bytes": 75244
+    }
+  ]
+}

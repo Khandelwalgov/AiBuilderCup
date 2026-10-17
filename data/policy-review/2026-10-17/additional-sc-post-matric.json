@@ -1,0 +1,208 @@
+{
+  "schema_version": "additional-policy-candidate-v1",
+  "source_hash": "cf73697baff4d7ebaf5919363296479b501ea9efc146a27de50623a9472cfa57",
+  "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+  "acquisition_snapshot_id": "398ecd05-ce5a-42db-92d1-fdc17ffd2707",
+  "candidate": {
+    "title": "SC Post-Matric Scholarship — historical baseline for reconciliation",
+    "summary": "Captured national SC post-matric eligibility baseline; current financial continuation and amendments are not established.",
+    "issuer": null,
+    "category": "education",
+    "country": "IN",
+    "state": null,
+    "district": null,
+    "benefits": null,
+    "restrictions": [],
+    "required_documents": [],
+    "document_evidence": [],
+    "opens_on": null,
+    "closes_on": null,
+    "apply_url": null,
+    "field_evidence": [
+      {
+        "field": "title",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+          "passage": "Post Matric Scholarship for SCs: Scheme Guidelines|_—__ Matric Scholarship for SCs: Scheme Guidelines\n\nProvided that where a particular number of seats for a particular course have\nbeen recognized / authorized by the concerned regulatory authority, the\nscholarships shall be restricted to those numbers and courses.\n\n5. Conditions of Eligibility of Students\n\n5.4. The scholarships are open to Nationals of India only.\n\n5.2 Only those candidates who belong to Scheduled Castes so specified in relation to\nthe State/Union Territory to which the applicant actually belongs /domiciled as determined\nby the State/UT and who have passed the Matriculation or Higher Secondary or any higher\nexamination of a recognized University or Board of Secondary Education will be eligible.\n5.3. Scholarships will be paid to the students whose parents’/guardians' income from all\nsources does not exceed Rs. 2,50,000/- (Rupees Two lakh Fifty thousand only) during the\nlast Financial Year. Income certificate is required to be taken once only i.e. at the time of\nadmission only to courses which are continuing for more than one year. The income\ncertificate shall be issued by the Authority as decided by the State Government.\n\n5.4 The ceiling on age limit for admission as regular student in different classes should\nbe decided by concerned Institutions.\n\n5.5 Candidates who, after passing one stage of education are studying in the same\nstage of education in a different subject e.g. Intermediate Science after Intermediate Arts\nor B.Com after B.A. or M.A in one subject after M.A in other subjects will not be eligible.\n\n5.6 Students, who pursue their studies through correspondence/online courses, are also\neligible. The term correspondence includes distant and continuous education for courses in\nCentral/ State Universities only. Non-refundable fees shall be paid and no academic\nallowance will be paid.\n\n5.7. All the children of any parent/guardian will be entitled to receive benefits of the\nscheme.\n\n5.8 A scholarship holder under this scheme will not hold any other scholarship/stipend.\nIf awarded any other scholarship/stipend, the student can exercise his/her option for either\nof the two scholarships/stipends, whichever is more beneficial to him/her, and should\ninform the awarding authority through the Head of the Institution about the option made. No\nscholarship will be paid to the students under this scheme from the date he/she accepts\nanother scholarship/stipend. The student can however, accept free lodging or a grant or\n\nad-hoc monetary help from the State Government or any other source for the purchase of\n\nPage 5 of 8\n",
+          "page": 5,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "summary",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+          "passage": "Post Matric Scholarship for SCs: Scheme Guidelines|_—__ Matric Scholarship for SCs: Scheme Guidelines\n\nProvided that where a particular number of seats for a particular course have\nbeen recognized / authorized by the concerned regulatory authority, the\nscholarships shall be restricted to those numbers and courses.\n\n5. Conditions of Eligibility of Students\n\n5.4. The scholarships are open to Nationals of India only.\n\n5.2 Only those candidates who belong to Scheduled Castes so specified in relation to\nthe State/Union Territory to which the applicant actually belongs /domiciled as determined\nby the State/UT and who have passed the Matriculation or Higher Secondary or any higher\nexamination of a recognized University or Board of Secondary Education will be eligible.\n5.3. Scholarships will be paid to the students whose parents’/guardians' income from all\nsources does not exceed Rs. 2,50,000/- (Rupees Two lakh Fifty thousand only) during the\nlast Financial Year. Income certificate is required to be taken once only i.e. at the time of\nadmission only to courses which are continuing for more than one year. The income\ncertificate shall be issued by the Authority as decided by the State Government.\n\n5.4 The ceiling on age limit for admission as regular student in different classes should\nbe decided by concerned Institutions.\n\n5.5 Candidates who, after passing one stage of education are studying in the same\nstage of education in a different subject e.g. Intermediate Science after Intermediate Arts\nor B.Com after B.A. or M.A in one subject after M.A in other subjects will not be eligible.\n\n5.6 Students, who pursue their studies through correspondence/online courses, are also\neligible. The term correspondence includes distant and continuous education for courses in\nCentral/ State Universities only. Non-refundable fees shall be paid and no academic\nallowance will be paid.\n\n5.7. All the children of any parent/guardian will be entitled to receive benefits of the\nscheme.\n\n5.8 A scholarship holder under this scheme will not hold any other scholarship/stipend.\nIf awarded any other scholarship/stipend, the student can exercise his/her option for either\nof the two scholarships/stipends, whichever is more beneficial to him/her, and should\ninform the awarding authority through the Head of the Institution about the option made. No\nscholarship will be paid to the students under this scheme from the date he/she accepts\nanother scholarship/stipend. The student can however, accept free lodging or a grant or\n\nad-hoc monetary help from the State Government or any other source for the purchase of\n\nPage 5 of 8\n",
+          "page": 5,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "category",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+          "passage": "Post Matric Scholarship for SCs: Scheme Guidelines|_—__ Matric Scholarship for SCs: Scheme Guidelines\n\nProvided that where a particular number of seats for a particular course have\nbeen recognized / authorized by the concerned regulatory authority, the\nscholarships shall be restricted to those numbers and courses.\n\n5. Conditions of Eligibility of Students\n\n5.4. The scholarships are open to Nationals of India only.\n\n5.2 Only those candidates who belong to Scheduled Castes so specified in relation to\nthe State/Union Territory to which the applicant actually belongs /domiciled as determined\nby the State/UT and who have passed the Matriculation or Higher Secondary or any higher\nexamination of a recognized University or Board of Secondary Education will be eligible.\n5.3. Scholarships will be paid to the students whose parents’/guardians' income from all\nsources does not exceed Rs. 2,50,000/- (Rupees Two lakh Fifty thousand only) during the\nlast Financial Year. Income certificate is required to be taken once only i.e. at the time of\nadmission only to courses which are continuing for more than one year. The income\ncertificate shall be issued by the Authority as decided by the State Government.\n\n5.4 The ceiling on age limit for admission as regular student in different classes should\nbe decided by concerned Institutions.\n\n5.5 Candidates who, after passing one stage of education are studying in the same\nstage of education in a different subject e.g. Intermediate Science after Intermediate Arts\nor B.Com after B.A. or M.A in one subject after M.A in other subjects will not be eligible.\n\n5.6 Students, who pursue their studies through correspondence/online courses, are also\neligible. The term correspondence includes distant and continuous education for courses in\nCentral/ State Universities only. Non-refundable fees shall be paid and no academic\nallowance will be paid.\n\n5.7. All the children of any parent/guardian will be entitled to receive benefits of the\nscheme.\n\n5.8 A scholarship holder under this scheme will not hold any other scholarship/stipend.\nIf awarded any other scholarship/stipend, the student can exercise his/her option for either\nof the two scholarships/stipends, whichever is more beneficial to him/her, and should\ninform the awarding authority through the Head of the Institution about the option made. No\nscholarship will be paid to the students under this scheme from the date he/she accepts\nanother scholarship/stipend. The student can however, accept free lodging or a grant or\n\nad-hoc monetary help from the State Government or any other source for the purchase of\n\nPage 5 of 8\n",
+          "page": 5,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "country",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+          "passage": "Post Matric Scholarship for SCs: Scheme Guidelines|_—__ Matric Scholarship for SCs: Scheme Guidelines\n\nProvided that where a particular number of seats for a particular course have\nbeen recognized / authorized by the concerned regulatory authority, the\nscholarships shall be restricted to those numbers and courses.\n\n5. Conditions of Eligibility of Students\n\n5.4. The scholarships are open to Nationals of India only.\n\n5.2 Only those candidates who belong to Scheduled Castes so specified in relation to\nthe State/Union Territory to which the applicant actually belongs /domiciled as determined\nby the State/UT and who have passed the Matriculation or Higher Secondary or any higher\nexamination of a recognized University or Board of Secondary Education will be eligible.\n5.3. Scholarships will be paid to the students whose parents’/guardians' income from all\nsources does not exceed Rs. 2,50,000/- (Rupees Two lakh Fifty thousand only) during the\nlast Financial Year. Income certificate is required to be taken once only i.e. at the time of\nadmission only to courses which are continuing for more than one year. The income\ncertificate shall be issued by the Authority as decided by the State Government.\n\n5.4 The ceiling on age limit for admission as regular student in different classes should\nbe decided by concerned Institutions.\n\n5.5 Candidates who, after passing one stage of education are studying in the same\nstage of education in a different subject e.g. Intermediate Science after Intermediate Arts\nor B.Com after B.A. or M.A in one subject after M.A in other subjects will not be eligible.\n\n5.6 Students, who pursue their studies through correspondence/online courses, are also\neligible. The term correspondence includes distant and continuous education for courses in\nCentral/ State Universities only. Non-refundable fees shall be paid and no academic\nallowance will be paid.\n\n5.7. All the children of any parent/guardian will be entitled to receive benefits of the\nscheme.\n\n5.8 A scholarship holder under this scheme will not hold any other scholarship/stipend.\nIf awarded any other scholarship/stipend, the student can exercise his/her option for either\nof the two scholarships/stipends, whichever is more beneficial to him/her, and should\ninform the awarding authority through the Head of the Institution about the option made. No\nscholarship will be paid to the students under this scheme from the date he/she accepts\nanother scholarship/stipend. The student can however, accept free lodging or a grant or\n\nad-hoc monetary help from the State Government or any other source for the purchase of\n\nPage 5 of 8\n",
+          "page": 5,
+          "language": "English",
+          "basis": "explicit"
+        }
+      }
+    ],
+    "requirements": [
+      {
+        "description": "Indian nationality is required.",
+        "kind": "eligibility",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "eq",
+            "fact": "nationality",
+            "value": "IN",
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+          "passage": "Post Matric Scholarship for SCs: Scheme Guidelines|_—__ Matric Scholarship for SCs: Scheme Guidelines\n\nProvided that where a particular number of seats for a particular course have\nbeen recognized / authorized by the concerned regulatory authority, the\nscholarships shall be restricted to those numbers and courses.\n\n5. Conditions of Eligibility of Students\n\n5.4. The scholarships are open to Nationals of India only.\n\n5.2 Only those candidates who belong to Scheduled Castes so specified in relation to\nthe State/Union Territory to which the applicant actually belongs /domiciled as determined\nby the State/UT and who have passed the Matriculation or Higher Secondary or any higher\nexamination of a recognized University or Board of Secondary Education will be eligible.\n5.3. Scholarships will be paid to the students whose parents’/guardians' income from all\nsources does not exceed Rs. 2,50,000/- (Rupees Two lakh Fifty thousand only) during the\nlast Financial Year. Income certificate is required to be taken once only i.e. at the time of\nadmission only to courses which are continuing for more than one year. The income\ncertificate shall be issued by the Authority as decided by the State Government.\n\n5.4 The ceiling on age limit for admission as regular student in different classes should\nbe decided by concerned Institutions.\n\n5.5 Candidates who, after passing one stage of education are studying in the same\nstage of education in a different subject e.g. Intermediate Science after Intermediate Arts\nor B.Com after B.A. or M.A in one subject after M.A in other subjects will not be eligible.\n\n5.6 Students, who pursue their studies through correspondence/online courses, are also\neligible. The term correspondence includes distant and continuous education for courses in\nCentral/ State Universities only. Non-refundable fees shall be paid and no academic\nallowance will be paid.\n\n5.7. All the children of any parent/guardian will be entitled to receive benefits of the\nscheme.\n\n5.8 A scholarship holder under this scheme will not hold any other scholarship/stipend.\nIf awarded any other scholarship/stipend, the student can exercise his/her option for either\nof the two scholarships/stipends, whichever is more beneficial to him/her, and should\ninform the awarding authority through the Head of the Institution about the option made. No\nscholarship will be paid to the students under this scheme from the date he/she accepts\nanother scholarship/stipend. The student can however, accept free lodging or a grant or\n\nad-hoc monetary help from the State Government or any other source for the purchase of\n\nPage 5 of 8\n",
+          "page": 5,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "SC status is defined against domicile State/UT, with the preceding recognized examination qualification.",
+        "kind": "eligibility",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+          "passage": "Post Matric Scholarship for SCs: Scheme Guidelines|_—__ Matric Scholarship for SCs: Scheme Guidelines\n\nProvided that where a particular number of seats for a particular course have\nbeen recognized / authorized by the concerned regulatory authority, the\nscholarships shall be restricted to those numbers and courses.\n\n5. Conditions of Eligibility of Students\n\n5.4. The scholarships are open to Nationals of India only.\n\n5.2 Only those candidates who belong to Scheduled Castes so specified in relation to\nthe State/Union Territory to which the applicant actually belongs /domiciled as determined\nby the State/UT and who have passed the Matriculation or Higher Secondary or any higher\nexamination of a recognized University or Board of Secondary Education will be eligible.\n5.3. Scholarships will be paid to the students whose parents’/guardians' income from all\nsources does not exceed Rs. 2,50,000/- (Rupees Two lakh Fifty thousand only) during the\nlast Financial Year. Income certificate is required to be taken once only i.e. at the time of\nadmission only to courses which are continuing for more than one year. The income\ncertificate shall be issued by the Authority as decided by the State Government.\n\n5.4 The ceiling on age limit for admission as regular student in different classes should\nbe decided by concerned Institutions.\n\n5.5 Candidates who, after passing one stage of education are studying in the same\nstage of education in a different subject e.g. Intermediate Science after Intermediate Arts\nor B.Com after B.A. or M.A in one subject after M.A in other subjects will not be eligible.\n\n5.6 Students, who pursue their studies through correspondence/online courses, are also\neligible. The term correspondence includes distant and continuous education for courses in\nCentral/ State Universities only. Non-refundable fees shall be paid and no academic\nallowance will be paid.\n\n5.7. All the children of any parent/guardian will be entitled to receive benefits of the\nscheme.\n\n5.8 A scholarship holder under this scheme will not hold any other scholarship/stipend.\nIf awarded any other scholarship/stipend, the student can exercise his/her option for either\nof the two scholarships/stipends, whichever is more beneficial to him/her, and should\ninform the awarding authority through the Head of the Institution about the option made. No\nscholarship will be paid to the students under this scheme from the date he/she accepts\nanother scholarship/stipend. The student can however, accept free lodging or a grant or\n\nad-hoc monetary help from the State Government or any other source for the purchase of\n\nPage 5 of 8\n",
+          "page": 5,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Parents or guardians income from all sources must not exceed Rs. 2,50,000 during the last financial year; admission-year certificate and continuing-course exception apply. Do not substitute a generic household sum.",
+        "kind": "eligibility",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+          "passage": "Post Matric Scholarship for SCs: Scheme Guidelines|_—__ Matric Scholarship for SCs: Scheme Guidelines\n\nProvided that where a particular number of seats for a particular course have\nbeen recognized / authorized by the concerned regulatory authority, the\nscholarships shall be restricted to those numbers and courses.\n\n5. Conditions of Eligibility of Students\n\n5.4. The scholarships are open to Nationals of India only.\n\n5.2 Only those candidates who belong to Scheduled Castes so specified in relation to\nthe State/Union Territory to which the applicant actually belongs /domiciled as determined\nby the State/UT and who have passed the Matriculation or Higher Secondary or any higher\nexamination of a recognized University or Board of Secondary Education will be eligible.\n5.3. Scholarships will be paid to the students whose parents’/guardians' income from all\nsources does not exceed Rs. 2,50,000/- (Rupees Two lakh Fifty thousand only) during the\nlast Financial Year. Income certificate is required to be taken once only i.e. at the time of\nadmission only to courses which are continuing for more than one year. The income\ncertificate shall be issued by the Authority as decided by the State Government.\n\n5.4 The ceiling on age limit for admission as regular student in different classes should\nbe decided by concerned Institutions.\n\n5.5 Candidates who, after passing one stage of education are studying in the same\nstage of education in a different subject e.g. Intermediate Science after Intermediate Arts\nor B.Com after B.A. or M.A in one subject after M.A in other subjects will not be eligible.\n\n5.6 Students, who pursue their studies through correspondence/online courses, are also\neligible. The term correspondence includes distant and continuous education for courses in\nCentral/ State Universities only. Non-refundable fees shall be paid and no academic\nallowance will be paid.\n\n5.7. All the children of any parent/guardian will be entitled to receive benefits of the\nscheme.\n\n5.8 A scholarship holder under this scheme will not hold any other scholarship/stipend.\nIf awarded any other scholarship/stipend, the student can exercise his/her option for either\nof the two scholarships/stipends, whichever is more beneficial to him/her, and should\ninform the awarding authority through the Head of the Institution about the option made. No\nscholarship will be paid to the students under this scheme from the date he/she accepts\nanother scholarship/stipend. The student can however, accept free lodging or a grant or\n\nad-hoc monetary help from the State Government or any other source for the purchase of\n\nPage 5 of 8\n",
+          "page": 5,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Correspondence and online courses in Central or State Universities are permitted with non-refundable fees only and no academic allowance.",
+        "kind": "eligibility",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+          "passage": "Post Matric Scholarship for SCs: Scheme Guidelines|_—__ Matric Scholarship for SCs: Scheme Guidelines\n\nProvided that where a particular number of seats for a particular course have\nbeen recognized / authorized by the concerned regulatory authority, the\nscholarships shall be restricted to those numbers and courses.\n\n5. Conditions of Eligibility of Students\n\n5.4. The scholarships are open to Nationals of India only.\n\n5.2 Only those candidates who belong to Scheduled Castes so specified in relation to\nthe State/Union Territory to which the applicant actually belongs /domiciled as determined\nby the State/UT and who have passed the Matriculation or Higher Secondary or any higher\nexamination of a recognized University or Board of Secondary Education will be eligible.\n5.3. Scholarships will be paid to the students whose parents’/guardians' income from all\nsources does not exceed Rs. 2,50,000/- (Rupees Two lakh Fifty thousand only) during the\nlast Financial Year. Income certificate is required to be taken once only i.e. at the time of\nadmission only to courses which are continuing for more than one year. The income\ncertificate shall be issued by the Authority as decided by the State Government.\n\n5.4 The ceiling on age limit for admission as regular student in different classes should\nbe decided by concerned Institutions.\n\n5.5 Candidates who, after passing one stage of education are studying in the same\nstage of education in a different subject e.g. Intermediate Science after Intermediate Arts\nor B.Com after B.A. or M.A in one subject after M.A in other subjects will not be eligible.\n\n5.6 Students, who pursue their studies through correspondence/online courses, are also\neligible. The term correspondence includes distant and continuous education for courses in\nCentral/ State Universities only. Non-refundable fees shall be paid and no academic\nallowance will be paid.\n\n5.7. All the children of any parent/guardian will be entitled to receive benefits of the\nscheme.\n\n5.8 A scholarship holder under this scheme will not hold any other scholarship/stipend.\nIf awarded any other scholarship/stipend, the student can exercise his/her option for either\nof the two scholarships/stipends, whichever is more beneficial to him/her, and should\ninform the awarding authority through the Head of the Institution about the option made. No\nscholarship will be paid to the students under this scheme from the date he/she accepts\nanother scholarship/stipend. The student can however, accept free lodging or a grant or\n\nad-hoc monetary help from the State Government or any other source for the purchase of\n\nPage 5 of 8\n",
+          "page": 5,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Same-stage study in a different subject is excluded; one scholarship/stipend must be chosen, subject to the separate lodging and ad-hoc support exception.",
+        "kind": "eligibility",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+          "passage": "Post Matric Scholarship for SCs: Scheme Guidelines|_—__ Matric Scholarship for SCs: Scheme Guidelines\n\nProvided that where a particular number of seats for a particular course have\nbeen recognized / authorized by the concerned regulatory authority, the\nscholarships shall be restricted to those numbers and courses.\n\n5. Conditions of Eligibility of Students\n\n5.4. The scholarships are open to Nationals of India only.\n\n5.2 Only those candidates who belong to Scheduled Castes so specified in relation to\nthe State/Union Territory to which the applicant actually belongs /domiciled as determined\nby the State/UT and who have passed the Matriculation or Higher Secondary or any higher\nexamination of a recognized University or Board of Secondary Education will be eligible.\n5.3. Scholarships will be paid to the students whose parents’/guardians' income from all\nsources does not exceed Rs. 2,50,000/- (Rupees Two lakh Fifty thousand only) during the\nlast Financial Year. Income certificate is required to be taken once only i.e. at the time of\nadmission only to courses which are continuing for more than one year. The income\ncertificate shall be issued by the Authority as decided by the State Government.\n\n5.4 The ceiling on age limit for admission as regular student in different classes should\nbe decided by concerned Institutions.\n\n5.5 Candidates who, after passing one stage of education are studying in the same\nstage of education in a different subject e.g. Intermediate Science after Intermediate Arts\nor B.Com after B.A. or M.A in one subject after M.A in other subjects will not be eligible.\n\n5.6 Students, who pursue their studies through correspondence/online courses, are also\neligible. The term correspondence includes distant and continuous education for courses in\nCentral/ State Universities only. Non-refundable fees shall be paid and no academic\nallowance will be paid.\n\n5.7. All the children of any parent/guardian will be entitled to receive benefits of the\nscheme.\n\n5.8 A scholarship holder under this scheme will not hold any other scholarship/stipend.\nIf awarded any other scholarship/stipend, the student can exercise his/her option for either\nof the two scholarships/stipends, whichever is more beneficial to him/her, and should\ninform the awarding authority through the Head of the Institution about the option made. No\nscholarship will be paid to the students under this scheme from the date he/she accepts\nanother scholarship/stipend. The student can however, accept free lodging or a grant or\n\nad-hoc monetary help from the State Government or any other source for the purchase of\n\nPage 5 of 8\n",
+          "page": 5,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      }
+    ],
+    "review_flags": [
+      "HARD HOLD: source states financial continuation only through 2025-26; needs authoritative current extension/revised guidelines.",
+      "Only physical page 5 visually checked in this session. Remaining OCR text is unverified, not silently substituted for immutable snapshot pages.",
+      "No independent semantic review; partial candidate, excluded from approval batch."
+    ],
+    "missing_fields": []
+  },
+  "candidate_hash": "1696e6599b3f052f215c00f2368bb97d1e55ffebd0f84b84f50467ae6e0fe28e",
+  "reviewed_derivative": {
+    "page": 5,
+    "ocr_checkpoint_sha256": "12a44978fb017a78ceebc5f8fc292397f1cdf161da8b7845dc7c89536ba9e88c",
+    "render_sha256": "08ebdfc53b6c3592582253ceee420e94d962a76049d447b46962854b5389bfd1",
+    "text": "Post Matric Scholarship for SCs: Scheme Guidelines|_—__ Matric Scholarship for SCs: Scheme Guidelines\n\nProvided that where a particular number of seats for a particular course have\nbeen recognized / authorized by the concerned regulatory authority, the\nscholarships shall be restricted to those numbers and courses.\n\n5. Conditions of Eligibility of Students\n\n5.4. The scholarships are open to Nationals of India only.\n\n5.2 Only those candidates who belong to Scheduled Castes so specified in relation to\nthe State/Union Territory to which the applicant actually belongs /domiciled as determined\nby the State/UT and who have passed the Matriculation or Higher Secondary or any higher\nexamination of a recognized University or Board of Secondary Education will be eligible.\n5.3. Scholarships will be paid to the students whose parents’/guardians' income from all\nsources does not exceed Rs. 2,50,000/- (Rupees Two lakh Fifty thousand only) during the\nlast Financial Year. Income certificate is required to be taken once only i.e. at the time of\nadmission only to courses which are continuing for more than one year. The income\ncertificate shall be issued by the Authority as decided by the State Government.\n\n5.4 The ceiling on age limit for admission as regular student in different classes should\nbe decided by concerned Institutions.\n\n5.5 Candidates who, after passing one stage of education are studying in the same\nstage of education in a different subject e.g. Intermediate Science after Intermediate Arts\nor B.Com after B.A. or M.A in one subject after M.A in other subjects will not be eligible.\n\n5.6 Students, who pursue their studies through correspondence/online courses, are also\neligible. The term correspondence includes distant and continuous education for courses in\nCentral/ State Universities only. Non-refundable fees shall be paid and no academic\nallowance will be paid.\n\n5.7. All the children of any parent/guardian will be entitled to receive benefits of the\nscheme.\n\n5.8 A scholarship holder under this scheme will not hold any other scholarship/stipend.\nIf awarded any other scholarship/stipend, the student can exercise his/her option for either\nof the two scholarships/stipends, whichever is more beneficial to him/her, and should\ninform the awarding authority through the Head of the Institution about the option made. No\nscholarship will be paid to the students under this scheme from the date he/she accepts\nanother scholarship/stipend. The student can however, accept free lodging or a grant or\n\nad-hoc monetary help from the State Government or any other source for the purchase of\n\nPage 5 of 8\n",
+    "state": "same-session-visual-check-not-independent"
+  },
+  "disposition": "blocked_do_not_publish",
+  "publication_authorized": false,
+  "reason": "Unresolved post-2025-26 continuation and incomplete full-document OCR verification. Preserve distinct SC and ST rules."
+}
