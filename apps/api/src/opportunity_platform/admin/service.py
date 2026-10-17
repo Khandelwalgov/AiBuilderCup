@@ -255,7 +255,7 @@ def review(session: Session, identifier: uuid.UUID, actor: User, data: ReviewWri
                 document_dependency=dependency(document, citation),
                 kind="document",
                 rule={"op": "condition", "condition": {"op": "unknown"}, "children": []},
-                subject_context="person",
+                subject_context="business" if candidate.category == "business" else "person",
             )
             session.add(record)
             session.flush()

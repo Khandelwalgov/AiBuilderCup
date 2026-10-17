@@ -1,0 +1,942 @@
+{
+  "key": "st-post-matric",
+  "baseline": {
+    "opportunity_id": "a4b79e71-439d-5ea7-be65-22dad5dd765e",
+    "version_id": "2045fb1a-f8eb-503b-a058-742ea55d41af",
+    "version": 1,
+    "title": "Post Matric Scholarship for Scheduled Tribe Students for Studies in India",
+    "publication_state": "draft",
+    "content_hash": "0a198cda53699cce97f72c59608f63a5d282cee33e591ebb57b4d04b6efedc83",
+    "snapshot_id": "132c820f-cf6e-5e69-be30-12e0b53aa421",
+    "source_id": "fa7b6033-6403-50da-bb16-80a5d23f912a",
+    "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+    "acquisition_snapshot_id": "e4ad47a9-d8b0-4b36-8b0b-5f5136224887",
+    "stored_candidate_hash": "fbb358598f86d05238ab99b27075dfe7e6dfb56fd147d35f79656cd9dc033e20",
+    "original_packet_sha256": "60d27ca8d6c1448c934d54ecf32b35c0a7efd483f08f37ab71a9f81554f87ab1",
+    "original_focus": "post-matric-st-2022"
+  },
+  "focus": "post-matric-st-2022",
+  "disposition": "human_approval_candidate",
+  "candidate": {
+    "title": "Post Matric Scholarship for Scheduled Tribe Students for Studies in India",
+    "summary": "National ST post-matric policy for recognized studies in India, administered through the domicile State or UT. Family-income, orphan, institution, other-award and renewal exceptions are scheme-specific. State application rounds and actual availability must be checked separately.",
+    "issuer": "MINISTRY OF TRIBAL AFFAIRS",
+    "category": "education",
+    "country": "IN",
+    "state": null,
+    "district": null,
+    "benefits": "Compulsory non-refundable fees plus course-group stipend. Central support private-course annual fee ceilings: engineering Rs. 2.50 lakh; MBBS/MS/MD Rs. 6.00 lakh; other courses Rs. 1.00 lakh, with State top-ups separately accounted. Hosteller/day-scholar monthly rates by Groups I, II, III, IV: Rs. 1200/550, Rs. 820/530, Rs. 570/300, Rs. 380/230, normally for a maximum of 10 months. Additional certified-disability monthly allowance: Rs. 800 hosteller or Rs. 600 day scholar under the stated categories. State may pay tuition to institutions and stipend to students; stipend is not actual hostel-cost reimbursement.",
+    "restrictions": [
+      "Only one scholarship/stipend at a time; notified Top Class overlap and continuing-cohort exceptions apply.",
+      "Income means gross income without tax deductions. Parents income is combined as specified; other earning family members are excluded; guardian-supported orphans are exempt from the income criterion.",
+      "Current State rounds and institution empanelment are not established by the national guideline. Suggested timetable dates are not a universal live deadline.",
+      "Disability certification and income certification are conditional on the relevant allowance/exception; do not require a disability certificate from every applicant or override orphan exemption."
+    ],
+    "required_documents": [
+      "ST certificate issued by competent State or UT authority"
+    ],
+    "document_evidence": [
+      {
+        "document": "ST certificate issued by competent State or UT authority",
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "12  \na. The Ministry shall provide PFMS configuration details (agency ID, Agency \nname, PFMS scheme code, DBT mission code, beneficiary type, \npayment purpose code) to States/UTs \nb. The Ministries shall verify the correctness of Scheme configuration, \nincluding but not limited to the eligibility criteria, important dates etc. \nc. The Ministries shall provide proper IT platform to facilitate state to upload \nbeneficiary data on its portal and would issue necessary instructions to \nStates/UTs. \n \n \n6. Documents required: Students need to carefully go through State/ NSP portal \nfor required documents to be uploaded with the application form as mentioned in clause \n3 of guidelines. \n \na. Aadhar Number \nb. Domicile certificate \nc. Scanned copy of certificates, diploma, degree etc. in respect of all \nexaminations passed. \nd. Last qualified marks [percentage/Equivalent percentage in case of \nCGPA/OGPA etc.] \ne. ST certificate issued by competent authority of State/UT. \nf. Family Income Certificate. \ng. Disability certificate. \nh. Scanned copy of the passport size photograph \n \n \nThe State/UT may specify the procedure for issuing ST certificate, family Income \nCertificate and Disability certificate and the competent authority to issue such \ncertificate. If the State has online system of issuing such certificate including \ncertificate of examination passed, State/UT may link the State/UT portal through Digi \nlocker so that the certificates placed in Digi locker can be fetched automatically. \n \nNote 1:- Self-declarations or affidavits of self-assessment of income shall not be \nacceptable and the State/UT Governments shall make appropriate arrangements to \nnotify a competent income-certificate issuing authority for this purpose. \n \n6.1. All States/UTs are required to establish a dedicated Helpdesk/Grievance \nredressal mechanism to address the students’ query. The primary role of the Helpdesk \nat State/UT level is to provide first level assistance to the users at various levels of portal. \nThe States/UTs shall: ",
+          "page": 12,
+          "language": "English",
+          "basis": "explicit"
+        }
+      }
+    ],
+    "opens_on": null,
+    "closes_on": null,
+    "apply_url": null,
+    "field_evidence": [
+      {
+        "field": "title",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": " \n \n \n \n \n \n \n \n \n \n \n \n \nGOVERNMENT OF INDIA \nMINISTRY OF TRIBAL AFFAIRS \nNEW DELHI. \n*** \n \n \n \nPOST MATRIC SCHOLARSHIP \n(CENTRALLY SPONSORED SCHEME) \n \n \n \nFOR THE STUDENTS BELONGING TO \nSCHEDULED TRIBE FOR STUDIES IN INDIA \n \n \n \n \nREGULATION GOVERNING THE AWARD OF SCHOLARSHIP \n(APPLICABLE FROM 01-04-2022) ",
+          "page": 1,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "issuer",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": " \n \n \n \n \n \n \n \n \n \n \n \n \nGOVERNMENT OF INDIA \nMINISTRY OF TRIBAL AFFAIRS \nNEW DELHI. \n*** \n \n \n \nPOST MATRIC SCHOLARSHIP \n(CENTRALLY SPONSORED SCHEME) \n \n \n \nFOR THE STUDENTS BELONGING TO \nSCHEDULED TRIBE FOR STUDIES IN INDIA \n \n \n \n \nREGULATION GOVERNING THE AWARD OF SCHOLARSHIP \n(APPLICABLE FROM 01-04-2022) ",
+          "page": 1,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "category",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "3  \n1. Introduction \n \nIt is a Centrally Sponsored Scheme implemented by Ministry of Tribal Affairs to grant \nscholarship to eligible ST students for pursuing higher education starting from class \nXI to Post Graduation courses in India. \n \n2. Objective \n \n \na. To enable eligible Scheduled Tribe students to undertake quality education \nfrom Post Matric to Post Graduate level by providing them financial \nassistance. \nb. To create an error free platform ensuring that the targeted beneficiaries \nreceive scholarship on time. \n \n3. Salient features of the Scheme \n \n3.1. Scope \n \nScholarship under the Scheme will be available to ST students for studies in India and \nwill be directly transferred to the account of students. The scholarship will be awarded \nby the Government of the State/Union Territory to which the applicant belongs as per \nthe terms of domicile decided by the State/UT. \n \n3.2. Conditions of eligibility  \n \n \na. The student should belong to Scheduled Tribe so specified in relation to the \nState/Union Territory to which he/she actually belongs (Domicile State). \nb. Student should have passed the Matriculation or Higher Secondary or any higher \nexamination of a recognized University or Board of Secondary Education. \nc. The family income of student from all sources should not exceed Rs.2.50 lakh per \nannum. \nd. The student should have a valid account in a Schedule Bank linked with Aadhar \nand Mobile number. \ne. The student should not be getting any other scholarship. \nf. The scholarships will be given for study of recognized post-matriculation/ post-\nsecondary courses, recognized by the concerned approving authority, pursued in \nfollowing category of Institutions/Universities/Colleges. \n \ni. All Government Institutes/Colleges/Universities \nii. Institutions of National Importance; ",
+          "page": 3,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "country",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "3  \n1. Introduction \n \nIt is a Centrally Sponsored Scheme implemented by Ministry of Tribal Affairs to grant \nscholarship to eligible ST students for pursuing higher education starting from class \nXI to Post Graduation courses in India. \n \n2. Objective \n \n \na. To enable eligible Scheduled Tribe students to undertake quality education \nfrom Post Matric to Post Graduate level by providing them financial \nassistance. \nb. To create an error free platform ensuring that the targeted beneficiaries \nreceive scholarship on time. \n \n3. Salient features of the Scheme \n \n3.1. Scope \n \nScholarship under the Scheme will be available to ST students for studies in India and \nwill be directly transferred to the account of students. The scholarship will be awarded \nby the Government of the State/Union Territory to which the applicant belongs as per \nthe terms of domicile decided by the State/UT. \n \n3.2. Conditions of eligibility  \n \n \na. The student should belong to Scheduled Tribe so specified in relation to the \nState/Union Territory to which he/she actually belongs (Domicile State). \nb. Student should have passed the Matriculation or Higher Secondary or any higher \nexamination of a recognized University or Board of Secondary Education. \nc. The family income of student from all sources should not exceed Rs.2.50 lakh per \nannum. \nd. The student should have a valid account in a Schedule Bank linked with Aadhar \nand Mobile number. \ne. The student should not be getting any other scholarship. \nf. The scholarships will be given for study of recognized post-matriculation/ post-\nsecondary courses, recognized by the concerned approving authority, pursued in \nfollowing category of Institutions/Universities/Colleges. \n \ni. All Government Institutes/Colleges/Universities \nii. Institutions of National Importance; ",
+          "page": 3,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "required_documents",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "12  \na. The Ministry shall provide PFMS configuration details (agency ID, Agency \nname, PFMS scheme code, DBT mission code, beneficiary type, \npayment purpose code) to States/UTs \nb. The Ministries shall verify the correctness of Scheme configuration, \nincluding but not limited to the eligibility criteria, important dates etc. \nc. The Ministries shall provide proper IT platform to facilitate state to upload \nbeneficiary data on its portal and would issue necessary instructions to \nStates/UTs. \n \n \n6. Documents required: Students need to carefully go through State/ NSP portal \nfor required documents to be uploaded with the application form as mentioned in clause \n3 of guidelines. \n \na. Aadhar Number \nb. Domicile certificate \nc. Scanned copy of certificates, diploma, degree etc. in respect of all \nexaminations passed. \nd. Last qualified marks [percentage/Equivalent percentage in case of \nCGPA/OGPA etc.] \ne. ST certificate issued by competent authority of State/UT. \nf. Family Income Certificate. \ng. Disability certificate. \nh. Scanned copy of the passport size photograph \n \n \nThe State/UT may specify the procedure for issuing ST certificate, family Income \nCertificate and Disability certificate and the competent authority to issue such \ncertificate. If the State has online system of issuing such certificate including \ncertificate of examination passed, State/UT may link the State/UT portal through Digi \nlocker so that the certificates placed in Digi locker can be fetched automatically. \n \nNote 1:- Self-declarations or affidavits of self-assessment of income shall not be \nacceptable and the State/UT Governments shall make appropriate arrangements to \nnotify a competent income-certificate issuing authority for this purpose. \n \n6.1. All States/UTs are required to establish a dedicated Helpdesk/Grievance \nredressal mechanism to address the students’ query. The primary role of the Helpdesk \nat State/UT level is to provide first level assistance to the users at various levels of portal. \nThe States/UTs shall: ",
+          "page": 12,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "summary",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "3  \n1. Introduction \n \nIt is a Centrally Sponsored Scheme implemented by Ministry of Tribal Affairs to grant \nscholarship to eligible ST students for pursuing higher education starting from class \nXI to Post Graduation courses in India. \n \n2. Objective \n \n \na. To enable eligible Scheduled Tribe students to undertake quality education \nfrom Post Matric to Post Graduate level by providing them financial \nassistance. \nb. To create an error free platform ensuring that the targeted beneficiaries \nreceive scholarship on time. \n \n3. Salient features of the Scheme \n \n3.1. Scope \n \nScholarship under the Scheme will be available to ST students for studies in India and \nwill be directly transferred to the account of students. The scholarship will be awarded \nby the Government of the State/Union Territory to which the applicant belongs as per \nthe terms of domicile decided by the State/UT. \n \n3.2. Conditions of eligibility  \n \n \na. The student should belong to Scheduled Tribe so specified in relation to the \nState/Union Territory to which he/she actually belongs (Domicile State). \nb. Student should have passed the Matriculation or Higher Secondary or any higher \nexamination of a recognized University or Board of Secondary Education. \nc. The family income of student from all sources should not exceed Rs.2.50 lakh per \nannum. \nd. The student should have a valid account in a Schedule Bank linked with Aadhar \nand Mobile number. \ne. The student should not be getting any other scholarship. \nf. The scholarships will be given for study of recognized post-matriculation/ post-\nsecondary courses, recognized by the concerned approving authority, pursued in \nfollowing category of Institutions/Universities/Colleges. \n \ni. All Government Institutes/Colleges/Universities \nii. Institutions of National Importance; ",
+          "page": 3,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "benefits",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "6  \n3.4.1. Fee component: \n \nThe fee component will depend on type of course pursued by the student. The \ncourses have been divided in 4 categories. \n \nTable 1 \n \nGroup Courses \nGroup I Graduate and Post Graduate courses leading to Degree, PG \nDiploma, MPhil, PhD in professional courses in various streams \nGroup Il All non-professional recognized courses leading to a Graduate, Post \nGraduate Degree not covered under Group I in Arts, Science and\nCommerce like BA/B.Sc/B.Com or MA/MSc/M.Com etc \nGroup III Vocational stream, ITI  \nPolytechnics, etc. \ncourses, 3  year diploma courses in \nGroup IV All post-matriculation level non-degree courses for which entrance  \nqualification is High School (Class X), e,g. senior secondary \ncertificate (class XI and XII). \n \nNote 1: The fee component will be decided by the State Level Fee Fixation Committee \nof the state. In case of students studying in private sector institutes there will be a ceiling \nof Rs.2.50 lakhs per annum per student for Engineering Courses and Rs.6.00 lakh per \nannum for MBBS/ MS/ MD courses and Rs.1.00 lakh per annum for other courses as far \nas support of Government of India is concerned. However, the concerned State \nGovernment/UT Administration is free to provide scholarship over and above the limit \nspecified above to students studying in private sector Institutes. For accounting \npurpose, such additional amount, if any, would be accounted for separately in the State \nportal. \n \nNote 2: The guidelines will apply prospectively for students taking fresh admission from \n1.4.2022. It is clarified that existing students who have enrolled themselves in a particular \ncourse within or outside State as per the prevailing guidelines at the time of admission \nwill continue to get the benefit in respect of fee fixed by the State for the remaining period \nof the course. The new guidelines will be applicable in respect of students who apply in \nPost Matric Scholarship Scheme on or after 1.4.2022. ",
+          "page": 6,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "benefits",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "7  \n3.4.2. Stipend: \n \nThe student will be entitled to stipend as per rates listed below. \n \n \nTable:2 \n \nGroup Courses Hostellers Day Scholar \nMonthly Annually Monthly Annually  \nGroup I Bachelor, Master Degree,\nMPhil/PhD degree   leading\nto Degree, PG Diploma, in\nprofessional courses in \nvarious streams \n \n \n1200 \n \n \n12000 \n \n \n550 \n \n \n5500 \nGroup Il All non-professional \nrecognized courses leading\nto a Bachelor, Master Degree,\nMPhil/PhD degree not\ncovered under Group I in\nArts, Science and Commerce\n like \nBA/B.Sc/B.Com or \nMA/MSc/M.Com \n \n \n \n \n820 \n \n \n \n \n8200 \n \n \n \n \n530 \n \n \n \n \n5300 \nGroup III Vocational stream, ITI\ncourses, 3 year diploma\ncourses in Polytechnics, \netc. \n \n570 \n \n5700 \n \n300 \n \n3000 \nGroup-IV All post-matriculation level\nnon-degree courses for\nwhich entrance qualification\nis High School (Class X),\ne.g.      senior      secondary  \ncertificate (class XI and XII).  \n \n \n380 \n \n \n3800 \n \n \n230 \n \n \n2300 \n \nNote 1: It needs to be clarified that the stipend is a sort of incentive provided to a student \nfor pursuing a particular course and in no way meant to provide for reimbursement of \nboarding and lodging charges like mess, hostel or other similar charges. The stipend will \nbe given to the student as per rates according to course listed in Group-I to IV. \nHowever, the concerned State Government/UT Administration is free to provide the \nstipend over and above the prescribed rates of the scheme. For accounting purpose, \nsuch additional amount, if any, would be accounted for separately in the State portal. ",
+          "page": 7,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "benefits",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "8  \nNote 2: In order to provide quality boarding and lodging facility to students within and \noutside States/UTs, all States/UTs are advised to identify cities where such Institutes \nare located that do not have availability of hostel. The States may seek grants from SCA \nto TSS/275(1) for construction of tribal hostels within and outside State. Such hostels \nwill however be open for students of all States. \n \nNote3: Normally the term 'Hostel' is applicable to a common residential building and \na common mess for the students run under the supervision of the educational institution \nauthorities. In case the college authorities are unable to provide accommodation in the \ncollege Hostel, an approved place of residence can also be treated as Hostel for the \npurpose of this scheme. The place will be approved by the Head of the Institution after \ndue inspection and keeping in view the rules and regulations laid down by the University, \nif any. In such case, a certificate to the effect that the student is residing in an approved \nplace of residence as he is unable to get accommodation in the college hostel should be \nfurnished by the Head of the Institution. \n \nIt is further clarified that such deemed hostels should consist of such accommodation as \nis hired at least by a group of 5 (five) students living together, usually with common \nmess arrangements. \n \n \nNote 4: Additional Disability Allowance: - In addition to stipend provided in Table- 2 \nabove, an additional Stipend of Rs. 800/-per month (Rs. 9600 annually) will be \ngiven to the Divyangjan student who is hosteller and Rs.600 (Rs 7200 annually) to \nDay scholar. The disability as defined under the relevant ‘Disabilities Act’ has to be \ncertified by competent medical authority of the State Govt./UT Administration. The \nprovisions of Disability allowance will also apply to leprosy-cured and students having \nsickle cell Anemia or Thalassemia as notified by Ministry of Social Justice and \nempowerment \n \n4. Empanelment of Institutions/universities/colleges within and outside states \n \na. It would be the responsibility of the State to empanel the eligible Institutes within \nand outside states where student can take admission. Students will be free to \ntake admission in any Government School/ Institute/College/University within and \noutside the domicile State. In respect of Non- Government Schools/ \nInstitutes/Colleges/Universities located within and outside domicile State, each \nState would empanel and prepare a list of such Non-Government Institutes and \nthe courses for which such Institutes are eligible as per Group-I to IV. States \nwould share such list with MoTA on its portal. \nb. The state Govt. shall ensure that empanelled Non- Government Schools/ \nInstitutes/Colleges/Universities located inside and outside the state possess ",
+          "page": 8,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "benefits",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "9  \ndesired Infrastructure and has capacity to provide quality education. A \nmechanism will be devised for Inspection of such Institutes by domicile State \nin coordination with respective destination state where such Institute is located. \nc. State Government before awarding scholarship to a student will verify \nregistration, affiliation and accreditation, courses being offered and number of \nseats approved for each course in Schools/ Institutes/Colleges/Universities. \nd. In the application form, it will be mentioned that the student is studying in an \nInstitute outside the State/UT and data in respect of that Institute along with \nnecessary affiliation and accreditation will be captured in online form. \ne. The concerned Non-Government School/ Institute/College will not force the \nstudent to pay the fee if there is delay in disbursement of scholarship to student. \nIt would be the responsibility of concerned State Government to ensure that the \nstudent is allowed to sit in the exams and attend classes even if there is delay \nin payment of fee by State Government. State may take such Undertaking from \nthe Institutes at the time of empanelling them.   The State will however ensure \nthat any grievance of such School/ Institute/College/University is addressed on \npriority. State may create special cell in Scholarship Division for empanelment, \ninspection and grievance redressal of such Non-Government School/ \nInstitute/College, for which expenditure can be incurred from administrative \nexpenses provided under the scheme as discussed in para 14 of guidelines. \nf. The state may decide whether the entire fee will be credited to the account of \nstudent by DBT mode or the tuition fee may go to Institute and the stipend to \nthe student. \n \n5. Selection of candidates \n \n \ni. All States/UTs are required to develop an Online Platform for inviting \nonline applications and disbursement through DBT mode into the bank \naccount of student. The states/UTs have option to opt for National \nScholarship Portal for inviting such applications, if State/UT does not have \nown portal. \n \nii. The States/UTs would obtain necessary documents from applicants in \nsupport of eligibility of the applicants. Any student found to have stated \nwrong facts and misrepresented facts would become ineligible and \ndebarred from any benefits of the scheme. ",
+          "page": 9,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "benefits",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "13  \na. Assist the student(s)/applicant(s) for filling the registration and application \nforms and provide technical support for queries on fee, Institution details etc. \nb. Escalate the critical issues to State/NSP team, as and when required. \n \n6.2. The States shall maintain a complete database of the beneficiaries under \nvarious other scholarship schemes to ensure de-duplication of the beneficiaries \n \n7. Duration and renewal of scholarship  \n \ni. The scholarship will be payable for the entire course for which the application has \nbeen made. \n \nii. In the application form student will be required to mention the duration of course.    \nThe award once made will be tenable from the stage at which it is given till the \ncompletion of course subject to good conduct and regularity in attendance. \n \niii. In case a student couldn't apply for scholarship for an eligible course in the 1st \nyear of the course, he can apply for scholarship in 2nd or subsequent year and \nwould be entitled for scholarship for the remaining duration of course from the \ndate of application, subject to the eligibility. \n \niv. The scholarship to a student will be renewed from year to year provided he/she \nhas completed the previous class successfully and moves to the next class. \n \nv.  In case he/she has failed in one year, he/she will not be entitled to scholarship \ntill he/she clears that class and gets promoted to the next class. \n \nvi. However, if a student is unable to appear in the annual examination owing to \nillness and/or on account of any other unforeseen event, the award may be \nrenewed for the next academic year on submission of medical certificate and/or \nother required sufficient proof to the satisfaction of the Head of the Institution and \nhis/her certifying that the student would have passed had he/she appeared in \nthe examination. \n \nvii. In accordance with the Regulations of a University/institution, if a student is \npromoted to the next higher class even though he/she may not have actually \npassed in lower class and is required to take examination of the junior class again \nafter sometime, he/she will be entitled to scholarship for the class to which he/she \nis promoted if the student is otherwise eligible for scholarship. \n \nv. Stipend is payable from 1 st April or from the month of admission, whichever is \nlater, to the month in which the examinations are completed, at the end of the \nacademic year for a maximum period of 10 months. ",
+          "page": 13,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "restrictions",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "4  \niii. Central University/ State university/ Autonomous colleges recognized by \nUGC and Universities/ Colleges recognized under section 2(f) and/or \n12(b) of UGC Act; \niv. Deemed Universities; \nv. Private Universities recognized by State/Centre with ‘A’ level or \nequivalent accreditation by NAAC, NBA; \nvi. Private Professional Institutions affiliated to a recognized Central/State \nUniversity \nvii. Schools /colleges recognized by Govt/Govt aided for Classes XI to \nclass XII; \nviii. Diploma granting Institutions as recognized by State/UT Governments; \nix. Vocational Training Institute affiliated to National Council of Vocational \nTraining (NCVT); \nx. Institutions affiliated/approved by the appropriate bodies like MCI/AICTE \netc or any regulatory body established by State/Centre as approving \nauthority for particular course. \n \n \nNote 1: Under “National fellowship & Scholarship for Higher Education of ST students” \nScheme [Top class Scholarship], MoTA is providing Scholarships to students for \npursuing graduation and post-graduation courses in Top Class Institutes (currently 252) \nacross India. To avoid duplicity, students pursuing courses in such Institutes will \nnot be entitled for benefit under Post Matric Scholarship . All students already \nregistered under Post Matric Schemes till 2020-21 will however continue to be funded \nunder the scheme till completion of course. The new students admitted after issuance of \nguidelines will be registered under the scholarship component of the “National fellowship \n& Scholarship for Higher Education of ST students” Scheme from academic year 2021-\n22. List of 252 Top Class Institutes is given in the website of the Ministry (tribal.nic.in). \n \n \nNote 2: State Governments/UTs will gradually shift towards institutions to be covered \nwhich ranks high as per NIRF of Ministry of Education for Post-matric scholarship \nscheme so as to ensure better employability. \n3.2.1. Candidates who complete a course in one stream will not be eligible to take \ndiploma/degree course of different stream. For example, student will not be eligible for \nscholarship for pursuing B. Com after completing B.A or BSC or MBBS after doing \nB.Tech. \n3.2.2. Scholarship holder under this scheme can hold only one scholarship/stipend at a \ntime. If awarded any other scholarship/stipend, the student can exercise his/her option \nfor either of the two scholarships/stipends, whichever is more beneficial to him/her and ",
+          "page": 4,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "restrictions",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "5  \nshould inform the awarding authority through the Head of the Institution about the option \nmade. \n3.3. Income Criteria \n \nScholarships will be paid to the students whose family income from all sources \ndoes not exceed Rs.2,50,000/- (Rs. Two lakh fifty thousand only) per annum. \n \nThe family income shall be computed in the following manner: - \n \nI. In case where both father and mother are working, the combined income of both \nof them from all sources shall be taken into account in computing total family \nincome. \nII. In case any other member of the family, other than father and mother is an earning \nmember, his or her income shall not be included in computing total family income. \nIII. In case only one parent is alive, the income of that parent shall be taken into \naccount for considering total family income . If other sibling or family member \nis an earning member, their income shall not be included in computing total family \nincome. \nIV. In case of an orphan, supported by a guardian, income criteria shall not apply. \n \n \nNote 1: Definition of Income - Income means gross income including income from all \nsources without any exemption and deductions available in the Income Tax Act. \n \nNote 2: Income certificate is required to be taken once only i.e. at the time of admission \nto course which will be valid for the entire duration of the course. At the time of renewal \nin second or subsequent year of the course, fresh income certificate is not required. \n \nNote 3: The income certificate given at the time of admission should be taken in the \nsame year for which the admission is taken. In the case of salaried employee, the income \nof previous financial year will be considered for the purpose of eligibility. For example, if \ncandidate applies afresh for academic year 2021-22, the family income for financial \nyear 2020-21 would be required. \n \n \n3.4. Value of scholarship  \n \nThe scholarship will have two components, payment of compulsory non- \nrefundable fees for the course pursued by the student and the monthly stipend. ",
+          "page": 5,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "restrictions",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "12  \na. The Ministry shall provide PFMS configuration details (agency ID, Agency \nname, PFMS scheme code, DBT mission code, beneficiary type, \npayment purpose code) to States/UTs \nb. The Ministries shall verify the correctness of Scheme configuration, \nincluding but not limited to the eligibility criteria, important dates etc. \nc. The Ministries shall provide proper IT platform to facilitate state to upload \nbeneficiary data on its portal and would issue necessary instructions to \nStates/UTs. \n \n \n6. Documents required: Students need to carefully go through State/ NSP portal \nfor required documents to be uploaded with the application form as mentioned in clause \n3 of guidelines. \n \na. Aadhar Number \nb. Domicile certificate \nc. Scanned copy of certificates, diploma, degree etc. in respect of all \nexaminations passed. \nd. Last qualified marks [percentage/Equivalent percentage in case of \nCGPA/OGPA etc.] \ne. ST certificate issued by competent authority of State/UT. \nf. Family Income Certificate. \ng. Disability certificate. \nh. Scanned copy of the passport size photograph \n \n \nThe State/UT may specify the procedure for issuing ST certificate, family Income \nCertificate and Disability certificate and the competent authority to issue such \ncertificate. If the State has online system of issuing such certificate including \ncertificate of examination passed, State/UT may link the State/UT portal through Digi \nlocker so that the certificates placed in Digi locker can be fetched automatically. \n \nNote 1:- Self-declarations or affidavits of self-assessment of income shall not be \nacceptable and the State/UT Governments shall make appropriate arrangements to \nnotify a competent income-certificate issuing authority for this purpose. \n \n6.1. All States/UTs are required to establish a dedicated Helpdesk/Grievance \nredressal mechanism to address the students’ query. The primary role of the Helpdesk \nat State/UT level is to provide first level assistance to the users at various levels of portal. \nThe States/UTs shall: ",
+          "page": 12,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "restrictions",
+        "citation": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "15  \nand electronic media and all empanelled Institutions located outside the State are \ninformed about opening and closing dates. The applicant should submit/upload the \ncompleted application to the prescribed authority before the last date prescribed for \nreceipt of applications. The following timeline is suggested for opening, closing of \nportal, verification of students and Institute and disbursal of scholarship. \n \nPROCESS FRESH RENEWAL \nRegistration for Students 1 April – 30 th \nSeptember \n1 April– 30th \nSeptember \nCompletion of verification of \nInstitutes \n30th October  \n \n30th October Completion of verification by  \nInstitute/ State \n15th November \nDisbursement of scholarship  31st December 15th November \n \nThe above-mentioned timelines are only suggestive. The State should make efforts that \nfor the renewal students, the disbursement would start as and when the verification is \ncomplete. \n \nNote 1: The State/UT may ensure that a dedicated cell under Scholarship Division is \nmade which will be responsible for preparation of portal, grievance redressal in filling \napplications, integration of all Institutes including empanelled Institutes outside State \nwith the portal, verification of documents and eligibility of student, course, checking of \ncourse fee and stipend, Aadhar linked bank account and disbursal of scholarship. The \nexpenditure can be incurred from administrative expenses provided under the scheme \nas discussed in para 14 of guidelines. \n \n \n \n9. Publicity & Inviting Application \n \nThe State Governments/U.T. Administrations suitably publicize the Scheme and \ninvite applications by issuing an advertisement in local language, in the leading \nnewspapers of the State and through their respective websites and other media outfits. \nThe awareness programme may also be arranged in coordination with Civil Society \nOrganization (CSOs)/NGOS/PRIs/any other stake holders. ",
+          "page": 15,
+          "language": "English",
+          "basis": "explicit"
+        }
+      }
+    ],
+    "requirements": [
+      {
+        "description": "Scheduled Tribe status must be specified in relation to the domicile State or UT; the student needs the preceding recognized qualification and recognized post-matric or post-secondary course.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "3  \n1. Introduction \n \nIt is a Centrally Sponsored Scheme implemented by Ministry of Tribal Affairs to grant \nscholarship to eligible ST students for pursuing higher education starting from class \nXI to Post Graduation courses in India. \n \n2. Objective \n \n \na. To enable eligible Scheduled Tribe students to undertake quality education \nfrom Post Matric to Post Graduate level by providing them financial \nassistance. \nb. To create an error free platform ensuring that the targeted beneficiaries \nreceive scholarship on time. \n \n3. Salient features of the Scheme \n \n3.1. Scope \n \nScholarship under the Scheme will be available to ST students for studies in India and \nwill be directly transferred to the account of students. The scholarship will be awarded \nby the Government of the State/Union Territory to which the applicant belongs as per \nthe terms of domicile decided by the State/UT. \n \n3.2. Conditions of eligibility  \n \n \na. The student should belong to Scheduled Tribe so specified in relation to the \nState/Union Territory to which he/she actually belongs (Domicile State). \nb. Student should have passed the Matriculation or Higher Secondary or any higher \nexamination of a recognized University or Board of Secondary Education. \nc. The family income of student from all sources should not exceed Rs.2.50 lakh per \nannum. \nd. The student should have a valid account in a Schedule Bank linked with Aadhar \nand Mobile number. \ne. The student should not be getting any other scholarship. \nf. The scholarships will be given for study of recognized post-matriculation/ post-\nsecondary courses, recognized by the concerned approving authority, pursued in \nfollowing category of Institutions/Universities/Colleges. \n \ni. All Government Institutes/Colleges/Universities \nii. Institutions of National Importance; ",
+          "page": 3,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "A valid account in a Scheduled Bank is required, with the specified Aadhaar/mobile linkage and other-award exclusion; generic account possession alone is insufficient.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "all",
+          "condition": null,
+          "children": [
+            {
+              "op": "condition",
+              "condition": {
+                "op": "eq",
+                "fact": "has_bank_account",
+                "value": true,
+                "income_period": null,
+                "income_definition": null,
+                "as_of": null
+              },
+              "children": []
+            },
+            {
+              "op": "condition",
+              "condition": {
+                "op": "unknown",
+                "fact": null,
+                "value": null,
+                "income_period": null,
+                "income_definition": null,
+                "as_of": null
+              },
+              "children": []
+            }
+          ]
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "3  \n1. Introduction \n \nIt is a Centrally Sponsored Scheme implemented by Ministry of Tribal Affairs to grant \nscholarship to eligible ST students for pursuing higher education starting from class \nXI to Post Graduation courses in India. \n \n2. Objective \n \n \na. To enable eligible Scheduled Tribe students to undertake quality education \nfrom Post Matric to Post Graduate level by providing them financial \nassistance. \nb. To create an error free platform ensuring that the targeted beneficiaries \nreceive scholarship on time. \n \n3. Salient features of the Scheme \n \n3.1. Scope \n \nScholarship under the Scheme will be available to ST students for studies in India and \nwill be directly transferred to the account of students. The scholarship will be awarded \nby the Government of the State/Union Territory to which the applicant belongs as per \nthe terms of domicile decided by the State/UT. \n \n3.2. Conditions of eligibility  \n \n \na. The student should belong to Scheduled Tribe so specified in relation to the \nState/Union Territory to which he/she actually belongs (Domicile State). \nb. Student should have passed the Matriculation or Higher Secondary or any higher \nexamination of a recognized University or Board of Secondary Education. \nc. The family income of student from all sources should not exceed Rs.2.50 lakh per \nannum. \nd. The student should have a valid account in a Schedule Bank linked with Aadhar \nand Mobile number. \ne. The student should not be getting any other scholarship. \nf. The scholarships will be given for study of recognized post-matriculation/ post-\nsecondary courses, recognized by the concerned approving authority, pursued in \nfollowing category of Institutions/Universities/Colleges. \n \ni. All Government Institutes/Colleges/Universities \nii. Institutions of National Importance; ",
+          "page": 3,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Notified Top Class institutions use a different scholarship component for new entrants, but students registered under post-matric support through the stated earlier cohort continue to course completion.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "4  \niii. Central University/ State university/ Autonomous colleges recognized by \nUGC and Universities/ Colleges recognized under section 2(f) and/or \n12(b) of UGC Act; \niv. Deemed Universities; \nv. Private Universities recognized by State/Centre with ‘A’ level or \nequivalent accreditation by NAAC, NBA; \nvi. Private Professional Institutions affiliated to a recognized Central/State \nUniversity \nvii. Schools /colleges recognized by Govt/Govt aided for Classes XI to \nclass XII; \nviii. Diploma granting Institutions as recognized by State/UT Governments; \nix. Vocational Training Institute affiliated to National Council of Vocational \nTraining (NCVT); \nx. Institutions affiliated/approved by the appropriate bodies like MCI/AICTE \netc or any regulatory body established by State/Centre as approving \nauthority for particular course. \n \n \nNote 1: Under “National fellowship & Scholarship for Higher Education of ST students” \nScheme [Top class Scholarship], MoTA is providing Scholarships to students for \npursuing graduation and post-graduation courses in Top Class Institutes (currently 252) \nacross India. To avoid duplicity, students pursuing courses in such Institutes will \nnot be entitled for benefit under Post Matric Scholarship . All students already \nregistered under Post Matric Schemes till 2020-21 will however continue to be funded \nunder the scheme till completion of course. The new students admitted after issuance of \nguidelines will be registered under the scholarship component of the “National fellowship \n& Scholarship for Higher Education of ST students” Scheme from academic year 2021-\n22. List of 252 Top Class Institutes is given in the website of the Ministry (tribal.nic.in). \n \n \nNote 2: State Governments/UTs will gradually shift towards institutions to be covered \nwhich ranks high as per NIRF of Ministry of Education for Post-matric scholarship \nscheme so as to ensure better employability. \n3.2.1. Candidates who complete a course in one stream will not be eligible to take \ndiploma/degree course of different stream. For example, student will not be eligible for \nscholarship for pursuing B. Com after completing B.A or BSC or MBBS after doing \nB.Tech. \n3.2.2. Scholarship holder under this scheme can hold only one scholarship/stipend at a \ntime. If awarded any other scholarship/stipend, the student can exercise his/her option \nfor either of the two scholarships/stipends, whichever is more beneficial to him/her and ",
+          "page": 4,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Completing a course in one stream and then taking a different-stream diploma or degree is excluded; concurrent scholarship or stipend permits choosing one and informing the authority.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "4  \niii. Central University/ State university/ Autonomous colleges recognized by \nUGC and Universities/ Colleges recognized under section 2(f) and/or \n12(b) of UGC Act; \niv. Deemed Universities; \nv. Private Universities recognized by State/Centre with ‘A’ level or \nequivalent accreditation by NAAC, NBA; \nvi. Private Professional Institutions affiliated to a recognized Central/State \nUniversity \nvii. Schools /colleges recognized by Govt/Govt aided for Classes XI to \nclass XII; \nviii. Diploma granting Institutions as recognized by State/UT Governments; \nix. Vocational Training Institute affiliated to National Council of Vocational \nTraining (NCVT); \nx. Institutions affiliated/approved by the appropriate bodies like MCI/AICTE \netc or any regulatory body established by State/Centre as approving \nauthority for particular course. \n \n \nNote 1: Under “National fellowship & Scholarship for Higher Education of ST students” \nScheme [Top class Scholarship], MoTA is providing Scholarships to students for \npursuing graduation and post-graduation courses in Top Class Institutes (currently 252) \nacross India. To avoid duplicity, students pursuing courses in such Institutes will \nnot be entitled for benefit under Post Matric Scholarship . All students already \nregistered under Post Matric Schemes till 2020-21 will however continue to be funded \nunder the scheme till completion of course. The new students admitted after issuance of \nguidelines will be registered under the scholarship component of the “National fellowship \n& Scholarship for Higher Education of ST students” Scheme from academic year 2021-\n22. List of 252 Top Class Institutes is given in the website of the Ministry (tribal.nic.in). \n \n \nNote 2: State Governments/UTs will gradually shift towards institutions to be covered \nwhich ranks high as per NIRF of Ministry of Education for Post-matric scholarship \nscheme so as to ensure better employability. \n3.2.1. Candidates who complete a course in one stream will not be eligible to take \ndiploma/degree course of different stream. For example, student will not be eligible for \nscholarship for pursuing B. Com after completing B.A or BSC or MBBS after doing \nB.Tech. \n3.2.2. Scholarship holder under this scheme can hold only one scholarship/stipend at a \ntime. If awarded any other scholarship/stipend, the student can exercise his/her option \nfor either of the two scholarships/stipends, whichever is more beneficial to him/her and ",
+          "page": 4,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Annual family income from all sources must not exceed Rs. 2,50,000. Both working parents incomes are combined, other earning family members are excluded, a surviving parent alone is counted, and guardian-supported orphans are exempt from the income criterion.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "5  \nshould inform the awarding authority through the Head of the Institution about the option \nmade. \n3.3. Income Criteria \n \nScholarships will be paid to the students whose family income from all sources \ndoes not exceed Rs.2,50,000/- (Rs. Two lakh fifty thousand only) per annum. \n \nThe family income shall be computed in the following manner: - \n \nI. In case where both father and mother are working, the combined income of both \nof them from all sources shall be taken into account in computing total family \nincome. \nII. In case any other member of the family, other than father and mother is an earning \nmember, his or her income shall not be included in computing total family income. \nIII. In case only one parent is alive, the income of that parent shall be taken into \naccount for considering total family income . If other sibling or family member \nis an earning member, their income shall not be included in computing total family \nincome. \nIV. In case of an orphan, supported by a guardian, income criteria shall not apply. \n \n \nNote 1: Definition of Income - Income means gross income including income from all \nsources without any exemption and deductions available in the Income Tax Act. \n \nNote 2: Income certificate is required to be taken once only i.e. at the time of admission \nto course which will be valid for the entire duration of the course. At the time of renewal \nin second or subsequent year of the course, fresh income certificate is not required. \n \nNote 3: The income certificate given at the time of admission should be taken in the \nsame year for which the admission is taken. In the case of salaried employee, the income \nof previous financial year will be considered for the purpose of eligibility. For example, if \ncandidate applies afresh for academic year 2021-22, the family income for financial \nyear 2020-21 would be required. \n \n \n3.4. Value of scholarship  \n \nThe scholarship will have two components, payment of compulsory non- \nrefundable fees for the course pursued by the student and the monthly stipend. ",
+          "page": 5,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Income is gross income without tax exemptions or deductions. Admission-year income certification is valid throughout the course; salaried employees use the previous financial year and do not require a new certificate at renewal.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "5  \nshould inform the awarding authority through the Head of the Institution about the option \nmade. \n3.3. Income Criteria \n \nScholarships will be paid to the students whose family income from all sources \ndoes not exceed Rs.2,50,000/- (Rs. Two lakh fifty thousand only) per annum. \n \nThe family income shall be computed in the following manner: - \n \nI. In case where both father and mother are working, the combined income of both \nof them from all sources shall be taken into account in computing total family \nincome. \nII. In case any other member of the family, other than father and mother is an earning \nmember, his or her income shall not be included in computing total family income. \nIII. In case only one parent is alive, the income of that parent shall be taken into \naccount for considering total family income . If other sibling or family member \nis an earning member, their income shall not be included in computing total family \nincome. \nIV. In case of an orphan, supported by a guardian, income criteria shall not apply. \n \n \nNote 1: Definition of Income - Income means gross income including income from all \nsources without any exemption and deductions available in the Income Tax Act. \n \nNote 2: Income certificate is required to be taken once only i.e. at the time of admission \nto course which will be valid for the entire duration of the course. At the time of renewal \nin second or subsequent year of the course, fresh income certificate is not required. \n \nNote 3: The income certificate given at the time of admission should be taken in the \nsame year for which the admission is taken. In the case of salaried employee, the income \nof previous financial year will be considered for the purpose of eligibility. For example, if \ncandidate applies afresh for academic year 2021-22, the family income for financial \nyear 2020-21 would be required. \n \n \n3.4. Value of scholarship  \n \nThe scholarship will have two components, payment of compulsory non- \nrefundable fees for the course pursued by the student and the monthly stipend. ",
+          "page": 5,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Fee-fixation and private-sector course ceilings apply to central support; State or UT top-ups are separate. Existing entrants retain the fee treatment applicable at admission under the transitory provisions.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "6  \n3.4.1. Fee component: \n \nThe fee component will depend on type of course pursued by the student. The \ncourses have been divided in 4 categories. \n \nTable 1 \n \nGroup Courses \nGroup I Graduate and Post Graduate courses leading to Degree, PG \nDiploma, MPhil, PhD in professional courses in various streams \nGroup Il All non-professional recognized courses leading to a Graduate, Post \nGraduate Degree not covered under Group I in Arts, Science and\nCommerce like BA/B.Sc/B.Com or MA/MSc/M.Com etc \nGroup III Vocational stream, ITI  \nPolytechnics, etc. \ncourses, 3  year diploma courses in \nGroup IV All post-matriculation level non-degree courses for which entrance  \nqualification is High School (Class X), e,g. senior secondary \ncertificate (class XI and XII). \n \nNote 1: The fee component will be decided by the State Level Fee Fixation Committee \nof the state. In case of students studying in private sector institutes there will be a ceiling \nof Rs.2.50 lakhs per annum per student for Engineering Courses and Rs.6.00 lakh per \nannum for MBBS/ MS/ MD courses and Rs.1.00 lakh per annum for other courses as far \nas support of Government of India is concerned. However, the concerned State \nGovernment/UT Administration is free to provide scholarship over and above the limit \nspecified above to students studying in private sector Institutes. For accounting \npurpose, such additional amount, if any, would be accounted for separately in the State \nportal. \n \nNote 2: The guidelines will apply prospectively for students taking fresh admission from \n1.4.2022. It is clarified that existing students who have enrolled themselves in a particular \ncourse within or outside State as per the prevailing guidelines at the time of admission \nwill continue to get the benefit in respect of fee fixed by the State for the remaining period \nof the course. The new guidelines will be applicable in respect of students who apply in \nPost Matric Scholarship Scheme on or after 1.4.2022. ",
+          "page": 6,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Stipend rates differ by course group and hosteller or day scholar status; stipend is an incentive rather than reimbursement of actual board and lodging. State top-ups must remain separately identified.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "7  \n3.4.2. Stipend: \n \nThe student will be entitled to stipend as per rates listed below. \n \n \nTable:2 \n \nGroup Courses Hostellers Day Scholar \nMonthly Annually Monthly Annually  \nGroup I Bachelor, Master Degree,\nMPhil/PhD degree   leading\nto Degree, PG Diploma, in\nprofessional courses in \nvarious streams \n \n \n1200 \n \n \n12000 \n \n \n550 \n \n \n5500 \nGroup Il All non-professional \nrecognized courses leading\nto a Bachelor, Master Degree,\nMPhil/PhD degree not\ncovered under Group I in\nArts, Science and Commerce\n like \nBA/B.Sc/B.Com or \nMA/MSc/M.Com \n \n \n \n \n820 \n \n \n \n \n8200 \n \n \n \n \n530 \n \n \n \n \n5300 \nGroup III Vocational stream, ITI\ncourses, 3 year diploma\ncourses in Polytechnics, \netc. \n \n570 \n \n5700 \n \n300 \n \n3000 \nGroup-IV All post-matriculation level\nnon-degree courses for\nwhich entrance qualification\nis High School (Class X),\ne.g.      senior      secondary  \ncertificate (class XI and XII).  \n \n \n380 \n \n \n3800 \n \n \n230 \n \n \n2300 \n \nNote 1: It needs to be clarified that the stipend is a sort of incentive provided to a student \nfor pursuing a particular course and in no way meant to provide for reimbursement of \nboarding and lodging charges like mess, hostel or other similar charges. The stipend will \nbe given to the student as per rates according to course listed in Group-I to IV. \nHowever, the concerned State Government/UT Administration is free to provide the \nstipend over and above the prescribed rates of the scheme. For accounting purpose, \nsuch additional amount, if any, would be accounted for separately in the State portal. ",
+          "page": 7,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "An institution-approved residence may qualify as a hostel when campus accommodation is unavailable; the deemed-hostel conditions include the specified group and common-mess arrangement.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "8  \nNote 2: In order to provide quality boarding and lodging facility to students within and \noutside States/UTs, all States/UTs are advised to identify cities where such Institutes \nare located that do not have availability of hostel. The States may seek grants from SCA \nto TSS/275(1) for construction of tribal hostels within and outside State. Such hostels \nwill however be open for students of all States. \n \nNote3: Normally the term 'Hostel' is applicable to a common residential building and \na common mess for the students run under the supervision of the educational institution \nauthorities. In case the college authorities are unable to provide accommodation in the \ncollege Hostel, an approved place of residence can also be treated as Hostel for the \npurpose of this scheme. The place will be approved by the Head of the Institution after \ndue inspection and keeping in view the rules and regulations laid down by the University, \nif any. In such case, a certificate to the effect that the student is residing in an approved \nplace of residence as he is unable to get accommodation in the college hostel should be \nfurnished by the Head of the Institution. \n \nIt is further clarified that such deemed hostels should consist of such accommodation as \nis hired at least by a group of 5 (five) students living together, usually with common \nmess arrangements. \n \n \nNote 4: Additional Disability Allowance: - In addition to stipend provided in Table- 2 \nabove, an additional Stipend of Rs. 800/-per month (Rs. 9600 annually) will be \ngiven to the Divyangjan student who is hosteller and Rs.600 (Rs 7200 annually) to \nDay scholar. The disability as defined under the relevant ‘Disabilities Act’ has to be \ncertified by competent medical authority of the State Govt./UT Administration. The \nprovisions of Disability allowance will also apply to leprosy-cured and students having \nsickle cell Anemia or Thalassemia as notified by Ministry of Social Justice and \nempowerment \n \n4. Empanelment of Institutions/universities/colleges within and outside states \n \na. It would be the responsibility of the State to empanel the eligible Institutes within \nand outside states where student can take admission. Students will be free to \ntake admission in any Government School/ Institute/College/University within and \noutside the domicile State. In respect of Non- Government Schools/ \nInstitutes/Colleges/Universities located within and outside domicile State, each \nState would empanel and prepare a list of such Non-Government Institutes and \nthe courses for which such Institutes are eligible as per Group-I to IV. States \nwould share such list with MoTA on its portal. \nb. The state Govt. shall ensure that empanelled Non- Government Schools/ \nInstitutes/Colleges/Universities located inside and outside the state possess ",
+          "page": 8,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Certified disability attracts the stated additional allowance, with different hosteller and day-scholar amounts; the source also includes leprosy-cured, sickle-cell anaemia and thalassaemia cases under the stated provisions.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "8  \nNote 2: In order to provide quality boarding and lodging facility to students within and \noutside States/UTs, all States/UTs are advised to identify cities where such Institutes \nare located that do not have availability of hostel. The States may seek grants from SCA \nto TSS/275(1) for construction of tribal hostels within and outside State. Such hostels \nwill however be open for students of all States. \n \nNote3: Normally the term 'Hostel' is applicable to a common residential building and \na common mess for the students run under the supervision of the educational institution \nauthorities. In case the college authorities are unable to provide accommodation in the \ncollege Hostel, an approved place of residence can also be treated as Hostel for the \npurpose of this scheme. The place will be approved by the Head of the Institution after \ndue inspection and keeping in view the rules and regulations laid down by the University, \nif any. In such case, a certificate to the effect that the student is residing in an approved \nplace of residence as he is unable to get accommodation in the college hostel should be \nfurnished by the Head of the Institution. \n \nIt is further clarified that such deemed hostels should consist of such accommodation as \nis hired at least by a group of 5 (five) students living together, usually with common \nmess arrangements. \n \n \nNote 4: Additional Disability Allowance: - In addition to stipend provided in Table- 2 \nabove, an additional Stipend of Rs. 800/-per month (Rs. 9600 annually) will be \ngiven to the Divyangjan student who is hosteller and Rs.600 (Rs 7200 annually) to \nDay scholar. The disability as defined under the relevant ‘Disabilities Act’ has to be \ncertified by competent medical authority of the State Govt./UT Administration. The \nprovisions of Disability allowance will also apply to leprosy-cured and students having \nsickle cell Anemia or Thalassemia as notified by Ministry of Social Justice and \nempowerment \n \n4. Empanelment of Institutions/universities/colleges within and outside states \n \na. It would be the responsibility of the State to empanel the eligible Institutes within \nand outside states where student can take admission. Students will be free to \ntake admission in any Government School/ Institute/College/University within and \noutside the domicile State. In respect of Non- Government Schools/ \nInstitutes/Colleges/Universities located within and outside domicile State, each \nState would empanel and prepare a list of such Non-Government Institutes and \nthe courses for which such Institutes are eligible as per Group-I to IV. States \nwould share such list with MoTA on its portal. \nb. The state Govt. shall ensure that empanelled Non- Government Schools/ \nInstitutes/Colleges/Universities located inside and outside the state possess ",
+          "page": 8,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Government institutions may be inside or outside domicile State; non-government institutions and courses require State empanelment and verification. State decides whether tuition goes to the institution or the student while stipend goes to the student.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "9  \ndesired Infrastructure and has capacity to provide quality education. A \nmechanism will be devised for Inspection of such Institutes by domicile State \nin coordination with respective destination state where such Institute is located. \nc. State Government before awarding scholarship to a student will verify \nregistration, affiliation and accreditation, courses being offered and number of \nseats approved for each course in Schools/ Institutes/Colleges/Universities. \nd. In the application form, it will be mentioned that the student is studying in an \nInstitute outside the State/UT and data in respect of that Institute along with \nnecessary affiliation and accreditation will be captured in online form. \ne. The concerned Non-Government School/ Institute/College will not force the \nstudent to pay the fee if there is delay in disbursement of scholarship to student. \nIt would be the responsibility of concerned State Government to ensure that the \nstudent is allowed to sit in the exams and attend classes even if there is delay \nin payment of fee by State Government. State may take such Undertaking from \nthe Institutes at the time of empanelling them.   The State will however ensure \nthat any grievance of such School/ Institute/College/University is addressed on \npriority. State may create special cell in Scholarship Division for empanelment, \ninspection and grievance redressal of such Non-Government School/ \nInstitute/College, for which expenditure can be incurred from administrative \nexpenses provided under the scheme as discussed in para 14 of guidelines. \nf. The state may decide whether the entire fee will be credited to the account of \nstudent by DBT mode or the tuition fee may go to Institute and the stipend to \nthe student. \n \n5. Selection of candidates \n \n \ni. All States/UTs are required to develop an Online Platform for inviting \nonline applications and disbursement through DBT mode into the bank \naccount of student. The states/UTs have option to opt for National \nScholarship Portal for inviting such applications, if State/UT does not have \nown portal. \n \nii. The States/UTs would obtain necessary documents from applicants in \nsupport of eligibility of the applicants. Any student found to have stated \nwrong facts and misrepresented facts would become ineligible and \ndebarred from any benefits of the scheme. ",
+          "page": 9,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Applicants use the domicile State authority even while studying elsewhere, maintain an active account in their own name with linkage, upload legible evidence, respond to defects and follow verification deadlines.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "10  \niii. Before initiating registration process, students are advised to carefully \ngo through the instructions of State /NSP portal and take care of the \nfollowing: \n \na) Candidates belonging to one State (Domicile State) but studying in other \nState will be awarded scholarships by the State to which they belong \n(domicile State) and will submit their applications to the competent \nauthorities in their domicile State. The student can take admission in any \nGovernment Institute within or outside the state. As far as Non-\nGovernment Institutes are concerned, the students can take admission \nonly in empanelled Institutes within and outside state as discussed in \npara 4(a) above. \n \nb) The Bank Account details (A/c Number, IFSC Code) given in \napplication is correct and keep the account active (i.e. non-dormant). \nThe account should be held in the name of the student and linked with \nAadhar and Mobile number to ensure timely DBT payment. \n \nc) The resolution/quality of documents and photo uploaded is adequate \nand document is legible and clear. \n \nd) The mobile number provided in the application is correct, active and \nbelongs to the applicant or the parent. The student should preferably \ncontinue the same mobile number linked with the bank account for entire \nperiod of course. \n \ne) The student/applicant should take timely action(s) on the SMS received \nfrom State owned portal/NSP \n \nf) The applicant should follow up with Institutes for application verification \nbefore the deadlines. \n \n \ng) The applicant should rectify the error(s) and comply with the remarks \nmade in the application in case the application is marked as defective \nin State owned portal/NSP. \n \n \n5.1. Role of Institute Nodal Officer (INO)  \n \nThere will be a Nodal Officer for every Institute. The Institute Nodal officer using \nportal must adhere to the following:",
+          "page": 10,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "The source lists identity, domicile, educational and marks records, ST certificate, family income certificate, disability certificate and photograph; State procedures and DigiLocker retrieval apply. Income self-assessment affidavits are not acceptable under this component.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "12  \na. The Ministry shall provide PFMS configuration details (agency ID, Agency \nname, PFMS scheme code, DBT mission code, beneficiary type, \npayment purpose code) to States/UTs \nb. The Ministries shall verify the correctness of Scheme configuration, \nincluding but not limited to the eligibility criteria, important dates etc. \nc. The Ministries shall provide proper IT platform to facilitate state to upload \nbeneficiary data on its portal and would issue necessary instructions to \nStates/UTs. \n \n \n6. Documents required: Students need to carefully go through State/ NSP portal \nfor required documents to be uploaded with the application form as mentioned in clause \n3 of guidelines. \n \na. Aadhar Number \nb. Domicile certificate \nc. Scanned copy of certificates, diploma, degree etc. in respect of all \nexaminations passed. \nd. Last qualified marks [percentage/Equivalent percentage in case of \nCGPA/OGPA etc.] \ne. ST certificate issued by competent authority of State/UT. \nf. Family Income Certificate. \ng. Disability certificate. \nh. Scanned copy of the passport size photograph \n \n \nThe State/UT may specify the procedure for issuing ST certificate, family Income \nCertificate and Disability certificate and the competent authority to issue such \ncertificate. If the State has online system of issuing such certificate including \ncertificate of examination passed, State/UT may link the State/UT portal through Digi \nlocker so that the certificates placed in Digi locker can be fetched automatically. \n \nNote 1:- Self-declarations or affidavits of self-assessment of income shall not be \nacceptable and the State/UT Governments shall make appropriate arrangements to \nnotify a competent income-certificate issuing authority for this purpose. \n \n6.1. All States/UTs are required to establish a dedicated Helpdesk/Grievance \nredressal mechanism to address the students’ query. The primary role of the Helpdesk \nat State/UT level is to provide first level assistance to the users at various levels of portal. \nThe States/UTs shall: ",
+          "page": 12,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Later-year first application covers only the remaining course from application. Annual renewal requires progression; failed classes suspend entitlement until progression, but illness or unforeseen-event proof and promotion-with-pending-exam exceptions apply.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "13  \na. Assist the student(s)/applicant(s) for filling the registration and application \nforms and provide technical support for queries on fee, Institution details etc. \nb. Escalate the critical issues to State/NSP team, as and when required. \n \n6.2. The States shall maintain a complete database of the beneficiaries under \nvarious other scholarship schemes to ensure de-duplication of the beneficiaries \n \n7. Duration and renewal of scholarship  \n \ni. The scholarship will be payable for the entire course for which the application has \nbeen made. \n \nii. In the application form student will be required to mention the duration of course.    \nThe award once made will be tenable from the stage at which it is given till the \ncompletion of course subject to good conduct and regularity in attendance. \n \niii. In case a student couldn't apply for scholarship for an eligible course in the 1st \nyear of the course, he can apply for scholarship in 2nd or subsequent year and \nwould be entitled for scholarship for the remaining duration of course from the \ndate of application, subject to the eligibility. \n \niv. The scholarship to a student will be renewed from year to year provided he/she \nhas completed the previous class successfully and moves to the next class. \n \nv.  In case he/she has failed in one year, he/she will not be entitled to scholarship \ntill he/she clears that class and gets promoted to the next class. \n \nvi. However, if a student is unable to appear in the annual examination owing to \nillness and/or on account of any other unforeseen event, the award may be \nrenewed for the next academic year on submission of medical certificate and/or \nother required sufficient proof to the satisfaction of the Head of the Institution and \nhis/her certifying that the student would have passed had he/she appeared in \nthe examination. \n \nvii. In accordance with the Regulations of a University/institution, if a student is \npromoted to the next higher class even though he/she may not have actually \npassed in lower class and is required to take examination of the junior class again \nafter sometime, he/she will be entitled to scholarship for the class to which he/she \nis promoted if the student is otherwise eligible for scholarship. \n \nv. Stipend is payable from 1 st April or from the month of admission, whichever is \nlater, to the month in which the examinations are completed, at the end of the \nacademic year for a maximum period of 10 months. ",
+          "page": 13,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Stipend runs from April or admission month, whichever is later, through examination completion for at most ten months.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "13  \na. Assist the student(s)/applicant(s) for filling the registration and application \nforms and provide technical support for queries on fee, Institution details etc. \nb. Escalate the critical issues to State/NSP team, as and when required. \n \n6.2. The States shall maintain a complete database of the beneficiaries under \nvarious other scholarship schemes to ensure de-duplication of the beneficiaries \n \n7. Duration and renewal of scholarship  \n \ni. The scholarship will be payable for the entire course for which the application has \nbeen made. \n \nii. In the application form student will be required to mention the duration of course.    \nThe award once made will be tenable from the stage at which it is given till the \ncompletion of course subject to good conduct and regularity in attendance. \n \niii. In case a student couldn't apply for scholarship for an eligible course in the 1st \nyear of the course, he can apply for scholarship in 2nd or subsequent year and \nwould be entitled for scholarship for the remaining duration of course from the \ndate of application, subject to the eligibility. \n \niv. The scholarship to a student will be renewed from year to year provided he/she \nhas completed the previous class successfully and moves to the next class. \n \nv.  In case he/she has failed in one year, he/she will not be entitled to scholarship \ntill he/she clears that class and gets promoted to the next class. \n \nvi. However, if a student is unable to appear in the annual examination owing to \nillness and/or on account of any other unforeseen event, the award may be \nrenewed for the next academic year on submission of medical certificate and/or \nother required sufficient proof to the satisfaction of the Head of the Institution and \nhis/her certifying that the student would have passed had he/she appeared in \nthe examination. \n \nvii. In accordance with the Regulations of a University/institution, if a student is \npromoted to the next higher class even though he/she may not have actually \npassed in lower class and is required to take examination of the junior class again \nafter sometime, he/she will be entitled to scholarship for the class to which he/she \nis promoted if the student is otherwise eligible for scholarship. \n \nv. Stipend is payable from 1 st April or from the month of admission, whichever is \nlater, to the month in which the examinations are completed, at the end of the \nacademic year for a maximum period of 10 months. ",
+          "page": 13,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Remunerated internship or practical-training periods are excluded. Misconduct, false statements, unapproved course or institution changes and discontinuation can lead to withholding, cancellation or recovery at authority discretion.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "14  \nvi. In case of renewal of scholarship awarded in the previous years, stipend will be \npaid from the month following the month up to which scholarship was paid in \nthe previous year, if the course of study is continuous. \nvii. Scholarship will not be paid for the period of internship/houseman-ship in the \nM.B.B, S. course or for a practical training in other course if the student is in \nreceipt of some remuneration during the internship period or some \nallowance/stipend during the practical training in other course. \nviii. The scholarship is dependent on the satisfactory progress and conduct of the \nscholars. If it is reported by the Head of the Institution at any time that a student \nhas by reason of his/her own act of default failed to make satisfactory progress \nor has been guilty of misconduct such as resorting to or participating in strikes, \nirregularity in attendance without permission of the authorities concerned etc., the \nauthority sanctioning the scholarship may either cancel the scholarship or stop \nor withhold further payment for such period as it may think fit. \nix. If a student is found to have obtained a scholarship by false statements, his/her \nscholarship will be cancelled forthwith and the amount of the scholarship paid \nwill be recovered, at the discretion of the concerned State Government. The \nstudent concerned will be blacklisted and debarred for scholarship in any scheme \nforever. \nx. A scholarship awarded may be cancelled if the scholar changes the subject of the \ncourse of study for which the scholarship was originally awarded or changes the \nInstitution of study, without prior approval of the State Government. The Head \nof the Institution shall report such cases to the respective States/UTs to stop \npayment of the scholarship money. The amount already paid may also be \nrecovered at the discretion of the State Government. \nxi. A student is liable to refund the scholarship amount at the discretion of the State \nGovernment, if during the course of the year, the studies for which the scholarship \nhas been awarded, is discontinued by him/her. \nxii. The regulations can be changed at any time at the discretion of the Government \nof India. \n8. Announcement and timeline of the scheme \n \nIn order to ensure timely disbursement of Scholarship, it is necessary that \nStates/UTs adhere to timelines for opening and closing of portal, verification of \napplications and disbursal of scholarship to students through DBT. State \nGovernments/UT Administration will make all efforts to open the portal for inviting \napplications by 1st May. The State will be responsible for proper advertisement of the \ndate of opening and closing of portal through print, social ",
+          "page": 14,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Opening, registration, verification and disbursement schedules in this table are suggestive. State-advertised dates control the actual round; the table is not a verified current student application deadline.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "15  \nand electronic media and all empanelled Institutions located outside the State are \ninformed about opening and closing dates. The applicant should submit/upload the \ncompleted application to the prescribed authority before the last date prescribed for \nreceipt of applications. The following timeline is suggested for opening, closing of \nportal, verification of students and Institute and disbursal of scholarship. \n \nPROCESS FRESH RENEWAL \nRegistration for Students 1 April – 30 th \nSeptember \n1 April– 30th \nSeptember \nCompletion of verification of \nInstitutes \n30th October  \n \n30th October Completion of verification by  \nInstitute/ State \n15th November \nDisbursement of scholarship  31st December 15th November \n \nThe above-mentioned timelines are only suggestive. The State should make efforts that \nfor the renewal students, the disbursement would start as and when the verification is \ncomplete. \n \nNote 1: The State/UT may ensure that a dedicated cell under Scholarship Division is \nmade which will be responsible for preparation of portal, grievance redressal in filling \napplications, integration of all Institutes including empanelled Institutes outside State \nwith the portal, verification of documents and eligibility of student, course, checking of \ncourse fee and stipend, Aadhar linked bank account and disbursal of scholarship. The \nexpenditure can be incurred from administrative expenses provided under the scheme \nas discussed in para 14 of guidelines. \n \n \n \n9. Publicity & Inviting Application \n \nThe State Governments/U.T. Administrations suitably publicize the Scheme and \ninvite applications by issuing an advertisement in local language, in the leading \nnewspapers of the State and through their respective websites and other media outfits. \nThe awareness programme may also be arranged in coordination with Civil Society \nOrganization (CSOs)/NGOS/PRIs/any other stake holders. ",
+          "page": 15,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "Existing beneficiaries receive revised stipend rates from the revision date, while their prevailing admission fee protection continues; do not retroactively apply new private-fee ceilings to every continuing student.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "18  \nor grievances relating to release of funds, mismatch of fund and beneficiary \nstatements etc. \nIV. Dynamic dashboard based on information shared by states in respect of \nbeneficiaries and fund release for regular monitoring by States and MoTA. \n \n \n12.2. In compliance of above guidelines, MoTA has developed DBT portal \n(dbttribal.gov.in) and has designed uniform data exchange format in consultation with \nStates/UTs and DBT Mission. The Ministry will issue separate instructions to the state \nwith regard to \n(i). Use of DBT portal/NSP Portal for data sharing. \n(ii). Integration of DBT/NSP Portal with State Portal, \n(iii). Standardization of data, \n(iv). Data Sharing Format \n(v). MIS reports and Dashboard. \n \n12.3. In case any fraudulent use of funds is detected, it would be the responsibility \nof the State/UT to get an enquiry conducted within a specific time limit. The State/UT \nwill share the outcome of the enquiry to MOTA. The State will provide necessary support \nincluding provision of data, beneficiary details to monitoring Agency engaged by \nEvaluation and Monitoring Division of MoTA/ Development, Monitoring and Evaluation \nOffice (DMEO) division of NITI Aayog or any other Central Agency required to review \nOutput-Outcome or performance of the scheme. \n \n12.3. MoTA will devise a mechanism to have periodic evaluation of the scheme through \na specialized agency in coordination with State Government. \n \n13. Transitory provision for existing beneficiaries \nIdentified beneficiaries of scholarships under the existing Post-Matric Scholarship \nScheme for STs will also get the benefit of the revised rate of scholarship from effective \ndate of revision of the scheme. As stated above against Note-2 to the table under para \n3.4.1, existing students who have enrolled themselves in a particular course within or \noutside State as per the prevailing guidelines at the time of admission will continue to \nget the benefit in respect of fee fixed by the State for the remaining period of the course. \n \n \n14. Central and State PMU \n \nIn order to ensure proper implementation of Scholarship scheme as per scheme \nguidelines, Government of India will provide funds for setting up Central PMU and \nfunds to State for setting up State PMU for which separate guidelines will be issued. ",
+          "page": 18,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      },
+      {
+        "description": "The Minister may change scheme provisions; later amendments and current State implementation must be checked before publication.",
+        "kind": "interpretation",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "passage": "19  \n \n \nRole of State PMU  \n \n \nI. Maintenance and upkeep of State portal, \nII. Data sharing requirement of DBT Mission, \nIII. Fund accountability requirement of PFMS, \nIV. Output outcome requirement of NITI Aayog \nV. grievance redressal mechanism, \nVI. Integration of all Institutes including empanelled Institutes outside State \nwith the portal, \nVII. helpline for resolving students’ query, \nVIII. Examination of data analysis reports prepared by MoTA. \n \n \nRole of Central PMU  \n \na). Portal and Data requirements:  \n \nI. Maintenance and upkeep of DBT portal, \nII. data sharing requirement with States including development of web services \nfor DBT. States, NSP States and NSP Portal \nIII. web Services for Darpan, PMO and Performance Dashboard. \nIV. Data Analytics and MIS reports. \n \na) Field visit and enquiry in case of evidence of misappropriation or \nmisutilization of funds. \nb) Interaction and capacity building of states though Video Conferencing, \nTraining. \nc) Engagement of professional agency for Periodical Monitoring & Evaluation \nof scheme as per requirement. \n \n15. Change in the provisions of the scheme \n \nThe provisions of this Scheme can be changed at any time with the approval \nof Minister of Tribal Affairs, Government of India. \n***** ",
+          "page": 19,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "person"
+      }
+    ],
+    "review_flags": [
+      "Independent semantic review unavailable at zero external AI budget. Human must approve the exact cited interpretation.",
+      "Supported source rules are separated from unknown applicant facts; no eligibility or award guarantee.",
+      "Income aggregate and guardian-supported orphan exemption cannot safely be flattened into an unconditional household-income threshold. Income condition remains unknown until scheme-specific evidence supports it.",
+      "Conditional document checklist: identity, domicile, qualifications/marks, photo, income unless exempt, disability evidence only where applicable; State online/DigiLocker retrieval may substitute uploads."
+    ],
+    "missing_fields": [
+      "Verified application-round opening and closing dates",
+      "Current fund or slot availability",
+      "Independent semantic verification"
+    ]
+  },
+  "candidate_hash": "a84828d1ac2e3726b15ceef448b53483d6bb0bdac496cec58e539e46596f342b",
+  "approval_hash": "392f8a7e86fe50b6f6bf22f24e095ec2e802b770233fbf9a8b15338be1bc48c5",
+  "pages": [
+    {
+      "page": 1,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": " \n \n \n \n \n \n \n \n \n \n \n \n \nGOVERNMENT OF INDIA \nMINISTRY OF TRIBAL AFFAIRS \nNEW DELHI. \n*** \n \n \n \nPOST MATRIC SCHOLARSHIP \n(CENTRALLY SPONSORED SCHEME) \n \n \n \nFOR THE STUDENTS BELONGING TO \nSCHEDULED TRIBE FOR STUDIES IN INDIA \n \n \n \n \nREGULATION GOVERNING THE AWARD OF SCHOLARSHIP \n(APPLICABLE FROM 01-04-2022) ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F1",
+        "/CIDFont+F2",
+        "/CIDFont+F3"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 2,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "CONTENTS \n \n \nSl. No. Particulars Page no \n1 Introduction 3 \n2 Objectives 3 \n3 Salient feature of the Scheme 3 \n3.1 Scope 3 \n3.2 Conditions of Eligibility 3-4 \n3.3 Income Criteria 5 \n3.4 Value of Scholarship 5 \n3.4.1Fee Component 6 \n3.4.2Stipend 7-8 \n4 Empanelment of Institutions/universities/colleges within \nand outside states \n8-9 \n5 Selection of candidates 9-10 \n5.1 Role of Institute Nodal Officer (INO) 10-11 \n5.2 Role of District/ State Nodal Officer 11 \n5.3 Role of Ministry 11-12 \n6 Documents required 12-13 \n7 Duration and renewal of scholarship 13-14 \n8 Announcement and timeline of the scheme 14-15 \n9 Publicity and Inviting Application 15 \n10 Funding pattern of the scheme 16 \n11 Procedure for claiming and release of GoI assistance 16-17 \n12 Monitoring & Evaluation 17-18 \n13 Transitory provision for existing beneficiaries 18 \n14 Central and State PMU 18-19 \n15 Change in the provisions of the scheme 19 ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F2",
+        "/CIDFont+F4"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 3,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "3  \n1. Introduction \n \nIt is a Centrally Sponsored Scheme implemented by Ministry of Tribal Affairs to grant \nscholarship to eligible ST students for pursuing higher education starting from class \nXI to Post Graduation courses in India. \n \n2. Objective \n \n \na. To enable eligible Scheduled Tribe students to undertake quality education \nfrom Post Matric to Post Graduate level by providing them financial \nassistance. \nb. To create an error free platform ensuring that the targeted beneficiaries \nreceive scholarship on time. \n \n3. Salient features of the Scheme \n \n3.1. Scope \n \nScholarship under the Scheme will be available to ST students for studies in India and \nwill be directly transferred to the account of students. The scholarship will be awarded \nby the Government of the State/Union Territory to which the applicant belongs as per \nthe terms of domicile decided by the State/UT. \n \n3.2. Conditions of eligibility  \n \n \na. The student should belong to Scheduled Tribe so specified in relation to the \nState/Union Territory to which he/she actually belongs (Domicile State). \nb. Student should have passed the Matriculation or Higher Secondary or any higher \nexamination of a recognized University or Board of Secondary Education. \nc. The family income of student from all sources should not exceed Rs.2.50 lakh per \nannum. \nd. The student should have a valid account in a Schedule Bank linked with Aadhar \nand Mobile number. \ne. The student should not be getting any other scholarship. \nf. The scholarships will be given for study of recognized post-matriculation/ post-\nsecondary courses, recognized by the concerned approving authority, pursued in \nfollowing category of Institutions/Universities/Colleges. \n \ni. All Government Institutes/Colleges/Universities \nii. Institutions of National Importance; ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F2"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 4,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "4  \niii. Central University/ State university/ Autonomous colleges recognized by \nUGC and Universities/ Colleges recognized under section 2(f) and/or \n12(b) of UGC Act; \niv. Deemed Universities; \nv. Private Universities recognized by State/Centre with ‘A’ level or \nequivalent accreditation by NAAC, NBA; \nvi. Private Professional Institutions affiliated to a recognized Central/State \nUniversity \nvii. Schools /colleges recognized by Govt/Govt aided for Classes XI to \nclass XII; \nviii. Diploma granting Institutions as recognized by State/UT Governments; \nix. Vocational Training Institute affiliated to National Council of Vocational \nTraining (NCVT); \nx. Institutions affiliated/approved by the appropriate bodies like MCI/AICTE \netc or any regulatory body established by State/Centre as approving \nauthority for particular course. \n \n \nNote 1: Under “National fellowship & Scholarship for Higher Education of ST students” \nScheme [Top class Scholarship], MoTA is providing Scholarships to students for \npursuing graduation and post-graduation courses in Top Class Institutes (currently 252) \nacross India. To avoid duplicity, students pursuing courses in such Institutes will \nnot be entitled for benefit under Post Matric Scholarship . All students already \nregistered under Post Matric Schemes till 2020-21 will however continue to be funded \nunder the scheme till completion of course. The new students admitted after issuance of \nguidelines will be registered under the scholarship component of the “National fellowship \n& Scholarship for Higher Education of ST students” Scheme from academic year 2021-\n22. List of 252 Top Class Institutes is given in the website of the Ministry (tribal.nic.in). \n \n \nNote 2: State Governments/UTs will gradually shift towards institutions to be covered \nwhich ranks high as per NIRF of Ministry of Education for Post-matric scholarship \nscheme so as to ensure better employability. \n3.2.1. Candidates who complete a course in one stream will not be eligible to take \ndiploma/degree course of different stream. For example, student will not be eligible for \nscholarship for pursuing B. Com after completing B.A or BSC or MBBS after doing \nB.Tech. \n3.2.2. Scholarship holder under this scheme can hold only one scholarship/stipend at a \ntime. If awarded any other scholarship/stipend, the student can exercise his/her option \nfor either of the two scholarships/stipends, whichever is more beneficial to him/her and ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F3",
+        "/CIDFont+F5"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 5,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "5  \nshould inform the awarding authority through the Head of the Institution about the option \nmade. \n3.3. Income Criteria \n \nScholarships will be paid to the students whose family income from all sources \ndoes not exceed Rs.2,50,000/- (Rs. Two lakh fifty thousand only) per annum. \n \nThe family income shall be computed in the following manner: - \n \nI. In case where both father and mother are working, the combined income of both \nof them from all sources shall be taken into account in computing total family \nincome. \nII. In case any other member of the family, other than father and mother is an earning \nmember, his or her income shall not be included in computing total family income. \nIII. In case only one parent is alive, the income of that parent shall be taken into \naccount for considering total family income . If other sibling or family member \nis an earning member, their income shall not be included in computing total family \nincome. \nIV. In case of an orphan, supported by a guardian, income criteria shall not apply. \n \n \nNote 1: Definition of Income - Income means gross income including income from all \nsources without any exemption and deductions available in the Income Tax Act. \n \nNote 2: Income certificate is required to be taken once only i.e. at the time of admission \nto course which will be valid for the entire duration of the course. At the time of renewal \nin second or subsequent year of the course, fresh income certificate is not required. \n \nNote 3: The income certificate given at the time of admission should be taken in the \nsame year for which the admission is taken. In the case of salaried employee, the income \nof previous financial year will be considered for the purpose of eligibility. For example, if \ncandidate applies afresh for academic year 2021-22, the family income for financial \nyear 2020-21 would be required. \n \n \n3.4. Value of scholarship  \n \nThe scholarship will have two components, payment of compulsory non- \nrefundable fees for the course pursued by the student and the monthly stipend. ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F2",
+        "/CIDFont+F3",
+        "/CIDFont+F5"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 6,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "6  \n3.4.1. Fee component: \n \nThe fee component will depend on type of course pursued by the student. The \ncourses have been divided in 4 categories. \n \nTable 1 \n \nGroup Courses \nGroup I Graduate and Post Graduate courses leading to Degree, PG \nDiploma, MPhil, PhD in professional courses in various streams \nGroup Il All non-professional recognized courses leading to a Graduate, Post \nGraduate Degree not covered under Group I in Arts, Science and\nCommerce like BA/B.Sc/B.Com or MA/MSc/M.Com etc \nGroup III Vocational stream, ITI  \nPolytechnics, etc. \ncourses, 3  year diploma courses in \nGroup IV All post-matriculation level non-degree courses for which entrance  \nqualification is High School (Class X), e,g. senior secondary \ncertificate (class XI and XII). \n \nNote 1: The fee component will be decided by the State Level Fee Fixation Committee \nof the state. In case of students studying in private sector institutes there will be a ceiling \nof Rs.2.50 lakhs per annum per student for Engineering Courses and Rs.6.00 lakh per \nannum for MBBS/ MS/ MD courses and Rs.1.00 lakh per annum for other courses as far \nas support of Government of India is concerned. However, the concerned State \nGovernment/UT Administration is free to provide scholarship over and above the limit \nspecified above to students studying in private sector Institutes. For accounting \npurpose, such additional amount, if any, would be accounted for separately in the State \nportal. \n \nNote 2: The guidelines will apply prospectively for students taking fresh admission from \n1.4.2022. It is clarified that existing students who have enrolled themselves in a particular \ncourse within or outside State as per the prevailing guidelines at the time of admission \nwill continue to get the benefit in respect of fee fixed by the State for the remaining period \nof the course. The new guidelines will be applicable in respect of students who apply in \nPost Matric Scholarship Scheme on or after 1.4.2022. ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F2"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 7,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "7  \n3.4.2. Stipend: \n \nThe student will be entitled to stipend as per rates listed below. \n \n \nTable:2 \n \nGroup Courses Hostellers Day Scholar \nMonthly Annually Monthly Annually  \nGroup I Bachelor, Master Degree,\nMPhil/PhD degree   leading\nto Degree, PG Diploma, in\nprofessional courses in \nvarious streams \n \n \n1200 \n \n \n12000 \n \n \n550 \n \n \n5500 \nGroup Il All non-professional \nrecognized courses leading\nto a Bachelor, Master Degree,\nMPhil/PhD degree not\ncovered under Group I in\nArts, Science and Commerce\n like \nBA/B.Sc/B.Com or \nMA/MSc/M.Com \n \n \n \n \n820 \n \n \n \n \n8200 \n \n \n \n \n530 \n \n \n \n \n5300 \nGroup III Vocational stream, ITI\ncourses, 3 year diploma\ncourses in Polytechnics, \netc. \n \n570 \n \n5700 \n \n300 \n \n3000 \nGroup-IV All post-matriculation level\nnon-degree courses for\nwhich entrance qualification\nis High School (Class X),\ne.g.      senior      secondary  \ncertificate (class XI and XII).  \n \n \n380 \n \n \n3800 \n \n \n230 \n \n \n2300 \n \nNote 1: It needs to be clarified that the stipend is a sort of incentive provided to a student \nfor pursuing a particular course and in no way meant to provide for reimbursement of \nboarding and lodging charges like mess, hostel or other similar charges. The stipend will \nbe given to the student as per rates according to course listed in Group-I to IV. \nHowever, the concerned State Government/UT Administration is free to provide the \nstipend over and above the prescribed rates of the scheme. For accounting purpose, \nsuch additional amount, if any, would be accounted for separately in the State portal. ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F2",
+        "/CIDFont+F5",
+        "/CIDFont+F3"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 8,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "8  \nNote 2: In order to provide quality boarding and lodging facility to students within and \noutside States/UTs, all States/UTs are advised to identify cities where such Institutes \nare located that do not have availability of hostel. The States may seek grants from SCA \nto TSS/275(1) for construction of tribal hostels within and outside State. Such hostels \nwill however be open for students of all States. \n \nNote3: Normally the term 'Hostel' is applicable to a common residential building and \na common mess for the students run under the supervision of the educational institution \nauthorities. In case the college authorities are unable to provide accommodation in the \ncollege Hostel, an approved place of residence can also be treated as Hostel for the \npurpose of this scheme. The place will be approved by the Head of the Institution after \ndue inspection and keeping in view the rules and regulations laid down by the University, \nif any. In such case, a certificate to the effect that the student is residing in an approved \nplace of residence as he is unable to get accommodation in the college hostel should be \nfurnished by the Head of the Institution. \n \nIt is further clarified that such deemed hostels should consist of such accommodation as \nis hired at least by a group of 5 (five) students living together, usually with common \nmess arrangements. \n \n \nNote 4: Additional Disability Allowance: - In addition to stipend provided in Table- 2 \nabove, an additional Stipend of Rs. 800/-per month (Rs. 9600 annually) will be \ngiven to the Divyangjan student who is hosteller and Rs.600 (Rs 7200 annually) to \nDay scholar. The disability as defined under the relevant ‘Disabilities Act’ has to be \ncertified by competent medical authority of the State Govt./UT Administration. The \nprovisions of Disability allowance will also apply to leprosy-cured and students having \nsickle cell Anemia or Thalassemia as notified by Ministry of Social Justice and \nempowerment \n \n4. Empanelment of Institutions/universities/colleges within and outside states \n \na. It would be the responsibility of the State to empanel the eligible Institutes within \nand outside states where student can take admission. Students will be free to \ntake admission in any Government School/ Institute/College/University within and \noutside the domicile State. In respect of Non- Government Schools/ \nInstitutes/Colleges/Universities located within and outside domicile State, each \nState would empanel and prepare a list of such Non-Government Institutes and \nthe courses for which such Institutes are eligible as per Group-I to IV. States \nwould share such list with MoTA on its portal. \nb. The state Govt. shall ensure that empanelled Non- Government Schools/ \nInstitutes/Colleges/Universities located inside and outside the state possess ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F5",
+        "/CIDFont+F3",
+        "/CIDFont+F2"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 9,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "9  \ndesired Infrastructure and has capacity to provide quality education. A \nmechanism will be devised for Inspection of such Institutes by domicile State \nin coordination with respective destination state where such Institute is located. \nc. State Government before awarding scholarship to a student will verify \nregistration, affiliation and accreditation, courses being offered and number of \nseats approved for each course in Schools/ Institutes/Colleges/Universities. \nd. In the application form, it will be mentioned that the student is studying in an \nInstitute outside the State/UT and data in respect of that Institute along with \nnecessary affiliation and accreditation will be captured in online form. \ne. The concerned Non-Government School/ Institute/College will not force the \nstudent to pay the fee if there is delay in disbursement of scholarship to student. \nIt would be the responsibility of concerned State Government to ensure that the \nstudent is allowed to sit in the exams and attend classes even if there is delay \nin payment of fee by State Government. State may take such Undertaking from \nthe Institutes at the time of empanelling them.   The State will however ensure \nthat any grievance of such School/ Institute/College/University is addressed on \npriority. State may create special cell in Scholarship Division for empanelment, \ninspection and grievance redressal of such Non-Government School/ \nInstitute/College, for which expenditure can be incurred from administrative \nexpenses provided under the scheme as discussed in para 14 of guidelines. \nf. The state may decide whether the entire fee will be credited to the account of \nstudent by DBT mode or the tuition fee may go to Institute and the stipend to \nthe student. \n \n5. Selection of candidates \n \n \ni. All States/UTs are required to develop an Online Platform for inviting \nonline applications and disbursement through DBT mode into the bank \naccount of student. The states/UTs have option to opt for National \nScholarship Portal for inviting such applications, if State/UT does not have \nown portal. \n \nii. The States/UTs would obtain necessary documents from applicants in \nsupport of eligibility of the applicants. Any student found to have stated \nwrong facts and misrepresented facts would become ineligible and \ndebarred from any benefits of the scheme. ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F2"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 10,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "10  \niii. Before initiating registration process, students are advised to carefully \ngo through the instructions of State /NSP portal and take care of the \nfollowing: \n \na) Candidates belonging to one State (Domicile State) but studying in other \nState will be awarded scholarships by the State to which they belong \n(domicile State) and will submit their applications to the competent \nauthorities in their domicile State. The student can take admission in any \nGovernment Institute within or outside the state. As far as Non-\nGovernment Institutes are concerned, the students can take admission \nonly in empanelled Institutes within and outside state as discussed in \npara 4(a) above. \n \nb) The Bank Account details (A/c Number, IFSC Code) given in \napplication is correct and keep the account active (i.e. non-dormant). \nThe account should be held in the name of the student and linked with \nAadhar and Mobile number to ensure timely DBT payment. \n \nc) The resolution/quality of documents and photo uploaded is adequate \nand document is legible and clear. \n \nd) The mobile number provided in the application is correct, active and \nbelongs to the applicant or the parent. The student should preferably \ncontinue the same mobile number linked with the bank account for entire \nperiod of course. \n \ne) The student/applicant should take timely action(s) on the SMS received \nfrom State owned portal/NSP \n \nf) The applicant should follow up with Institutes for application verification \nbefore the deadlines. \n \n \ng) The applicant should rectify the error(s) and comply with the remarks \nmade in the application in case the application is marked as defective \nin State owned portal/NSP. \n \n \n5.1. Role of Institute Nodal Officer (INO)  \n \nThere will be a Nodal Officer for every Institute. The Institute Nodal officer using \nportal must adhere to the following:",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F2"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 11,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "11  \na. The Nodal officer get registered in the portal with valid documents issued \nby the Institute \nb. The Institute/School shall possess a valid AISHE/U-DISE/NCVT/SCVT \ncode, before registering on the portal. In case the institute is not registered, \nthe Nodal Officer can add it by providing the requisite details. \nc. The primary role of the Institute Nodal officer is 1st Level verification of the \napplications submitted by applicants at portal. The Institute Nodal officer \nmust verify the correctness of details in the application form and uploaded \ndocuments submitted by the student/ applicant, and maintain physical \ncopies of supporting documents submitted by the student/ applicant. The \nDistrict/State/Ministry Nodal Officer can ask for copies of these documents \nfrom the Institute Nodal Officers, as and when required. \nd. The Institute Nodal officer has the option to either verify the application, \nreject the application or make the application defective. In case she/he \nchooses to reject or defect the application, the reasons for rejection or \ndefect must be provided, so that the same can be displayed to the \nstudent/applicant. \n \n \n5.2. Role of District/ State Nodal Officer  \n \nThe primary role of District/ State Nodal officer is to verify the documents at \nsecond/third Level. \n \ni. The District/ State Nodal Officer shall verify the correctness of details in the \napplication form and uploaded documents submitted by the student/applicant \nas per guidelines of the related scheme. \nii. The District / State Nodal officer can either verify the application, make the \nApplication defective or reject the application giving reason. \niii. The District / State Level Nodal officer shall monitor overall pendency of the \napplications for the scheme at Institute Level. \niv. The District / State Nodal officer shall ensure that the applications are \nscrutinized well-in-time by the Institute, thus avoiding the last-minute rush to \nverify the applications, that the same can be displayed to the \nstudent/applicant. \n \n5.3. Role of Ministry: \n \nThe primary role of the Ministry is to monitor the overall progress of the \nscheme. The Ministry shall provide the guidelines to the States/UTs and for \ndevelopment of portal as per the requirements of the Ministry. ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F2"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 12,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "12  \na. The Ministry shall provide PFMS configuration details (agency ID, Agency \nname, PFMS scheme code, DBT mission code, beneficiary type, \npayment purpose code) to States/UTs \nb. The Ministries shall verify the correctness of Scheme configuration, \nincluding but not limited to the eligibility criteria, important dates etc. \nc. The Ministries shall provide proper IT platform to facilitate state to upload \nbeneficiary data on its portal and would issue necessary instructions to \nStates/UTs. \n \n \n6. Documents required: Students need to carefully go through State/ NSP portal \nfor required documents to be uploaded with the application form as mentioned in clause \n3 of guidelines. \n \na. Aadhar Number \nb. Domicile certificate \nc. Scanned copy of certificates, diploma, degree etc. in respect of all \nexaminations passed. \nd. Last qualified marks [percentage/Equivalent percentage in case of \nCGPA/OGPA etc.] \ne. ST certificate issued by competent authority of State/UT. \nf. Family Income Certificate. \ng. Disability certificate. \nh. Scanned copy of the passport size photograph \n \n \nThe State/UT may specify the procedure for issuing ST certificate, family Income \nCertificate and Disability certificate and the competent authority to issue such \ncertificate. If the State has online system of issuing such certificate including \ncertificate of examination passed, State/UT may link the State/UT portal through Digi \nlocker so that the certificates placed in Digi locker can be fetched automatically. \n \nNote 1:- Self-declarations or affidavits of self-assessment of income shall not be \nacceptable and the State/UT Governments shall make appropriate arrangements to \nnotify a competent income-certificate issuing authority for this purpose. \n \n6.1. All States/UTs are required to establish a dedicated Helpdesk/Grievance \nredressal mechanism to address the students’ query. The primary role of the Helpdesk \nat State/UT level is to provide first level assistance to the users at various levels of portal. \nThe States/UTs shall: ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F2"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 13,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "13  \na. Assist the student(s)/applicant(s) for filling the registration and application \nforms and provide technical support for queries on fee, Institution details etc. \nb. Escalate the critical issues to State/NSP team, as and when required. \n \n6.2. The States shall maintain a complete database of the beneficiaries under \nvarious other scholarship schemes to ensure de-duplication of the beneficiaries \n \n7. Duration and renewal of scholarship  \n \ni. The scholarship will be payable for the entire course for which the application has \nbeen made. \n \nii. In the application form student will be required to mention the duration of course.    \nThe award once made will be tenable from the stage at which it is given till the \ncompletion of course subject to good conduct and regularity in attendance. \n \niii. In case a student couldn't apply for scholarship for an eligible course in the 1st \nyear of the course, he can apply for scholarship in 2nd or subsequent year and \nwould be entitled for scholarship for the remaining duration of course from the \ndate of application, subject to the eligibility. \n \niv. The scholarship to a student will be renewed from year to year provided he/she \nhas completed the previous class successfully and moves to the next class. \n \nv.  In case he/she has failed in one year, he/she will not be entitled to scholarship \ntill he/she clears that class and gets promoted to the next class. \n \nvi. However, if a student is unable to appear in the annual examination owing to \nillness and/or on account of any other unforeseen event, the award may be \nrenewed for the next academic year on submission of medical certificate and/or \nother required sufficient proof to the satisfaction of the Head of the Institution and \nhis/her certifying that the student would have passed had he/she appeared in \nthe examination. \n \nvii. In accordance with the Regulations of a University/institution, if a student is \npromoted to the next higher class even though he/she may not have actually \npassed in lower class and is required to take examination of the junior class again \nafter sometime, he/she will be entitled to scholarship for the class to which he/she \nis promoted if the student is otherwise eligible for scholarship. \n \nv. Stipend is payable from 1 st April or from the month of admission, whichever is \nlater, to the month in which the examinations are completed, at the end of the \nacademic year for a maximum period of 10 months. ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F2"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 14,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "14  \nvi. In case of renewal of scholarship awarded in the previous years, stipend will be \npaid from the month following the month up to which scholarship was paid in \nthe previous year, if the course of study is continuous. \nvii. Scholarship will not be paid for the period of internship/houseman-ship in the \nM.B.B, S. course or for a practical training in other course if the student is in \nreceipt of some remuneration during the internship period or some \nallowance/stipend during the practical training in other course. \nviii. The scholarship is dependent on the satisfactory progress and conduct of the \nscholars. If it is reported by the Head of the Institution at any time that a student \nhas by reason of his/her own act of default failed to make satisfactory progress \nor has been guilty of misconduct such as resorting to or participating in strikes, \nirregularity in attendance without permission of the authorities concerned etc., the \nauthority sanctioning the scholarship may either cancel the scholarship or stop \nor withhold further payment for such period as it may think fit. \nix. If a student is found to have obtained a scholarship by false statements, his/her \nscholarship will be cancelled forthwith and the amount of the scholarship paid \nwill be recovered, at the discretion of the concerned State Government. The \nstudent concerned will be blacklisted and debarred for scholarship in any scheme \nforever. \nx. A scholarship awarded may be cancelled if the scholar changes the subject of the \ncourse of study for which the scholarship was originally awarded or changes the \nInstitution of study, without prior approval of the State Government. The Head \nof the Institution shall report such cases to the respective States/UTs to stop \npayment of the scholarship money. The amount already paid may also be \nrecovered at the discretion of the State Government. \nxi. A student is liable to refund the scholarship amount at the discretion of the State \nGovernment, if during the course of the year, the studies for which the scholarship \nhas been awarded, is discontinued by him/her. \nxii. The regulations can be changed at any time at the discretion of the Government \nof India. \n8. Announcement and timeline of the scheme \n \nIn order to ensure timely disbursement of Scholarship, it is necessary that \nStates/UTs adhere to timelines for opening and closing of portal, verification of \napplications and disbursal of scholarship to students through DBT. State \nGovernments/UT Administration will make all efforts to open the portal for inviting \napplications by 1st May. The State will be responsible for proper advertisement of the \ndate of opening and closing of portal through print, social ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F2"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 15,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "15  \nand electronic media and all empanelled Institutions located outside the State are \ninformed about opening and closing dates. The applicant should submit/upload the \ncompleted application to the prescribed authority before the last date prescribed for \nreceipt of applications. The following timeline is suggested for opening, closing of \nportal, verification of students and Institute and disbursal of scholarship. \n \nPROCESS FRESH RENEWAL \nRegistration for Students 1 April – 30 th \nSeptember \n1 April– 30th \nSeptember \nCompletion of verification of \nInstitutes \n30th October  \n \n30th October Completion of verification by  \nInstitute/ State \n15th November \nDisbursement of scholarship  31st December 15th November \n \nThe above-mentioned timelines are only suggestive. The State should make efforts that \nfor the renewal students, the disbursement would start as and when the verification is \ncomplete. \n \nNote 1: The State/UT may ensure that a dedicated cell under Scholarship Division is \nmade which will be responsible for preparation of portal, grievance redressal in filling \napplications, integration of all Institutes including empanelled Institutes outside State \nwith the portal, verification of documents and eligibility of student, course, checking of \ncourse fee and stipend, Aadhar linked bank account and disbursal of scholarship. The \nexpenditure can be incurred from administrative expenses provided under the scheme \nas discussed in para 14 of guidelines. \n \n \n \n9. Publicity & Inviting Application \n \nThe State Governments/U.T. Administrations suitably publicize the Scheme and \ninvite applications by issuing an advertisement in local language, in the leading \nnewspapers of the State and through their respective websites and other media outfits. \nThe awareness programme may also be arranged in coordination with Civil Society \nOrganization (CSOs)/NGOS/PRIs/any other stake holders. ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F2"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 16,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "16  \n10. Funding pattern of the scheme \n \nThe Scheme is a Centrally Sponsored Scheme implemented by the State \nGovernments and Union Territory Administrations. The contribution from Government \nof India would be 75% and the state contribution would be 25%. In respect of North East \nstates and hilly states, the contribution from Government of India would be 90% and \nthe state contribution would be 10%. In case of UTs like Andaman & Nicobar without \nLegislative Assembly and own grants, Govt. of India’s contribution will be 100%. \n \n10.1.     It is the endeavor of the Ministry to transfer scholarship to the students by DBT \nmode preferably using the Aadhar Enabled Payment System. The Ministry will devise a \nmechanism with NSP so that the Central share in the scheme can be released on DBT \nmode directly into the bank accounts of the students in consultation with states. The \nstates will be required to complete necessary verification of the student at Institute, \nDistrict and State level. After necessary verification, the state will share the data of the \neligible students to the NSP, who in turn will release the amount to the bank account \nof the student.   Necessary instructions in this regard will be issued after consultation \nwith states.   Till the time said mechanism is developed, the Central share of scholarship \nwill be transferred to the states and the states/UTs with their contribution would disburse \nthe scholarship amount through DBT directly in the bank account of the student. \n \n11. Procedure for claiming and release of central assistance \n \n(i). Central Assistance will be released to the States/UTs, in two or more instalments \ndepending on availability of the funds and compliance by the State/UT as per General \nFinancial Rules. Central Assistance would be released as per the guidelines issued by \nthe Department of Expenditure (DoE), Ministry of Finance from time to time. The states \nwill be required to comply with following conditions: - \n \na) The State has utilized the amount given in previous year and has submitted \nUtilization Certificate (UC). \nb) The amount has been disbursed to beneficiaries and the expenditure is \nreflected in PFMS. \nc) The State has also contributed their share in previous year corresponding to \nCentral Share. \nd) The state has submitted a Statement of Expenditure (SOE) of previous year, \namount actually utilized supported by utilization certificate. \ne) The state has opened the portal for inviting online applications. \nf) The State has submitted estimated expenditure based on the actual \nexpenditure of previous year. ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F2"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 17,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "17  \n(ii). Based on availability of funds and compliance by State/UT in respect of utilization \nof funds granted in previous year, the Central Share may be released to State/UT as per \nguidelines of DoE for timely disbursal of scholarship. \n \n(iii). The final instalment would be released to state on submission Utilization \nCertificate (UC) of the grants already released and the amount has been disbursed to \nbeneficiaries and the expenditure is reflected in PFMS.    The state would also submit \nstatement of expenditure giving details of total liability including central and state share. \n \n12. Monitoring & Evaluation \n \nMonitoring and Evaluation is used to assess the performance of the scheme \nand to ensure that the objectives for which the scheme is initiated are achieved. The \npurpose of monitoring and Evaluation is to improve current and future management \nof outputs, outcomes and impact. In this regard, DBT Mission has framed \nguidelines which have the following important components: \n \ni. IT based system to ensure transparency for inviting application, verification \nand disbursal of funds. \nii. Data should capture beneficiary information, including Aadhar Number and \nintegrate with Aadhar CIDR. \niii. The States/UTs should follow Local Government Directory (LGD) standard \niv. Institutions should use DISE/AISHE code. \nv. Bank account should be linked with Aadhar and Integrated with PFMS/State \nTreasury \nvi. Ministry to develop their own Scheme MIS \nvii. The States/UTs to share beneficiary data in uniform data exchange format \nviii. The State/UT Should integrate with DBT Bharat Portal for monthly reporting of \ndata \n \n \n12.1. In compliance of above guidelines, MoTA has developed DBT portal \n(dbttribal.gov.in) and has designed uniform data exchange format in consultation with \nStates/UTs and DBT Mission. Portal has the following features: \n \n \nI. Data sharing Modules to upload data through Webservices, Excel/CSV or manual \ndata entry. \nII. Communication Module for speedy communication with States/UTs. The module \nhas given facility to States/UTs to upload, UC, SOE and other documents. There \nis facility to send bulk messages and email to State and notification when a \ndocument is uploaded on notice board. \nIII. Grievance Module: States can register technical query regarding issues \npertaining to uploading of data, change of users, change in Log In ID and PW ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F2"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 18,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "18  \nor grievances relating to release of funds, mismatch of fund and beneficiary \nstatements etc. \nIV. Dynamic dashboard based on information shared by states in respect of \nbeneficiaries and fund release for regular monitoring by States and MoTA. \n \n \n12.2. In compliance of above guidelines, MoTA has developed DBT portal \n(dbttribal.gov.in) and has designed uniform data exchange format in consultation with \nStates/UTs and DBT Mission. The Ministry will issue separate instructions to the state \nwith regard to \n(i). Use of DBT portal/NSP Portal for data sharing. \n(ii). Integration of DBT/NSP Portal with State Portal, \n(iii). Standardization of data, \n(iv). Data Sharing Format \n(v). MIS reports and Dashboard. \n \n12.3. In case any fraudulent use of funds is detected, it would be the responsibility \nof the State/UT to get an enquiry conducted within a specific time limit. The State/UT \nwill share the outcome of the enquiry to MOTA. The State will provide necessary support \nincluding provision of data, beneficiary details to monitoring Agency engaged by \nEvaluation and Monitoring Division of MoTA/ Development, Monitoring and Evaluation \nOffice (DMEO) division of NITI Aayog or any other Central Agency required to review \nOutput-Outcome or performance of the scheme. \n \n12.3. MoTA will devise a mechanism to have periodic evaluation of the scheme through \na specialized agency in coordination with State Government. \n \n13. Transitory provision for existing beneficiaries \nIdentified beneficiaries of scholarships under the existing Post-Matric Scholarship \nScheme for STs will also get the benefit of the revised rate of scholarship from effective \ndate of revision of the scheme. As stated above against Note-2 to the table under para \n3.4.1, existing students who have enrolled themselves in a particular course within or \noutside State as per the prevailing guidelines at the time of admission will continue to \nget the benefit in respect of fee fixed by the State for the remaining period of the course. \n \n \n14. Central and State PMU \n \nIn order to ensure proper implementation of Scholarship scheme as per scheme \nguidelines, Government of India will provide funds for setting up Central PMU and \nfunds to State for setting up State PMU for which separate guidelines will be issued. ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F2"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 19,
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "text": "19  \n \n \nRole of State PMU  \n \n \nI. Maintenance and upkeep of State portal, \nII. Data sharing requirement of DBT Mission, \nIII. Fund accountability requirement of PFMS, \nIV. Output outcome requirement of NITI Aayog \nV. grievance redressal mechanism, \nVI. Integration of all Institutes including empanelled Institutes outside State \nwith the portal, \nVII. helpline for resolving students’ query, \nVIII. Examination of data analysis reports prepared by MoTA. \n \n \nRole of Central PMU  \n \na). Portal and Data requirements:  \n \nI. Maintenance and upkeep of DBT portal, \nII. data sharing requirement with States including development of web services \nfor DBT. States, NSP States and NSP Portal \nIII. web Services for Darpan, PMO and Performance Dashboard. \nIV. Data Analytics and MIS reports. \n \na) Field visit and enquiry in case of evidence of misappropriation or \nmisutilization of funds. \nb) Interaction and capacity building of states though Video Conferencing, \nTraining. \nc) Engagement of professional agency for Periodical Monitoring & Evaluation \nof scheme as per requirement. \n \n15. Change in the provisions of the scheme \n \nThe provisions of this Scheme can be changed at any time with the approval \nof Minister of Tribal Affairs, Government of India. \n***** ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/CIDFont+F4",
+        "/CIDFont+F2"
+      ],
+      "provenance": "pdf_physical_page"
+    }
+  ],
+  "pages_hash": "25c32279c8f32ef675348ccdd994d8904781101859e41c7bae1ae96604cd6a87",
+  "original_binary_hash": "0a198cda53699cce97f72c59608f63a5d282cee33e591ebb57b4d04b6efedc83",
+  "independent_review": {
+    "status": "unavailable",
+    "method": null,
+    "reason": "No separate semantic reviewer available at zero external paid AI budget. Agent 2 explicitly performs engineering checks only."
+  },
+  "human_required": true,
+  "publication_authorized": false
+}

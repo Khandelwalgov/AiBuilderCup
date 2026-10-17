@@ -294,7 +294,16 @@ def validate(raw, audited):
             )
         if item.field in {"benefits", "summary", "restrictions"} and value:
             text = " ".join(value) if isinstance(value, list) else str(value)
-            if not numbers(text).issubset(numbers(item.citation.passage)):
+            # A field may be supported by several exact page citations. Only
+            # source-bound passages participate; invented numbers still fail.
+            support = set().union(
+                *(
+                    numbers(other.citation.passage)
+                    for other in data.field_evidence
+                    if other.field == item.field and cited(other.citation, pages)
+                )
+            )
+            if not numbers(text).issubset(support):
                 problems.append(
                     issue(
                         "metadata_amount_not_in_clause",

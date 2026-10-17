@@ -1,0 +1,370 @@
+{
+  "key": "pms",
+  "baseline": {
+    "opportunity_id": "61fca8c6-8769-5977-baf2-27174174dff9",
+    "version_id": "c1e886d4-a2d1-5447-8141-f6c54f59746e",
+    "version": 1,
+    "title": "Procurement and Marketing Support (PMS) Scheme — individual MSE trade-fair participation",
+    "publication_state": "draft",
+    "content_hash": "a0bbff9257700b9d8dac83f6e20122bf45b90982a6edfe6b8fa4730e5fd8172d",
+    "snapshot_id": "db9e80cc-f579-5671-bbe7-4f624e7ec05b",
+    "source_id": "61e58698-e207-52b3-9dc5-4cb243fb199f",
+    "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+    "acquisition_snapshot_id": "bd36bc36-be61-415d-8274-95c1ad5ca2ad",
+    "stored_candidate_hash": "f27127943e420a1a07a6b601188a69850d73111f0dc2408b2e4a8faf831fb929",
+    "original_packet_sha256": "988c406259521329e944e1f2760468ef37aeceb98240b8d6f7c5c4045566efa8",
+    "original_focus": "Procurement and Marketing Support (PMS) Scheme — individual MSE trade-fair participation"
+  },
+  "focus": "Procurement and Marketing Support (PMS) Scheme — individual MSE trade-fair participation",
+  "disposition": "blocked_do_not_publish",
+  "candidate": {
+    "title": "Procurement and Marketing Support (PMS) Scheme — individual MSE trade-fair participation",
+    "summary": "Captured PMS guidelines describe the individual-enterprise trade-fair component. This historical baseline is retained for reconciliation, with no assertion of a currently open event.",
+    "issuer": "Ministry of MSME",
+    "category": "business",
+    "country": "IN",
+    "state": null,
+    "district": null,
+    "benefits": "The original captured table is retained as evidence; its garbled percentage text has been checked against original imagery. Current eligible recipients and event conditions require the later amendment bundle before these historical rates can be published.",
+    "restrictions": [
+      "HARD BLOCK: this is the historical 2022 baseline awaiting reconciliation of later official amendments; do not publish as current."
+    ],
+    "required_documents": [],
+    "document_evidence": [],
+    "opens_on": null,
+    "closes_on": null,
+    "apply_url": null,
+    "field_evidence": [
+      {
+        "field": "title",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "passage": "5 (l)/2021 -2Z/PMS/SFC & Scheme Guideline\nGovernment oflndia\nMinistry of MSME\nOfflce of the Development Commissioner (MSME)\nPMS Division\n)t *:t + *:* +\nNirman Bhawan, New Delhi\nDated: 2610712022\nSubject: New guidelines of Procurement and Marketing Support (PMS) Scheme -reg\nThe undersigned is directed to enclose a copy of the approved Guidelines of the\nProcurement and Marketing Support (PMS) Scheme and to state that the Guidelines are in\nsupersession ofthe earlier Guidelines issued vide O.M 5(ly20l6-MDA dated 20-Il-2019 and shall\ncome into force w.e.f. 26-07 -2022.\nThe new Guidelines are available on the website of the DC (MSME).\nv\n(Swa S\n'7s't\ni)\n'l\nJoint Development Commissioner\nEncl: As stated.\nTo,\nl. All Directors/HoO of MSME-DFOs/BT.MSME-DFOs/IvISME-TCs\n2. All offices and Autonomous Bodies under DC(MSME)\n3. CEO, KVIC\n4. Chairman. NSIC\n5. Chairman, Coir Board\nCopy to.\nL All Ministries/Departments ofthe Central Covemment\n2. CEO, NITI Aayog, New Delhi\n3. SS&FA, IF Wing, M/o MSME, Udyog Bhavan, New Delhi\n4. JS(SME),VI/o MSME,Udyog Bhavan, New Delhi\n5. PS to Hon'ble Minister (MSME)\n6. PS to Hon'ble Minister of State (MSME)\n7. PPS to Secretary @SME). Udyog Bhawan, New Delhi.\n8. PPS to AS&DC(MSME),O/o DC (MSME), Nirman Bhawan, New Delhi\nOFFICE MEMOR{NDUM\nI",
+          "page": 1,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "issuer",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "passage": "5 (l)/2021 -2Z/PMS/SFC & Scheme Guideline\nGovernment oflndia\nMinistry of MSME\nOfflce of the Development Commissioner (MSME)\nPMS Division\n)t *:t + *:* +\nNirman Bhawan, New Delhi\nDated: 2610712022\nSubject: New guidelines of Procurement and Marketing Support (PMS) Scheme -reg\nThe undersigned is directed to enclose a copy of the approved Guidelines of the\nProcurement and Marketing Support (PMS) Scheme and to state that the Guidelines are in\nsupersession ofthe earlier Guidelines issued vide O.M 5(ly20l6-MDA dated 20-Il-2019 and shall\ncome into force w.e.f. 26-07 -2022.\nThe new Guidelines are available on the website of the DC (MSME).\nv\n(Swa S\n'7s't\ni)\n'l\nJoint Development Commissioner\nEncl: As stated.\nTo,\nl. All Directors/HoO of MSME-DFOs/BT.MSME-DFOs/IvISME-TCs\n2. All offices and Autonomous Bodies under DC(MSME)\n3. CEO, KVIC\n4. Chairman. NSIC\n5. Chairman, Coir Board\nCopy to.\nL All Ministries/Departments ofthe Central Covemment\n2. CEO, NITI Aayog, New Delhi\n3. SS&FA, IF Wing, M/o MSME, Udyog Bhavan, New Delhi\n4. JS(SME),VI/o MSME,Udyog Bhavan, New Delhi\n5. PS to Hon'ble Minister (MSME)\n6. PS to Hon'ble Minister of State (MSME)\n7. PPS to Secretary @SME). Udyog Bhawan, New Delhi.\n8. PPS to AS&DC(MSME),O/o DC (MSME), Nirman Bhawan, New Delhi\nOFFICE MEMOR{NDUM\nI",
+          "page": 1,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "country",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "passage": "5 (l)/2021 -2Z/PMS/SFC & Scheme Guideline\nGovernment oflndia\nMinistry of MSME\nOfflce of the Development Commissioner (MSME)\nPMS Division\n)t *:t + *:* +\nNirman Bhawan, New Delhi\nDated: 2610712022\nSubject: New guidelines of Procurement and Marketing Support (PMS) Scheme -reg\nThe undersigned is directed to enclose a copy of the approved Guidelines of the\nProcurement and Marketing Support (PMS) Scheme and to state that the Guidelines are in\nsupersession ofthe earlier Guidelines issued vide O.M 5(ly20l6-MDA dated 20-Il-2019 and shall\ncome into force w.e.f. 26-07 -2022.\nThe new Guidelines are available on the website of the DC (MSME).\nv\n(Swa S\n'7s't\ni)\n'l\nJoint Development Commissioner\nEncl: As stated.\nTo,\nl. All Directors/HoO of MSME-DFOs/BT.MSME-DFOs/IvISME-TCs\n2. All offices and Autonomous Bodies under DC(MSME)\n3. CEO, KVIC\n4. Chairman. NSIC\n5. Chairman, Coir Board\nCopy to.\nL All Ministries/Departments ofthe Central Covemment\n2. CEO, NITI Aayog, New Delhi\n3. SS&FA, IF Wing, M/o MSME, Udyog Bhavan, New Delhi\n4. JS(SME),VI/o MSME,Udyog Bhavan, New Delhi\n5. PS to Hon'ble Minister (MSME)\n6. PS to Hon'ble Minister of State (MSME)\n7. PPS to Secretary @SME). Udyog Bhawan, New Delhi.\n8. PPS to AS&DC(MSME),O/o DC (MSME), Nirman Bhawan, New Delhi\nOFFICE MEMOR{NDUM\nI",
+          "page": 1,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "category",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "passage": "GUIDELINES OF PROCUREMENT AND MARKETING SUPPORT (PMSI SCHEME\n1.O INTRODUCTION:\nMarketrng, a strategic tool for business development, is critical for the growth and\nsurvival of MSMEs. Due to the lack of information, scarcity of resources and\nunorganized ways of selling /marketing, MSME sector often faces problems in\nexplonng new markets and retaining the existing ones. Keeping in view these facts,\nthe Procurement and Marketing Support Scheme has been introduced to enhalce\nthe marketability of products and services in the MSME sector.\n2.O THE SCHEME AIMS AT THE FOLLOWING:\nFromoting new market access initiatives like organizing / participation in\nNational / International Trade Fairs / Exhibitions / MSME Expo, etc. held\nacross ttre country.\nTo create awareness and educate the MSMEs about importance / methods/\nprocess of packaging in marketing, latest packaging technologr, import-export\npolicy and procedure, GeM portal, MSME Conclave, latest developments in\ninternational / national trade and other subjects / topics relevant for market\naccess developments.\n3.O ELIGIBILITY CONDITION:\nManufacturing / Service sector MSEs having valid Udyam Registration (UR)\nCertificate.\n4.O IMPLEMENTING AGENCIES:\n5.O SCHEME COMPONENTS:\n(Il Market Access Initiatives across the country:\n1\n(A) Participation of Individual MSEs in Trade Fairs / E:rhibitions\nEligible items lScale of assistance\nSpace Rent charges O%o subsidy on built up space rent paid for Genera-i\nunits and IOOo/o for\nmen/ NER/ PH /Aspirational District units on\nstal1 size of the event for Micro and Small\ntegory\nSC/ ST/wo\nm\nEnterprises\n1. DC (MSME) through its field organizations namely MSME Development\nInstitutes and Technolory Centres.\n2. Other {ie1d organizations of M/o MSME namely NSIC, KVIC, Coir Board\n3. Other Central Gort. Ministries through their departments/ organizations/\ncorporations/autonomous bodies and agencies\n4. Departments /Organizalions / Corporations / Autonomous bodies and\nAgencies of State Governments.\nW^*,dt\\",
+          "page": 2,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "summary",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "passage": "5 (l)/2021 -2Z/PMS/SFC & Scheme Guideline\nGovernment oflndia\nMinistry of MSME\nOfflce of the Development Commissioner (MSME)\nPMS Division\n)t *:t + *:* +\nNirman Bhawan, New Delhi\nDated: 2610712022\nSubject: New guidelines of Procurement and Marketing Support (PMS) Scheme -reg\nThe undersigned is directed to enclose a copy of the approved Guidelines of the\nProcurement and Marketing Support (PMS) Scheme and to state that the Guidelines are in\nsupersession ofthe earlier Guidelines issued vide O.M 5(ly20l6-MDA dated 20-Il-2019 and shall\ncome into force w.e.f. 26-07 -2022.\nThe new Guidelines are available on the website of the DC (MSME).\nv\n(Swa S\n'7s't\ni)\n'l\nJoint Development Commissioner\nEncl: As stated.\nTo,\nl. All Directors/HoO of MSME-DFOs/BT.MSME-DFOs/IvISME-TCs\n2. All offices and Autonomous Bodies under DC(MSME)\n3. CEO, KVIC\n4. Chairman. NSIC\n5. Chairman, Coir Board\nCopy to.\nL All Ministries/Departments ofthe Central Covemment\n2. CEO, NITI Aayog, New Delhi\n3. SS&FA, IF Wing, M/o MSME, Udyog Bhavan, New Delhi\n4. JS(SME),VI/o MSME,Udyog Bhavan, New Delhi\n5. PS to Hon'ble Minister (MSME)\n6. PS to Hon'ble Minister of State (MSME)\n7. PPS to Secretary @SME). Udyog Bhawan, New Delhi.\n8. PPS to AS&DC(MSME),O/o DC (MSME), Nirman Bhawan, New Delhi\nOFFICE MEMOR{NDUM\nI",
+          "page": 1,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "benefits",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "passage": "GUIDELINES OF PROCUREMENT AND MARKETING SUPPORT (PMSI SCHEME\n1.O INTRODUCTION:\nMarketrng, a strategic tool for business development, is critical for the growth and\nsurvival of MSMEs. Due to the lack of information, scarcity of resources and\nunorganized ways of selling /marketing, MSME sector often faces problems in\nexplonng new markets and retaining the existing ones. Keeping in view these facts,\nthe Procurement and Marketing Support Scheme has been introduced to enhalce\nthe marketability of products and services in the MSME sector.\n2.O THE SCHEME AIMS AT THE FOLLOWING:\nFromoting new market access initiatives like organizing / participation in\nNational / International Trade Fairs / Exhibitions / MSME Expo, etc. held\nacross ttre country.\nTo create awareness and educate the MSMEs about importance / methods/\nprocess of packaging in marketing, latest packaging technologr, import-export\npolicy and procedure, GeM portal, MSME Conclave, latest developments in\ninternational / national trade and other subjects / topics relevant for market\naccess developments.\n3.O ELIGIBILITY CONDITION:\nManufacturing / Service sector MSEs having valid Udyam Registration (UR)\nCertificate.\n4.O IMPLEMENTING AGENCIES:\n5.O SCHEME COMPONENTS:\n(Il Market Access Initiatives across the country:\n1\n(A) Participation of Individual MSEs in Trade Fairs / E:rhibitions\nEligible items lScale of assistance\nSpace Rent charges O%o subsidy on built up space rent paid for Genera-i\nunits and IOOo/o for\nmen/ NER/ PH /Aspirational District units on\nstal1 size of the event for Micro and Small\ntegory\nSC/ ST/wo\nm\nEnterprises\n1. DC (MSME) through its field organizations namely MSME Development\nInstitutes and Technolory Centres.\n2. Other {ie1d organizations of M/o MSME namely NSIC, KVIC, Coir Board\n3. Other Central Gort. Ministries through their departments/ organizations/\ncorporations/autonomous bodies and agencies\n4. Departments /Organizalions / Corporations / Autonomous bodies and\nAgencies of State Governments.\nW^*,dt\\",
+          "page": 2,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "restrictions",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "passage": "5 (l)/2021 -2Z/PMS/SFC & Scheme Guideline\nGovernment oflndia\nMinistry of MSME\nOfflce of the Development Commissioner (MSME)\nPMS Division\n)t *:t + *:* +\nNirman Bhawan, New Delhi\nDated: 2610712022\nSubject: New guidelines of Procurement and Marketing Support (PMS) Scheme -reg\nThe undersigned is directed to enclose a copy of the approved Guidelines of the\nProcurement and Marketing Support (PMS) Scheme and to state that the Guidelines are in\nsupersession ofthe earlier Guidelines issued vide O.M 5(ly20l6-MDA dated 20-Il-2019 and shall\ncome into force w.e.f. 26-07 -2022.\nThe new Guidelines are available on the website of the DC (MSME).\nv\n(Swa S\n'7s't\ni)\n'l\nJoint Development Commissioner\nEncl: As stated.\nTo,\nl. All Directors/HoO of MSME-DFOs/BT.MSME-DFOs/IvISME-TCs\n2. All offices and Autonomous Bodies under DC(MSME)\n3. CEO, KVIC\n4. Chairman. NSIC\n5. Chairman, Coir Board\nCopy to.\nL All Ministries/Departments ofthe Central Covemment\n2. CEO, NITI Aayog, New Delhi\n3. SS&FA, IF Wing, M/o MSME, Udyog Bhavan, New Delhi\n4. JS(SME),VI/o MSME,Udyog Bhavan, New Delhi\n5. PS to Hon'ble Minister (MSME)\n6. PS to Hon'ble Minister of State (MSME)\n7. PPS to Secretary @SME). Udyog Bhawan, New Delhi.\n8. PPS to AS&DC(MSME),O/o DC (MSME), Nirman Bhawan, New Delhi\nOFFICE MEMOR{NDUM\nI",
+          "page": 1,
+          "language": "English",
+          "basis": "explicit"
+        }
+      }
+    ],
+    "requirements": [
+      {
+        "description": "The captured baseline describes Udyam-registered manufacturing or service MSEs; this historical criterion remains unknown pending reconciliation.",
+        "kind": "eligibility",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "passage": "GUIDELINES OF PROCUREMENT AND MARKETING SUPPORT (PMSI SCHEME\n1.O INTRODUCTION:\nMarketrng, a strategic tool for business development, is critical for the growth and\nsurvival of MSMEs. Due to the lack of information, scarcity of resources and\nunorganized ways of selling /marketing, MSME sector often faces problems in\nexplonng new markets and retaining the existing ones. Keeping in view these facts,\nthe Procurement and Marketing Support Scheme has been introduced to enhalce\nthe marketability of products and services in the MSME sector.\n2.O THE SCHEME AIMS AT THE FOLLOWING:\nFromoting new market access initiatives like organizing / participation in\nNational / International Trade Fairs / Exhibitions / MSME Expo, etc. held\nacross ttre country.\nTo create awareness and educate the MSMEs about importance / methods/\nprocess of packaging in marketing, latest packaging technologr, import-export\npolicy and procedure, GeM portal, MSME Conclave, latest developments in\ninternational / national trade and other subjects / topics relevant for market\naccess developments.\n3.O ELIGIBILITY CONDITION:\nManufacturing / Service sector MSEs having valid Udyam Registration (UR)\nCertificate.\n4.O IMPLEMENTING AGENCIES:\n5.O SCHEME COMPONENTS:\n(Il Market Access Initiatives across the country:\n1\n(A) Participation of Individual MSEs in Trade Fairs / E:rhibitions\nEligible items lScale of assistance\nSpace Rent charges O%o subsidy on built up space rent paid for Genera-i\nunits and IOOo/o for\nmen/ NER/ PH /Aspirational District units on\nstal1 size of the event for Micro and Small\ntegory\nSC/ ST/wo\nm\nEnterprises\n1. DC (MSME) through its field organizations namely MSME Development\nInstitutes and Technolory Centres.\n2. Other {ie1d organizations of M/o MSME namely NSIC, KVIC, Coir Board\n3. Other Central Gort. Ministries through their departments/ organizations/\ncorporations/autonomous bodies and agencies\n4. Departments /Organizalions / Corporations / Autonomous bodies and\nAgencies of State Governments.\nW^*,dt\\",
+          "page": 2,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "Space-rent categories and event/claim caps are historical source provisions; reconcile subsequent official instructions before publication.",
+        "kind": "eligibility",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "passage": "GUIDELINES OF PROCUREMENT AND MARKETING SUPPORT (PMSI SCHEME\n1.O INTRODUCTION:\nMarketrng, a strategic tool for business development, is critical for the growth and\nsurvival of MSMEs. Due to the lack of information, scarcity of resources and\nunorganized ways of selling /marketing, MSME sector often faces problems in\nexplonng new markets and retaining the existing ones. Keeping in view these facts,\nthe Procurement and Marketing Support Scheme has been introduced to enhalce\nthe marketability of products and services in the MSME sector.\n2.O THE SCHEME AIMS AT THE FOLLOWING:\nFromoting new market access initiatives like organizing / participation in\nNational / International Trade Fairs / Exhibitions / MSME Expo, etc. held\nacross ttre country.\nTo create awareness and educate the MSMEs about importance / methods/\nprocess of packaging in marketing, latest packaging technologr, import-export\npolicy and procedure, GeM portal, MSME Conclave, latest developments in\ninternational / national trade and other subjects / topics relevant for market\naccess developments.\n3.O ELIGIBILITY CONDITION:\nManufacturing / Service sector MSEs having valid Udyam Registration (UR)\nCertificate.\n4.O IMPLEMENTING AGENCIES:\n5.O SCHEME COMPONENTS:\n(Il Market Access Initiatives across the country:\n1\n(A) Participation of Individual MSEs in Trade Fairs / E:rhibitions\nEligible items lScale of assistance\nSpace Rent charges O%o subsidy on built up space rent paid for Genera-i\nunits and IOOo/o for\nmen/ NER/ PH /Aspirational District units on\nstal1 size of the event for Micro and Small\ntegory\nSC/ ST/wo\nm\nEnterprises\n1. DC (MSME) through its field organizations namely MSME Development\nInstitutes and Technolory Centres.\n2. Other {ie1d organizations of M/o MSME namely NSIC, KVIC, Coir Board\n3. Other Central Gort. Ministries through their departments/ organizations/\ncorporations/autonomous bodies and agencies\n4. Departments /Organizalions / Corporations / Autonomous bodies and\nAgencies of State Governments.\nW^*,dt\\",
+          "page": 2,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "The historical source limits event counts and sets a post-event claim period; it does not establish a currently open event or absolute closing date.",
+        "kind": "procedure",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "passage": "Contingenry\nexpenditure\n(include travel,\npublicity & freight).\n1007o contingency expenditure for a-11 categories of units\nsubject to maximum Rs. 25,000/- or actual, whichever is\n1ess. One representalive from each participating unit may\ntravel, limited to AC II tier train fair/ Economy Class Air\nFare per event.\nMaximum\nBudgetary\nSupport (including\ncontingency\nexpenditure)\nMetro & A Class City: Rs 1.50 lakh (inc1. A11 taxes) max or\nactual, whichever is less for a participating enterprise per\nevent.\nOther City: Rs. 0.80 lakh (incl. A11 taxes) max or actual,\nwhichever is less for a parti.cipating enterprise per event.\nNote:\n11\nAn MSE wouid be a1lowed reirnbursement for maxirnum of 2 (two) events\nin a year.\nApplicant units sha-ll have to submit their claim online (or system in place)\nin the prescribed format within 3O days from date of conclusion of the\nevent.\nOverall participation in Min 1OO Trade Fairs per year with Max 6O\nparticipating units per Trade Fair.\nThe Empowered Committee of the Scheme may assign al Implementing\nAgency which will represent the Ministry for propagating tJ:e scheme &\npolicies in the event along with monitoring of participants and publicity by\ncommon fascia of the Ministry, hanging of bunting, etc. The budgetary\nsupport for participation of implementing agency will be max. 1O% of total\nallocation to the event or actual whichever is 1ess. The Implementing\nAgency wili take the approval of the competent authority for detailed\npublicity proposal.\nul.\n1V\n(Bl Organlzi-g Domestic/ Interaatioral Ttade Falrs/Drhibitioa and\nparticipation in trade fairs/exhibitions by the Mintstry/Oflice of DC\n(MSMEI/covernment organizationa:\n2\n(a) The expenditure to be incurred wherever the Ministry decides to organize or\nparticipate on its own will be decided by the Empowered Committee, subject to\nthe overall ceiling prescribed by the Deptt. of Expenditure (If applicable). The\nscale of assistance to participating MSEs in MSME pavilion will be admissible as\ndetailed in space rent subsidy and contingency expenditure as above under para\n5.0 (I)(A) above.\n(b! Virtual Trade Fair: The upper cap for organizing / participating in Virtual\nTrade Fairs shal1 be Rs. 16.45 lakh or actual, whichever is less, towards the\nvirtual platform cost, training and development cost arrd advertrsing & publicity\ncost. The minimum requirement for orgalizing a vi.rtual trade fair should be on\nthe basis of (i) Organizer's experience - 3 years (ii) Minimum number of seliers /\nexhibitors - 100 (iii) Minimum number of buyers / visitors - 1,000 (iv) Duration of\nfair - Min. 3 days (v) Timings- 8- 12 hrs interactive, 24 hrs live (vi) the platform\nshould a11ow at least 2O products to be displayed and requisite digital space have\nto be aLlocated. Any other expenditure, if any, sha11 be borne by the event\norganizers.\n%*",
+          "page": 3,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      }
+    ],
+    "review_flags": [
+      "Independent semantic review unavailable at zero external AI budget. Human must approve the exact cited interpretation.",
+      "Supported source rules are separated from unknown applicant facts; no eligibility or award guarantee.",
+      "HARD BLOCK: later amendment evidence is in the research dossier but not yet in an original-byte-bound composite snapshot."
+    ],
+    "missing_fields": [
+      "Verified application-round opening and closing dates",
+      "Current fund or slot availability",
+      "Independent semantic verification"
+    ]
+  },
+  "candidate_hash": "3353c1d861b223085d1d88af40ce98334d725afb906b753307dfd6a9516e61c7",
+  "approval_hash": "aa63be51bb68a75a7653672052cab00ca9221741c74710f8133f239d887c243f",
+  "pages": [
+    {
+      "page": 1,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+      "text": "5 (l)/2021 -2Z/PMS/SFC & Scheme Guideline\nGovernment oflndia\nMinistry of MSME\nOfflce of the Development Commissioner (MSME)\nPMS Division\n)t *:t + *:* +\nNirman Bhawan, New Delhi\nDated: 2610712022\nSubject: New guidelines of Procurement and Marketing Support (PMS) Scheme -reg\nThe undersigned is directed to enclose a copy of the approved Guidelines of the\nProcurement and Marketing Support (PMS) Scheme and to state that the Guidelines are in\nsupersession ofthe earlier Guidelines issued vide O.M 5(ly20l6-MDA dated 20-Il-2019 and shall\ncome into force w.e.f. 26-07 -2022.\nThe new Guidelines are available on the website of the DC (MSME).\nv\n(Swa S\n'7s't\ni)\n'l\nJoint Development Commissioner\nEncl: As stated.\nTo,\nl. All Directors/HoO of MSME-DFOs/BT.MSME-DFOs/IvISME-TCs\n2. All offices and Autonomous Bodies under DC(MSME)\n3. CEO, KVIC\n4. Chairman. NSIC\n5. Chairman, Coir Board\nCopy to.\nL All Ministries/Departments ofthe Central Covemment\n2. CEO, NITI Aayog, New Delhi\n3. SS&FA, IF Wing, M/o MSME, Udyog Bhavan, New Delhi\n4. JS(SME),VI/o MSME,Udyog Bhavan, New Delhi\n5. PS to Hon'ble Minister (MSME)\n6. PS to Hon'ble Minister of State (MSME)\n7. PPS to Secretary @SME). Udyog Bhawan, New Delhi.\n8. PPS to AS&DC(MSME),O/o DC (MSME), Nirman Bhawan, New Delhi\nOFFICE MEMOR{NDUM\nI",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/Helvetica"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 2,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+      "text": "GUIDELINES OF PROCUREMENT AND MARKETING SUPPORT (PMSI SCHEME\n1.O INTRODUCTION:\nMarketrng, a strategic tool for business development, is critical for the growth and\nsurvival of MSMEs. Due to the lack of information, scarcity of resources and\nunorganized ways of selling /marketing, MSME sector often faces problems in\nexplonng new markets and retaining the existing ones. Keeping in view these facts,\nthe Procurement and Marketing Support Scheme has been introduced to enhalce\nthe marketability of products and services in the MSME sector.\n2.O THE SCHEME AIMS AT THE FOLLOWING:\nFromoting new market access initiatives like organizing / participation in\nNational / International Trade Fairs / Exhibitions / MSME Expo, etc. held\nacross ttre country.\nTo create awareness and educate the MSMEs about importance / methods/\nprocess of packaging in marketing, latest packaging technologr, import-export\npolicy and procedure, GeM portal, MSME Conclave, latest developments in\ninternational / national trade and other subjects / topics relevant for market\naccess developments.\n3.O ELIGIBILITY CONDITION:\nManufacturing / Service sector MSEs having valid Udyam Registration (UR)\nCertificate.\n4.O IMPLEMENTING AGENCIES:\n5.O SCHEME COMPONENTS:\n(Il Market Access Initiatives across the country:\n1\n(A) Participation of Individual MSEs in Trade Fairs / E:rhibitions\nEligible items lScale of assistance\nSpace Rent charges O%o subsidy on built up space rent paid for Genera-i\nunits and IOOo/o for\nmen/ NER/ PH /Aspirational District units on\nstal1 size of the event for Micro and Small\ntegory\nSC/ ST/wo\nm\nEnterprises\n1. DC (MSME) through its field organizations namely MSME Development\nInstitutes and Technolory Centres.\n2. Other {ie1d organizations of M/o MSME namely NSIC, KVIC, Coir Board\n3. Other Central Gort. Ministries through their departments/ organizations/\ncorporations/autonomous bodies and agencies\n4. Departments /Organizalions / Corporations / Autonomous bodies and\nAgencies of State Governments.\nW^*,dt\\",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/Helvetica"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 3,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+      "text": "Contingenry\nexpenditure\n(include travel,\npublicity & freight).\n1007o contingency expenditure for a-11 categories of units\nsubject to maximum Rs. 25,000/- or actual, whichever is\n1ess. One representalive from each participating unit may\ntravel, limited to AC II tier train fair/ Economy Class Air\nFare per event.\nMaximum\nBudgetary\nSupport (including\ncontingency\nexpenditure)\nMetro & A Class City: Rs 1.50 lakh (inc1. A11 taxes) max or\nactual, whichever is less for a participating enterprise per\nevent.\nOther City: Rs. 0.80 lakh (incl. A11 taxes) max or actual,\nwhichever is less for a parti.cipating enterprise per event.\nNote:\n11\nAn MSE wouid be a1lowed reirnbursement for maxirnum of 2 (two) events\nin a year.\nApplicant units sha-ll have to submit their claim online (or system in place)\nin the prescribed format within 3O days from date of conclusion of the\nevent.\nOverall participation in Min 1OO Trade Fairs per year with Max 6O\nparticipating units per Trade Fair.\nThe Empowered Committee of the Scheme may assign al Implementing\nAgency which will represent the Ministry for propagating tJ:e scheme &\npolicies in the event along with monitoring of participants and publicity by\ncommon fascia of the Ministry, hanging of bunting, etc. The budgetary\nsupport for participation of implementing agency will be max. 1O% of total\nallocation to the event or actual whichever is 1ess. The Implementing\nAgency wili take the approval of the competent authority for detailed\npublicity proposal.\nul.\n1V\n(Bl Organlzi-g Domestic/ Interaatioral Ttade Falrs/Drhibitioa and\nparticipation in trade fairs/exhibitions by the Mintstry/Oflice of DC\n(MSMEI/covernment organizationa:\n2\n(a) The expenditure to be incurred wherever the Ministry decides to organize or\nparticipate on its own will be decided by the Empowered Committee, subject to\nthe overall ceiling prescribed by the Deptt. of Expenditure (If applicable). The\nscale of assistance to participating MSEs in MSME pavilion will be admissible as\ndetailed in space rent subsidy and contingency expenditure as above under para\n5.0 (I)(A) above.\n(b! Virtual Trade Fair: The upper cap for organizing / participating in Virtual\nTrade Fairs shal1 be Rs. 16.45 lakh or actual, whichever is less, towards the\nvirtual platform cost, training and development cost arrd advertrsing & publicity\ncost. The minimum requirement for orgalizing a vi.rtual trade fair should be on\nthe basis of (i) Organizer's experience - 3 years (ii) Minimum number of seliers /\nexhibitors - 100 (iii) Minimum number of buyers / visitors - 1,000 (iv) Duration of\nfair - Min. 3 days (v) Timings- 8- 12 hrs interactive, 24 hrs live (vi) the platform\nshould a11ow at least 2O products to be displayed and requisite digital space have\nto be aLlocated. Any other expenditure, if any, sha11 be borne by the event\norganizers.\n%*",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/Helvetica"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 4,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+      "text": "Type of VDPS Program\nduratlon\nScale of Assistance\nCPSE level Vendor\nDevclopment Program\ncum Exhibition of\nProducts\n2 days Sanction of max. Rs 5.0 lakh / program or\nactual, whichever is less, per program. Each\nprogram would consist of training on various\naspects related to GeM and exhibition of\nproducts.\nVDP should beneht MSMEs in their GeM\nregistration and detailed understanding of\nPublic Procurement with CPSEs.\n(Ul Capacity building :\nSanction of max. Rs 15 lakh / cluster or actual, whichever islCluster based\nlinterventions for\nlspecific packaging\nland branding\nlreCuirements.\nI\nI\ness, depending on the tlpe of approved cluster\nEmpalelled packaging expert organ2ations like IIP, NID,\nNIFT and other similar orgalizations sha11 sig:n an MoU with\nO/o DC (MSME) and, accordingly, provide the consultancy\nservices to the approved clusters supported by the Ministry\nnder its various schemes\ne focus of the scheme would be clusters like food\nprocessing, toys, handicrafts, kitchen and home utilities,\nceramics, g1ass, gem & jewe11ery, textiles and apparels,\nedical u1 ment ods etc.S\n(Al Adoption ofModern Packaging Techniques:\nScale of assistance\nThe upper cap for packaging interventions may be enhanced with approval of\nEmpowered Committee subject to limit of max 10-15%.\n(Bl Adoption of Bar Code :\nEligible items Scale of assistance\nUnit based\ninterventions for Bar\nCode.\nProviding financial assistance of 80% of one-time registration\nfee ald annual recurring fee (for first three years) paid by\nmi.cro enterprises for obtaining up to 100 Nos. of bar codes\n(i.e. products) or actual whichever is less subject to Rs\n50,650/- (Fifty thousand six hundred and frfty) max.\nImplementing\nAgencies\nMSME Development Institutes (MSME-DIs)\nEligibility Micro enterprises which have UDYAM Registration and\nalso have registration with GS1 India for use of Bar Codes\nHow to apply Eligible Micro enterprises may apply to the Director /\nHOO, Micro, Sma1l & Medium Enterprises- Developrnent\nInstitute of their region in prescribed application form\n(Annexure - A) for claiming reimbursement on Bar Code.\nApplication Forms along with formats for the supporting\ndocuments may be collected from Director / HOO,\nMSME-DI o[ their region.\n3\nq\n(C) Vendor Development Program (VDP): To facilitate market linkages for effecti.ve\nimplementation of Public Procurement Policy for MSEs.\niEtgible items\nR-I",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/Helvetica"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 5,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+      "text": "19| Algption of e-Commerce Platform\nAdoption of e-\nCommerce by Micro\nEnterprises\nProviding frnancial assistance on annual membershlp fee\n/subscription fee / contingency expenses (photography,\ncataloguing, advertising etc.) for selling their products or\nservices by Micro Enterprises (up to 10 new products)\nthrough e-cornmerce portal \"MSME G1oba1 Mart\" being\noperated by National Smal1 lndustries Corporation.\nThe financial assistarr.ce may be provided 7 5o/o of paid amount\nby Micro Enterprises subject to maximum Rs. 25,000/-\n(excluding applicable taxes), whichever is less per financial\nyear.\nEligibility Micro Enterprises with valid Udyam Registration\nHow to apply The Micro enterprises with va-1id Udyam Registration may\nsubmit their claims to NSIC for reimbursement\n(Dl National trIorkshops / Seminars: To educate MSMEs on various facets of\nbusiness development i.e. product & process development innovations, technologtcal\ndevelopment, EXIM policy, Pubiic Procurement Policy, adoption of e- commerce,\ndesign & packaging, market research and access.\nScale of assistance: Rs. 5.0 lakh max. or actual, whichever is less per\nworkshop/seminar, alywhere in the country. Assistance is admissible to the Go!t. /\nNon - Govt. reputed organizations having at least 3 years of experience in organizing\nsubject specific workshops / semi.nars.\n(E| Organizing Natlonal workshops/ Seminars by the Ministry / OIIice of DC\n(MSMEI (Coaventional / Virtual): The expenditure to be incurred wherever the\nMinistry decides to organize or participate on i.ts own will be decided by the\nEmpowered Committee, subject to overall ceiling prescribed by the Deptt. of\nExpenditure, MoF (if applicable).\n(III| Development of Retail Outlet.\n4\nItem Scale of assistance\nInfrastructure\ndevelopment of Retail\nOutlets for promoting\nGI products\nRs. 3O lakh max per outlet in Metro & A class cities and Rs.\n20 lakh max per outlets for other cities shal1 be prouded\ntowards infrastructure outlet area of 500 sq.ft with proper\ninterior design, including computer, printer, bill counter,\ncata-logue of product ald show case to the retailer subject\nto 5O% contribution from the retailer. Limit of GIA will be\nRs. 15.0 lakh for Class A & Metro cities and Rs. 10.0 lakh\nfor other cities, subject to matching contribution from the\nretailer. Only the products with valid Geographical\nIndi.cations (GI) would be sold at such outlets. The seller\nmust have an MoU / agreement with GI holder.\nImplementing Agency MSME-Development Insti.tutes (MSME-DIs)\nMechanism The Industry Associations / Trade Bodies representing the\neligible retailers may submit their proposals to concerned\nMSME-DIs\nI\n&\"(",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/Helvetica"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 6,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+      "text": "6.O Submlssion of Proposals: The proposal regarding the scheme components /\nevents will be submitted to Implementing Agency on line (or system in place) well in\nadvance preferably two months before the commencement of subject event.\n7.O Selection of MSEs: The Implementing Agency will send the proposals to Offrce\nof DC (MSME) online (or system irr place), well in advarce (preferably 45 days) prior\nto the commencement of Trade Fairs / Exhibitions after due scrutiny of financial &\nphysical viability and fulfillment of objectives of the event. The programme Division\nwill submit the proposal to the Empowered Committee for the final approval. While\nprocessing the proposa.ls, the preference shall be given to first trme participants and\nunits from remote location viz., from Aspirational Districts and also from SC/ST,\nWomen, PH and NER. The Empowered Committee may also consider t.l.e post-facto\napprova1 for events which have been accorded Administrative Approval but could\nnot be placed for approval of Empowered Committee before commencement.\n8.O Empowered Committee: The Empowered Committee shall be the fina-1\nauthority for approval of proposals. The Empowered Committee will be headed by\nSecreta-ry / AS&DC (MSME) vrith JS (SME) or his / her representative, ADC (PMS)\n/ In-charge of PMS Division, Director (Planning and Marketing) NSIC or his/her\nrepresentative and Nominee of IFW as members. Secretariat services shall be\nprovided by PMS Division of Of1ice of DC (MSME). Any of the Export promotion\nAssociation / Industry association may be invited as special invitee (optional) to\nattend the meeting, if needed. AS&DC (MSME) / ADC (PMS) may relax the criteria\nof minimum applications per implementing agency for events under 5(A) for specific\nevents depending on urgency and other such circumstances. ADC (PMS) can gve\nin-principle administrative approva.ls for the events proposed under the PMS\nscheme.\n9.O The scheme will be monitored through an integrated MIS by the Implementing\nAgency and also scheme management unit setup in the offrce of DC (MSME).\n1O.O It is to be ensured that every event is 1ed by business and data for each event\nalong with participants has to be captured for follow up action and also to do\nperformance audit. The Outcome for various programmes including Trade Fairs and\nVendor Development Programmes should invariably include the parameters as\nspecified in Output/Outcome framework of NITI AAYOG.\n11.O Services of Professional / Event Management Agencies / Organizations may\nbe utilized as per GFR for organizing events for Ministry / Government.\n5\ne,b\nq4N.",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/Helvetica"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 7,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+      "text": "Aoolication Form for ClaiminE 8O7\" Reimbursement of Bar Code ReEistration\nFee/ Annual Fee paid by Micro Enterprise to GS1 India\n1. (a) Name of Micro enterprise : M/s................\n4. (a) Amount paid for\n(i) One-time registration fee Rs\n(ii) Annual Recurring fee Rs.\n(b) Amount to be reirnbursed for\n(b) Address of Micro Enterprise\n(i) Registered Office\n(ii) Works Offrce :\n(c) Tel. No.\n(ii) Annual Recurring fee Rs\n..Fa-:< No. E-rnail:\n(i) One-time registration fee Rs. ...........-.......\nfor the year ..........\n......... for the year\n5. Details of UDYAM Registration\n6. Range of products being rnanufactured ...\n7. The following documents are also enclosed along with Application Form:\n(i) An attested copy of Cash Receipt for total amount (one-time registration fee\n&/or annual recurring fee) paid to GS 1 India for use of Bar Codes.\n(ii) An attested copy of license received from GS1 India for use of Bar Code.\n(iii) Pre-receipted bill (In original) in triplicate for amount to be reimbursed for\none- time registration fees (as per Annexure-I) &/or for annual recurring fee for\n1st three years (as per Annexure II).\n(iv) A copy of UDYAM REGTSTRATION of the rnicro enterpri.se.\n(v) An Affidavit as per Annexure - III regarding current status of theenterprise.\n(vi) An undertaking as per Annexure-IV (concerning non-receipt of similar\nfinancial assista-nce from any other organization and/or from Of1ice of the DC\n(MSME).\n*\nANNEXURE - A\n2. Whether enterprise is Micro as per UDYAM Registration? Yes / No\n3. Narne of proprietor/partner of the enterprise............... Mob. No. ............\nw_\n\\b1\n6",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/Helvetica"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 8,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+      "text": "DECLARATION\nI declare that ttre particulars given in the above statement are correct. I also\nundertake that any fina.rlcia-l assistance granted to rne/rrly enterprise on the basis\nofthis declaration shall be liable to be refunded to the Government if at any tme\nany information furnished in this application is found to be wrong or incorrect or\nmisleading. I do hereby bind myself and rny enterprise to pay the Government on\ndemand a sum equal to ttre amount claimed as frnancial assistance in respect of\nabove mentioned activity, within seven days of the demand being made to me in\nwriting.\nDate Signature\nNarne..........\nDesignation..\nEncI :\nAnnexure-l\nPRE.RECEIPT\n(For One-Time Registration Fee)\nReceived \\rrith thanks a sum of Rs. ..-.............. (Rupees\nonly) frorn ttre Director/HOO, MSME-DI\ntowards reimbursement of SOoA of the one-time registration fee paid to GS1 lndia\n(under the Ministry of Commerce & Industry) for Bar Code registration.\n(Affix Revenue Stamp)\nDate : (Signature)\nProprietor/Partner/Managing Director\nwith Seal\nNote: The above pre-receipt is to be submitted on Letter head of the company, in\ntriplicate.\n1 xa)\n@..*/.,/fi\\",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/Helvetica"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 9,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+      "text": "Annexure-ll\nPRE-R\"ECEIPT\n(For Annual Recurring Fee)\nReceived with thanks a surn of Rs. (Rupees\n................only) from the Director, MSME-DI towards reimbursement of 80%\nof annual recurring fee for the year(s) . .... .. . ....\npaid to GS1 India (under Ministry of Comrnerce & Industry, Gort. of India)\ntowards Bar Code registration. However, reimbursement has already been\nreceived for one-time registration fee / annual recurring fees for the 1st\nyear..-.....,. /2n,t year.....-. . (if receiwed earlier)\n(Affix Revenue Stamp)\nDate : (Signature)\nProprietor/ Partner/ Managing Director\nwith SeaI\nNote: The above pre-receipt is to be submitted on Letterhead of the company, in\ntriplicate.\n8\nm\\\\+-\nr\\)",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/Helvetica"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 10,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+      "text": "Annexure - III\nAFFIDAVIT\nTo be submitted on a stamp paper (of Rs. 50/-) duly attested by NotaryPublic\n(duly affixed with Notarial revenue stamp; with Notary Seal; and Notary\nRegistration number, etc.)\nwith their Registered Office at.\n& Enterprise located at.. .. ... .. .. ..\n;;; ;;;i;.;;;-r.a.., \"-' \"'-\"'do trerebv solemnlv arnrrn\nThe company is a Micro Enterprise as per the Govt. of India definition;\nand has been functiona-l & in production at the time of Bar Code\nreglstration.\nThe company continues to be a Micro enterprise and functional & in\nproduction as on date.\nDEPONENT\nVerification:\nVerified that the contents of the Affidavit are true to the best of my knowledge\nand belief.\nDEPONENT\nPlace:\nDate:\n*Strike out whichever is not applicable.\n9\nM.\nK\n-r\"tl-",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/Helvetica"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 11,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+      "text": "Annexure- lV\nUNDERTAKING\nTo be submitted by the applicant on a Non-judicial Stamp Paper of Rs. 50/-\n(Minimum)/amount-as applicable in the respective State, duly sworn before a Notary\npublic (duly affixed with Notadal Stamp, and with Notary Seal & Notary Registration\nnumber) or First Class Magistrate.\nI\nMalaging Director* / Director*/ Proprietor*/ Partner\" S/ o.............Registered Offrce at\n& Factory located at\ndo hereby solernnly affirm ard declare as under\n(a) That the aforesaid Company/Firm/Enterprise has/has not availed\nreimbursement/ Subsidy/ grant for obtaining Bar-Code registration under any scheme\noperated by Central Government {including Office of DC (MSME), M/o Micro,\nSma-ll and Medium Enterprise)/ State Government/ Financial Institutions, etc., if\navailed, give the details.\n(b) That the aJoresaid Company/ Firm/Enterprise has/has not applied to\nName of the Ministry/Department of Central Govt. (other than Office\n(MSME)/State Govt./Financial institution for reimbursement/ subsidy/\nincentive for registration of Bar Coding from GSI India.\nof DC\ngrant /\n[c] That after availing reimbursement for obtaining Bar-Code registration from\nOfhce of DC IMSME), Ministry of MSME, in respect of the said Company/Firm/Enterprise, I shall disclose this fact of the said Company/Firm/Enterprise at the\ntime of claiming/reimbursement/ subsidy/grant/ incentive, if any, under any other\nsimilar scheme run by Central Government/ State Government\nDepartment/Financial In sl it ut ion. etc.\n(dl I hereby solemnly affirm that the information given above is correct. In case,\nabove declaration is found wrong or incorrect or misleading, I do hereby bind\nmyself & My enterprise and undertaking to pay to the Government on demand the full\namount received as reimbursement in respect of above mentioned activity, within\nseven days of the demand being made to me in writing.\nSignature of Partner/ Proprietor/Managing Director/Director\nIn the presence of two witnesses\n(Narnes and Addresses of the witnesses above a-lso to be indicated a.long with\nsiBnatures).\n(* Strike out whichever is not applicable)\n1.\n2.\n*\"\" 10",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/Helvetica"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 12,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+      "text": "ANNEXURE - B\nDocuments to be colleeted bv Irnple ntins Asencies frorn Event Organizers\nof the Trade Fairs / Exhibitions etc. whllqleceiv!4g !!gn!epqE4!c\n1. Proposal/ Request letter from the Organisation/ Company/ Association/ Enterprise\n2. Memorandum of Association (MoA)/ Bye-Laws/ Partnership Deed (Regd.) (in case of\nPartnership entity)\n3. Brochure of the Trade Fair(s)/ Exhibition(s)/ Event(s) along with other details\n4. Balance Sheets of last 03 (three) years of business along with copy of Income Tax\nReturns\n5. Past experiences of business in organizing Trade Fair(s)/ Exhibition(s)/ Event(s)\n6. Estimated no. of MSEs participating in the event along with category (Women/ SC/\nST/ PH/ Micro/ Small enterprises)\n7. Booking space confirmation letter for the venue where event is proposed to be\norga::iz,ed (uenue change not permitted once tfte euent is approued)\n11\nW",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/Helvetica"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 13,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+      "text": "ANNEXURE - C\nCheck-list for reimbursement of claims under Component StA) : PMS Scheme\nName of the Fair/ Exhibition\nThe following documents/ information have been received for reimbursement under PMS\nScheme from M/\n(Two additional copies submitted : Yes / No)\n(Put 'i' or 'x' ln box) Pe No.\nCovering letter on Letter Head of unit/ enterprise\nClaim Form (Annexure - D) fi1led by the unit/ enterprise\nPrint out of Online Application Form No. : UAM/DTF/_\nCopy of UDYAM Regn- Certilicate (self certified) :\nOriginal tnvoice(s)/ Bill(s) :\nOriginai Receipt Voucher(s) :\nParticipants Feed Back Report with photos (02) :\nOriginat Mandate Form (duly verihed by the Bank)\nCancelled cheque of the concerned bank (original)\nOriginal Pre-Receipt (signed & stamped) (in tripticate) :\nDetails of Agency creation for PFMS\n(i) Name of the unit/ enterprise, complete postal address of unit/ enterprise with e-\nmail & mobile number {as given in Udyam Regn Certifrcatei.\n(ii) Name of the Director(s)/ Proprietor/ Partner(s)\n(iii) Date of Birth (dd/mm/yryy)\n(iv) Gender (Male/ Female/ Transgender)\n(v) Aadhaar Card Details (Director(s)/ Proprietor/ Partners)\n(vi) Udyam Registration Certificate details.\n(vii) GST Number (enclose a copy of certificate issued by an Appropriate Authority)\n(viii) Ballk details (Bank Account Number, Name of Bank, Branch name, IFSC, MICR\nof Branch).\n(ix) Aadhaar linked Bank Account Number\n1.\n2.\n4.\n6.\n7.\n8.\n9.\n10\n11\n12\n14\nCopy of Aadhaar Card(s) (Director(s)/ Proprietor/ Partners)\nCopy of GST Registration Certificate\nOther related documents (PAN card) etc. :\nDocuments/ information checked and verified the claim of the aforementioned unit /enterprise is found in order and eligible for reimbursement as per PMS Scheme\nguidelines.\nS. No. Particulars\n\\\\ <\"''/t/,.\\et\n,4,1.\\\nI\n72\nSignature",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/Helvetica"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 14,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+      "text": "neficia unit for relmbursemert\nPART - I : EEtrepreaeuts' Details :\n1 Name of Implementhg agency\nName of the Applicant Unit\n3 Complete address, phone, Fax, e-mail including name ofthe proprietor/partner\n4 Udyam Regisuation Number (PI. enclose copy)\nCalegory of the entrepreneur (General/Women/ SC/ ST\n/NER/PH) (Pl. enclose the copy of relevant document, as\napplicable)\n6 Type of the unit (Micro or Small)(whichever applicable)\nCategory of the Unit (Manufacturins/ Service)\n8 Products manufactured/ service rendered by applicantunit\nPART-U: Evert details\nName of event participated, venue, duration of trade fair /\nexhibition\n10\nFeedback: [about 200 words]\nInclude details about new business tie-ups achieved\nthrough the event, B2B Knowledge on new technolosr,\nopportunity for market expansion etc.\nPART -III : Payment Details\nDETAILS OF CLAIM (itr RE.)\nItema\nActual\nExpenditure\nlin Rs.)\nAEgult\nAdmissible\naa per\nScheme\nguidellnes\n(ir Re.l\nDoErestic\nTrade Fairs\nExhlbitions\nContingency expenditure including travel, (attach\nexpenditure copy for travel/publicity/ freight charges)\nSpace Rent (sta-Il rent)lMinimum booth/sta1l size provided\nby fair organiserl(Attach invoice / bill)\nTotsl lin Rs.)\n13\nANNEXURE - D\nCLAIM FORM\n2.\n] n\"-u or\nls\"h.-\"\nI component\nI\nI\nW",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/Helvetica"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 15,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+      "text": "DECLARATION\nI hereby declare that :\n(a) Above information is correct and is based on the actual expenditure incurred. In case\nany of the statement/ information furnished in application / document is Iater found\nto be wrong or in correct or misleading, I do hereby bind myself and my unit to pay to\nthe Government on demand the full amount received as reimbursement in respect\nwithin seven days of the demand.\n(b) The unit has not claimed/ applied for financial assistance from any other Ministry/\nDepartment of the Government of lndia or any other State Government or any\nGovernment Institute/Agency for the above mentioned trade fair/ packaging\nconsultancy.\nSignature of the Authorized Signatory\nName:\nDate:\nDesignation:\nPlace:\nApproval Flow Chart:\nClaim submission by applicant Unit -> Scrutiny--|Approval/ Sanction/ Release to beneficiary unit\nu\n.1\n1.4\nx-,\ni\nxr-\n.\"/",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/Helvetica"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 16,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+      "text": "Year-Wise Output/Outcomes lEstimated) w.r,t PMS scheae\nProcurement and Marketiag Support (PMS) scherle\nProgram/\nScheme\nComponent\nDescription\nPrograms/\nMSMEs/Cluster\ns\nBerellciarles\nlApproximatel2O2l-22 to 2025 -\n26\nVendor\nDeveloment\nProgram (VDP)\nCPSE kvel VDP cum exhi\nbition of products Conventional\n500\nProgrammes\n50,000 MSMEs\n@too\nParticipation of\nindividual MSEs\nin Domestic\nTrade Fairs\n30000\nMSEs\n30,000\nMSEs\nOrganizing/ Parti\ncipation in trade\nFairs\nEvents where Ministry decide\nto organize / participate on its\nown (Conv entional/ Virtual)\n12,600\nMSEs @100\n10\nTradeFairs\n1,000 MSEs\n@1OO\nCapac ity\nbuilding of\nMSMES\nCluster based Modern/ green packaging\nlechnique / branding inter\nvention\n100\nClusters\n5,000 MSEs\n@so\nBar Code for Micro Enterprises 1C) 1\nMicro Enterprises\n1 .)41\nMicro Ent\nNational Seminars / Workshops 505Programmes 50,5OO MSMES@ 100\nNational Seminars / workshops\nEvents where Ministry decide toorgalize /participate on its own(Conventional / Virtual) 15Prograrnmes 1,5O0 MSMES@r 100\nDevelopment of\nMSME Retail Outiets\n250\nNumbers\n250\nMSEs\nAdoption of e-commerce platform by Micro Enterprises @\nRs.20000/- (75% ofRs. 25000/- Max. 50000 Micro Ent\n50,000\nMicro Ent\nTotal Beneficiaries\n2,O2,O7 I\nMSMEs\n?\\\n15\n.*\nd*'\nANNEXT'RE - E\nI\nI\nI\n126\nTradeFairs\nI\nMarket Access i\nInitiatives \nI\nVirtual\nK",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/Helvetica"
+      ],
+      "provenance": "pdf_physical_page"
+    }
+  ],
+  "pages_hash": "0e99cb2fa29ba7d6539375f61a056c0aa6adebceb5d8fd84438340fe616e0360",
+  "original_binary_hash": "a0bbff9257700b9d8dac83f6e20122bf45b90982a6edfe6b8fa4730e5fd8172d",
+  "independent_review": {
+    "status": "unavailable",
+    "method": null,
+    "reason": "No separate semantic reviewer available at zero external paid AI budget. Agent 2 explicitly performs engineering checks only."
+  },
+  "human_required": true,
+  "publication_authorized": false
+}

@@ -1,6 +1,66 @@
+# Corpus-to-policy integration
+
+## Final policy handoff — 17 October 2026
+
+This section supersedes the earlier checkpoint's remaining-work statements for the four production drafts. The earlier corpus audit below remains historical evidence. The broader OCR/completion checkpoint stays on `codex/corpus-completion` at `93872d2`; its optional processing modules are not part of this narrow production integration.
+
+Delivered four revised structured artifacts: TEAM (12 conditions), LEAN (9), PMS (3 held reconciliation conditions), ST Post-Matric (19). TEAM and ST form the **two-version human approval batch**; LEAN's captured financial validity expired, and PMS requires a material September 2026 amendment before a current consolidated version is supportable. An additional five-condition SC scholarship baseline is prepared but held for continuation/amendment and remaining OCR verification. No candidate is independently semantically certified. No production data was modified by this branch.
+
+Read [the substantive approval dossiers](policy-review/2026-10-17-approval-dossiers.md) before authorizing publication. The immutable staging input is `data/policy-review/2026-10-17/batch.json`; `handoff-manifest.json` binds every JSON artifact by file SHA-256 and byte count. Original binary hashes, page-text hashes, corpus candidate digests and existing-admin approval digests are deliberately separate. A manifest digest is never represented as an original PDF hash. This handoff does not create a pretend PMS composite snapshot from uncaptured amendments.
+
+### Corpus accounting, with distinct meanings
+
+- Initial corpus: 120 unique originals, 125 capture occurrences, 115 PDFs and five HTML snapshots, 193,031,267 bytes. Three supplementary official PDFs add 4,366,911 bytes.
+- All 120 initial originals have technical processing artifacts; 119 unique documents/124 capture occurrences pass the existing importer's strict gate. One garbled original remains excluded. Production's reported 128 snapshots include the supplementary captures; these are snapshot counts, not 128 unique policies.
+- Local OCR was completed for 95 initial documents (665 checkpoint files representing 643 unique content/page pairs). No selected pages remain unattempted. Thirteen initial documents still have low-confidence or empty output and need correction/review; completed OCR is not automatically trusted. Two supplementary documents received OCR; one retains a quality concern. These are document counts, not an assertion every flagged original was scanned.
+- Original quality triage flagged questionable exact issuer/title metadata on 117 initial documents. This task substantively reconciles the four named production policies, without pretending to resolve the other metadata flags or recomputing a misleading corpus-wide accuracy score.
+- Nineteen initial documents were triaged as potential guidelines; this is not nineteen extraction-approved policies. This handoff has four citation/schema-valid revised artifacts, two focused human-decision candidates, two explicit holds, and one additional partial held SC candidate. Full independent semantic reviews: zero. Confirmed open application rounds: zero.
+
+### Runtime changes and staging
+
+`ingestion/corpus_policy/review_batch.py` is a bounded offline CLI. Default invocation validates files, closed candidate schemas, exact citations, distinct hash bindings and approval dispositions, and prints the proposed IDs without database access. Execution requires a persisted administrator, locks stable opportunities, verifies the original v1 draft and source snapshot against the live baseline, and appends TEAM/ST v2 only. Any changed draft, changed immutable text, already published opportunity or competing correction fails closed. The caller owns the atomic transaction. Repeating the same operation is idempotent. LEAN/PMS remain private original drafts; they are **not covered by the proposed publication authorization**.
+
+Existing snapshots, old drafts, `CandidateReview` history, published pointers and requirements are never modified by staging. Ingestion-run diagnostics explain the previous draft, both candidate hash algorithms, missing independent review and zero paid calls. No migration, dependency, generated public API contract, frontend, retrieval, deployment or Scenario Studio change is required.
+
+Two backend changes accompany the CLI: numerical metadata may use the union of its exact source-bound page citations (invented amounts still fail); published business-document dependencies retain `subject_context=business` rather than incorrectly becoming person requirements. Existing admin authentication, exact evidence, optimistic hash, human completeness and review-flag acknowledgment guards remain unchanged. The admin fix is an API runtime change; Agent 2 must include it in the backend release before publishing TEAM.
+
+From the exact checked-out handoff commit, run the read-only plan:
+
+```sh
+cd apps/api
+PYTHONPATH="$PWD/src" uv run python -m opportunity_platform.ingestion.corpus_policy.review_batch \
+  ../../data/policy-review/2026-10-17/batch.json
+```
+
+Agent 2, after the user's consolidated authorization and exact-commit engineering checks, may append the two private drafts with the existing production secret configuration and an already authorized administrator's database UUID:
+
+```sh
+PYTHONPATH="$PWD/src" uv run python -m opportunity_platform.ingestion.corpus_policy.review_batch \
+  ../../data/policy-review/2026-10-17/batch.json --execute --actor-id "$POLICY_REVIEW_ADMIN_ID"
+```
+
+This command performs **no publication, indexing or eligibility refresh**. Agent 2 must read back both proposed version IDs, verify admin hashes and source/page hashes, and apply the consolidated human decision through the existing guarded review service. TEAM and ST dossiers identify exact expected hashes. Hold if anything differs. Do not use stale v1 hashes. After authorized publication, Agent 2 owns reindexing, affected eligibility refresh and live validation; preserve all pre-existing DEPwD records and published state. Rollback means leaving the append-only drafts unapproved, never deleting source/history.
+
+### Verification actually completed
+
+Full backend suite, isolated local PostgreSQL test schemas, archived real-source tests enabled:
+
+```sh
+cd apps/api
+PYTHONPATH=src CORPUS_ARCHIVE_ROOT=/Users/govind/Projects/AIBuildersCup/.corpus \
+  /Users/govind/Projects/AIBuildersCup/apps/api/.venv/bin/python -m pytest -q
+```
+
+Result: **269 passed, 3 skipped**, six existing dependency deprecation warnings; log `/tmp/policy-review-backend-final.log`. `ruff check .` passed. Ten new real-artifact/staging tests cover exact citation/hash bindings, tampering, role/source/baseline changes, idempotency, unchanged review history, business document context, multi-page financial evidence, invented amounts and retained human approval gates. No paid model calls, OCR reruns, production writes or cloud resource creation occurred. Source image checking is same-session human-facing evidence preparation, not independent semantic review.
+
+The earlier bounded future live-extraction command below remains **provided only, not run**. The ₹0 budget does not authorize executing its paid-provider switches. This release needs no live extraction to stage the reviewed artifacts.
+
+
+## Historical audit — superseded where stated above
+
 > 17 October follow-up: paid worker execution now additionally requires an explicit worker role, paid-worker permission, positive global/per-run budgets and reviewed provider/model price ceilings. Defaults remain zero. Interactive Codex packets can be staged without API calls; missing separate semantic review is escalated, never fabricated. Current evidence: [intelligence audit](unclaimed-intelligence-audit.md).
 
-# Corpus-to-policy integration — phase 2
+## Historical phase 2 integration audit
 
 Verified 17 October 2026 (Asia/Kolkata). Work is isolated on `codex/corpus-policy-integration` in `/Users/govind/.codex/worktrees/corpus-policy/AIBuildersCup`. The shared checkout, deployment infrastructure, retrieval, Scenario Studio and frontend are unchanged. No paid model call, public-source fetch, publication, cloud operation or product-database import was performed. Database writes in verification used disposable PostgreSQL schemas only.
 

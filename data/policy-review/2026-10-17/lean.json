@@ -1,0 +1,784 @@
+{
+  "key": "lean",
+  "baseline": {
+    "opportunity_id": "4600dafa-7138-5618-a2a4-6a2bfdb6ddb0",
+    "version_id": "163321ed-32e2-5e1f-a9a0-cd64b05f9d26",
+    "version": 1,
+    "title": "MSME COMPETITIVE (LEAN) SCHEME",
+    "publication_state": "draft",
+    "content_hash": "01c60d4b0050200515ca42eef8085a0940162b2f5ed811a6f80470612eb7d4f2",
+    "snapshot_id": "97e40d57-58d6-53da-8b0d-03eb3295fe36",
+    "source_id": "ac3a74a2-4b4e-51e3-b807-a6d760dfa5e6",
+    "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+    "acquisition_snapshot_id": "f2d63928-4410-4c92-9049-2073eaaba0bb",
+    "stored_candidate_hash": "2eda8266f3d732fe16fcd9d59300734fb5e1fe5a199f01a2e02ec84f3e28b18e",
+    "original_packet_sha256": "236a0e3801339c9244c2eee82d503e38f8d1c14ea65265d03c1cac9692c3fc26",
+    "original_focus": "MSME COMPETITIVE (LEAN) SCHEME"
+  },
+  "focus": "MSME COMPETITIVE (LEAN) SCHEME",
+  "disposition": "blocked_do_not_publish",
+  "candidate": {
+    "title": "MSME COMPETITIVE (LEAN) SCHEME",
+    "summary": "Historical captured LEAN policy with financial provisions valid only until March 31, 2026. A currently reachable portal is not an extension instrument. This version is excluded from publication as currently available assistance.",
+    "issuer": "Ministry of Micro, Small & Medium Enterprises",
+    "category": "business",
+    "country": "IN",
+    "state": null,
+    "district": null,
+    "benefits": "Captured provisions: Basic level free; Intermediate implementation cost up to Rs. 120000 plus taxes with beneficiary contribution up to Rs. 12000 plus taxes and GoI contribution up to Rs. 108000. Advanced cost up to Rs. 240000 plus taxes, beneficiary up to Rs. 24000 plus taxes and GoI up to Rs. 216000. Additional 5% category/cluster assistance and an additional 5% OEM or association route incentive have their own conditions; Rs. 5000 per MSME is paid to OEM or association after all stages, not to the enterprise.",
+    "restrictions": [
+      "BLOCKED: no authoritative extension of captured financial validity beyond 31 March 2026 was established.",
+      "Phase descriptions and broad eligibility wording need reconciliation; do not infer operationalisation of service-sector inclusion from a live portal."
+    ],
+    "required_documents": [],
+    "document_evidence": [],
+    "opens_on": null,
+    "closes_on": null,
+    "apply_url": null,
+    "field_evidence": [
+      {
+        "field": "title",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+          "passage": " \nPage 1 of 28 \n \n \n \nMSME COMPETITIVE (LEAN) SCHEME \n(A component of MSME Champions Scheme) \nGUIDELINES 2022 \n",
+          "page": 1,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "issuer",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+          "passage": " \nPage 4 of 28 \n \n1.0 Introduction \n \nAs domestic & global competitiveness becomes intensive, there is a need for MSMEs to transition \nto a new business environment especially with the disruption in the global supply chains and \nconvergence of multiple sourcing as a methodology in vendor develop ment. MSMEs form an \nintegral part of almost every value chain and there is a symbiotic relationship between the large \ncorporations and relatively small sized suppliers. Recognizing the importance of overall economic \ngrowth of a country and the need for enh ancing its productivity, competitiveness and employment \ngeneration besides resource optimization, many countries have initiated institutional mechanism for \na national approach on improving the quality of manufacturing & services.  \n \nMinistry of Micro, Small  & Medium Enterprises, Government of India, aims to implement the \nMSME Competitive (Lean) Scheme for MSMEs with an objective to enhance their productivity, \nefficiency, and competitiveness by reduction of wastages in processes, inventory management, \nspace management, energy consumption, etc.  \n \n2.0 About MSME COMPETITIVE (Lean) Scheme \n \nMSME Competitive (Lean) Scheme is an extensive drive and continuous effort on the part of \nMinistry of Micro, Small and Medium Enterprises for enhancing the competitiveness of MSME \nSectors through implementation of Lean Tools and Techniques. Lean Tools and Techniques are a \ntested and proven methodology for improving the competitiveness of MSME sector.  \n \nLean Scheme is proposed to be implemented in 2 Phases: \n \n \n \n \n \n \n \n \nScheme Validity: The financial support, incenti ves, benefits & other provisions contained in \nthe scheme herein will be valid till March 31, 2026.   \n \nPHASE 1 \nFor Manufacturing MSMEs with UDYAM Registration. This phase will \nfocus largely on maximizing inclusion of manufacturing MSMEs and taking \nthem through the journey of Lean. \nPHASE 2 \nInclusion of Service Sector MSMEs. This phase will also strive to integrate \nthose MSMEs (Manufacturing and Service Sectors) who are registered \nunder a State Government protocol /system but not on UDYAM.  ",
+          "page": 4,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "country",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+          "passage": " \nPage 4 of 28 \n \n1.0 Introduction \n \nAs domestic & global competitiveness becomes intensive, there is a need for MSMEs to transition \nto a new business environment especially with the disruption in the global supply chains and \nconvergence of multiple sourcing as a methodology in vendor develop ment. MSMEs form an \nintegral part of almost every value chain and there is a symbiotic relationship between the large \ncorporations and relatively small sized suppliers. Recognizing the importance of overall economic \ngrowth of a country and the need for enh ancing its productivity, competitiveness and employment \ngeneration besides resource optimization, many countries have initiated institutional mechanism for \na national approach on improving the quality of manufacturing & services.  \n \nMinistry of Micro, Small  & Medium Enterprises, Government of India, aims to implement the \nMSME Competitive (Lean) Scheme for MSMEs with an objective to enhance their productivity, \nefficiency, and competitiveness by reduction of wastages in processes, inventory management, \nspace management, energy consumption, etc.  \n \n2.0 About MSME COMPETITIVE (Lean) Scheme \n \nMSME Competitive (Lean) Scheme is an extensive drive and continuous effort on the part of \nMinistry of Micro, Small and Medium Enterprises for enhancing the competitiveness of MSME \nSectors through implementation of Lean Tools and Techniques. Lean Tools and Techniques are a \ntested and proven methodology for improving the competitiveness of MSME sector.  \n \nLean Scheme is proposed to be implemented in 2 Phases: \n \n \n \n \n \n \n \n \nScheme Validity: The financial support, incenti ves, benefits & other provisions contained in \nthe scheme herein will be valid till March 31, 2026.   \n \nPHASE 1 \nFor Manufacturing MSMEs with UDYAM Registration. This phase will \nfocus largely on maximizing inclusion of manufacturing MSMEs and taking \nthem through the journey of Lean. \nPHASE 2 \nInclusion of Service Sector MSMEs. This phase will also strive to integrate \nthose MSMEs (Manufacturing and Service Sectors) who are registered \nunder a State Government protocol /system but not on UDYAM.  ",
+          "page": 4,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "category",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+          "passage": " \nPage 4 of 28 \n \n1.0 Introduction \n \nAs domestic & global competitiveness becomes intensive, there is a need for MSMEs to transition \nto a new business environment especially with the disruption in the global supply chains and \nconvergence of multiple sourcing as a methodology in vendor develop ment. MSMEs form an \nintegral part of almost every value chain and there is a symbiotic relationship between the large \ncorporations and relatively small sized suppliers. Recognizing the importance of overall economic \ngrowth of a country and the need for enh ancing its productivity, competitiveness and employment \ngeneration besides resource optimization, many countries have initiated institutional mechanism for \na national approach on improving the quality of manufacturing & services.  \n \nMinistry of Micro, Small  & Medium Enterprises, Government of India, aims to implement the \nMSME Competitive (Lean) Scheme for MSMEs with an objective to enhance their productivity, \nefficiency, and competitiveness by reduction of wastages in processes, inventory management, \nspace management, energy consumption, etc.  \n \n2.0 About MSME COMPETITIVE (Lean) Scheme \n \nMSME Competitive (Lean) Scheme is an extensive drive and continuous effort on the part of \nMinistry of Micro, Small and Medium Enterprises for enhancing the competitiveness of MSME \nSectors through implementation of Lean Tools and Techniques. Lean Tools and Techniques are a \ntested and proven methodology for improving the competitiveness of MSME sector.  \n \nLean Scheme is proposed to be implemented in 2 Phases: \n \n \n \n \n \n \n \n \nScheme Validity: The financial support, incenti ves, benefits & other provisions contained in \nthe scheme herein will be valid till March 31, 2026.   \n \nPHASE 1 \nFor Manufacturing MSMEs with UDYAM Registration. This phase will \nfocus largely on maximizing inclusion of manufacturing MSMEs and taking \nthem through the journey of Lean. \nPHASE 2 \nInclusion of Service Sector MSMEs. This phase will also strive to integrate \nthose MSMEs (Manufacturing and Service Sectors) who are registered \nunder a State Government protocol /system but not on UDYAM.  ",
+          "page": 4,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "summary",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+          "passage": " \nPage 4 of 28 \n \n1.0 Introduction \n \nAs domestic & global competitiveness becomes intensive, there is a need for MSMEs to transition \nto a new business environment especially with the disruption in the global supply chains and \nconvergence of multiple sourcing as a methodology in vendor develop ment. MSMEs form an \nintegral part of almost every value chain and there is a symbiotic relationship between the large \ncorporations and relatively small sized suppliers. Recognizing the importance of overall economic \ngrowth of a country and the need for enh ancing its productivity, competitiveness and employment \ngeneration besides resource optimization, many countries have initiated institutional mechanism for \na national approach on improving the quality of manufacturing & services.  \n \nMinistry of Micro, Small  & Medium Enterprises, Government of India, aims to implement the \nMSME Competitive (Lean) Scheme for MSMEs with an objective to enhance their productivity, \nefficiency, and competitiveness by reduction of wastages in processes, inventory management, \nspace management, energy consumption, etc.  \n \n2.0 About MSME COMPETITIVE (Lean) Scheme \n \nMSME Competitive (Lean) Scheme is an extensive drive and continuous effort on the part of \nMinistry of Micro, Small and Medium Enterprises for enhancing the competitiveness of MSME \nSectors through implementation of Lean Tools and Techniques. Lean Tools and Techniques are a \ntested and proven methodology for improving the competitiveness of MSME sector.  \n \nLean Scheme is proposed to be implemented in 2 Phases: \n \n \n \n \n \n \n \n \nScheme Validity: The financial support, incenti ves, benefits & other provisions contained in \nthe scheme herein will be valid till March 31, 2026.   \n \nPHASE 1 \nFor Manufacturing MSMEs with UDYAM Registration. This phase will \nfocus largely on maximizing inclusion of manufacturing MSMEs and taking \nthem through the journey of Lean. \nPHASE 2 \nInclusion of Service Sector MSMEs. This phase will also strive to integrate \nthose MSMEs (Manufacturing and Service Sectors) who are registered \nunder a State Government protocol /system but not on UDYAM.  ",
+          "page": 4,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "benefits",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+          "passage": " \nPage 19 of 28 \n \n9.0 Financial Assistance for MSME Units \n Basic Level Intermediate level Advanced Level \nImplementation \nCost (Max. per \nunit) \nFree  ₹ 1,20,000 + Taxes  ₹ 2,40,000 + Taxes \nBeneficiary \nContribution  \n- \n10% of Total Cost of \nImplementation i.e., up \nto ₹ 12,000 + Taxes per \nunit (Max.) \n10% of Total Cost of \nImplementation i.e., up to  ₹ \n24,000 + Taxes per unit (Max.) \nGOI \nContribution  \n- \nMSME unit will be \nentitled for up to ₹ \n1,08,000 (max.) towards \nthe Implementation cost \n(Taxes Extra) \nMSME unit will be entitled for \nup to ₹ 2,16,000 (max.) towards \nthe Implementation cost (Taxes \nExtra) \nAdditional \nBenefit \n- \na) Additional 5% GOI contribution for MSMEs which are \npart of SFURTI Clusters, Woman/SC/ ST owned, NER \nlocated MSMEs. \n \nb) OEM/ Industry Association route  \n(i) Additional 5% GoI contribution shall be given to the \nMSMEs registering through Industry Association/ OEM \nafter completion of all levels.  \n(ii)  ₹ 5000/ per MSME shall be given to OEM/ Association \nafter completing all stages of lean intervention. \n(iii) For availing this benefit MSME unit need to mention \non while applying – Applying under Original Equipment \nManufacturer (OEM) or Applying under Industry \nAssociation (IA). \n \n ",
+          "page": 19,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "restrictions",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+          "passage": " \nPage 4 of 28 \n \n1.0 Introduction \n \nAs domestic & global competitiveness becomes intensive, there is a need for MSMEs to transition \nto a new business environment especially with the disruption in the global supply chains and \nconvergence of multiple sourcing as a methodology in vendor develop ment. MSMEs form an \nintegral part of almost every value chain and there is a symbiotic relationship between the large \ncorporations and relatively small sized suppliers. Recognizing the importance of overall economic \ngrowth of a country and the need for enh ancing its productivity, competitiveness and employment \ngeneration besides resource optimization, many countries have initiated institutional mechanism for \na national approach on improving the quality of manufacturing & services.  \n \nMinistry of Micro, Small  & Medium Enterprises, Government of India, aims to implement the \nMSME Competitive (Lean) Scheme for MSMEs with an objective to enhance their productivity, \nefficiency, and competitiveness by reduction of wastages in processes, inventory management, \nspace management, energy consumption, etc.  \n \n2.0 About MSME COMPETITIVE (Lean) Scheme \n \nMSME Competitive (Lean) Scheme is an extensive drive and continuous effort on the part of \nMinistry of Micro, Small and Medium Enterprises for enhancing the competitiveness of MSME \nSectors through implementation of Lean Tools and Techniques. Lean Tools and Techniques are a \ntested and proven methodology for improving the competitiveness of MSME sector.  \n \nLean Scheme is proposed to be implemented in 2 Phases: \n \n \n \n \n \n \n \n \nScheme Validity: The financial support, incenti ves, benefits & other provisions contained in \nthe scheme herein will be valid till March 31, 2026.   \n \nPHASE 1 \nFor Manufacturing MSMEs with UDYAM Registration. This phase will \nfocus largely on maximizing inclusion of manufacturing MSMEs and taking \nthem through the journey of Lean. \nPHASE 2 \nInclusion of Service Sector MSMEs. This phase will also strive to integrate \nthose MSMEs (Manufacturing and Service Sectors) who are registered \nunder a State Government protocol /system but not on UDYAM.  ",
+          "page": 4,
+          "language": "English",
+          "basis": "explicit"
+        }
+      }
+    ],
+    "requirements": [
+      {
+        "description": "Financial provisions in this captured version ended March 31, 2026; do not offer these as current benefits without an explicit extension.",
+        "kind": "eligibility",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+          "passage": " \nPage 4 of 28 \n \n1.0 Introduction \n \nAs domestic & global competitiveness becomes intensive, there is a need for MSMEs to transition \nto a new business environment especially with the disruption in the global supply chains and \nconvergence of multiple sourcing as a methodology in vendor develop ment. MSMEs form an \nintegral part of almost every value chain and there is a symbiotic relationship between the large \ncorporations and relatively small sized suppliers. Recognizing the importance of overall economic \ngrowth of a country and the need for enh ancing its productivity, competitiveness and employment \ngeneration besides resource optimization, many countries have initiated institutional mechanism for \na national approach on improving the quality of manufacturing & services.  \n \nMinistry of Micro, Small  & Medium Enterprises, Government of India, aims to implement the \nMSME Competitive (Lean) Scheme for MSMEs with an objective to enhance their productivity, \nefficiency, and competitiveness by reduction of wastages in processes, inventory management, \nspace management, energy consumption, etc.  \n \n2.0 About MSME COMPETITIVE (Lean) Scheme \n \nMSME Competitive (Lean) Scheme is an extensive drive and continuous effort on the part of \nMinistry of Micro, Small and Medium Enterprises for enhancing the competitiveness of MSME \nSectors through implementation of Lean Tools and Techniques. Lean Tools and Techniques are a \ntested and proven methodology for improving the competitiveness of MSME sector.  \n \nLean Scheme is proposed to be implemented in 2 Phases: \n \n \n \n \n \n \n \n \nScheme Validity: The financial support, incenti ves, benefits & other provisions contained in \nthe scheme herein will be valid till March 31, 2026.   \n \nPHASE 1 \nFor Manufacturing MSMEs with UDYAM Registration. This phase will \nfocus largely on maximizing inclusion of manufacturing MSMEs and taking \nthem through the journey of Lean. \nPHASE 2 \nInclusion of Service Sector MSMEs. This phase will also strive to integrate \nthose MSMEs (Manufacturing and Service Sectors) who are registered \nunder a State Government protocol /system but not on UDYAM.  ",
+          "page": 4,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "Captured broad eligibility includes Udyam-registered MSMEs and CFCs under SFURTI or MSE-CDP; reconcile the phased introduction before asserting current sector scope.",
+        "kind": "eligibility",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+          "passage": " \nPage 7 of 28 \n \nv. PR campaign, Advertising & Brand Promotion:  For popularizing the Lean \nScheme, a Nation-wide publicity will be done. \nvi. Digital Platform: Lean Scheme process will be e -enabled through a single window \ndigital platform which will be utilized for the implementation of the scheme. \n2.4 Coverage & Eligibility  \n \ni. All MSMEs registered with the UDYAM registration portal (of the Mo MSME) will be \neligible to participate in MSME Competitive (Lean) Scheme and avail related \nbenefits/incentives. \nii. Scheme is also open to Common Facilities Centers (CFCs) under SFURTI (Scheme of Fund \nfor Regeneration of Traditional Industries) and Micro & Smal l Enterprises - Cluster \nDevelopment Program (MSE-CDP) Schemes.  \n \n \n3.0 Stakeholders and their expected roles  \n \na) Ministry of MSME \n  The Ministry of MSME shall create an enabling environment and assist its partners in achieving \nthe objectives of the scheme by: \ni) Providing the approved guidelines for the development of various strategies and frameworks \nii) Monitoring, evaluation and necessary approvals. \niii) Creating a PMU for smooth operations and coordination. \niv) Identifying and partnering with Implementing Agencies for implementation of Lean Scheme. \nv) Co-ordinating with various Ministries/Departments/States and other stakeholders regarding \nthe Lean Scheme, including obtaining relevant consents/approvals wherever needed. \nvi) Ensuring Nation-wide Media/PR activities for wide publicity of the Lean Scheme. \nvii) Instituting incentives for MSMEs implementing Lean Scheme. \nviii) Developing synergies with States/ UTs and DICs to take forward the scheme into \nunderserved and un-served sectors, clusters, industrial units.  \n \nb) Implementing Agencies: \nImplementation of the Lean Scheme will be carried out through Quality Council of India (QCI) \nand National Productivity Council (NPC), who will work as Implementing Agencies (IAs). ",
+          "page": 7,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "Take the Lean Pledge and submit the prescribed undertaking before applying.",
+        "kind": "procedure",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+          "passage": " \nPage 10 of 28 \n \n4.0 Scheme Implementation (Implementation Mechanism) \nA.  Lean Pledge  \n \na) Every MSME that embarks on the journey of Lean Scheme will have to take “Lean Pledge” \n(Annexure -1) before submitting its application. \nb) After taking “Lean Pledge”, MSME can apply for implementation of Lean Tools and \nTechniques. Every MSME embarking on the journey of Lean Scheme must submit an \nundertaking as per Annexure -2. \nB.  Basic Level-2 Months  \n \na) The BASIC Level can be achieved by MSMEs individually, without forming any cluster/ \ngroup and is aimed at motivating them and creating awareness about the principles & benefits \nof Lean manufacturing.  \nb) Subsequent to taking Lean Pledge, the MSME will registe r itself for the Lean BASIC Level \nthrough the dedicated online portal of the scheme. \nc) This will be achieved through self -paced learning with the help of online Module developed \nand hosted on dedicated Lean Scheme portal.  \nd) There will be a provision of online  technical support for MSMEs in case of clarification of \ndoubts in the online module. \ne) The MSME will ensure dissemination of the learnings achieved after undergoing the BASIC \nLevel module to an adequate number of employees for sustenance and continuation. \nf) Basic level is free of cost for MSMEs. \n \nCertificate Validity: The validity of the certificate is for a period of 03 years. The applicant \nwill have to apply afresh in order to continue availing associated benefits/ incentives as per \nthe validity of the scheme.  \n \nLean \nREGISTR\nATION\nLean \nPLEDGE\nBasic Level \nthrough Self \nlearning",
+          "page": 10,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "Basic level is free and can be taken individually through self-paced learning; completion precedes Intermediate level.",
+        "kind": "procedure",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+          "passage": " \nPage 10 of 28 \n \n4.0 Scheme Implementation (Implementation Mechanism) \nA.  Lean Pledge  \n \na) Every MSME that embarks on the journey of Lean Scheme will have to take “Lean Pledge” \n(Annexure -1) before submitting its application. \nb) After taking “Lean Pledge”, MSME can apply for implementation of Lean Tools and \nTechniques. Every MSME embarking on the journey of Lean Scheme must submit an \nundertaking as per Annexure -2. \nB.  Basic Level-2 Months  \n \na) The BASIC Level can be achieved by MSMEs individually, without forming any cluster/ \ngroup and is aimed at motivating them and creating awareness about the principles & benefits \nof Lean manufacturing.  \nb) Subsequent to taking Lean Pledge, the MSME will registe r itself for the Lean BASIC Level \nthrough the dedicated online portal of the scheme. \nc) This will be achieved through self -paced learning with the help of online Module developed \nand hosted on dedicated Lean Scheme portal.  \nd) There will be a provision of online  technical support for MSMEs in case of clarification of \ndoubts in the online module. \ne) The MSME will ensure dissemination of the learnings achieved after undergoing the BASIC \nLevel module to an adequate number of employees for sustenance and continuation. \nf) Basic level is free of cost for MSMEs. \n \nCertificate Validity: The validity of the certificate is for a period of 03 years. The applicant \nwill have to apply afresh in order to continue availing associated benefits/ incentives as per \nthe validity of the scheme.  \n \nLean \nREGISTR\nATION\nLean \nPLEDGE\nBasic Level \nthrough Self \nlearning",
+          "page": 10,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "Intermediate level requires Basic completion and a Group of Enterprises; stated implementation duration and consultant handholding apply.",
+        "kind": "procedure",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+          "passage": " \nPage 11 of 28 \n \nC.  Intermediate Level  \n \na) After completion of BASIC Level MSMEs would be eligible for applying for \nIntermediate Level through the dedicated online portal of the scheme \nb) For achieving the Intermediate Level, the eligible MSMEs will have to form a Group of \nEnterprises (GoE). \nc) Intermediate Level encompasses application of Lean tools and techniques through onsite \nhandholding provided by the designated consultant. \nd) The cost of implementation of the Intermediate level is up to Rs. 1.2 Lakh (excluding taxes) \nper unit. The details of financial assistance are available at para 9.0. \ne) The three stages through which the Intermediate Level will be achieved are given in the table \nbelow: \nImplementation Mechanism – Intermediate Level \nDuration  6 Months*  \nImplementation \nPhases  3 Phases \nDuration of Phases  2 months each \n1st Stage  DSR and Action Plan \n2nd Stage  Implementation \n3rd Stage  Final and Last Stage of Implementation \nNote  Minimum onsite holding of 12 -14-man days per unit of GoE \n* From the date of signing of Tri-Partite Agreement (TPA) \n \nCertificate Validity: The validity of the certificate is for a period of 03 years subject to \nsurveillance audit at the end of 18 months. The applicant will have to apply afresh in order to \ncontinue availing associated benefits/ incentives as per the validity of the scheme.   \nLean \nREGISTRATION\nLean \nPLEDGE\nBasic Level \nthrough Self \nlearning\nFormation of \nGoE\nHandholding \nsupport in \nthree stages\nAssessment for \nIntermediate \nLevel\nAward of Lean \nIntermediate \nLevel",
+          "page": 11,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "Advanced level requires Intermediate completion and GoE; stated duration and handholding apply.",
+        "kind": "procedure",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+          "passage": " \nPage 12 of 28 \n \nD.  Advance Level \n \na) After completion of Intermediate Level MSMEs would be eligible for applying for \nAdvanced Level through the dedicated online portal of the scheme.  \nb) For achieving the Advanced Level, the eligible MSMEs will have to form  a Group of \nEnterprises (GoE). \nc) Advanced Level encompasses application of Lean tools and techniques through onsite \nhandholding provided by the designated consultant. \nd) The cost of implementation of Advanced level is up to Rs. 2.4 Lakh (excluding taxes) per unit.  \nThe details of financial assistance are available at para 9.0. \ne) The three stages through which the Advanced Level will be achieved are given in the table \nbelow: \nAdvanced Level \nDuration  12 months* \nImplementation Phases  3 Phases \nDuration of Phases  \n1st Stage (2 months); \n2nd Stage (5 months); \n3rd Stage (5 months) \n1st Stage  DSR and Action Plan \n2nd Stage  Implementation \n3rd Stage  Final and Last Stage of Implementation \nNote  Minimum onsite holding of 24–26-man days per unit of GoE \n \n* From the date of signing of Tri-Partite Agreement (TPA) ",
+          "page": 12,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "GoE comprises four to ten MSMEs, with MoU, nodal officer, power of attorney and PMAC approval; dissimilar products may also be allowed.",
+        "kind": "procedure",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+          "passage": " \nPage 14 of 28 \n \nE.  Group of Enterprises (GoE) \n \nA Group of Enterprises will comprise at least 4 and up to 10 MSMEs located  within an \nidentifiable, and as for as practicable, contiguous area and manufacturing same/similar products. \nHowever, MSMEs manufacturing dissimilar products may also be allowed to form Group of \nEnterprises (GoE).  \n \n \n \nFormation of GoE: The eligible MSMEs would be required to form a Group of Enterprises \n(GoE) for applying for intermediate and Advanced Levels. The following are the stages for \nthe formation of GoE:  \n(i) Identification of MSMEs by IAs. \n(ii) Signing of MoU amongst the identified MSMEs. \n(iii) Selection of a Nodal Officer and Power of Attorney. \n(iv) Applying through online portal for registration of GoE. \n(v) Forwarding of proposals of eligible GoEs by IAs after scrutiny to Ministry of MSME.  \n(vi) Approval of GoE by PMAC.  \n \nLevel Individual/ (GoE) Mode and Duration \nLevel -1  Basic Level  MSME as Individual Units  Self – learning Phase \nthrough e - learning \nmodule  \nDuration up to 2 Months \nLevel -2  Intermediate Level MSMEs as Group of \nEnterprise (GoE).  \n \nSelf – learning Phase \nthrough e - learning \nmodule and Handholding \nDuration up to 6 months \nLevel -3  Advanced Level MSMEs as Group of \nEnterprise (GoE).  \n \nHandholding Phase: \nDuration up to 12 \nmonths  ",
+          "page": 14,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "Certificates have three-year validity subject to stated surveillance audits and scheme validity; certificate validity does not extend financial scheme validity.",
+        "kind": "renewal",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+          "passage": " \nPage 13 of 28 \n \n \nDuring the Advanced Stage units forming a GoE may choose to continue with same GoE/  \nConsultant or may form a new GoE/appoint a new consultant with the approval of PMAC based on \nthe recommendation of Implementing Agency (IA). \n \nLean Certificate Validity:  The validity of the certificate is for a period of 03 years subject to \nsurveillance audit at the end of 18 months. The applicant will have to apply afresh in order to \ncontinue availing associated benefits/ incentives as per the validity of the scheme.   \ni. The details of the topics covered in each certification level of Lean Scheme are available at \nAnnexure -3. \n \n \n \nLean REGISTRA TION\nLean PLEDGE\nBasic Level through \nSelf learning\nIntermediate Level \ncertification\nFormation of GoE (if \nrequired)\nHandholding support in \nthree stages\nAssessment for \nAdvanced Level\nAward of Lean \nAdvanced ",
+          "page": 13,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "Category, SFURTI, NER and OEM/association additional contributions require their printed conditions; do not automatically add every incentive or pay intermediary assistance to the enterprise.",
+        "kind": "selection",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+          "passage": " \nPage 19 of 28 \n \n9.0 Financial Assistance for MSME Units \n Basic Level Intermediate level Advanced Level \nImplementation \nCost (Max. per \nunit) \nFree  ₹ 1,20,000 + Taxes  ₹ 2,40,000 + Taxes \nBeneficiary \nContribution  \n- \n10% of Total Cost of \nImplementation i.e., up \nto ₹ 12,000 + Taxes per \nunit (Max.) \n10% of Total Cost of \nImplementation i.e., up to  ₹ \n24,000 + Taxes per unit (Max.) \nGOI \nContribution  \n- \nMSME unit will be \nentitled for up to ₹ \n1,08,000 (max.) towards \nthe Implementation cost \n(Taxes Extra) \nMSME unit will be entitled for \nup to ₹ 2,16,000 (max.) towards \nthe Implementation cost (Taxes \nExtra) \nAdditional \nBenefit \n- \na) Additional 5% GOI contribution for MSMEs which are \npart of SFURTI Clusters, Woman/SC/ ST owned, NER \nlocated MSMEs. \n \nb) OEM/ Industry Association route  \n(i) Additional 5% GoI contribution shall be given to the \nMSMEs registering through Industry Association/ OEM \nafter completion of all levels.  \n(ii)  ₹ 5000/ per MSME shall be given to OEM/ Association \nafter completing all stages of lean intervention. \n(iii) For availing this benefit MSME unit need to mention \non while applying – Applying under Original Equipment \nManufacturer (OEM) or Applying under Industry \nAssociation (IA). \n \n ",
+          "page": 19,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      }
+    ],
+    "review_flags": [
+      "Independent semantic review unavailable at zero external AI budget. Human must approve the exact cited interpretation.",
+      "Supported source rules are separated from unknown applicant facts; no eligibility or award guarantee.",
+      "HARD BLOCK: retain as unapproved historical draft. No consolidated publication authorization applies to LEAN."
+    ],
+    "missing_fields": [
+      "Verified application-round opening and closing dates",
+      "Current fund or slot availability",
+      "Independent semantic verification"
+    ]
+  },
+  "candidate_hash": "511f6fb815717a9fcd4ca72fb02847aee8b030c318c3b445c6813ec1f4d80ae4",
+  "approval_hash": "7130a49e934b0e93fee4846d5b653ee98d56fdd10770b15f0d14f62d2d09342a",
+  "pages": [
+    {
+      "page": 1,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 1 of 28 \n \n \n \nMSME COMPETITIVE (LEAN) SCHEME \n(A component of MSME Champions Scheme) \nGUIDELINES 2022 \n",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/ABCDEE+Calibri,BoldItalic"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 2,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 2 of 28 \n \n                             TABLE OF CONTENT \n \n \nABBREVIATIONS ................................ ................................ ................................ ..3 \n1.0 Introduction ................................ ................................ ................................ .....4 \n2.0 About MSME COMPETITIVE (Lean) Scheme ................................ ............4 \n2.1 Objectives of the Scheme ................................ ................................ ................... 5 \n2.2 MSME Competitive (Lean) Scheme Levels................................ ....................... 5 \n2.3 MSME Competitive (Lean) Scheme Components ................................ ............6 \n2.4 Coverage & Eligibility ................................ ................................ ........................ 7 \n3.0 Stakeholders and their expected roles ................................ ............................... 7 \n4.0 Scheme Implementation (Implementation Mechanism) ................................ .. 10 \nA.  Lean Pledge ................................ ................................ ................................  10 \nB.  Basic Level-2 Months ................................ ................................ .................  10 \nC.  Intermediate Level ................................ ................................ .....................  11 \nD.  Advance Level ................................ ................................ ............................  12 \nE.  Group of Enterprises (GoE) ................................ ................................ ...... 14 \nF.  LEAN Manufacturing Consultant (LMC) ................................ ................  15 \n5.0 Monitoring Mechanism ................................ ................................ ....................  16 \n6.0 MSME Competitive (Lean) Scheme Activities ................................ ................  17 \n7.0 E-Certificate ................................ ................................ ................................ ..... 18 \n8.0 Benefits/ Incentives ................................ ................................ ...........................  18 \n9.0 Financial Assistance for MSME Units ................................ ............................  19 \n10.0 Implementation Arrangements ................................ ................................ ...... 20 \nAnnexure-1 ................................ ................................ ................................ ............. 22 \nAnnexure-2 ................................ ................................ ................................ ............. 23 \nAnnexure-3 ................................ ................................ ................................ ............. 24 \nAnnexure-4 ................................ ................................ ................................ ............. 26 \nAnnexure-5 ................................ ................................ ................................ ............. 27 \n \n",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman",
+        "/ABCDEE+Tw Cen MT",
+        "/Times New Roman,Bold",
+        "/Times New Roman,BoldItalic"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 3,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 3 of 28 \n \n \n                             ABBREVIATIONS \n \n \n \nCFC Common Facility Center \nDSR Diagnostic Study Report \nGoE Group of Enterprises  \nIA Implementing Agency \nISO International Standard Organisation \nLMC Lean Manufacturing Consultant \nLean Scheme MSME Competitive (Lean) Scheme  \nMoMSME Ministry of Micro, Small and Medium Enterprise \nMSME Micro, Small and Medium Enterprises \nMSE-CDP Micro & Small Enterprises - Cluster Development Program  \nMSME-DFO MSME-Development and Facilitation Office \nNPC National Productivity Council \nOEM Original Equipment Manufacturer \nPMAC Project Monitoring and Advisory Committee \nPMU Project Monitoring Unit \nQCI Quality Council of India \nSFURTI Scheme of Fund for Regeneration of Traditional Industries ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman",
+        "/Times New Roman,Bold"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 4,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 4 of 28 \n \n1.0 Introduction \n \nAs domestic & global competitiveness becomes intensive, there is a need for MSMEs to transition \nto a new business environment especially with the disruption in the global supply chains and \nconvergence of multiple sourcing as a methodology in vendor develop ment. MSMEs form an \nintegral part of almost every value chain and there is a symbiotic relationship between the large \ncorporations and relatively small sized suppliers. Recognizing the importance of overall economic \ngrowth of a country and the need for enh ancing its productivity, competitiveness and employment \ngeneration besides resource optimization, many countries have initiated institutional mechanism for \na national approach on improving the quality of manufacturing & services.  \n \nMinistry of Micro, Small  & Medium Enterprises, Government of India, aims to implement the \nMSME Competitive (Lean) Scheme for MSMEs with an objective to enhance their productivity, \nefficiency, and competitiveness by reduction of wastages in processes, inventory management, \nspace management, energy consumption, etc.  \n \n2.0 About MSME COMPETITIVE (Lean) Scheme \n \nMSME Competitive (Lean) Scheme is an extensive drive and continuous effort on the part of \nMinistry of Micro, Small and Medium Enterprises for enhancing the competitiveness of MSME \nSectors through implementation of Lean Tools and Techniques. Lean Tools and Techniques are a \ntested and proven methodology for improving the competitiveness of MSME sector.  \n \nLean Scheme is proposed to be implemented in 2 Phases: \n \n \n \n \n \n \n \n \nScheme Validity: The financial support, incenti ves, benefits & other provisions contained in \nthe scheme herein will be valid till March 31, 2026.   \n \nPHASE 1 \nFor Manufacturing MSMEs with UDYAM Registration. This phase will \nfocus largely on maximizing inclusion of manufacturing MSMEs and taking \nthem through the journey of Lean. \nPHASE 2 \nInclusion of Service Sector MSMEs. This phase will also strive to integrate \nthose MSMEs (Manufacturing and Service Sectors) who are registered \nunder a State Government protocol /system but not on UDYAM.  ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Arial,Bold",
+        "/Times New Roman"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 5,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 5 of 28 \n \n2.1 Objectives of Scheme \n \nThe objective of the scheme is to enhance the Domestic and Global Competitiveness of MSMEs \nthrough the application of various Lean Techniques that inter-alia includes:  \n Reduction in: \n Rejection Rates  \n Product and Raw Material Movements \n Production Cost \n Optimization of: \n Space Utilization \n Resources Like Water, Energy, Natural Resources etc. \n Enhancement of: \n Quality in Product and Process   \n Production & Export Capabilities   \n Workplace Safety \n Knowledge & Skill Sets  \n Innovative Work Culture \n Social & Environmental Accountability  \n Profitability  \n Introduction & Awareness to Industry 4.0 \n Digital Empowerment \n2.2 MSME Competitive (Lean) Scheme Levels  \n \nMSME Competitive (Lean) Scheme can be attained in THREE Levels after registering and taking \nthe Lean Pledge:  \n \n• Level 1: BASIC \n• Level 2: INTERMEDIATE \n• Level 3: ADVANCED \n \na) Every MSME that embarks on the journey of Lean (Basic, Intermediate, Advanced) will \nhave to take a “Lean Pledge” before undertaking the journey of implementation of lean tools \nand techniques. ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Times New Roman",
+        "/Symbol",
+        "/Arial",
+        "/ABCDEE+Wingdings",
+        "/Times New Roman",
+        "/Times New Roman,Bold",
+        "/Arial,Bold"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 6,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 6 of 28 \n \nb) The intent of taking a Lean Pledge is to take a “pre-commitment” or a solemn promise \nby MSMEs to uphold the values of Lean Practices and Philosophy in their functioning \nand to urge them to move ahead on the journey of Lean.   \nc) After taking the Lean Pledge, the MSME can apply for handholding of its units depending \non the need and level of prepared ness and interest of MSME unit. Lean Scheme can be \nimplemented by MSME units in the above three levels. \n \n \n2.3 MSME Competitive (Lean) Scheme Components \n \ni. Industry Awareness Programmes/Workshop: MSMEs will be made aware of the Scheme \nthrough Nation-wide awareness programmes (online and/or face -to-face, as appropriate) \nwith the assistance of stakeholders like Industry Associations, Implementing Agencies, \nMSME-DFOs, District Industries Centres (DICs), Large Enterprises/OEMs.   \nii. Training Programmes : Stakeholders like the MSME Officers, Assessors and \nConsultants will be trained on the MSME Competitiveness (Lean) Scheme to enable \nan effective implementation by Implementing Agencies like QCI, NPC.  \niii. Handholding: MSMEs will be provided handholding towards the implementation of \nLean Tools and Techniques at three different levels – Basic, Intermediate , and \nAdvanced. Completion of each stage is verifiable end term assessment or assessment \nby Implementation Agency along MSME -DFOs as the case may be.  \niv. Benefits/Incentives: Graded incentives will be announced by the Ministry of MSME \nfor MSMEs for encouraging MSME units’ participation under the scheme.  \nImplementation of Lean \n(Generation of Lean ID)\nLean Pledge & \nUndertaking\n(Generation of Lean \nPledge Level)  \nImplementation of Lean\n(Basic, Intermediate, \nAdvanced) ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Arial,Bold",
+        "/Times New Roman",
+        "/Times New Roman"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 7,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 7 of 28 \n \nv. PR campaign, Advertising & Brand Promotion:  For popularizing the Lean \nScheme, a Nation-wide publicity will be done. \nvi. Digital Platform: Lean Scheme process will be e -enabled through a single window \ndigital platform which will be utilized for the implementation of the scheme. \n2.4 Coverage & Eligibility  \n \ni. All MSMEs registered with the UDYAM registration portal (of the Mo MSME) will be \neligible to participate in MSME Competitive (Lean) Scheme and avail related \nbenefits/incentives. \nii. Scheme is also open to Common Facilities Centers (CFCs) under SFURTI (Scheme of Fund \nfor Regeneration of Traditional Industries) and Micro & Smal l Enterprises - Cluster \nDevelopment Program (MSE-CDP) Schemes.  \n \n \n3.0 Stakeholders and their expected roles  \n \na) Ministry of MSME \n  The Ministry of MSME shall create an enabling environment and assist its partners in achieving \nthe objectives of the scheme by: \ni) Providing the approved guidelines for the development of various strategies and frameworks \nii) Monitoring, evaluation and necessary approvals. \niii) Creating a PMU for smooth operations and coordination. \niv) Identifying and partnering with Implementing Agencies for implementation of Lean Scheme. \nv) Co-ordinating with various Ministries/Departments/States and other stakeholders regarding \nthe Lean Scheme, including obtaining relevant consents/approvals wherever needed. \nvi) Ensuring Nation-wide Media/PR activities for wide publicity of the Lean Scheme. \nvii) Instituting incentives for MSMEs implementing Lean Scheme. \nviii) Developing synergies with States/ UTs and DICs to take forward the scheme into \nunderserved and un-served sectors, clusters, industrial units.  \n \nb) Implementing Agencies: \nImplementation of the Lean Scheme will be carried out through Quality Council of India (QCI) \nand National Productivity Council (NPC), who will work as Implementing Agencies (IAs). ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Arial,Bold",
+        "/Times New Roman",
+        "/Arial"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 8,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 8 of 28 \n \nThese IAs will co -ordinate with MoMSME to enable effective implementation of \nMSME Competitive (Lean) by: \ni) Nominating a Nodal Officer for effective coordination with the Ministry. \nii) Developing Lean Scheme monitoring and implementation mechanism, dedicated digital \nplatform, E-learning modules, etc. \niii) Developing mechanism for handholding of MSME units and on boarding of consultants for \nthe same.  \niv) Training of Stakeholders on the Lean Scheme \nv) Performing as an Implementing Agency (IA) \n \nc) Organisations under the administrative control of MoMSME & the office of DC-MSME \nThese organisations (such as MSME-DFOs, Technology Centres, Testing Centres, NIMSME \nand others) will enable effective implementation of the Lean Scheme by:  \ni) Nominating a Nodal Officer for effective coordination with the Ministry \nii) Creating a mechanism for widespread dissemination of information on this initiative through \nits offices and assisting maximizing awareness & outreach of Lean Scheme Guidelines to \nenroll MSMEs on the Lean journey \niii) Assisting the Ministry in capacity building of the industry \niv) Assisting the Ministry in inst itutionalizing incentives for MSME units availing Lean \nScheme \nv) Assisting in milestone assessment along with Implementing Agencies (IA’s) \n \nd) State Governments  \ni) Nominate a Nodal Officer for effective coordination with the Ministry  \nii) Activate all DICs & related divisions/offices under its administrative control/purview and \nsensitize them on Lean Scheme with the assistance of Implementing Agencies \niii) Create a mechanism for widespread dissemination of information on this initiative through \nits divisions/offices in the State and assist the Ministry of MSME in maximum awareness & \noutreach of the Lean Scheme guidelines and urging the MSMEs to join the Lean journey   \niv) Assist the Ministry in capacity building of the Industry in their State \nv) Incorporate Lean Scheme guidelines as a part of their respective Industrial policy \nvi) Extend graded benefits (that come under the purview of the State) to MSMEs that have \nimplemented Lean tools and techniques under Lean Scheme.  \n \n \n ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman",
+        "/Arial",
+        "/Times New Roman,Bold",
+        "/Arial,Bold",
+        "/Times New Roman"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 9,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 9 of 28 \n \ne) Lean Consultants   \ni) Preparation of Diagnostic Study Report (DSR) and Action Plan. \nii) Providing Remote / Onsite handholding to MSMEs for Lean implementation. \niii) Maintenance of record of Lean implementation activities carried out in units. \niv) Preparation of case studies, progress reports of GoEs and any other report as desired from \ntime to time by the MoMSME. \nv) Any other task as advised by the MoMSME \n \nf)   OEMs and Industrial Associations \n        Ministry of MSME will identify and partner with OEMs and Industrial Associations for:  \ni) Disseminate information amongst its MSME members and assist the Ministry in creating \nawareness & outreach of the Lean Scheme \nii)  Motivating MSMEs to apply for Lean scheme  \niii) Ensure the MSMEs joining the Lean Scheme to complete the journey  \n \ng)   Micro, Small & Medium Enterprises \ni) Undergo Awareness Programmes & Training for a better understanding of the Lean Scheme \nguidelines \nii)  Exhibit intent and commitment towards improving their systems and processes so as to \nachieve higher lean implementation level in their unit \n \nh)  Other Ministries & Departments \ni) Explore benefits/incentives relevant to their respective Ministry/Department for MSMEs \nwho undertake lean implementation \nii) Explore extending preference in procurement to Lean Implemented MSMEs \n \n \n \n \n \n \n \n ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Arial,Bold",
+        "/Times New Roman",
+        "/Arial"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 10,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 10 of 28 \n \n4.0 Scheme Implementation (Implementation Mechanism) \nA.  Lean Pledge  \n \na) Every MSME that embarks on the journey of Lean Scheme will have to take “Lean Pledge” \n(Annexure -1) before submitting its application. \nb) After taking “Lean Pledge”, MSME can apply for implementation of Lean Tools and \nTechniques. Every MSME embarking on the journey of Lean Scheme must submit an \nundertaking as per Annexure -2. \nB.  Basic Level-2 Months  \n \na) The BASIC Level can be achieved by MSMEs individually, without forming any cluster/ \ngroup and is aimed at motivating them and creating awareness about the principles & benefits \nof Lean manufacturing.  \nb) Subsequent to taking Lean Pledge, the MSME will registe r itself for the Lean BASIC Level \nthrough the dedicated online portal of the scheme. \nc) This will be achieved through self -paced learning with the help of online Module developed \nand hosted on dedicated Lean Scheme portal.  \nd) There will be a provision of online  technical support for MSMEs in case of clarification of \ndoubts in the online module. \ne) The MSME will ensure dissemination of the learnings achieved after undergoing the BASIC \nLevel module to an adequate number of employees for sustenance and continuation. \nf) Basic level is free of cost for MSMEs. \n \nCertificate Validity: The validity of the certificate is for a period of 03 years. The applicant \nwill have to apply afresh in order to continue availing associated benefits/ incentives as per \nthe validity of the scheme.  \n \nLean \nREGISTR\nATION\nLean \nPLEDGE\nBasic Level \nthrough Self \nlearning",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Times New Roman,BoldItalic",
+        "/Times New Roman",
+        "/Arial",
+        "/Times New Roman"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 11,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 11 of 28 \n \nC.  Intermediate Level  \n \na) After completion of BASIC Level MSMEs would be eligible for applying for \nIntermediate Level through the dedicated online portal of the scheme \nb) For achieving the Intermediate Level, the eligible MSMEs will have to form a Group of \nEnterprises (GoE). \nc) Intermediate Level encompasses application of Lean tools and techniques through onsite \nhandholding provided by the designated consultant. \nd) The cost of implementation of the Intermediate level is up to Rs. 1.2 Lakh (excluding taxes) \nper unit. The details of financial assistance are available at para 9.0. \ne) The three stages through which the Intermediate Level will be achieved are given in the table \nbelow: \nImplementation Mechanism – Intermediate Level \nDuration  6 Months*  \nImplementation \nPhases  3 Phases \nDuration of Phases  2 months each \n1st Stage  DSR and Action Plan \n2nd Stage  Implementation \n3rd Stage  Final and Last Stage of Implementation \nNote  Minimum onsite holding of 12 -14-man days per unit of GoE \n* From the date of signing of Tri-Partite Agreement (TPA) \n \nCertificate Validity: The validity of the certificate is for a period of 03 years subject to \nsurveillance audit at the end of 18 months. The applicant will have to apply afresh in order to \ncontinue availing associated benefits/ incentives as per the validity of the scheme.   \nLean \nREGISTRATION\nLean \nPLEDGE\nBasic Level \nthrough Self \nlearning\nFormation of \nGoE\nHandholding \nsupport in \nthree stages\nAssessment for \nIntermediate \nLevel\nAward of Lean \nIntermediate \nLevel",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Times New Roman",
+        "/Arial",
+        "/Times New Roman,Bold",
+        "/Times New Roman,Italic"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 12,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 12 of 28 \n \nD.  Advance Level \n \na) After completion of Intermediate Level MSMEs would be eligible for applying for \nAdvanced Level through the dedicated online portal of the scheme.  \nb) For achieving the Advanced Level, the eligible MSMEs will have to form  a Group of \nEnterprises (GoE). \nc) Advanced Level encompasses application of Lean tools and techniques through onsite \nhandholding provided by the designated consultant. \nd) The cost of implementation of Advanced level is up to Rs. 2.4 Lakh (excluding taxes) per unit.  \nThe details of financial assistance are available at para 9.0. \ne) The three stages through which the Advanced Level will be achieved are given in the table \nbelow: \nAdvanced Level \nDuration  12 months* \nImplementation Phases  3 Phases \nDuration of Phases  \n1st Stage (2 months); \n2nd Stage (5 months); \n3rd Stage (5 months) \n1st Stage  DSR and Action Plan \n2nd Stage  Implementation \n3rd Stage  Final and Last Stage of Implementation \nNote  Minimum onsite holding of 24–26-man days per unit of GoE \n \n* From the date of signing of Tri-Partite Agreement (TPA) ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Times New Roman",
+        "/Arial",
+        "/Times New Roman,Bold",
+        "/ABCDEE+Tahoma",
+        "/Times New Roman,Italic"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 13,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 13 of 28 \n \n \nDuring the Advanced Stage units forming a GoE may choose to continue with same GoE/  \nConsultant or may form a new GoE/appoint a new consultant with the approval of PMAC based on \nthe recommendation of Implementing Agency (IA). \n \nLean Certificate Validity:  The validity of the certificate is for a period of 03 years subject to \nsurveillance audit at the end of 18 months. The applicant will have to apply afresh in order to \ncontinue availing associated benefits/ incentives as per the validity of the scheme.   \ni. The details of the topics covered in each certification level of Lean Scheme are available at \nAnnexure -3. \n \n \n \nLean REGISTRA TION\nLean PLEDGE\nBasic Level through \nSelf learning\nIntermediate Level \ncertification\nFormation of GoE (if \nrequired)\nHandholding support in \nthree stages\nAssessment for \nAdvanced Level\nAward of Lean \nAdvanced ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman",
+        "/Times New Roman,Bold",
+        "/Arial,Bold"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 14,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 14 of 28 \n \nE.  Group of Enterprises (GoE) \n \nA Group of Enterprises will comprise at least 4 and up to 10 MSMEs located  within an \nidentifiable, and as for as practicable, contiguous area and manufacturing same/similar products. \nHowever, MSMEs manufacturing dissimilar products may also be allowed to form Group of \nEnterprises (GoE).  \n \n \n \nFormation of GoE: The eligible MSMEs would be required to form a Group of Enterprises \n(GoE) for applying for intermediate and Advanced Levels. The following are the stages for \nthe formation of GoE:  \n(i) Identification of MSMEs by IAs. \n(ii) Signing of MoU amongst the identified MSMEs. \n(iii) Selection of a Nodal Officer and Power of Attorney. \n(iv) Applying through online portal for registration of GoE. \n(v) Forwarding of proposals of eligible GoEs by IAs after scrutiny to Ministry of MSME.  \n(vi) Approval of GoE by PMAC.  \n \nLevel Individual/ (GoE) Mode and Duration \nLevel -1  Basic Level  MSME as Individual Units  Self – learning Phase \nthrough e - learning \nmodule  \nDuration up to 2 Months \nLevel -2  Intermediate Level MSMEs as Group of \nEnterprise (GoE).  \n \nSelf – learning Phase \nthrough e - learning \nmodule and Handholding \nDuration up to 6 months \nLevel -3  Advanced Level MSMEs as Group of \nEnterprise (GoE).  \n \nHandholding Phase: \nDuration up to 12 \nmonths  ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Times New Roman",
+        "/Arial",
+        "/Times New Roman,BoldItalic",
+        "/Times New Roman"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 15,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 15 of 28 \n \nF.  LEAN Manufacturing Consultant (LMC) \n \nLean Consultant will provide, inter -alia, remote/ onsite handholding to MSMEs for Lean \nimplementation, maintenance of record of Lean implementation activities carried out in units and \npreparation of case studies, progress report of GoEs, and any other reports as desired from time \nto time by the MoMSME. \n \nThe procedure for empanelment and selection of Lean consultant is as below: \nEmpanelment:  \n(a) The criteria for empanelment of Lean consultants would be developed by the IAs, which will \nbe approved by the PMAC.  \n(b) The criteria so developed must facilitate the selection of consultants having adequate expertise, \nknowledge, training & consulting skills, experience and adequate territorial presence etc.  \nSelection:  \n(a) IAs would develop criteria for the s election of Lean consultants which will be approved by \nPMAC.  \n(b) The Lean consultants which have been empanelled would be selected for the GoE for carrying \nout the implementation of Lean activities.  \n(c) The IAs would carry out the selection process through a competitive bidding process ensuring \nfair and transparent selection as per GFR/ CVC norms. The consultant so selected shall be \napproved by the PMAC.  \n(d) IAs would develop criteria for monitoring/ evaluat ing the performance of the consultants. In \ncase of unsatisfactory performance/ withdrawal/ any unforeseen circumstances leading to the \nchange of consultants, the IAs would ensure the approval of PMAC before doing the same.  \n(e) A Tri-Partite agreement shall be signed amongst GoE, IA and the approved Lean Consultant. \n(f) IAs shall ensure the same Lean consultant is not selected for more than 01 GoE at a time.  \n \n \n ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Times New Roman",
+        "/Arial"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 16,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 16 of 28 \n \n5.0 Monitoring Mechanism \n \na) Basic Level  \n \nDuration 2 Months \nMonitoring \nMechanism \nThis will be achieved through self- paced learning with the help of online \nModule Developed for the same. Monitoring of Basic Level \nCertification will be based upon online assessment examination at the \nend of the Basic Level self -paced learning modules. Su bsequent to \nsuccessful completion of the online assessment examination, the MSME \nUnit will be eligible for the Basic Level Certification.  \n \nb) Intermediate Level   \nDuration 6 Months \nMonitoring \nMechanism \na) 1st Stage (DSR Stage):  Online by Implementing Agency \nb) 2nd Stage: Online by Implementing Agency  \nc) 3rd Stage: Physical by Implementing Agency along with MSME \nDFO Official \n \nc) Advanced Level   \nDuration 12 Months \nMonitoring \nMechanism \na) 1st Stage (DSR Stage):  Online by Implementing Agency \nb) 2nd Stage: Online by Implementing Agency  \nc)  3rd Stage: Physical by Implementing Agency along with MSME DFO \nOfficial \n \nNote:  \na. At Intermediate level, consultant will be provided a grace period of 3 months for completion \nof work at Intermediate Level; while at Advanced Level, consultant will be provided a grace \nperiod of 6 months for completion of work at Advanced Level \nb. MSME DFO offices need to appoint SPOC for interaction with Implementing Agency  ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Times New Roman",
+        "/Arial,Bold",
+        "/Arial"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 17,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 17 of 28 \n \nc. MSME DFO offices are expected to provide date for assessment within 7 working days \nof receipt of request for date f rom Implementing Agency. In absence of receipt of date \nfrom MSME DI office within 7 working days of receipt of request, Implementing Agency can \nproceed to carry the audit of designate GoE with intimation to MSME DI office.  \nd. Implementing Agency will be submitting assessment report of stages available for scrutiny by \nMo MSME through online mode. \ne. MoMSME is free to conduct surprise assessment of GoE alloca ted to Implementing Agency \nfor assessing the ground realities of implementation in GoE.  \nf. Monitoring will be carried out in all three Stages for verification of achievement of targets in \neach stage through a mix of virtual and on-site monitoring mechanisms.  \n6.0 MSME Competitive (Lean) Scheme Activities \n \na) Awareness & Training \nThe activities in this component will leverage the already existing partnerships of the Ministry of \nMSME with other public/private organisations  and also explore to forge new partnerships so as to \nenable a more conducive environment for MSMEs which are on the Lean Journey.   \n \nFollowing activities shall be organised by the stakeholders: \nS.No Type of Programme Deliverables Amount limit \n1. Industry Awareness \nProgrammes /Workshops / \nRegistration Camps \nHalf-day workshops. \nMinimum 50 participants. \nMinimum 15 (new) \nPledges. \nWebinar: Rs. 40,000/- \nFace to Face: Rs. 70,000/- \n2. Training of officials of \nMSME- DFOs, MSME -\nTesting Centres, Technology \nCentres, Design Incubation \nCentres, IPFC, etc. \n5-Day training programme \n~20-25 participants per \ntraining \nVirtual: Rs. 60,000/- per day \nFace to Face: Rs. 1 Lakh per \nday \n(Prorated for both modes) \n3. Consultants/Assessors/Master \nTrainers’ Training \n5-Day training programme \n~20-25 participants per \ntraining \nVirtual: Rs. 60,000/- per day \nFace to Face: Rs. 1 Lakh per \nday (Prorated) \nThe Annual targets will be allocated by the PMAC based on the industry requirements. \n ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman",
+        "/Arial",
+        "/Times New Roman,Bold",
+        "/Arial,Bold",
+        "/Times New Roman"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 18,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 18 of 28 \n \nb) International Benchmarking and Learning Best Practices and Foreign \nTravels/Delegations, International Trainings related to MSME Competitive (Lean) \nCertification \nAdoption of world class practices for Lean implementation is required for effective implementation \nof MSME Competitive (Lean) Certification. To facilitate learning of relevant world class practices, \nproposal(s) relating to the activity will be prepared by IAs, which will be considered on case -to-\ncase basis on its merit. IA will submit a report regarding the findings of the visit that will be shared \nwith stakeholders. The PMAC will approve the finer details and financial requirements. \n \nc) Marketing and Other Initiatives \ni. Nationwide prolonged Awareness Campaigns through Print / Electronic Media shall be \nundertaken to reach entire industrial belts of the country in vernacular languages.  \nii. Animated Audio/Video developed on the Knowledge repository on ‘Lean Tools and \nTechniques’ for showcasing ‘Body of Knowledge’ to be dissipated for enhancing ‘Trained \nmanpower’ on Lean for the industry as well as academia. \niii. A portal shall be developed for the scheme implementation and monitoring. This portal shall \nalso contain the e-learning modules developed for all three levels of the scheme.  \n7.0 E-Certificate \na) E- Certificate towards participation under the scheme will be issued by MoMSME after \ncompletion of Basic Level, Intermediate Level, and Advanced Level. \nb) The Implementing Agencies (IA) will establish a mechanism for the issue of Certifications \nwhich is verifiable and authentic. \nc) The list of MSMEs that have taken the Lean Pledge and achieved any Lean Implementation \nLevel will be displayed on the Lean Scheme portal. \n8.0 Benefits/ Incentives \n \nGraded incentives will be announc ed for MSMEs so as to motivate MSMEs to participate in the \nScheme. Details attached as Annexure -4. \n \n ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Arial,Bold",
+        "/Times New Roman",
+        "/Arial",
+        "/Times New Roman"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 19,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 19 of 28 \n \n9.0 Financial Assistance for MSME Units \n Basic Level Intermediate level Advanced Level \nImplementation \nCost (Max. per \nunit) \nFree  ₹ 1,20,000 + Taxes  ₹ 2,40,000 + Taxes \nBeneficiary \nContribution  \n- \n10% of Total Cost of \nImplementation i.e., up \nto ₹ 12,000 + Taxes per \nunit (Max.) \n10% of Total Cost of \nImplementation i.e., up to  ₹ \n24,000 + Taxes per unit (Max.) \nGOI \nContribution  \n- \nMSME unit will be \nentitled for up to ₹ \n1,08,000 (max.) towards \nthe Implementation cost \n(Taxes Extra) \nMSME unit will be entitled for \nup to ₹ 2,16,000 (max.) towards \nthe Implementation cost (Taxes \nExtra) \nAdditional \nBenefit \n- \na) Additional 5% GOI contribution for MSMEs which are \npart of SFURTI Clusters, Woman/SC/ ST owned, NER \nlocated MSMEs. \n \nb) OEM/ Industry Association route  \n(i) Additional 5% GoI contribution shall be given to the \nMSMEs registering through Industry Association/ OEM \nafter completion of all levels.  \n(ii)  ₹ 5000/ per MSME shall be given to OEM/ Association \nafter completing all stages of lean intervention. \n(iii) For availing this benefit MSME unit need to mention \non while applying – Applying under Original Equipment \nManufacturer (OEM) or Applying under Industry \nAssociation (IA). \n \n ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Times New Roman",
+        "/Times New Roman"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 20,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 20 of 28 \n \n10.0 Implementation Arrangements \n \nThe Ministry of MSME will implement the Scheme with the assistance of Implementing Agencies \n(IA) and organisations under the administrative control of MoMSME & the office of DC -\nMSME. IAs will be paid 15% as implementation charges (inclusive of all taxes) on the GoI grant \nreleased to MSMEs in respect of the activities mentioned under para 9.0. \n \na) A Project Monitoring and Advisory Committee (PMAC) set up in the O/o DC (MSME) will \nlook after the planning, screening / identification of interventions / projects and such other \nfunctions as may be necessary to ensure effective implementation of the scheme. All proposals \nunder the scheme will be received by IAs and submitted to PMAC for approval. \n  The constitution of PMAC will be as follows: \n1. AS & DC (MSME) Chairman \n2. Joint Secretary, O/o DC (MSME) Vice Chairman \n3. EA (IFW)/Representative Member \n4. ADC/JDC In-charge of MSME-DFOs/TCs at O/o DC \n(MSME)/Representative \nMember \n5. Representative of Ministry of Heavy Industries Member \n6. Representative of DPIIT Member \n7. Representative of PMU Member \n8. Representative of Industry Associations/OEMs Member \n9. Representative of Implementation Agencies of the Scheme Member \n10. Special invitees/experts/consultants Member \n11. Director/Nodal officer handling scheme in MoMSME Member – Secretary \n \nb) The Ministry of MSME will implement the Lean Schemewith the assistance of Implementing \nAgencies and will institute suitable monitoring & fund -flow mechanism. Details of the same \nwill be decided by the PMAC.  \nc) The PMAC will have overall responsibility for policy formulation for scheme implementation \nand monitoring agency. It will be empowered to take all key decisions related to the scheme and ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Times New Roman",
+        "/Arial",
+        "/Times New Roman"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 21,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 21 of 28 \n \nalso approve minor modifications for operational expediency. PMAC will hold its meeting \nas and when required. \nd) PMU: A Project Monitoring Unit (PMU) shall be setup to tak e care of facilitation, \nimplementation and monitoring of the scheme involving Implementing Agencies (IAs) in \naccordance with established procedure.  \ne) Implementing Agencies: Ministry of MSME will identify and engage an Implementing Agency \n(IA). O/o DC (MSME)  and its field institutions that are MSME Development  and Facilitation \nOffices, Technology Centres, Testing Centres/Central Government/State Government and its \norganizations shall also be a part of the implementation.  \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman",
+        "/Times New Roman,Bold",
+        "/Arial,Bold",
+        "/Arial"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 22,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 22 of 28 \n \n  Annexure-1  \nLean Pledge  \n \n \n(This will be an online pledge/commitment) \nOwner/Partner Name: ______________________________________________ \n \nEnterprise Name: __________________________________________________ \n \nUdyam Registration No. : ____________________________________ \n \nUnit Address: _____________________________________________________ \n \nLean- ID: ______________________________________________________ \n (The above details will be extracted from the Udyam Registration/MSME Competitive \n(Lean) Scheme Registration validation) \n \n \n1. We undertake to conform to the Principles of Lean Manufacturing in our enterprise and thereby \ntowards elimination of wastes in processes through implementation of Lean Tools and \nTechniques. \n2. We will work towards delivering safe and high-quality products  \n3. We will give back, in every way we can, to our people, our community and to our planet. \n \n \n \n \n \n \n \n \n \n \n \n ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Times New Roman",
+        "/Times New Roman,Italic",
+        "/Arial"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 23,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 23 of 28 \n \n  Annexure-2  \nUndertaking  \n \n \n(This will be an online undertaking) \n \nOwner/Partner Name: ______________________________________________ \n \nEnterprise Name: __________________________________________________ \n \nUdyam Registration No.: ________________________________________ \n \nUnit Address: _____________________________________________________ \n \nLean- ID: _______________________________________________________ \n (The above details will be extracted from the Udyam Registration/MSME Competitive \n(Lean) Scheme Registration validation) \n \n \nI/We understand that the MSME Competitive (Lean) Scheme is voluntary and recognize the \nauthority of the Ministry of MSME, Government of India, in issuance of any Level. \n \nI/We hereby give our commitment to complete the entire Lean Scheme journey as per the \nguidelines. By proceeding I/We certify that my/our Enterpri se/Unit complies with & fulfils all \nrelevant & applicable regulatory & statutory norms/licenses pertaining to the functioning of this \nmanufacturing unit. If not, then efforts will be taken to fulfil those regulatory/statutory requirements \nby me/us. If at a ny stage the Enterprise/Unit is found to be non -compliant with any \nrelevant/applicable regulatory & statutory norms, the competent authority will have the right to \nrecall/withdraw any or all reports or Level Issued. \n \n \n \n \n \n \n ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Times New Roman",
+        "/Times New Roman,Italic",
+        "/ABCDEE+Tahoma"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 24,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 24 of 28 \n \n  Annexure-3  \n \nCoverage of Topics \nBasic Level \na. Topics related to existence of organization – Voice of Customer, Voice of Business, \nEmployee Involvement. Current Working Environment for Organization  \nb. Basic Concept of Lean \nc. Linkages with Lean /Quality Guru  \nd. Conceptual Knowledge on Lead Time, Takt Time, Waste, Value Added, Non -Value-Added \nActivities \ne. Typical Diagnostic Study Report  \nf. Concept of 5S, Kaizen, Visual Management, Value Stream Mapping \ng. Introduction of basic concepts related to Industry 4.0 & Lean Six Sigma  \nIntermediate Level \na. Daily 5S; 5S Pledge  \nb. Daily Work Management  \nc. 8 Waste Awareness Workshop; 8 Waste Identification  \nd. Kaizen \ne. Visual control; SOP  \nf. Awards and Recognition system within Units  \n                                      Advance Level \na) Continuation of practices installed or initiated at basic level.  \ni. 5S  \nii. Kaizen  \niii. Visual Control  \niv. SOP  \nb) Application of following concept in units based on capability and maturity of unit (at least 7 \ntools)  \ni. JIT – Kanban \nii. VSM – Cross Functional VSM  \niii. Line Balancing,  ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Times New Roman",
+        "/Arial",
+        "/Times New Roman"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 25,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 25 of 28 \n \niv. Takt Time, \nv. Process Capability,  \nvi. SMED,  \nvii. Preventive Maintenance,  \nviii. 7 QC tools.  \nix. Poka Yoke,  \nx. Cellular Layout,  \nxi. Flow of Manufacturing - Single Piece Flow Manufacturing, \nxii. Product Process Matrix,  \nxiii. Skill Mapping, (Multi Skilling, Multi-Tasking) \nxiv. TPM  \nxv. Low Cost Automation ( Jidoko) \nxvi. Hinjunka \nc) Concept of Inventory Management / Reduction (Mandatory Project)  \nd) Introduction of Six Sigma Concept  \ne) Introduction of Industry 4.0 /Digital Lean Concept  \nNote: \n1. Training shall not be taken as an independent project; it should be a mandatory component under \nprojects taken. \n2. The tools stated above are illustrative and non-exhaustive. \n3. The selection of the tools will be based on the requirement of MSME units towards \nimplementation of the Certification Levels. \n \n \n \n \n \n \n \n \n \n ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman",
+        "/Arial",
+        "/Times New Roman,Bold",
+        "/ABCDEE+Tahoma"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 26,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 26 of 28 \n \n  Annexure-4  \n \nBenefits/ Incentives \n \nBeneficiaries of the MSME Competitive (Lean) Scheme may also take benefit of the \ninteroperability envisaged within the schemes under MSME Champions Scheme of the \nMinistry of Micro, Small and Medium Enterprises, subject to  fulfillment of desired \nconditions/ parameters.  \n \nExamples of such benefits are listed below: \n  \n MSME Competitive (Lean) Scheme, Advance Level Certification holder is exempted \nfrom Daily Works Management Parameter of the MSME Sustainable (ZED) Silver \nLevel Certification. \n \n MSME Competitive (Lean) Scheme, Advance Level Certification holder is exempted \nfrom Daily Works Management and Waste Management (Muda, Mura, Muri) \nParameters of the MSME Sustainable (ZED) Gold Level Certification. \n \n \n(This list is evolving; detailed incentives may be found on \nwww.msmecompetitive.gov.in) \n \n \n \n \n \n \n \n \n \n \n \n ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Times New Roman",
+        "/Symbol",
+        "/Arial"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 27,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 27 of 28 \n \nAnnexure-5 \nLeans Tools & Techniques \nLean Tools and Techniques are a tested and proven methodology for improving the competitiveness \nof MSME sector. Main Lean-C tools & techniques are mentioned below (but not limited to): \n \n1. 5S System   \nThe 5S systems is a workplace management which helps in getting the “junk out of the work \narea and set of procedures to keep it that way. 5S stands for Sort, Set in Order, Shine, \nStandardize & Sustain. \n2.  Visual Control  \nVisual controls such as cartoons, charts, light signals, Lane marking on floor, Safety \ninstructions, Warning signs, Poka-Yoke instructions etc., can be displayed all over the \nworkplace. \n3. Standard Operating Procedures (SOPs) \nAll verbal instructions should be converted to SOPs to remove dependency on skilled \npersonnel in achieving required product quality level, consistency, effectiveness  and \nefficiency. \n4. Just in Time (JIT) \nIt’s a Japanese manufacturing philosophy to make the right product in right quantity at the \nright time. This almost results in zero inventory and shortest possible cycle time. \n5. KANBAN System  \nIn this, components are pulled by assembly or subsequent work centers and the containers \nare replenished with the right quantities by the previous work center, which reduces the \ninventory of unwanted components. \n6. Cellular Layout  \nIn this improved manufacturing system, familywise component completion is aimed at \nwithin the smaller self-contained cell, which is a part of a big factory, as compared to \noperation wise completion in traditional functional layout. \n7. Value Stream Mapping  \nIt covers all activities, both value added and non-value added, and helps in arriving at best \nlayout of all resources required for making the product. ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman,Bold",
+        "/Times New Roman",
+        "/Arial,Bold",
+        "/Times New Roman"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 28,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved_MSME_Competitive%28LEAN%29_Scheme_Guidelines_07_10_2022_0.pdf",
+      "text": " \nPage 28 of 28 \n \n \n8. PokaYoke or Mistake Proofing  \nIt is again a Japanese technique used to prevent errors occurring at their source of origin, \nand it finally leads to a “Zero Defect‟ situation. \n9. Single Minutes Exchange of DiesorQuick Changeover (SMED): \nApplying ingenious methods, setup time is minimized and brought to less than ten minutes; \nthereby smaller batches as required by the customer can be taken up for manufacturing. \n10. Total Productive Maintenance (TPM) \nTPM involves operators, maintenance staff and management working together to improve \noverall operation of any equipment. Operators, who first identify noisy or vibrating motors, \noil or air leaks, can be trained to make simple repairs to prevent major and costly break \ndowns. \n11. Kaizen Blitz or Rapid Improvement Process: \nIt is an intense management programme, which results in immediate change and bottom-line \nimprovement. Both management staff and workers are involved in this. \n12. 7 QC Tools \nThe 7 QC tools are fundamental instruments to improve the process and product quality. \nThey are used to examine the production process, identify the key issues, control \nfluctuations of product quality, and give solutions to avoid future defects. \n13.  Jidoka (Low-Cost Automation)  \nDesign equipment to partially automate the manufacturing process (partial automation is \ntypically much less expensive than full automation) and to automatically stop when defects \nare detected. After Jidoka, workers can frequently monitor multiple stations (reducing \nlabour costs) and many quality issues can be detected immediately (improving quality). \n14. Hinjunka (Level Scheduling)  \nA form of production scheduling that purposely manufactures in much smaller batches by \nsequencing (mixing) product variants within the same process. It reduces lead times (since \neach product or variant is manufactured more frequently) and inventory (since batches are \nsmaller). \n******* ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman",
+        "/Times New Roman,Bold",
+        "/Arial,Bold",
+        "/Times New Roman"
+      ],
+      "provenance": "pdf_physical_page"
+    }
+  ],
+  "pages_hash": "ee6b46dbc21f8f4e9c965eb3d3d4bf003119098a9c20ba10fd9b5b8a6cc6a2e6",
+  "original_binary_hash": "01c60d4b0050200515ca42eef8085a0940162b2f5ed811a6f80470612eb7d4f2",
+  "independent_review": {
+    "status": "unavailable",
+    "method": null,
+    "reason": "No separate semantic reviewer available at zero external paid AI budget. Agent 2 explicitly performs engineering checks only."
+  },
+  "human_required": true,
+  "publication_authorized": false
+}

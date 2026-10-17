@@ -1,0 +1,691 @@
+{
+  "key": "team",
+  "baseline": {
+    "opportunity_id": "1ed2eea7-7a4e-5681-83e8-97807e802dd6",
+    "version_id": "bb60c1a7-53ba-5657-8930-699f2f457acb",
+    "version": 1,
+    "title": "MSME Trade Enablement and Marketing Initiative (MSME TEAM Initiative)",
+    "publication_state": "draft",
+    "content_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+    "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+    "source_id": "e62b2278-ac6a-58d5-aec9-bb7c0e7940ba",
+    "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+    "acquisition_snapshot_id": "484fb5d6-115b-41e9-8827-e57ce380a874",
+    "stored_candidate_hash": "ec0a52108503e75540eaa7b70fe4d0375819ce66f285c99f0e2a37b9079aa635",
+    "original_packet_sha256": "c7c698ac49532346e7304ee9d48324d56151b41695080185186b990eab72b9c0",
+    "original_focus": "MSME Trade Enablement and Marketing Initiative (MSME TEAM Initiative)"
+  },
+  "focus": "MSME Trade Enablement and Marketing Initiative (MSME TEAM Initiative)",
+  "disposition": "human_approval_candidate",
+  "candidate": {
+    "title": "MSME Trade Enablement and Marketing Initiative (MSME TEAM Initiative)",
+    "summary": "Operating policy for Udyam-registered micro and small manufacturing or service enterprises joining ONDC. Assistance depends on component conditions, eligible transactions and remaining funds during the stated initiative tenure. This is not a verified open application round or a direct cash entitlement.",
+    "issuer": "Ministry of Micro, Small & Medium Enterprises",
+    "category": "business",
+    "country": "IN",
+    "state": null,
+    "district": null,
+    "benefits": "Catalogue support to SNPs: up to Rs. 2500 per MSE, with B2C Rs. 50 per SKU up to 50 SKUs and B2B Rs. 125 per SKU up to 20 SKUs; at least two successfully delivered ONDC orders precede the SNP claim. Account-management incentives to SNPs, paid monthly against a total per-enterprise cap (not a renewed monthly cap): B2C 5% of net sales or B2B Rs. 250 per transaction, capped at Rs. 5000 per MSE. Logistics through SNPs: B2C Rs. 50 or B2B Rs. 200 per order for up to 10 orders. Packaging material through SNPs: B2C Rs. 20 or B2B Rs. 250 per order for up to 10 orders. Packaging design: 20% of cost or Rs. 2000 per MSE, whichever is less, claimed by IIP from the implementing agency.",
+    "restrictions": [
+      "Financial support scope is micro and small manufacturing/services, not an unconditional entitlement for all MSMEs or trading enterprises.",
+      "No prior SNP onboarding at operationalisation and no similar Central or State assistance. ONDC transaction-data authorization to NSIC is required.",
+      "Activities 3, 4 and 5 must be availed within six months of the first ONDC transaction; activities 2 through 5 can be claimed by only one SNP. AI catalogue users do not generate the activity 2 catalogue-support claim for the SNP.",
+      "Assistance sunsets when the sanctioned corpus is fully committed or the initiative tenure ends, whichever is earlier. No verified absolute application deadline is claimed."
+    ],
+    "required_documents": [
+      "Udyam Registration certificate"
+    ],
+    "document_evidence": [
+      {
+        "document": "Udyam Registration certificate",
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws. \n  ",
+          "page": 12,
+          "language": "English",
+          "basis": "explicit"
+        }
+      }
+    ],
+    "opens_on": null,
+    "closes_on": null,
+    "apply_url": null,
+    "field_evidence": [
+      {
+        "field": "title",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "1 \n \n \n \nMinistry of Micro, Small & Medium Enterprises \nGovernment of India \n \n \n \n \n \nMSME Trade Enablement and Marketing Initiative \n(MSME TEAM Initiative) \n \n \n \nOperating Guidelines  \n \n \n \n \n \n \n(June 2024) \n  \n",
+          "page": 1,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "issuer",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "1 \n \n \n \nMinistry of Micro, Small & Medium Enterprises \nGovernment of India \n \n \n \n \n \nMSME Trade Enablement and Marketing Initiative \n(MSME TEAM Initiative) \n \n \n \nOperating Guidelines  \n \n \n \n \n \n \n(June 2024) \n  \n",
+          "page": 1,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "country",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "1 \n \n \n \nMinistry of Micro, Small & Medium Enterprises \nGovernment of India \n \n \n \n \n \nMSME Trade Enablement and Marketing Initiative \n(MSME TEAM Initiative) \n \n \n \nOperating Guidelines  \n \n \n \n \n \n \n(June 2024) \n  \n",
+          "page": 1,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "category",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "4 \n \n1. Introduction  \n \n1.1 India is aspiring to become a USD 5 Trillion economy  by 2027. The World Bank, ADB (Asian \nDevelopment Bank) and IMF (International Monetary Fund) have projected that India is likely \nto remain the fastest growing major economy in the world over the next few years \n \n1.2 Increased trade and commerce will play an important role in achieving this objective \nIndia is witnessing one of the fastest -growing digital transformation in the world , \nparticularly in the sector of e -commerce. It is projected that by 2030, digital \nconsumption in India could increase fivefold, reaching USD 340 billion, with 500 \nmillion digitally transacting consumers1.  \n \n1.3 This surge has been partly due to the technology transformation which has bee n \nunfolding across the country for the past decade or so.  The Government has been \nproviding impetus to the tech nological infrastructure with the objective of creating \ndigital ecosystem that enables access to trade and marketing facilities to the MSMEs. \n \n1.4 However, there is a need to include more and more MSMEs in the e commerce \ndevelopment. With the objective of promoting digitalization of trade and commerce \namong MSMEs, the Ministry of MSME  has designed a new initiative, MSME TEAM \n(Trade Enablement and Mar keting) under the  World Bank supported \"Raising and \nAccelerating MSME Productivity (RAMP)\" Program being implemented by  the \nMinistry of MSME.  \n \n1.5 The initiative will empower MSMEs with digital tools and guidance to effectively utilize \nthe e-commerce marketplace. One of the primary objectives of the TEAM Initiative is \nto support MSMEs to help them access different markets by integrating them avenues \nfor online commerce. This will enable the MSMEs in widening their customer base and \nincrease their income. This will also strengthen the trustworthiness and credibility of \nMSMEs by establishing their digital presence and creating transaction history. \n \n \n \n                                                             \n1 Democratising digital commerce in India, McKinsey & Company Report  ",
+          "page": 4,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "required_documents",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws. \n  ",
+          "page": 12,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "summary",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws. \n  ",
+          "page": 12,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "summary",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "6 \n \n8) Formalisation of MSMEs : The integration of MSMEs into the digital commerce \necosystem leads to formalisation of their operations, ensuring compliance with \nregulations and enhancing their legitimacy in  the market. This can improve their \naccess to financial services and government support. \n9) Enhancing Credibility and Financial Standing: Strengthen the trustworthiness and \ncredibility of MSMEs by establishing their digital presence and transaction history. \n10) Nationwide Outreach and Education: Engage with MSMEs across the nation through \nawareness campaigns and workshops, educating them about the advantages and \npracticality of embracing e-commerce platforms. \n \n3. Key features \n \n Initiative outlay: Rs. 277.35 Cr \n The Scheme duration is 3 years (FY 2024-2025 to FY 2026-2027) \n National Small Industries Corporation (NSIC) will be the Implementing Agency \n Target beneficiaries: 5 lakh MSEs (50% will be women owned MSEs) \n Sunset clause: All the assistance sanctioned after the d ate of notification of the \nInitiative by Ministry of MSME would be in operation till such time the sanctioned \ncorpus is fully committed, or the tenure of the Initiative is over, whichever is \nearlier. The Implementing Agency shall ensure that there is no committed liability \nbeyond the period of the Initiative. \n \n \n \n \n ",
+          "page": 6,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "benefits",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "9 \n \nmedia at Rs. 450 per MSE on-boarded on ONDC as \npart of the initiative \n2 Onboarding of MSEs \non the ONDC Network \nand Creation of ONDC \nCompliant Digital \nCatalogue \n The Seller Network Participants will connect with MSEs \nthat have registered for the Initiative.  \n The SNPs will initiate the registration/KYC process and \nwill be responsible for further follow-ups for completing \nonboarding process till MSEs go live.  \n A Reference Guide / SoP along with other reference \nmaterial towards this would be prepared by the \nImplementing Agency with the support of ONDC.   \n The SNPs will be supported towards the preparation of \nONDC Compliant digital catalogue for MSEs. This will be \ncapped at Rs. 2,500 per MSE. (Capped at Rs. 50 per SKU \nup to 50 SKUs for B2C and at Rs. 125 per SKU up  to 20 \nSKUs for B2B).  \n For the Seller Network Participant to claim benefit \nunder the initiative, the MSE seller should have \nsuccessfully delivered at least two orders on the ONDC \nNetwork prior to submission of claim.  \n3 Account Management \nsupport to MSEs \n The SNPs would be incentivized , subject to a cap of Rs . \n5,000 per MSE for supporting the MSEs in driving their \nonline business on ONDC through account management \nsupport. It will comprise the following:  \n Order fulfilment  \n Operations support \n Logistics support \n Training and capacity building  \n Contract management between the buyer and \nseller (for B2B transactions) \n ",
+          "page": 9,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "benefits",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "10 \n \n For B2C MSEs, the incentives will be linked to the value \nof transactions being undertaken on the network. Given \nthat the average order value of B2B transaction is \ngenerally higher, for B2B MSEs, the incentives will be \nlinked to the number of orders on ONDC. \n \n The incentives will be paid  to the Seller Network \nParticipant on a monthly basis , based on the following  \n(once the incentive limit of Rs. 5000/ - for any MSE is \nreached, the SNP will not be able to claim any  further \nincentive for driving transactions for that particular \nMSE) –  \n \n For B2C : 5% of net sales on the network up to Rs. \n5,000 per MSE  \n For B2B : Rs. 250 per transaction on the network, \nup to Rs. 5,000 per MSE \n4 Subsidy for \ntransportation and \nlogistics \n Subsidy for transportation and logistics will be provided \nto the MSEs  through the SNPs  as per the following \ndetails: \n \n For B2C: Rs. 50 per order for up to 10 orders per MSE  \n For B2B: Rs. 200 per order for up to 10 orders per MSE \n5 Subsidy on Packaging \nmaterial \n Support for Packaging  material will be provided to the \nMSEs through the Seller NPs as per the following details: \n For B2C: Rs 20 per order for up to 10 orders per MSE \n For B2B: Rs 250 per order for up to 10 orders per MSE \n \n6. Subsidy for Packaging \ndesign from  Indian \nInstitute of Packaging \n(IIP) \n Subsidy of 20% of packaging design cost or Rs. 2,000 per \nMSE, whichever is less \n Subsidy for packaging design will be claimed by IIP from \nthe IA ",
+          "page": 10,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "restrictions",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws. \n  ",
+          "page": 12,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "restrictions",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "11 \n \n7. AI Based Cataloguing  AI based cataloguing system will be developed under \nthe Initiative to fast rack and reduce the cost towards \npreparation of digital catalogues required for \nconducting eCommerce \n8. Benefits from the \nInitiative Portal \n(Msmemart.com as \nInitiative portal in \nVernacular language) \n \nThe Portal inter alia, will provide the following services: \n(a) Initiative Information \n(b) Registration system \n(c) Fund flow system \n(d) Centralized support system (call center / help desk \nand other digital system including grievance) \n(e) Embedded finance \n(f) Packaging design subsidy system \n(g) MIS \n \nNotes:  \n1) For activities 3, 4 and 5 the benefits must be availed within first 6 months of the 1st \ntransaction done on ONDC \n2) The benefits for activities 2, 3, 4 and 5 for an MSE can be claimed only by one SNP. The \nbenefits under activity 6 would be payable directly to IIP through the IA. \n3) For an MSE utilizing the AI cataloguing on MSMEmart portal, the SNP will not be eligible \nto claim support for cataloguing. (Activity no. 2) \n4) No single SNP shall be allowed to claim benefits of more than 20% of budget allocated   \nfor any of the activities listed at 2 -5 in section 4 of the Operating Guidelines of this \ninitiative.   \n5) The B2B transactions require a certain level of trust and association which takes time and \ntransactions to develop. Hence, MSEs that join the network for the B2B archetype, will be \nencouraged to bring a set of their existing buyer base online as far as a possible as it will \nhelp drive initial volume and also help the sellers build their reputation on the network. \n5. Eligibility Conditions \n ",
+          "page": 11,
+          "language": "English",
+          "basis": "explicit"
+        }
+      },
+      {
+        "field": "restrictions",
+        "citation": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "6 \n \n8) Formalisation of MSMEs : The integration of MSMEs into the digital commerce \necosystem leads to formalisation of their operations, ensuring compliance with \nregulations and enhancing their legitimacy in  the market. This can improve their \naccess to financial services and government support. \n9) Enhancing Credibility and Financial Standing: Strengthen the trustworthiness and \ncredibility of MSMEs by establishing their digital presence and transaction history. \n10) Nationwide Outreach and Education: Engage with MSMEs across the nation through \nawareness campaigns and workshops, educating them about the advantages and \npracticality of embracing e-commerce platforms. \n \n3. Key features \n \n Initiative outlay: Rs. 277.35 Cr \n The Scheme duration is 3 years (FY 2024-2025 to FY 2026-2027) \n National Small Industries Corporation (NSIC) will be the Implementing Agency \n Target beneficiaries: 5 lakh MSEs (50% will be women owned MSEs) \n Sunset clause: All the assistance sanctioned after the d ate of notification of the \nInitiative by Ministry of MSME would be in operation till such time the sanctioned \ncorpus is fully committed, or the tenure of the Initiative is over, whichever is \nearlier. The Implementing Agency shall ensure that there is no committed liability \nbeyond the period of the Initiative. \n \n \n \n \n ",
+          "page": 6,
+          "language": "English",
+          "basis": "explicit"
+        }
+      }
+    ],
+    "requirements": [
+      {
+        "description": "Udyam-registered Micro or Small Enterprise in manufacturing or services; a generic company-registration flag does not establish this scheme-specific status.",
+        "kind": "eligibility",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws. \n  ",
+          "page": 12,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "An MSE without GST is limited to intra-state online business under applicable laws; lack of GST is not a blanket exclusion.",
+        "kind": "eligibility",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws. \n  ",
+          "page": 12,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "No SNP onboarding as of initiative operationalisation; establish the operationalisation date and prior onboarding evidence.",
+        "kind": "eligibility",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws. \n  ",
+          "page": 12,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "No similar assistance from another Central or State government scheme or programme.",
+        "kind": "eligibility",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws. \n  ",
+          "page": 12,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "Authorize ONDC to share relevant enterprise details and network transactions with NSIC for scheme administration in compliance with applicable laws.",
+        "kind": "eligibility",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws. \n  ",
+          "page": 12,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "Catalogue claim belongs to the SNP and requires at least two successfully delivered orders; applicable SKU and enterprise caps apply.",
+        "kind": "procedure",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "9 \n \nmedia at Rs. 450 per MSE on-boarded on ONDC as \npart of the initiative \n2 Onboarding of MSEs \non the ONDC Network \nand Creation of ONDC \nCompliant Digital \nCatalogue \n The Seller Network Participants will connect with MSEs \nthat have registered for the Initiative.  \n The SNPs will initiate the registration/KYC process and \nwill be responsible for further follow-ups for completing \nonboarding process till MSEs go live.  \n A Reference Guide / SoP along with other reference \nmaterial towards this would be prepared by the \nImplementing Agency with the support of ONDC.   \n The SNPs will be supported towards the preparation of \nONDC Compliant digital catalogue for MSEs. This will be \ncapped at Rs. 2,500 per MSE. (Capped at Rs. 50 per SKU \nup to 50 SKUs for B2C and at Rs. 125 per SKU up  to 20 \nSKUs for B2B).  \n For the Seller Network Participant to claim benefit \nunder the initiative, the MSE seller should have \nsuccessfully delivered at least two orders on the ONDC \nNetwork prior to submission of claim.  \n3 Account Management \nsupport to MSEs \n The SNPs would be incentivized , subject to a cap of Rs . \n5,000 per MSE for supporting the MSEs in driving their \nonline business on ONDC through account management \nsupport. It will comprise the following:  \n Order fulfilment  \n Operations support \n Logistics support \n Training and capacity building  \n Contract management between the buyer and \nseller (for B2B transactions) \n ",
+          "page": 9,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "Account-management support belongs to the SNP, depends on B2C sales or B2B transactions and stops at the enterprise cap.",
+        "kind": "procedure",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "10 \n \n For B2C MSEs, the incentives will be linked to the value \nof transactions being undertaken on the network. Given \nthat the average order value of B2B transaction is \ngenerally higher, for B2B MSEs, the incentives will be \nlinked to the number of orders on ONDC. \n \n The incentives will be paid  to the Seller Network \nParticipant on a monthly basis , based on the following  \n(once the incentive limit of Rs. 5000/ - for any MSE is \nreached, the SNP will not be able to claim any  further \nincentive for driving transactions for that particular \nMSE) –  \n \n For B2C : 5% of net sales on the network up to Rs. \n5,000 per MSE  \n For B2B : Rs. 250 per transaction on the network, \nup to Rs. 5,000 per MSE \n4 Subsidy for \ntransportation and \nlogistics \n Subsidy for transportation and logistics will be provided \nto the MSEs  through the SNPs  as per the following \ndetails: \n \n For B2C: Rs. 50 per order for up to 10 orders per MSE  \n For B2B: Rs. 200 per order for up to 10 orders per MSE \n5 Subsidy on Packaging \nmaterial \n Support for Packaging  material will be provided to the \nMSEs through the Seller NPs as per the following details: \n For B2C: Rs 20 per order for up to 10 orders per MSE \n For B2B: Rs 250 per order for up to 10 orders per MSE \n \n6. Subsidy for Packaging \ndesign from  Indian \nInstitute of Packaging \n(IIP) \n Subsidy of 20% of packaging design cost or Rs. 2,000 per \nMSE, whichever is less \n Subsidy for packaging design will be claimed by IIP from \nthe IA ",
+          "page": 10,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "Logistics and packaging-material support flow through the SNP and depend on actual qualifying orders and the category-specific per-order limits.",
+        "kind": "procedure",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "10 \n \n For B2C MSEs, the incentives will be linked to the value \nof transactions being undertaken on the network. Given \nthat the average order value of B2B transaction is \ngenerally higher, for B2B MSEs, the incentives will be \nlinked to the number of orders on ONDC. \n \n The incentives will be paid  to the Seller Network \nParticipant on a monthly basis , based on the following  \n(once the incentive limit of Rs. 5000/ - for any MSE is \nreached, the SNP will not be able to claim any  further \nincentive for driving transactions for that particular \nMSE) –  \n \n For B2C : 5% of net sales on the network up to Rs. \n5,000 per MSE  \n For B2B : Rs. 250 per transaction on the network, \nup to Rs. 5,000 per MSE \n4 Subsidy for \ntransportation and \nlogistics \n Subsidy for transportation and logistics will be provided \nto the MSEs  through the SNPs  as per the following \ndetails: \n \n For B2C: Rs. 50 per order for up to 10 orders per MSE  \n For B2B: Rs. 200 per order for up to 10 orders per MSE \n5 Subsidy on Packaging \nmaterial \n Support for Packaging  material will be provided to the \nMSEs through the Seller NPs as per the following details: \n For B2C: Rs 20 per order for up to 10 orders per MSE \n For B2B: Rs 250 per order for up to 10 orders per MSE \n \n6. Subsidy for Packaging \ndesign from  Indian \nInstitute of Packaging \n(IIP) \n Subsidy of 20% of packaging design cost or Rs. 2,000 per \nMSE, whichever is less \n Subsidy for packaging design will be claimed by IIP from \nthe IA ",
+          "page": 10,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "Packaging-design assistance is the lesser of the stated percentage of cost and enterprise cap, claimed by IIP rather than an unrestricted payment to the enterprise.",
+        "kind": "procedure",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "10 \n \n For B2C MSEs, the incentives will be linked to the value \nof transactions being undertaken on the network. Given \nthat the average order value of B2B transaction is \ngenerally higher, for B2B MSEs, the incentives will be \nlinked to the number of orders on ONDC. \n \n The incentives will be paid  to the Seller Network \nParticipant on a monthly basis , based on the following  \n(once the incentive limit of Rs. 5000/ - for any MSE is \nreached, the SNP will not be able to claim any  further \nincentive for driving transactions for that particular \nMSE) –  \n \n For B2C : 5% of net sales on the network up to Rs. \n5,000 per MSE  \n For B2B : Rs. 250 per transaction on the network, \nup to Rs. 5,000 per MSE \n4 Subsidy for \ntransportation and \nlogistics \n Subsidy for transportation and logistics will be provided \nto the MSEs  through the SNPs  as per the following \ndetails: \n \n For B2C: Rs. 50 per order for up to 10 orders per MSE  \n For B2B: Rs. 200 per order for up to 10 orders per MSE \n5 Subsidy on Packaging \nmaterial \n Support for Packaging  material will be provided to the \nMSEs through the Seller NPs as per the following details: \n For B2C: Rs 20 per order for up to 10 orders per MSE \n For B2B: Rs 250 per order for up to 10 orders per MSE \n \n6. Subsidy for Packaging \ndesign from  Indian \nInstitute of Packaging \n(IIP) \n Subsidy of 20% of packaging design cost or Rs. 2,000 per \nMSE, whichever is less \n Subsidy for packaging design will be claimed by IIP from \nthe IA ",
+          "page": 10,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "The six-month transaction-relative window applies to activities 3, 4 and 5; the one-SNP restriction covers activities 2 through 5.",
+        "kind": "procedure",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "11 \n \n7. AI Based Cataloguing  AI based cataloguing system will be developed under \nthe Initiative to fast rack and reduce the cost towards \npreparation of digital catalogues required for \nconducting eCommerce \n8. Benefits from the \nInitiative Portal \n(Msmemart.com as \nInitiative portal in \nVernacular language) \n \nThe Portal inter alia, will provide the following services: \n(a) Initiative Information \n(b) Registration system \n(c) Fund flow system \n(d) Centralized support system (call center / help desk \nand other digital system including grievance) \n(e) Embedded finance \n(f) Packaging design subsidy system \n(g) MIS \n \nNotes:  \n1) For activities 3, 4 and 5 the benefits must be availed within first 6 months of the 1st \ntransaction done on ONDC \n2) The benefits for activities 2, 3, 4 and 5 for an MSE can be claimed only by one SNP. The \nbenefits under activity 6 would be payable directly to IIP through the IA. \n3) For an MSE utilizing the AI cataloguing on MSMEmart portal, the SNP will not be eligible \nto claim support for cataloguing. (Activity no. 2) \n4) No single SNP shall be allowed to claim benefits of more than 20% of budget allocated   \nfor any of the activities listed at 2 -5 in section 4 of the Operating Guidelines of this \ninitiative.   \n5) The B2B transactions require a certain level of trust and association which takes time and \ntransactions to develop. Hence, MSEs that join the network for the B2B archetype, will be \nencouraged to bring a set of their existing buyer base online as far as a possible as it will \nhelp drive initial volume and also help the sellers build their reputation on the network. \n5. Eligibility Conditions \n ",
+          "page": 11,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "Using the MSMEmart AI catalogue prevents an SNP claiming separate catalogue support for that enterprise; do not claim both.",
+        "kind": "procedure",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "11 \n \n7. AI Based Cataloguing  AI based cataloguing system will be developed under \nthe Initiative to fast rack and reduce the cost towards \npreparation of digital catalogues required for \nconducting eCommerce \n8. Benefits from the \nInitiative Portal \n(Msmemart.com as \nInitiative portal in \nVernacular language) \n \nThe Portal inter alia, will provide the following services: \n(a) Initiative Information \n(b) Registration system \n(c) Fund flow system \n(d) Centralized support system (call center / help desk \nand other digital system including grievance) \n(e) Embedded finance \n(f) Packaging design subsidy system \n(g) MIS \n \nNotes:  \n1) For activities 3, 4 and 5 the benefits must be availed within first 6 months of the 1st \ntransaction done on ONDC \n2) The benefits for activities 2, 3, 4 and 5 for an MSE can be claimed only by one SNP. The \nbenefits under activity 6 would be payable directly to IIP through the IA. \n3) For an MSE utilizing the AI cataloguing on MSMEmart portal, the SNP will not be eligible \nto claim support for cataloguing. (Activity no. 2) \n4) No single SNP shall be allowed to claim benefits of more than 20% of budget allocated   \nfor any of the activities listed at 2 -5 in section 4 of the Operating Guidelines of this \ninitiative.   \n5) The B2B transactions require a certain level of trust and association which takes time and \ntransactions to develop. Hence, MSEs that join the network for the B2B archetype, will be \nencouraged to bring a set of their existing buyer base online as far as a possible as it will \nhelp drive initial volume and also help the sellers build their reputation on the network. \n5. Eligibility Conditions \n ",
+          "page": 11,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      },
+      {
+        "description": "The earlier-of remaining corpus or initiative tenure controls assistance. The target share for women is not a male-applicant disqualifier.",
+        "kind": "selection",
+        "application_context": "all",
+        "rule": {
+          "op": "condition",
+          "condition": {
+            "op": "unknown",
+            "fact": null,
+            "value": null,
+            "income_period": null,
+            "income_definition": null,
+            "as_of": null
+          },
+          "children": []
+        },
+        "evidence": {
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "passage": "6 \n \n8) Formalisation of MSMEs : The integration of MSMEs into the digital commerce \necosystem leads to formalisation of their operations, ensuring compliance with \nregulations and enhancing their legitimacy in  the market. This can improve their \naccess to financial services and government support. \n9) Enhancing Credibility and Financial Standing: Strengthen the trustworthiness and \ncredibility of MSMEs by establishing their digital presence and transaction history. \n10) Nationwide Outreach and Education: Engage with MSMEs across the nation through \nawareness campaigns and workshops, educating them about the advantages and \npracticality of embracing e-commerce platforms. \n \n3. Key features \n \n Initiative outlay: Rs. 277.35 Cr \n The Scheme duration is 3 years (FY 2024-2025 to FY 2026-2027) \n National Small Industries Corporation (NSIC) will be the Implementing Agency \n Target beneficiaries: 5 lakh MSEs (50% will be women owned MSEs) \n Sunset clause: All the assistance sanctioned after the d ate of notification of the \nInitiative by Ministry of MSME would be in operation till such time the sanctioned \ncorpus is fully committed, or the tenure of the Initiative is over, whichever is \nearlier. The Implementing Agency shall ensure that there is no committed liability \nbeyond the period of the Initiative. \n \n \n \n \n ",
+          "page": 6,
+          "language": "English",
+          "basis": "explicit"
+        },
+        "subject_context": "business"
+      }
+    ],
+    "review_flags": [
+      "Independent semantic review unavailable at zero external AI budget. Human must approve the exact cited interpretation.",
+      "Supported source rules are separated from unknown applicant facts; no eligibility or award guarantee.",
+      "All scheme-specific business, onboarding, prior-assistance and transaction conditions remain unknown in the closed evaluator until supporting facts/evidence exist.",
+      "General onboarding mentioned in a later operating SOP must not broaden this MSE-financial-benefit listing; that SOP could not be captured through the approved local fetch path."
+    ],
+    "missing_fields": [
+      "Verified application-round opening and closing dates",
+      "Current fund or slot availability",
+      "Independent semantic verification"
+    ]
+  },
+  "candidate_hash": "8ff5be5ef2769dd64fdcfc9e12cc701c32f2c1ce3fc985a94a24503eb13fa976",
+  "approval_hash": "82103128dcf5d831660a0b371f82707d698531d13d78446673638fad7bbb0d7f",
+  "pages": [
+    {
+      "page": 1,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "text": "1 \n \n \n \nMinistry of Micro, Small & Medium Enterprises \nGovernment of India \n \n \n \n \n \nMSME Trade Enablement and Marketing Initiative \n(MSME TEAM Initiative) \n \n \n \nOperating Guidelines  \n \n \n \n \n \n \n(June 2024) \n  \n",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 2,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "text": "2 \n \n \nTable of Contents \n1. Introduction ................................ ................................ ................................ ................................ .... 4 \n2. Objectives ................................ ................................ ................................ ................................ ........ 5 \n3. Key  features ................................ ................................ ................................ ................................ .... 6 \n4.      Activities supported ................................ ................................ ................................ ........................  7 \n5.      Eligibility Conditions ................................ ................................ ................................ ......................  11 \n6. Institutional Arrangement and their Role and Responsibilities ................................ ...........................  13 \n6.1 Scheme Monitoring Committee (SMC): ................................ ................................ ........................  13 \n6.2 Implementing Agency (IA) ................................ ................................ ................................ ............ 14 \n6.3 Seller Network Participants (SNPs) ................................ ................................ ...............................  15 \n6.4 Open Network for Digital Commerce (ONDC) ................................ ................................ ...............  15 \n \n \n \n  ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 3,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "text": "3 \n \nAbbreviations \n \nB2B Business-to-Business \nB2C Business-to-Consumer \nBNP Buyer Network Participant \nDFO Development and Facilitation Office \nDIC District Industries Centre \nDOE Department of Expenditure \nFPO Farmers Producer Organization \nFY Financial Year \nGST Goods and Services Tax \nIA Implementing Agency \nKYC Know Your Customer  \nMIS Management Information Systems \nMoMSME Ministry of Micro, Small and Medium Enterprises \nMSME Micro, Small, and Medium Enterprises \nNSIC National Small Industries Corporation \nONDC Open Network for Digital Commerce \nRAMP Raising and Accelerating MSME Performance \nSNP Seller Network Participant \nSKU Stock Keeping Unit \nSMC Scheme Monitoring Committee \nTEAM Trade Enablement and Marketing (Initiative) ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 4,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "text": "4 \n \n1. Introduction  \n \n1.1 India is aspiring to become a USD 5 Trillion economy  by 2027. The World Bank, ADB (Asian \nDevelopment Bank) and IMF (International Monetary Fund) have projected that India is likely \nto remain the fastest growing major economy in the world over the next few years \n \n1.2 Increased trade and commerce will play an important role in achieving this objective \nIndia is witnessing one of the fastest -growing digital transformation in the world , \nparticularly in the sector of e -commerce. It is projected that by 2030, digital \nconsumption in India could increase fivefold, reaching USD 340 billion, with 500 \nmillion digitally transacting consumers1.  \n \n1.3 This surge has been partly due to the technology transformation which has bee n \nunfolding across the country for the past decade or so.  The Government has been \nproviding impetus to the tech nological infrastructure with the objective of creating \ndigital ecosystem that enables access to trade and marketing facilities to the MSMEs. \n \n1.4 However, there is a need to include more and more MSMEs in the e commerce \ndevelopment. With the objective of promoting digitalization of trade and commerce \namong MSMEs, the Ministry of MSME  has designed a new initiative, MSME TEAM \n(Trade Enablement and Mar keting) under the  World Bank supported \"Raising and \nAccelerating MSME Productivity (RAMP)\" Program being implemented by  the \nMinistry of MSME.  \n \n1.5 The initiative will empower MSMEs with digital tools and guidance to effectively utilize \nthe e-commerce marketplace. One of the primary objectives of the TEAM Initiative is \nto support MSMEs to help them access different markets by integrating them avenues \nfor online commerce. This will enable the MSMEs in widening their customer base and \nincrease their income. This will also strengthen the trustworthiness and credibility of \nMSMEs by establishing their digital presence and creating transaction history. \n \n \n \n                                                             \n1 Democratising digital commerce in India, McKinsey & Company Report  ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/Arial",
+        "/ABCDEE+Calibri,Bold",
+        "/Arial,Bold"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 5,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "text": "5 \n \n2. Objectives  \n \n1) Expanding Market Reach for MSMEs: Enable MSMEs to present their products and \nservices to a wider audience, unlocking new market prospects beyond their \nconventional local customer base. \n2) Reduction in Cost of Doing Business : MSMEs will have access to significantly higher \nnumber of buyers, suppliers and service providers which will help bring down the cost \nof doing business. The commission for online commerce would be lower than what is \ncharged by traditional e -Commerce platf orms. This will allow even the smallest of \nunits to conduct online transactions. \n3) Leveraging Digital Public Infrastructure through ONDC: Ease the burden on MSMEs \nto invest in developing their own digital setup or e -commerce platforms. By \ncapitalising on the  ONDC ecosystem, MSMEs can access a readily available digital \nframework, complete with online storefronts, payment gateways, and logistical \nsupport. \n4) Digitalization of MSMEs thereby enhancing their competitiveness: Embracing \necommerce can drive the digitiza tion of MSMEs' operations, enabling them to \nstreamline processes, optimise supply chains, and improve overall efficiency. This \nenhanced competitiveness can help MSMEs thrive in a rapidly evolving business \nlandscape. \n5) Enabling and making the MSMEs  export ready: By participating in e -commerce, \nMSMEs can expand their reach to international markets, making them more export \nready. The digital platform provides access to a global customer base, potentially \nboosting export opportunities and contributing to the growth of the local economy. \n6) Localised e-commerce Access: Offer MSMEs access to e-commerce platforms in their \nnative languages, to support the Government of India's \"Local for Global\" initiative. \n7) Convergence with other Government initiatives: Converge with schemes and \ninitiatives such as PM  Vishwakarma, Udyam database, Trade Receivables electronic \nDiscounting System,  Online Dispute Resolution, Credit Support programmes, Interest \nSubvention programmes, mSeva, Digilocker, Digital MSME scheme, etc that align with \nthe objectives of the MSME TEAM initiative. ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/Arial",
+        "/ABCDEE+Calibri,Bold"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 6,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "text": "6 \n \n8) Formalisation of MSMEs : The integration of MSMEs into the digital commerce \necosystem leads to formalisation of their operations, ensuring compliance with \nregulations and enhancing their legitimacy in  the market. This can improve their \naccess to financial services and government support. \n9) Enhancing Credibility and Financial Standing: Strengthen the trustworthiness and \ncredibility of MSMEs by establishing their digital presence and transaction history. \n10) Nationwide Outreach and Education: Engage with MSMEs across the nation through \nawareness campaigns and workshops, educating them about the advantages and \npracticality of embracing e-commerce platforms. \n \n3. Key features \n \n Initiative outlay: Rs. 277.35 Cr \n The Scheme duration is 3 years (FY 2024-2025 to FY 2026-2027) \n National Small Industries Corporation (NSIC) will be the Implementing Agency \n Target beneficiaries: 5 lakh MSEs (50% will be women owned MSEs) \n Sunset clause: All the assistance sanctioned after the d ate of notification of the \nInitiative by Ministry of MSME would be in operation till such time the sanctioned \ncorpus is fully committed, or the tenure of the Initiative is over, whichever is \nearlier. The Implementing Agency shall ensure that there is no committed liability \nbeyond the period of the Initiative. \n \n \n \n \n ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/Arial",
+        "/ABCDEE+Calibri,Bold",
+        "/Symbol"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 7,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "text": "7 \n \n4. Activities supported  \n \nSr. \nNo. Name of the activity Description \n1 Awareness creation \nand demand \ngeneration  \nAwareness creation: \n 150 workshops will be organized across the country to \ncreate awareness among MSMEs about business \nbenefits of e -commerce for their eventual onboarding \nonto ONDC compliant Seller Network Participants \n(SNPs).  \n The workshops will be conducted preferably in Tier 2 \nand 3 cities and MSME Clus ters for greater outreach \nespecially to women and SC/ ST owned MSMEs. The \nSNPs will also be invited to attend the workshops and \nwill be encouraged to onboard MSMEs on ONDC.   \n NSIC will be conducting these workshops with support \nfrom the Ministry of MSME, S tate Governments/ UTs, \nindustry bodies and ONDC.  \n The SNPs would be identified for each workshop, based \non the product category/ archetype of MSMEs \n(B2B/B2C) (with the details of the MSMEs already \nshared with the SNPs as far as possible). \n Mapping of SNPs and MSMEs (based on product, \narchetype) will also be done before the workshop to the \nextent possible. \n The c ost of conducting a  workshop is as follows and \nwould include venue, branding, refreshments etc.  \na. Metro cities @ Rs 4.75 lakhs \nb. Non metro cities @ Rs. 3 lakhs ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Symbol",
+        "/Arial"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 8,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "text": "8 \n \n The Implementing Agency (I A) i.e.  NSIC will be \nresponsible for organising these workshops . The IA will \ndraw out a calendar in consultation with the ONDC and \nSNPs indicating dates, locations /venue etc. The same \nwould then be duly approved by the Ministry / Scheme \nMonitoring Committee (S MC) and wherever possible, \nmay club / combine the workshops with other RAMP \nworkshops. The Ministry of MSME will further assist the \nIA through its field offices for ensuring larger \nparticipation and outcome. \nDemand generation \n In eCommerce, one o f the biggest challenge  a seller  \nfaces is related to creating awareness among consumers \nand getting online orders. Accordingly, it is important \nthat continuous efforts are made for demand \ngeneration.  \n Towards this, funding is being earmarked for Buyer \nNetwork Participants and Digital Marketing Ag ency \n(through IA) to create  awareness among consumers \nabout the products and service being made available \nthrough this Initiative. \n  This would include the development and \nimplementation of a comprehensive marketing and \ncampaigning strategy covering digital , print, social \nmedia and buyer network participants of the ONDC. The \ncomponents would be -  \na. Incentives to Buyer Network Participants of ONDC  \nfor visibility and order generation (Rs. 50 per order \nwith a maximum of 10 orders per MSE through a \nbuyer network participant \nb. Digital marketing  campaigns (Social Media \nplatforms) and expenditure towards  print/offline ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/Symbol",
+        "/Arial",
+        "/ABCDEE+Calibri,Bold"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 9,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "text": "9 \n \nmedia at Rs. 450 per MSE on-boarded on ONDC as \npart of the initiative \n2 Onboarding of MSEs \non the ONDC Network \nand Creation of ONDC \nCompliant Digital \nCatalogue \n The Seller Network Participants will connect with MSEs \nthat have registered for the Initiative.  \n The SNPs will initiate the registration/KYC process and \nwill be responsible for further follow-ups for completing \nonboarding process till MSEs go live.  \n A Reference Guide / SoP along with other reference \nmaterial towards this would be prepared by the \nImplementing Agency with the support of ONDC.   \n The SNPs will be supported towards the preparation of \nONDC Compliant digital catalogue for MSEs. This will be \ncapped at Rs. 2,500 per MSE. (Capped at Rs. 50 per SKU \nup to 50 SKUs for B2C and at Rs. 125 per SKU up  to 20 \nSKUs for B2B).  \n For the Seller Network Participant to claim benefit \nunder the initiative, the MSE seller should have \nsuccessfully delivered at least two orders on the ONDC \nNetwork prior to submission of claim.  \n3 Account Management \nsupport to MSEs \n The SNPs would be incentivized , subject to a cap of Rs . \n5,000 per MSE for supporting the MSEs in driving their \nonline business on ONDC through account management \nsupport. It will comprise the following:  \n Order fulfilment  \n Operations support \n Logistics support \n Training and capacity building  \n Contract management between the buyer and \nseller (for B2B transactions) \n ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/Symbol",
+        "/Arial",
+        "/ABCDEE+Calibri,Bold",
+        "/ABCDEE+Wingdings"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 10,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "text": "10 \n \n For B2C MSEs, the incentives will be linked to the value \nof transactions being undertaken on the network. Given \nthat the average order value of B2B transaction is \ngenerally higher, for B2B MSEs, the incentives will be \nlinked to the number of orders on ONDC. \n \n The incentives will be paid  to the Seller Network \nParticipant on a monthly basis , based on the following  \n(once the incentive limit of Rs. 5000/ - for any MSE is \nreached, the SNP will not be able to claim any  further \nincentive for driving transactions for that particular \nMSE) –  \n \n For B2C : 5% of net sales on the network up to Rs. \n5,000 per MSE  \n For B2B : Rs. 250 per transaction on the network, \nup to Rs. 5,000 per MSE \n4 Subsidy for \ntransportation and \nlogistics \n Subsidy for transportation and logistics will be provided \nto the MSEs  through the SNPs  as per the following \ndetails: \n \n For B2C: Rs. 50 per order for up to 10 orders per MSE  \n For B2B: Rs. 200 per order for up to 10 orders per MSE \n5 Subsidy on Packaging \nmaterial \n Support for Packaging  material will be provided to the \nMSEs through the Seller NPs as per the following details: \n For B2C: Rs 20 per order for up to 10 orders per MSE \n For B2B: Rs 250 per order for up to 10 orders per MSE \n \n6. Subsidy for Packaging \ndesign from  Indian \nInstitute of Packaging \n(IIP) \n Subsidy of 20% of packaging design cost or Rs. 2,000 per \nMSE, whichever is less \n Subsidy for packaging design will be claimed by IIP from \nthe IA ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/Symbol",
+        "/Arial",
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Wingdings"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 11,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "text": "11 \n \n7. AI Based Cataloguing  AI based cataloguing system will be developed under \nthe Initiative to fast rack and reduce the cost towards \npreparation of digital catalogues required for \nconducting eCommerce \n8. Benefits from the \nInitiative Portal \n(Msmemart.com as \nInitiative portal in \nVernacular language) \n \nThe Portal inter alia, will provide the following services: \n(a) Initiative Information \n(b) Registration system \n(c) Fund flow system \n(d) Centralized support system (call center / help desk \nand other digital system including grievance) \n(e) Embedded finance \n(f) Packaging design subsidy system \n(g) MIS \n \nNotes:  \n1) For activities 3, 4 and 5 the benefits must be availed within first 6 months of the 1st \ntransaction done on ONDC \n2) The benefits for activities 2, 3, 4 and 5 for an MSE can be claimed only by one SNP. The \nbenefits under activity 6 would be payable directly to IIP through the IA. \n3) For an MSE utilizing the AI cataloguing on MSMEmart portal, the SNP will not be eligible \nto claim support for cataloguing. (Activity no. 2) \n4) No single SNP shall be allowed to claim benefits of more than 20% of budget allocated   \nfor any of the activities listed at 2 -5 in section 4 of the Operating Guidelines of this \ninitiative.   \n5) The B2B transactions require a certain level of trust and association which takes time and \ntransactions to develop. Hence, MSEs that join the network for the B2B archetype, will be \nencouraged to bring a set of their existing buyer base online as far as a possible as it will \nhelp drive initial volume and also help the sellers build their reputation on the network. \n5. Eligibility Conditions \n ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/Symbol",
+        "/Arial",
+        "/ABCDEE+Calibri,BoldItalic"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 12,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "text": "12 \n \n All the Udyam registered Micro and Small Enterprises (MSEs) under manufacturing \nand services sectors will be eligible for benefits under the Initiative. The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws. \n The MSE should not have been onboarded on any SNP as on the date of \noperationalisation of the Initiative. \n The MSE unit should not have taken similar assistance from any other Central / State \nGovernment schemes / programmes. \n The MSEs who want to avail benefits under this Initiative shall authorize ONDC to \nshare their relevant details, including transactions on the ONDC Network, with the \nImplementing Agency (NSIC) for the purpose of scheme administration and support, \nin compliance with applicable laws. \n  ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/Symbol",
+        "/Arial"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 13,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "text": "13 \n \n6. Institutional Arrangement and their Role and Responsibilities  \n \n6.1 Scheme Monitoring Committee (SMC):  \n \nThe scheme w ill be monitored by the MSE TEAM Scheme Monitoring Committee \n(SMC -TEAM). The AS&DC, Ministry of MSME will be the Chairperson of the \nCommittee. The constitution of the SMC will be as follows: \nSl. No. Name of the Ministry/Department Designation \n1 AS&DC, Ministry of MSME, Government of India Chairman \n2 Joint Secretary (AFI), Ministry of MSME, Government of India Member \n3 Representative from Ministry of DPIIT (Not Below the level of \nDirector) \nMember \n4 Representative from Ministry of Textiles (Not Below the level of \nDirector) \nMember \n5 Representative from the Implementing Agency (NSIC) (Not Below \nthe Rank of GM) \nMember \n6 Representative from ONDC (Not Below the Rank of VP) Member \n7 Representative from Industry association / academia/ SNP Member \n8 Any other invitee as and when required co -opted by the \nChairman \nMember \n9 Director, Ministry of MSME dealing with the subject matter. Member \nSecretary \n  \n The Terms of Reference (ToR) of SMC are as under: \na. The Committee shall be responsible for providing overall guidance and \ndirection, implementation, monitoring, necessary approvals and tracking the \nprogress of the Initiative.  ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/ABCDEE+Calibri,Bold",
+        "/Times New Roman",
+        "/Arial"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 14,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "text": "14 \n \nb. Any change/ course correction in the Initiative guidelines may be affected on \nthe recommendation of the S MC and with the approval of the Minister , \nMoMSME.           \n    \n6.2 Implementing Agency (IA) \nNational Small Industries Corporation (NSIC) will be the Implementing Agency (IA) for the \nInitiative. It will have the following roles and responsibilities -  \n1) Prepare a schedule for the workshops and conduct them \n2) Develop SOPs for fund flow to SNPs and other implementing partners.  \n3) Create a portal to register eligible MSEs for the Initiative and pass on the leads to the SNPs \n4) Sign an MoU with ONDC for implementing the activities under the Initiative \n5) Coordinate with IIP to provide packaging design solutions for MSEs through the scheme \nportal \n6) Empanel SNPs and BNPs for supporting MSEs as per Initiative guidelines. \n7) Onboard a ‘Digital Marketing Agency’ for undertaking marketing and demand generation \nactivities \n8) Develop a mechanism to ensure that the expenditure under the various components of \nInitiative is  utilized for the intended purpose . Further, the mechanism should have a \nfacility to prevent any deviation on the usage thereby \n9) Set up a centralised helpdesk to facilitate the implementation of the Initiative \n10) Develop a monitoring and evaluation framework for the initiative  and submit progress \nreport to the Ministry of MSME periodically \n11) Develop a system to encourage women-owned MSEs to participate in the Initiative \n12) Nominate a nodal officer for effective coordination with the Ministry of MSME and other \nstakeholders \n13) All dispute resolution and litigations related to the Initiative will be handled by the IA on \nbehalf of the Ministry of MSME \n14) Any other task assigned by the Ministry of MSME with the approval of SMC \n ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/Times New Roman",
+        "/Arial",
+        "/ABCDEE+Calibri"
+      ],
+      "provenance": "pdf_physical_page"
+    },
+    {
+      "page": 15,
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "text": "15 \n \n6.3 Seller Network Participants (SNPs) \n \nThe Seller Network Participants (SNPs) shall be the nodal points for the MSEs to join the ONDC \nnetwork. The SNP will be responsible for the following: \n1) Onboard the eligible MSEs on the ONDC network and support them in creation of their digital \ncatalogue \n2) Act on the leads generated through the Initiative portal \n3) Provide operations and account management support to the MSEs that join the ONDC \nnetwork under the Initiative \n4) Support growth of MSEs on the network in terms of increase in orders, pricing support, \nmarket intelligence, etc. \n5) Provide reports and documentation as required and communicated by the Ministry of MSME \nand the IA \n6) Participate in awareness and onboarding workshops.  \n7) Include Initiative beneficiaries in their marketing and outreach activities \n8) Any other task assigned by the Ministry of MSME with the approval of SMC \n \n6.4. Open Network for Digital Commerce (ONDC)  \nONDC shall play a strategic role in designing the e -commerce ecosystem and in supporting the \nImplementation Agency in rolling out various components of the scheme as outlined below -  \n1) Support in assessing  the B2B and B2C e -commerce ecosystem requirements  for the \nimplementation of the Initiative \n2) Support in prioritising archetypes and categories of MSMEs that will get optimum value from \necommerce and open network \n3) Design and implement a ‘train the trainer’ session(s) for capacity building on various aspects \nof the Initiative. \n4) Support the Ministry in the empanelment process of the eligible SNPs \n5) Provide necessary reports/documents for implementing various components of the \nInitiative \n6) Any other support requested by the Ministry of MSME with the approval of SMC ",
+      "quality": "readable_text_unverified",
+      "fonts": [
+        "/ABCDEE+Calibri",
+        "/Arial",
+        "/ABCDEE+Calibri,Bold",
+        "/ABCDEE+Calibri"
+      ],
+      "provenance": "pdf_physical_page"
+    }
+  ],
+  "pages_hash": "5af7df227e0c76ad2b46acd98ddf87ba6854423f0982ac2a730053dd1a021348",
+  "original_binary_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+  "independent_review": {
+    "status": "unavailable",
+    "method": null,
+    "reason": "No separate semantic reviewer available at zero external paid AI budget. Agent 2 explicitly performs engineering checks only."
+  },
+  "human_required": true,
+  "publication_authorized": false
+}
