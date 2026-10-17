@@ -1,5 +1,7 @@
 # Unclaimed first release — Neon + Cloud Run + Firebase Hosting
 
+**17 October 2026 live status:** The explicitly approved operator release of `984e667` is complete. See [actual production measurements and acceptance gaps](production-release-2026-10-17.md). The commands below remain an operator reference; they do not authorize another release. Hosting now stages fresh Vite output inside `infra/deploy-dist` before Firebase deployment.
+
 Updated 17 October 2026. **The existing application is deployed; the intelligence integration below is not yet released.** Read-only checks confirmed billing enabled, a ready Cloud Run revision, Neon head `f24a1000abcd`, zero source/opportunity records and zero administrators. No Google Cloud/Hosting/production-role/Neon mutation was performed in this integration assignment. Do not rerun first-release provisioning or initialize Neon. Sections 1–7 retain first-release reference commands; follow section 8 for the new additive release/import.
 
 ## Selected infrastructure

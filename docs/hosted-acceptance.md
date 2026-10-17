@@ -1,5 +1,7 @@
 # Real hosted acceptance — operator checklist
 
+**Latest measured run:** See [17 October 2026 production acceptance](production-release-2026-10-17.md) for checks actually performed, human-completed Google Sign-In, and remaining cross-account/populated-policy gates. The procedure below remains the checklist for later releases.
+
 **Public hosted smoke passed on 17 October; authenticated populated-production acceptance remains NOT RUN.** The intelligence release/import is not yet deployed. Local emulator, mocked tests and Docker checks do not establish live Google Sign-In or a working production policy catalogue. Paid generation/ingestion remain off; no Gemini/OpenAI acceptance is claimed.
 
 Use project `venuesignal`, existing Firebase Web app `AiBuilderCup`, Hosting site `unclaimed-ai-cup` and region `asia-south1`. The project Auth domain remains `venuesignal.firebaseapp.com`; it is not the frontend URL.

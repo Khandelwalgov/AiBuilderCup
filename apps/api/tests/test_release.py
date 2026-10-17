@@ -215,10 +215,11 @@ def test_execute_orders_candidate_smoke_build_promotion_and_hosting_without_clou
         shutil.copy(ROOT / "infra" / name, tmp_path / "infra" / name)
     monkeypatch.setattr(deploy, "ROOT", tmp_path)
     monkeypatch.setattr(deploy, "image_tag", lambda: "release-test")
+    monkeypatch.setattr(deploy, "prepare_hosting_assets", lambda: None)
     status = {
         "url": "https://api.run.app",
         "latestReadyRevisionName": "api-new",
-        "traffic": [{"tag": "release-test", "url": "https://candidate.run.app"}],
+        "traffic": [{"tag": "r-test", "url": "https://candidate.run.app"}],
     }
 
     def invoke(label, args, **kwargs):
@@ -229,7 +230,7 @@ def test_execute_orders_candidate_smoke_build_promotion_and_hosting_without_clou
             assert args[args.index("--only") + 1] == "hosting:unclaimed"
             assert args[args.index("--project") + 1] == "venuesignal"
         if label == "migration-job":
-            assert "--args=-m,opportunity_platform.operations.migration_gate,--mode,verify" in args
+            assert "--args=-m,opportunity_platform.operations.migration_gate,--mode=verify" in args
         if label == "record-existing-traffic":
             return json.dumps(
                 [
@@ -332,7 +333,7 @@ def test_neon_plan_and_hosting_are_explicit_and_exclusive(tmp_path, monkeypatch)
         "cloudsql" in arg.lower() or "/cloudsql/" in arg for _, cmd in commands for arg in cmd
     )
     assert (
-        "--args=-m,opportunity_platform.operations.migration_gate,--mode,verify" in commands[1][1]
+        "--args=-m,opportunity_platform.operations.migration_gate,--mode=verify" in commands[1][1]
     )
     assert "upgrade,head" not in commands[1][1]
     bad = {**c, "cloud_sql_connection": "not-allowed"}
@@ -584,7 +585,7 @@ def test_corpus_batches_use_exact_reviewed_manifest_size(tmp_path, monkeypatch, 
     assert job.main(["--config", str(path), "--all-batches", "--record-count", "42"]) == 0
     output = capsys.readouterr().out
     assert sum(line.startswith("corpus-job:") for line in output.splitlines()) == 3
-    assert "--offset,40" in output and "--offset,60" not in output
+    assert "--offset=40" in output and "--offset=60" not in output
     assert job.main(["--config", str(path), "--operation", "probe"]) == 0
     assert "neural_probe" in capsys.readouterr().out
     assert (
@@ -603,7 +604,7 @@ def test_corpus_batches_use_exact_reviewed_manifest_size(tmp_path, monkeypatch, 
     )
     output = capsys.readouterr().out
     assert sum(line.startswith("corpus-job:") for line in output.splitlines()) == 1
-    assert "--state-name,rajasthan-supplement-20261017" in output
+    assert "--state-name=rajasthan-supplement-20261017" in output
     with pytest.raises(SystemExit):
         job.main(["--config", str(path), "--state-name", "../private"])
     with pytest.raises(SystemExit):
@@ -672,3 +673,53 @@ def test_exact_gcloud_missing_image_allows_build_but_auth_errors_do_not(monkeypa
     message = "UNAUTHENTICATED: private diagnostic"
     with pytest.raises(RuntimeError, match="UNAUTHENTICATED"):
         deploy.invoke("check-existing-image", args, allow_not_found=True)
+
+
+def test_live_routing_tag_limit_keeps_image_fingerprint(monkeypatch):
+    deploy = module("deploy")
+    original = deploy.image_tag()
+    tag = deploy.routing_tag("opportunity-api")
+    assert len(tag + "opportunity-api") <= 46
+    assert tag == "r-" + original.removeprefix("release-")
+    assert deploy.image_tag() == original
+    with pytest.raises(ValueError):
+        deploy.routing_tag("s" * 40)
+
+
+def test_job_argument_transport_keeps_repeated_project_and_source_semantics():
+    deploy = module("deploy")
+    command = [
+        "gcloud",
+        "run",
+        "jobs",
+        "deploy",
+        "fictional-worker",
+        "--args=-m,module,import,--project,venuesignal,--execute,--approved-project,"
+        "venuesignal,--source,source-one,--source,source-two",
+    ]
+    transported = deploy.normalize_job_arguments(command)
+    parts = transported[-1].removeprefix("--args=").split(",")
+    assert len(parts) == len(set(parts))
+    assert "--project=venuesignal" in parts and "--approved-project=venuesignal" in parts
+    assert "--source=source-one" in parts and "--source=source-two" in parts
+    assert "--execute" in parts and "-m" in parts
+    assert deploy.normalize_job_arguments(transported) == transported
+
+
+def test_hosting_assets_are_fresh_and_stay_inside_project(tmp_path, monkeypatch):
+    deploy = module("deploy")
+    monkeypatch.setattr(deploy, "ROOT", tmp_path)
+    source = tmp_path / "apps/web/dist"
+    target = tmp_path / "infra/deploy-dist"
+    source.mkdir(parents=True)
+    target.mkdir(parents=True)
+    (target / "stale.js").write_text("stale")
+    (source / "index.html").write_text("<html>fresh</html>")
+    (source / "current.js").write_text("fresh")
+    deploy.prepare_hosting_assets()
+    assert (target / "index.html").read_bytes() == (source / "index.html").read_bytes()
+    assert (target / "current.js").read_text() == "fresh"
+    assert not (target / "stale.js").exists()
+    (source / "private-link").symlink_to(tmp_path)
+    with pytest.raises(ValueError):
+        deploy.prepare_hosting_assets()

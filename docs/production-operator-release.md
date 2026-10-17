@@ -1,5 +1,7 @@
 # One-time operator release — preparation and approval boundary
 
+**Execution record:** This document preserves the reviewed preparation/approval scope. The human subsequently approved it and the release ran; see [17 October production results](production-release-2026-10-17.md). Historical “not executed” statements below describe preparation, not current production.
+
 17 October 2026. Agent 2 owns this isolated production integration branch; Agent 1 owns corpus interpretation/OCR. **No production mutation has been executed.** Native GitHub production reviewer protection is unavailable for the private Free repository. A human must approve the exact CI-passing Git SHA and the itemized operator scope below. A plan file or a successful CI run is not authorization.
 
 ## Read-only observations

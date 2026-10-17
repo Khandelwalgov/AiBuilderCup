@@ -1,7 +1,7 @@
 {
   "hosting": {
     "target": "unclaimed",
-    "public": "../apps/web/dist",
+    "public": "deploy-dist",
     "ignore": [
       "firebase.json",
       "**/.*",

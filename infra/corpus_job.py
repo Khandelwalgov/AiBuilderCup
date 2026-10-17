@@ -10,7 +10,7 @@ import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from deploy import image_tag, invoke
+from deploy import image_tag, invoke, normalize_job_arguments
 
 
 def validate(config):
@@ -124,7 +124,7 @@ def plan(
     if operation == "probe":
         arguments = ["-m", "opportunity_platform.operations.neural_probe"]
     common = ["--project", project, "--region", region, "--quiet"]
-    return [
+    commands = [
         (
             "corpus-job",
             [
@@ -164,6 +164,8 @@ def plan(
             ["gcloud", "run", "jobs", "execute", config["job"], *common, "--wait"],
         ),
     ]
+
+    return [(label, normalize_job_arguments(command)) for label, command in commands]
 
 
 def main(argv=None):

@@ -7,6 +7,7 @@ import json
 import os
 import re
 import shlex
+import shutil
 import subprocess
 import tempfile
 import urllib.request
@@ -121,6 +122,7 @@ def validate_hosting(config):
         not isinstance(hosting, dict)
         or hosting.get("target") != config["hosting_target"]
         or hosting.get("site") is not None
+        or hosting.get("public") != "deploy-dist"
         or expected != [config["hosting_site"]]
     ):
         raise ValueError("Hosting configuration must target exactly the selected Unclaimed site")
@@ -128,6 +130,54 @@ def validate_hosting(config):
 
 def hosting_origin(config):
     return "https://" + config["hosting_site"] + ".web.app"
+
+
+def prepare_hosting_assets():
+    """Copy only this checkout's freshly built assets inside the Firebase project."""
+    source = ROOT / "apps/web/dist"
+    target = ROOT / "infra/deploy-dist"
+    if (
+        source.is_symlink()
+        or not (source / "index.html").is_file()
+        or any(path.is_symlink() for path in source.rglob("*"))
+        or target.is_symlink()
+    ):
+        raise ValueError("Fresh regular Vite assets are required for Hosting")
+    if target.exists():
+        shutil.rmtree(target)
+    shutil.copytree(source, target)
+
+
+def routing_tag(service):
+    # Cloud Run limits tag + service to 46 characters, independently of image tags.
+    available = 46 - len(service) - 2
+    if available < 12:
+        raise ValueError("Service name leaves too little room for a safe routing tag")
+    return "r-" + image_tag().removeprefix("release-")[:available]
+
+
+def normalize_job_arguments(command):
+    """Preserve container argv while avoiding gcloud ArgList duplicate values."""
+    result = []
+    for argument in command:
+        if argument.startswith("--args="):
+            parts, serialized, index = argument[7:].split(","), [], 0
+            while index < len(parts):
+                item = parts[index]
+                if (
+                    item.startswith("--")
+                    and "=" not in item
+                    and index + 1 < len(parts)
+                    and not parts[index + 1].startswith("--")
+                ):
+                    serialized.append(item + "=" + parts[index + 1])
+                    index += 2
+                else:
+                    serialized.append(item)
+                    index += 1
+            argument = "--args=" + ",".join(serialized)
+        result.append(argument)
+    return result
 
 
 def hosting_command(config):
@@ -387,7 +437,7 @@ def plan(c, env_file, runtime_role=None):
                 "60s",
                 "--no-traffic",
                 "--tag",
-                image_tag(),
+                routing_tag(service),
                 "--startup-probe",
                 "httpGet.path=/health,httpGet.port=8080,periodSeconds=10,timeoutSeconds=5,failureThreshold=12",
                 "--liveness-probe",
@@ -412,7 +462,7 @@ def plan(c, env_file, runtime_role=None):
             ("runtime-grants-job", grant_job),
             ("runtime-grants", list(commands[2][1])),
         ]
-    return commands
+    return [(label, normalize_job_arguments(command)) for label, command in commands]
 
 
 def invoke(label, args, *, allow_not_found=False, **kwargs):
@@ -594,6 +644,7 @@ def main(argv=None):
                         for t in item.get("status", {}).get("traffic", [])
                     ],
                     "image_tag": image_tag(),
+                    "routing_tag": routing_tag(service),
                     "database_provider": config["database_provider"],
                     "migration_mode": config["migration_mode"],
                     "runtime_dml_role": args.grant_runtime_role,
@@ -658,7 +709,9 @@ def main(argv=None):
             )
         )["status"]
         url = status["url"]
-        candidate = next(t["url"] for t in status["traffic"] if t.get("tag") == image_tag())
+        candidate = next(
+            t["url"] for t in status["traffic"] if t.get("tag") == routing_tag(service)
+        )
         smoke(candidate, json.loads(backend_environment(config)["CORS_ORIGINS"]))
         if args.receipt:
             receipt = json.loads(args.receipt.read_text())
@@ -672,6 +725,7 @@ def main(argv=None):
         environment = web_environment(config, url)
         invoke("install-web", ["pnpm", "--dir", "apps/web", "install", "--frozen-lockfile"])
         invoke("build-web", ["pnpm", "--dir", "apps/web", "build"], env=environment)
+        prepare_hosting_assets()
         invoke(
             "promote-api",
             [

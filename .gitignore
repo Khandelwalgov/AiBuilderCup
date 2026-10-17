@@ -31,3 +31,7 @@ firebase-debug.log
 
 # Ephemeral GitHub Workload Identity Federation ADC files.
 gha-creds-*.json
+
+# Fresh Firebase CLI build staging, never source or credentials.
+/infra/deploy-dist/
+/infra/firebase.deploy.json

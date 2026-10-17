@@ -12,6 +12,7 @@ from deploy import (
     hosting_command,
     hosting_origin,
     invoke,
+    prepare_hosting_assets,
     smoke,
     validate,
     validate_hosting,
@@ -76,6 +77,7 @@ def main(argv=None):
         ["pnpm", "--dir", "apps/web", "build"],
         env=web_environment(config, url),
     )
+    prepare_hosting_assets()
     invoke("hosting", hosting_command(config))
     receipt = {
         "frontend_only": True,
