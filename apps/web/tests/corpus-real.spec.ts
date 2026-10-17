@@ -54,5 +54,6 @@ test('actual captured government pages and unverified Codex drafts remain separa
   await page.goto('/government-sources');
   await page.getByRole('combobox', { name: 'Interface language' }).first().selectOption('hi');
   await expect(page.getByRole('heading', { name: 'सरकारी स्रोत', exact: true })).toBeVisible();
+  await expect(page.getByText('मानवीय समीक्षा बाकी · PDF', { exact: true }).first()).toBeVisible();
   await productCapture(page, 'actual-government-library-hi-mobile');
 });
