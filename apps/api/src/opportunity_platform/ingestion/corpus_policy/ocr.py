@@ -8,8 +8,11 @@ import argparse
 import csv
 import hashlib
 import json
+import os
 import shutil
 import subprocess
+import sys
+import tempfile
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -66,6 +69,19 @@ def main():
     root = args.corpus_root / "processing/ocr-checkpoints" / record.snapshot_id
     root.mkdir(parents=True, exist_ok=True)
     results = []
+    render_environment = dict(os.environ)
+    # Bundled Poppler may reference build-host Fontconfig paths on macOS. Use
+    # local system fonts and a temporary writable cache, without touching HOME.
+    render_directory = tempfile.TemporaryDirectory(prefix="corpus-fontconfig-")
+    if sys.platform == "darwin" and not render_environment.get("FONTCONFIG_FILE"):
+        fontconfig = Path(render_directory.name) / "fonts.conf"
+        fontconfig.write_text(
+            '<?xml version="1.0"?><fontconfig>'
+            "<dir>/System/Library/Fonts</dir><dir>/System/Library/Fonts/Supplemental</dir>"
+            "<dir>/Library/Fonts</dir><cachedir>" + render_directory.name + "</cachedir>"
+            "</fontconfig>"
+        )
+        render_environment["FONTCONFIG_FILE"] = str(fontconfig)
     for page in pages:
         output = root / f"page-{page}.json"
         if output.exists():
@@ -98,6 +114,7 @@ def main():
             check=True,
             timeout=90,
             capture_output=True,
+            env=render_environment,
         )
         subprocess.run(
             [
@@ -138,6 +155,10 @@ def main():
             "tool": tool,
             "language_hashes": language_hashes,
             "created_at": datetime.now(UTC).isoformat(),
+            "render_scale_to": 2200,
+            "render_font_configuration": "local_system_fonts"
+            if sys.platform == "darwin"
+            else "system_default",
             "image_sha256": sha(prefix.with_suffix(".png")),
             "text_sha256": sha(prefix.with_suffix(".txt")),
             "text": text,
@@ -150,6 +171,7 @@ def main():
         with output.open("x") as stream:
             json.dump(packet, stream, ensure_ascii=False, indent=2)
         results.append({"page": page, "state": packet["state"], "word_count": len(words)})
+    render_directory.cleanup()
     print(json.dumps({"results": results, "paid_calls": 0, "original_modified": False}))
 
 

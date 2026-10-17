@@ -1,3 +1,158 @@
+# Corpus-to-policy integration
+
+## Bulk processing checkpoint — 17 October 2026
+
+**The bulk interpretation task is not complete.** This checkpoint completes local text/OCR processing and portable source handoff for the initial corpus; it does not claim complete policy extraction, independent semantic verification, current opportunity availability or publication. All remaining work is explicitly queued. The original acquisition manifest, original bytes, existing snapshots, DEPwD drafts and review history remain unchanged.
+
+Work is isolated on `codex/corpus-completion` at `/Users/govind/.codex/worktrees/corpus-completion/AIBuildersCup`. Agent 2 owns production release, GCS staging and database mutations. No deployment, retrieval, Scenario Studio or frontend files were edited here. No paid external inference request was made.
+
+### Measured initial-corpus results
+
+| Measure | Initial corpus |
+|---|---:|
+| Unique documents / immutable URL-snapshot records | 120 / 125 |
+| Original bytes | 193,031,267 |
+| Hash-validated documents with page/section artifacts | 120 |
+| Fully processed through complete policy interpretation | **0** |
+| Documents with every required OCR page checkpointed | 95 |
+| Documents still missing required OCR checkpoints | 0 |
+| Documents with low-confidence or empty OCR pages | 13 |
+| OCR checkpoint files / unique content-hash-page pairs | 665 / 643 |
+| Structured component drafts / original-citation-valid drafts | 7 / 7 |
+| Deterministic-valid drafts / blocked drafts | 3 / 4 |
+| Focused same-session semantic critiques | 7 |
+| Completed full independent semantic reviews | **0** |
+| Drafts with material review concerns / requiring human review | 7 / 7 |
+| Confirmed currently actionable opportunities | **0** |
+| Exact issuer/title uncertainty from original audit | 117 |
+| Current availability unverified | 120 |
+| Technically transportable source artifacts | 125 records / 120 content hashes |
+| Existing importer eligible, after Citizen Charter exclusion | 124 records / 119 content hashes |
+
+“Fully processed” includes complete interpretation and amendment/currentness reconciliation, not merely nonempty text, a classifier label, or a model agreeing with itself. Zero here is deliberate: the existing three MSME drafts and new scholarship drafts are partial, conservative interpretations. “OCR completed” means local OCR ran and its checkpoints passed integrity checks, not that all recognition is correct. The 13 quality cases include empty pages; they are not 13 proven unreadable policies.
+
+The original detector flagged 94 documents and 640 pages. Codex inspection found an additional false negative: the three-page “Woman Welfare” PDF contained garbled Latin glyph fragments in place of Hindi. An explicit source-hash-bound quality override now requests OCR for those pages. Its recovered text identifies an institutional Expression of Interest for operating working-women residences, rather than a direct cash benefit for every working woman. Its OCR date is unreliable and has not become a current deadline.
+
+There were 147 bounded initial OCR chunks. One stopped on an existing English-only checkpoint identity rather than overwriting it with Hindi/English output. A second bounded pass processed only the four missing pages. All 643 required unique source-content/page pairs are now checkpointed. Existing equivalent-content URL aliases retain their own source attribution; 665 physical checkpoint files include these aliases and previously selective passes.
+
+### Classification and outstanding interpretations
+
+Current deterministic triage, which remains subject to source interpretation:
+
+| Class | Unique documents |
+|---|---:|
+| Policy or guideline | 19 |
+| Application schedule or amendment | 32 |
+| Procedure or FAQ | 12 |
+| Institution compliance, hold/debar/blacklist or show-cause material | 18 |
+| Tender notice | 20 |
+| Document index | 5 |
+| Administrative reference | 1 |
+| Announcement or unclassified | 13 |
+
+These are document counts, not opportunity counts. The five HTML documents are indexes; linked titles do not establish eligibility. The Citizen Charter stays archived and excluded by the existing importer. Institution lists are dependencies to reconcile, not new scholarships. Tender cancellation/correction relationships and deadline scopes remain pending; the task has not fabricated an expired-tender count. LEAN explicitly limits captured financial provisions to 31 March 2026. MSE-GIFT's older fresh-loan sanction cutoff does not prove the whole scheme discontinued. The IC bundle includes an amendment and an older financial-cycle baseline; filenames and capture dates cannot extend it.
+
+### Candidate preparation and verification
+
+The initial selection contains the existing TEAM, LEAN and PMS individual-trade-fair drafts. Four new PM-YASASVI component drafts cover pre-matric, post-matric, Top Class School and Top Class College education. They contain 46 cited applicant-facing conditions and exceptions, plus explicit unknown fields and clause dispositions. They do not conflate parental/guardian income, household income and family income, or the two-boy limit with the college two-sibling limit.
+
+The school component says income **less than** the threshold. The existing typed engine supports inclusive comparisons, so that condition remains unknown. A new operator was not invented. The college source's institutional verification date is not a student application deadline. Tuition paid to institutions is distinguished from student living/books/computer support.
+
+All four new drafts pass closed-schema and exact-original-page citation checks. Their first deterministic pass rejected overbroad whole-page-to-clause coverage mappings; one targeted repair changed those mappings to explicit completeness-review dispositions. The strict source readability check still rejects the bundle because page 66 has no substantive extracted text. The importer gate was not weakened to improve draft counts. These four drafts are quarantined outside the import selection, with both attempts and remaining findings retained.
+
+Seven focused source-grounded critiques are stored in `processing/completion-v1/semantic-critique.*.json`. They record actual examined claims and evidence, including income definitions, strict comparisons, exceptions, recipient scope and dates. **They used this Codex session and are not independent-model or independent-context verification.** They do not claim full-document semantic completeness. The existing independent-review stage remains pending and publication still requires an authorized human.
+
+Visual inspection of original PMS physical page 2 resolved the garbled space-rent table to 80% for general-category units and 100% for the specified categories on minimum stall size. That observation, image hash and suggested correction are retained separately. The original extracted quote was not silently rewritten and those rates were not promoted to executable rules.
+
+### Targeted coverage supplement
+
+All 23 registered groups were investigated using the existing registry, access notes, archived indexes and acquisition results. Four remain public acquisition groups; nineteen remain restricted, blocked or awaiting terms review. MyScheme, login/challenge sources and permission-restricted sources were not scraped.
+
+Three substantive PDFs linked by the already archived Rajasthan scholarship/residential-school index were acquired using the existing robots-aware collector, capped at three documents, five requests, 40 MiB and one-second host delay. They are a **separate** immutable root at `/Users/govind/Projects/AIBuildersCup/.corpus/coverage-supplement-v1`:
+
+- SC post-matric guidelines linked as March 2021.
+- ST post-matric regulations applicable from 1 April 2022.
+- Residential-school summary PDF.
+
+This adds 3 unique PDFs and 4,366,911 original bytes, without modifying the initial 125-record manifest. Two supplemental documents required OCR; all required pages were checkpointed, with one document retaining low-confidence/empty content. One additional ST draft contains 19 cited conditions and exceptions and passes deterministic/original-citation validation. Its income definition combines parents' gross income, excludes other earning family members, exempts guardian-supported orphans and uses the previous financial year for salaried employees. Suggestive timetable dates remain distinct from actual State deadlines. It is unapproved, contains unknown typed conditions and awaits independent review and current amendment reconciliation.
+
+The supplement selects a compatible one-segment candidate filename, preserving the original repair file unchanged. `handoff build --import-manifest` explicitly maps the compatible immutable selection to the importer-required `processing/import-manifest-v1.json` inside the bundle. Both source manifests and acquisition ledgers remain separate; no hidden merge or scope expansion occurs.
+
+### Portable, immutable handoff
+
+The new `corpus_policy.handoff` CLI builds deterministic exclusive-create archives. Each has `handoff.json`, a manifest, registry, read-only SQLite backup, public acquisition ledgers, exactly the manifest-referenced original blobs, page packets, OCR PNG/TXT/TSV/JSON, classifications, candidate versions, findings and an explicit import manifest. It excludes environment files, arbitrary local documents, neural-retrieval artifacts and unlisted directories. No 193 MB PDF set is committed to Git.
+
+Verification rejects duplicate/noncanonical/traversal paths, symlinks, unsupported members, excessive member counts/sizes, inconsistent manifest/blob inventories and checksum mismatches. Restore validates every member before creating a **new** destination; it refuses merging or overwriting a collector directory, then rechecks source access, original byte hashes and sizes. Agent 2's importer independently revalidates candidates against fresh original extraction before writes. Byte-identical candidate aliases are deduplicated; conflicting same-focus candidates escalate.
+
+| Bundle | Exact bytes | SHA-256 |
+|---|---:|---|
+| `.corpus/handoffs/initial-20261017-v1.tar.gz` | 814,747,164 | `94ca625c1d793284e2aabdfe65c5892ce682f2b82241fb88b5ad69e02099c423` |
+| `.corpus/handoffs/rajasthan-supplement-20261017-v1.tar.gz` | 37,841,352 | `ecd001143e08c604e0b09e2ef6ac51e1c307a2b05ffcf07149f1cfd989ef9e7f` |
+
+Absolute paths begin `/Users/govind/Projects/AIBuildersCup/`. Large size is primarily original PDFs and OCR page imagery, not a requirement to place those images inside the live metadata state. Agent 2 confirmed separate initial/supplemental state names and explicit reviewed record counts, using shared content-addressed private blob storage after release authorization.
+
+Initial manifest SHA: `a8f235f1f3ade35bce34ef5324cafdf12f037c63186f55405708d64f9d23f02c`; registry SHA: `ac9f2c89030c2db03f6b9e54d8ec33a059190e05412eb09c3971ec426863f8a3`.
+
+Supplement manifest SHA: `497bb7abefcbda640e4413035566d3c213caa2b6d4123bf1c54ecea4d3a79b14`; registry SHA: `f45d3da356f6a56a29cda8319a6ce44a80dd4fdc4c36d399d1e185dbdb77a07d`.
+
+Prepared import entries use the coordinated `prepared-import-v1` contract: snapshot/source hash, exact allowlisted candidate path and file hash, stable focus, deterministic validation state and `digest({snapshot_id, source_hash, candidate_sha256, focus})`. The initial manifest selects **3**, the separate supplement selects **1**. This selection cannot assert human approval or publish anything. Other candidates remain in the bundle as quarantined diagnostics.
+
+Read-only verification and portable restore (no model calls, no database writes):
+
+```sh
+cd /Users/govind/.codex/worktrees/corpus-completion/AIBuildersCup
+export PYTHONPATH="$PWD/apps/api/src"
+PYTHON=/Users/govind/Projects/AIBuildersCup/apps/api/.venv/bin/python
+"$PYTHON" -m opportunity_platform.ingestion.corpus_policy.handoff verify \
+  --bundle /Users/govind/Projects/AIBuildersCup/.corpus/handoffs/initial-20261017-v1.tar.gz
+"$PYTHON" -m opportunity_platform.ingestion.corpus_policy.handoff restore \
+  --bundle /Users/govind/Projects/AIBuildersCup/.corpus/handoffs/initial-20261017-v1.tar.gz \
+  --destination /private/tmp/unclaimed-initial-new-restore
+```
+
+Use another new destination and the separate supplemental bundle for that scope. Checksum reports and fresh restore tests are available locally; Git contains only code, tests and sanitized counts. No GCS upload, production import or release was performed by Agent 1.
+
+### Resuming processing without repeating completed OCR
+
+Implementation additions:
+
+- `ocr_batch.py`: plan-only default, 1–1,000 pages, 1–4 local workers, one targeted retry, source/page identity checks and durable per-page checkpoints.
+- `ocr.py`: explicit local macOS font configuration fixes bundled Poppler build-host paths; existing checkpoints remain immutable.
+- `completion.py`: per-record hash checks, original page boundaries, explicitly separate OCR derivatives, content-bound idempotency, source mentions/qualifiers and isolated failed-document reports. Damaged OCR affects its own source, not every document. Authority mentions are not automatically promoted to exact issuers.
+- `import_inventory.py`: closed-schema/exact-citation/deterministic checks, component deduplication, quarantined findings and immutable import selection.
+- `handoff.py`: portable bounded packaging, checksum/inventory validation and exclusive restore.
+
+The all-corpus processing inventories use content-addressed filenames under `processing/completion-v1`; new derivatives create new checkpoints instead of replacing prior pages. The inventory identifies which source still needs interpretation. The original `SourceSnapshot.pages` and `archive-text-v1` parser contract remain unchanged.
+
+```sh
+"$PYTHON" -m opportunity_platform.ingestion.corpus_policy.ocr_batch \
+  --corpus-root /Users/govind/Projects/AIBuildersCup/.corpus \
+  --manifest data/corpus/acquired-manifest.jsonl --registry data/corpus/sources.json \
+  --max-pages 64
+```
+
+This prints a plan. Executing local OCR additionally needs `--execute --tessdata-directory /private/tmp/unclaimed-ocr-data`. It never falls back to a hosted OCR or model service. The initial backlog plan now selects zero missing originally flagged pages; manually diagnosed false negatives are retained in the explicit quality override.
+
+### Remaining work, not silently assigned to the user
+
+The next interpretation queue is the 19 potential guideline documents, 32 schedule/amendment documents and relevant procedure/dependency material, rather than treating 120 documents as 120 application opportunities. The unresolved queue is for continuing source interpretation and targeted consequential decisions; it is not a request for the user to transcribe 120 documents. Important remaining cases include MSE-SPICE/GIFT/IC/ODR complete component logic, welfare operating-grant recipients, Mirasi/Bhishti scholarship conditions, institution restrictions and State-specific scholarship amendment chronology. OCR tables and unreliable dates must be reconciled with original imagery before becoming rules.
+
+The strict readable-source gate, typed-rule limits, unknown states, independent-review requirements and human publication safeguards remain intact. No new human `CandidateReview`, published requirement, catalogue update, notification or profile evaluation was created by this checkpoint.
+
+### Verification executed for this checkpoint
+
+The final full backend run passed **259 tests, 3 skipped**, with six existing dependency/deprecation warnings. The focused corpus suite passed **78 tests** with the real archive enabled; **14** tests cover the new completion/handoff behavior. Backend Ruff lint and format checks passed (122 files). Tests cover hash/citation/schema validation, candidate aliases and conflicts, corrupted OCR isolation, immutable resume, traversal/noncanonical paths, checksum tampering, exclusive restore and one-retry escalation. Earlier full-run results below are historical.
+
+Both real bundles were restored into fresh `/private/tmp` directories and candidate validation replayed there. Replay reproduced **7 citation-valid initial candidates, 3 deterministic-valid and 4 escalated**, plus **1 citation-valid and deterministic-valid supplemental candidate**. The compatible alias deduplicated without inventing a second opportunity. No original archive access is required after portable restore. Initial/supplemental roots and SQLite acquisition ledgers remain separate.
+
+Local DEPwD rows were fingerprinted before and after the final tests in read-only PostgreSQL transactions: **2 sources, 2 drafts, 70 citations, 4 review records, 16 fingerprinted rows**, unchanged. SHA-256: `61d5ad62def2711559893a1f9b493bdc9565e58023fa498d03608c16107318ab`. No production database connection or mutation was made.
+
+Commands actually executed included `corpus_policy.ocr`, `corpus_policy.ocr_batch`, `corpus_policy.completion`, `corpus_policy.import_inventory`, `corpus_policy.handoff build/restore`, the full `pytest -q` suite from `apps/api`, and backend `ruff check .` / `ruff format --check .`. All used the existing local virtual environment with the isolated worktree on `PYTHONPATH`. The future paid extraction command in the historical operator section was **not run**; its repair cap and worker/budget preflight settings have been corrected to the current interface.
+
+## Historical Phase 2 baseline
+
+The following sections record the earlier bounded integration and its original 94-document OCR triage. The checkpoint above supersedes its progress counts; earlier measurements are retained as history.
+
 > 17 October follow-up: paid worker execution now additionally requires an explicit worker role, paid-worker permission, positive global/per-run budgets and reviewed provider/model price ceilings. Defaults remain zero. Interactive Codex packets can be staged without API calls; missing separate semantic review is escalated, never fabricated. Current evidence: [intelligence audit](unclaimed-intelligence-audit.md).
 
 # Corpus-to-policy integration — phase 2
@@ -134,11 +289,14 @@ The existing runtime was reused with the worktree source first on `PYTHONPATH`; 
 
 ## Bounded future live extraction command — provided, not executed
 
-The following is for a separately and explicitly authorized operator test. It selects one exact archived MSME TEAM snapshot, one focus, explicit Gemini extractor/reviewer models, at most two repairs, 20,000 input tokens and 8,192 output tokens per generation. It appends only private corpus records/drafts and cannot publish. An existing database administrator UID and configured Gemini key are required; keep keys in the existing secret configuration.
+The following is for a separately and explicitly authorized operator test. It selects one exact archived MSME TEAM snapshot, one focus, explicit Gemini extractor/reviewer models, at most one repair, 20,000 input tokens and 8,192 output tokens per generation. It appends only private corpus records/drafts and cannot publish. An existing database administrator UID and configured Gemini key are required; keep keys in the existing secret configuration.
 
 ```sh
 cd /Users/govind/.codex/worktrees/corpus-policy/AIBuildersCup/apps/api
-AI_INGESTION_LIVE_ENABLED=true PYTHONPATH="$PWD/src" \
+PROCESS_ROLE=ingestion_worker PAID_AI_WORKER_ENABLED=true \
+  AI_GLOBAL_BUDGET_USD="$CORPUS_GLOBAL_BUDGET_USD" \
+  AI_RUN_BUDGET_USD="$CORPUS_RUN_BUDGET_USD" \
+  AI_INGESTION_LIVE_ENABLED=true PYTHONPATH="$PWD/src" \
   /Users/govind/Projects/AIBuildersCup/apps/api/.venv/bin/python \
   -m opportunity_platform.ingestion.corpus_policy.cli live-test \
   --corpus-root /Users/govind/Projects/AIBuildersCup/.corpus \
@@ -147,7 +305,7 @@ AI_INGESTION_LIVE_ENABLED=true PYTHONPATH="$PWD/src" \
   --review-model "$CORPUS_REVIEW_MODEL" \
   --actor-uid "$CORPUS_ADMIN_UID" \
   --focus "MSME TEAM Initiative only: extract cited requirements and procedures; keep unsupported conditions unknown" \
-  --max-repairs 2 --max-input-tokens 20000 --max-output-tokens 8192 \
+  --max-repairs 1 --max-input-tokens 20000 --max-output-tokens 8192 \
   --execute --authorize-paid
 ```
 
