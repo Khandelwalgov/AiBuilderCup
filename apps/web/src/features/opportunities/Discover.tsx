@@ -91,6 +91,16 @@ export function Discover() {
   });
   const items = mode === 'explore' ? (query.data?.pages.flatMap((p) => p.items) ?? []) : [];
   const total = query.data?.pages[0]?.total;
+  const hasFilters = !!(q || category || state || district);
+  const unpublishedCatalogue =
+    !development &&
+    (facets.data ? facets.data.total === 0 : !hasFilters && includeNational && total === 0);
+  function clearFilters() {
+    const next = new URLSearchParams(params);
+    for (const key of ['q', 'category', 'state', 'district', 'national', 'cursor'])
+      next.delete(key);
+    setParams(next);
+  }
   return (
     <div className="page discovery">
       <header className="research-header">
@@ -219,10 +229,7 @@ export function Discover() {
           <ChevronDown size={14} />
         </label>
         {(q || category || state || district) && (
-          <button
-            className="text-button"
-            onClick={() => setParams(development ? { development: 'true' } : {})}
-          >
+          <button className="text-button" onClick={clearFilters}>
             {t.reset}
           </button>
         )}
@@ -242,16 +249,19 @@ export function Discover() {
       ) : query.isError ? (
         <ErrorState message={query.error.message} retry={() => void query.refetch()} />
       ) : items.length === 0 ? (
-        <div className="empty-state">
+        <div className="empty-state" role="status">
           <Search size={30} />
-          <h2>{t.empty}</h2>
-          <p>{t.emptyText}</p>
-          <button
-            className="button"
-            onClick={() => setParams(development ? { development: 'true' } : {})}
-          >
-            {t.reset}
-          </button>
+          <h2>{unpublishedCatalogue ? t.unpublishedCatalogue : t.empty}</h2>
+          <p>{unpublishedCatalogue ? t.unpublishedCatalogueText : t.emptyText}</p>
+          {unpublishedCatalogue ? (
+            <Link className="button" to="/government-sources">
+              {t.browseSourceDocuments}
+            </Link>
+          ) : (
+            <button className="button" onClick={clearFilters}>
+              {t.reset}
+            </button>
+          )}
         </div>
       ) : (
         <>

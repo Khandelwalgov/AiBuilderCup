@@ -165,9 +165,13 @@ export function RankedCards({ response }: { response: Response }) {
       ))}
       {!response.items.length && (
         <p>
-          {hi
-            ? 'इस संदर्भ या फ़िल्टर के लिए अभी कोई समीक्षित अवसर प्रकाशित नहीं है। यह आपकी अपात्रता का निर्णय नहीं है।'
-            : 'No reviewed opportunities are published for this context or filter yet. This is a coverage gap, not a finding that you are ineligible.'}
+          {response.catalogue_count > 0
+            ? hi
+              ? 'प्रकाशित अवसर उपलब्ध हैं, लेकिन चुने गए अधिकृत संदर्भ के लिए कोई आकलन नहीं हो सका। व्यक्ति, परिवार या व्यवसाय का संदर्भ जाँचें, या सभी अवसर देखें। यह आपकी अपात्रता का निर्णय नहीं है।'
+              : 'Published opportunities are available, but none could be assessed for the selected authorized context. Check the selected person, family or business, or browse Explore All. This is not a finding that you are ineligible.'
+            : hi
+              ? 'इस संदर्भ या फ़िल्टर के लिए अभी कोई समीक्षित अवसर प्रकाशित नहीं है। यह आपकी अपात्रता का निर्णय नहीं है।'
+              : 'No reviewed opportunities are published for this context or filter yet. This is a coverage gap, not a finding that you are ineligible.'}
         </p>
       )}
       {response.items.length > limit && (

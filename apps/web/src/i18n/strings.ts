@@ -151,6 +151,10 @@ export const strings = {
     loading: 'Loading opportunities…',
     retry: 'Try again',
     error: 'We couldn’t load this page',
+    unpublishedCatalogue: 'No reviewed opportunities published yet',
+    unpublishedCatalogueText:
+      'Captured government documents are available, but policies must complete review before appearing here. This is a coverage gap, not a finding that you are ineligible.',
+    browseSourceDocuments: 'Browse government documents',
     empty: 'No opportunities found',
     emptyText: 'Try another keyword or broaden your filters.',
     back: 'Back to discovery',
@@ -366,6 +370,10 @@ export const strings = {
     loading: 'अवसर लोड हो रहे हैं…',
     retry: 'फिर प्रयास करें',
     error: 'यह पृष्ठ लोड नहीं हो सका',
+    unpublishedCatalogue: 'अभी कोई समीक्षित अवसर प्रकाशित नहीं हुआ है',
+    unpublishedCatalogueText:
+      'संग्रहित सरकारी दस्तावेज़ देख सकते हैं। यहाँ आने से पहले नीतियों की समीक्षा पूरी होनी चाहिए। यह कवरेज की कमी है, आपकी अपात्रता का निर्णय नहीं।',
+    browseSourceDocuments: 'सरकारी दस्तावेज़ देखें',
     empty: 'कोई अवसर नहीं मिला',
     emptyText: 'दूसरा शब्द खोजें या फ़िल्टर बदलें।',
     back: 'खोज पर वापस जाएँ',

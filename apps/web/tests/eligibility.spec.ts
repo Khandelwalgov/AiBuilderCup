@@ -159,7 +159,9 @@ test('normal catalogue keeps synthetic fixtures out and profile requires authent
 }) => {
   await page.goto('/discover');
   await expect(page.getByRole('article')).toHaveCount(0);
-  await expect(page.getByRole('heading', { name: 'No opportunities found' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'No reviewed opportunities published yet' }),
+  ).toBeVisible();
   await page.goto('/profile');
   await expect(page.getByRole('alert')).toContainText('Sign in');
   await expect(page.getByRole('button', { name: 'Save profile' })).toHaveCount(0);
