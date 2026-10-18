@@ -13,6 +13,8 @@ Local implementation only, based on `4fcc9e0c3175472a55588e32ad2a258549ec2b54`. 
 
 ## Neural participation, precisely
 
+**Historical scope of this correction commit:** the description below applies before the subsequent [profile-driven neural discovery change](profile-neural-discovery.md). That change adds request-scoped profile inference to empty-query research without weakening these relevance groups.
+
 `research/search.py:rank` returns `{}`, `not_requested` for an empty query. Therefore the current automatic **research** recommendations do not perform neural retrieval: guidance evaluates the applicable public catalogue and its available cited mappings. Entered research queries retain lexical/neural retrieval and lexical fallback; neither score can outrank a proven mismatch.
 
 The separate reviewed-policy retrieval path can use profile-context neural candidates even without a typed query; its small-catalogue path exhaustively assesses applicable published policies (up to 150 versions). This does not establish neural participation in the current research recommendations or imply any approved policies exist. No model/retriever behavior was changed.

@@ -73,9 +73,9 @@ def test_guidance_public_records_only_and_no_false_eligibility(monkeypatch):
     from opportunity_platform.research import guidance as module
 
     rows = [
-        SimpleNamespace(name="rajasthan", identity_key="test-rajasthan"),
-        SimpleNamespace(name="india", identity_key="test-india"),
-        SimpleNamespace(name="archive", identity_key="test-archive"),
+        SimpleNamespace(id="rajasthan", name="rajasthan", identity_key="test-rajasthan"),
+        SimpleNamespace(id="india", name="india", identity_key="test-india"),
+        SimpleNamespace(id="archive", name="archive", identity_key="test-archive"),
     ]
     view = {
         "rajasthan": research_card("Scholarship Rajasthan", "Rajasthan"),

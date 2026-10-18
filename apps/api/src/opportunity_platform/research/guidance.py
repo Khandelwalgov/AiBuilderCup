@@ -273,9 +273,10 @@ def guidance(
             .order_by(ResearchListing.identity_key, ResearchListing.id)
         )
     )
-    from .search import rank
+    from .search import profile_context, rank
 
-    scores, neural_status = rank(rows, request.q)
+    scores, neural_status = rank(rows, request.q) if request.q.strip() else ({}, "not_requested")
+    neural_statuses = set()
     matches = []
     grouped = {}
     subjects = [
@@ -302,6 +303,15 @@ def guidance(
         facts = with_overrides(baseline, updates)
         if person.id in fictional:
             facts = with_overrides([], fictional[person.id].facts)
+        if not request.q.strip():
+            scores, status = rank(rows, "", subject=profile_context(kind, facts, request.category))
+            neural_statuses.add(status)
+        # A programme can have several components. Its best semantic signal is
+        # request/subject-scoped; it never changes conditions or catalogue inclusion.
+        parent_scores = {}
+        for row in rows:
+            parent = parent_key(row.identity_key)
+            parent_scores[parent] = max(parent_scores.get(parent, 0), scores.get(str(row.id), 0))
         for row in rows:
             item = card(row)
             if parent_key(item.key) in exclude_parents:
@@ -370,7 +380,11 @@ def guidance(
                             entry.relevance_group
                         ],
                         -satisfied,
-                        -scores.get(str(item.id), 0),
+                        -(
+                            scores.get(str(item.id), 0)
+                            if request.q.strip()
+                            else parent_scores.get(parent, 0)
+                        ),
                         -location_rank,
                         source_rank,
                         item.title.casefold(),
@@ -386,7 +400,7 @@ def guidance(
         items=[entry[1] for entry in matches[request.offset : request.offset + request.limit]],
         candidate_count=len(matches),
         hypothetical=request.scenario or bool(request.overrides) or bool(request.member_overrides),
-        neural_status=neural_status,
+        neural_status="; ".join(sorted(neural_statuses)) if neural_statuses else neural_status,
         supported_pair_count=sum(bool(entry[1].conditions) for entry in matches),
         relevance_counts={
             group: sum(item.relevance_group == group for item in all_items)

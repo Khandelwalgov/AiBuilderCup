@@ -56,7 +56,7 @@ def test_age_22_pension_is_after_scholarships_and_unknowns_without_pagination_lo
     identities = {(i["subject_id"], i["parent_key"]) for i in items}
     assert len(identities) == len(items) == data["candidate_count"]
     assert sum(data["relevance_counts"].values()) == len(items)
-    assert data["neural_status"] == "not_requested"
+    assert data["neural_status"].startswith(("unavailable", "local_cpu:"))
     assert all(not i["eligibility_verified"] for i in items)
 
 
@@ -132,14 +132,14 @@ def test_provisional_scenario_totals_cover_all_pages_without_approved_assessment
     assert one["reviewed"]["items"] == [] and one["eligible_count"] == 0
 
 
-def test_empty_query_research_does_not_invoke_neural_retrieval(monkeypatch):
+def test_empty_query_without_profile_context_does_not_invoke_neural_retrieval(monkeypatch):
     from opportunity_platform.research import search
 
     def forbidden():
-        raise AssertionError("Empty-query discovery must not invoke neural retrieval")
+        raise AssertionError("Unknown profile must not invent a semantic query")
 
     monkeypatch.setattr(search, "neural_retriever", forbidden)
-    assert search.rank([], "  ") == ({}, "not_requested")
+    assert search.rank([], "  ") == ({}, "not_requested: no usable profile context")
 
 
 def test_repeated_condition_mapping_counts_once_per_programme_subject():

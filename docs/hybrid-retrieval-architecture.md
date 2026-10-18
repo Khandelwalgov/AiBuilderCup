@@ -40,3 +40,31 @@ Migration `f24a1000abcd` adds the generated FTS vector/GIN index; additive `f25b
 The corpus importer now stages actual public documents and prepared candidates into the existing source/snapshot/review model. Captured or machine-analyzed documents remain outside active opportunity retrieval until human publication. The earlier Phase 4 milestone made no corpus/model/deployment changes; the 17 October follow-up's actual work and production blockers are recorded separately in the intelligence audit.
 
 The actual persisted planner also uses the hybrid shortlist. It reports truncation and conservatively preserves old actions when candidate omission could explain their absence; omission cannot resolve a real task. Scenario planning never invokes that persistence path.
+
+
+## Personalized public research (18 October follow-up)
+
+The research catalogue has a distinct trust tier and ranking path from `/v1/search`.
+For an empty query, `research/guidance.py` now builds a deterministic semantic
+context per **authorized person/dependent or business**, using a closed selection
+of current, non-conflicting saved facts (or scenario overrides for hypothetical
+comparisons). Enrollment and completed qualifications remain separate. The
+explicit category filter can contribute intent; saved interests/goals are not
+currently modeled, so none are invented. Names, IDs, documents, financial amounts
+and arbitrary free text are omitted. Unknown profiles skip inference.
+
+The existing pinned local ONNX encoder ranks **every research row**, without a
+semantic cutoff or shortlist exclusion. Per-programme semantic rank uses its best
+component signal. Final ordering is relevance group (promising, information gaps,
+known mismatch), satisfied-condition count, semantic rank, geography, source
+strength and stable title/subject/listing tie-breakers; pagination follows this
+complete ordering. Source hashes, pages, exact passages and condition outcomes do
+not change. Typed-query lexical/neural scoring remains unchanged. A missing or
+failed model leaves deterministic discovery intact.
+
+Public document vectors use the existing bounded memory cache. Private profile
+representations/vectors remain request-scoped; no database embedding writes,
+provider calls or new dependencies are introduced. Production uses the same
+pinned weights already present in the image; this local change requires a new
+backend release before it affects the hosted application. See
+[real-model checks and measured costs](profile-neural-discovery.md).

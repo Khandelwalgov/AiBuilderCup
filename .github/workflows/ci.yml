@@ -55,7 +55,7 @@ jobs:
         run: |
           cd apps/api
           uv run python -m opportunity_platform.retrieval.model_artifact --directory /tmp/embedding-model
-          NEURAL_TEST_MODEL_DIRECTORY=/tmp/embedding-model uv run pytest tests/test_neural.py -q
+          NEURAL_TEST_MODEL_DIRECTORY=/tmp/embedding-model uv run pytest tests/test_neural.py tests/test_profile_neural.py -q
       - run: git diff --exit-code -- packages/contracts/openapi.json apps/web/src/lib/api/schema.d.ts
       - run: cd apps/web && pnpm exec playwright install --with-deps chromium
       - run: make test-e2e
