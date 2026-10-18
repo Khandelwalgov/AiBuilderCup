@@ -14,7 +14,7 @@ from opportunity_platform.eligibility.rules import FactKey
 from opportunity_platform.ingestion.gemini import SYSTEM, structured_schema
 
 from .contracts import AIReview, RawPolicyExtraction
-from .transport import BoundedExtraction, bounded_schema
+from .transport import BoundedExtraction, PayloadEnvelope, bounded_schema, payload_schema
 from .validation import digest
 
 REVIEW_SYSTEM = """You are an independent source-to-candidate policy reviewer, not the extractor.
@@ -73,7 +73,7 @@ def safe_field_errors(error, secret):
 def generation_config(schema, output_limit):
     return types.GenerateContentConfig(
         response_mime_type="application/json",
-        response_json_schema=bounded_schema()
+        response_json_schema=payload_schema()
         if schema is BoundedExtraction
         else structured_schema(schema),
         max_output_tokens=output_limit,
@@ -111,6 +111,7 @@ class GeminiRole:
                 "transport_schema": structured_schema(RawPolicyExtraction),
                 "bounded_transport": bounded_transport,
                 "bounded_schema": bounded_schema() if bounded_transport else None,
+                "bounded_outer_schema": payload_schema() if bounded_transport else None,
                 "bounded_normalization": hashlib.sha256(
                     Path(__file__).with_name("transport.py").read_bytes()
                 ).hexdigest()
@@ -166,9 +167,16 @@ class GeminiRole:
         )
         if not authorized or not config.gemini_api_key:
             raise ValueError("Live Gemini ingestion is disabled or unconfigured")
+        if schema is BoundedExtraction:
+            system += (
+                "\nReturn exactly one object with a payload_json string. That string must "
+                "contain the complete JSON extraction matching this inner schema. Preserve "
+                "every evidence and unknown field; no prose or Markdown. Inner schema: "
+                + json.dumps(bounded_schema(), ensure_ascii=False)
+            )
         content = json.dumps(payload, ensure_ascii=False)
         transport_schema = (
-            bounded_schema() if schema is BoundedExtraction else structured_schema(schema)
+            payload_schema() if schema is BoundedExtraction else structured_schema(schema)
         )
         if len(payload.get("untrusted_source_pages", [])) > 20:
             raise ValueError("Worker page budget exceeded")
@@ -214,7 +222,7 @@ class GeminiRole:
             "transport_schema_valid": False,
             "model_version": getattr(response, "model_version", None),
             "extractor_version": self.identity,
-            "prompt_schema_hash": digest({"system": system, "schema": schema.model_json_schema()}),
+            "prompt_schema_hash": digest({"system": system, "schema": transport_schema}),
             "counted_input_tokens": counted.total_tokens,
             "input_tokens": getattr(usage, "prompt_token_count", None),
             "output_tokens": getattr(usage, "candidates_token_count", None),
@@ -227,8 +235,14 @@ class GeminiRole:
             or response.candidates[0].finish_reason != types.FinishReason.STOP
         ):
             raise ValueError("Model output incomplete or blocked")
-        parsed = schema.model_validate_json(response.text)
-        consumed["transport_schema_valid"] = True
+        if schema is BoundedExtraction:
+            envelope = PayloadEnvelope.model_validate_json(response.text)
+            consumed["transport_schema_valid"] = True
+            parsed = BoundedExtraction.model_validate_json(envelope.payload_json)
+            consumed["bounded_payload_valid"] = True
+        else:
+            parsed = schema.model_validate_json(response.text)
+            consumed["transport_schema_valid"] = True
         return parsed, consumed
 
     def extract(self, audited, focus, feedback=None, previous=None):

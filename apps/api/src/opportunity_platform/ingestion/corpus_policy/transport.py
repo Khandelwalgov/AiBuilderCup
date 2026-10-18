@@ -111,6 +111,20 @@ class BoundedExtraction(Strict):
         return raw
 
 
+class PayloadEnvelope(Strict):
+    payload_json: str = Field(max_length=200000)
+
+
+def payload_schema():
+    """Minimal Google-facing grammar; all inner constraints remain application-side."""
+    return {
+        "type": "object",
+        "properties": {"payload_json": {"type": "string"}},
+        "required": ["payload_json"],
+        "additionalProperties": False,
+    }
+
+
 def bounded_schema():
     """Inline a finite schema; eliminate reference and nullable/heterogeneous unions.
 

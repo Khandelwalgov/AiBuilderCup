@@ -19,7 +19,7 @@ from opportunity_platform.ingestion.corpus_policy.archive import (
     registry_from,
 )
 from opportunity_platform.ingestion.corpus_policy.live import GeminiRole
-from opportunity_platform.ingestion.corpus_policy.transport import bounded_schema
+from opportunity_platform.ingestion.corpus_policy.transport import bounded_schema, payload_schema
 from opportunity_platform.ingestion.corpus_policy.validation import digest
 from opportunity_platform.ingestion.corpus_policy.workflow import run_pipeline
 
@@ -101,8 +101,9 @@ def main():
         "maximum_repair_cycles": 1 if args.authorize_independent_review else 0,
         "independent_review_authorized": args.authorize_independent_review,
         "transport": {
-            "name": "bounded_extraction_v1",
-            "schema_sha256": digest(bounded_schema()),
+            "name": "payload_json_bounded_v1",
+            "schema_sha256": digest(payload_schema()),
+            "inner_schema_sha256": digest(bounded_schema()),
             "sdk_version": importlib.metadata.version("google-genai"),
             "max_input_tokens": 20000,
             "max_output_tokens": 4096,
@@ -194,6 +195,7 @@ def main():
             for key in [
                 "generation_succeeded",
                 "transport_schema_valid",
+                "bounded_payload_valid",
                 "original_contract_valid",
                 "source_passages_valid",
             ]

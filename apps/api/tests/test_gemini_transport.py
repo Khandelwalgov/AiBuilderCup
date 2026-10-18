@@ -13,7 +13,11 @@ from test_corpus_policy import audited
 
 from opportunity_platform.eligibility.engine import FactRecord, evaluate
 from opportunity_platform.ingestion.corpus_policy.live import GeminiRole, safe_field_errors
-from opportunity_platform.ingestion.corpus_policy.transport import BoundedExtraction, bounded_schema
+from opportunity_platform.ingestion.corpus_policy.transport import (
+    BoundedExtraction,
+    PayloadEnvelope,
+    payload_schema,
+)
 from opportunity_platform.operations.gemini_document_demo import attempt_key
 from opportunity_platform.operations.gemini_transport_audit import serialize
 
@@ -96,7 +100,8 @@ def test_real_sdk_wire_serialization_is_offline_finite_and_tool_free(model):
     config = body["generationConfig"]
     assert set(config) == {"maxOutputTokens", "responseMimeType", "responseJsonSchema"}
     assert config["maxOutputTokens"] == 4096 and config["responseMimeType"] == "application/json"
-    assert config["responseJsonSchema"] == bounded_schema()
+    assert config["responseJsonSchema"] == payload_schema()
+    assert set(config["responseJsonSchema"]["properties"]) == {"payload_json"}
 
     def validate(node):
         if isinstance(node, dict):
@@ -334,22 +339,39 @@ def test_full_bounded_sdk_response_stages_are_truthful_with_mocked_http(monkeypa
     monkeypatch.setattr(settings(), "gemini_free_worker_enabled", True)
     monkeypatch.setattr(settings(), "gemini_api_key", "dummy-not-real")
     monkeypatch.setattr(budget, "worker_slot", nullcontext)
-    monkeypatch.setattr(budget, "reserve", lambda *args: "mock-reservation")
+    reservations = []
+
+    def reserve(*args):
+        reservations.append(args)
+        return "mock-reservation"
+
+    monkeypatch.setattr(budget, "reserve", reserve)
     monkeypatch.setattr(budget, "settle", lambda *args: None)
     captured = []
 
     def handler(request):
         captured.append(str(request.url.path))
         if request.url.path.endswith(":countTokens"):
+            counted_request = json.loads(request.content)
+            assert "Inner schema:" in json.dumps(counted_request)
+            assert "value_json" in json.dumps(counted_request)
             return httpx.Response(200, json={"totalTokens": 100})
         body = json.loads(request.content)
-        assert "$defs" not in body["generationConfig"]["responseJsonSchema"]
+        assert body["generationConfig"]["responseJsonSchema"] == payload_schema()
+        system = body["systemInstruction"]["parts"][0]["text"]
+        content = body["contents"][0]["parts"][0]["text"]
+        assert reservations[0][2] >= len((system + content).encode())
         assert not set(body) & {"tools", "toolConfig"}
         return httpx.Response(
             200,
             json={
                 "candidates": [
-                    {"content": {"parts": [{"text": json.dumps(wire)}]}, "finishReason": "STOP"}
+                    {
+                        "content": {
+                            "parts": [{"text": json.dumps({"payload_json": json.dumps(wire)})}]
+                        },
+                        "finishReason": "STOP",
+                    }
                 ],
                 "usageMetadata": {"promptTokenCount": 100, "candidatesTokenCount": 200},
                 "modelVersion": "simulated-version",
@@ -379,7 +401,50 @@ def test_full_bounded_sdk_response_stages_are_truthful_with_mocked_http(monkeypa
             assert usage["source_passages_valid"]
     assert role.last_usage["generation_succeeded"]
     assert role.last_usage["transport_schema_valid"]
+    assert role.last_usage["bounded_payload_valid"]
     assert role.last_usage["original_contract_valid"]
     assert role.last_usage.get("source_passages_valid", False) is (not fabricated)
     assert role.last_usage["model_version"] == "simulated-version"
     assert len(captured) == 2
+
+
+@pytest.mark.parametrize(
+    "response",
+    [
+        "{}",
+        '{"payload_json": {}}',
+        '{"payload_json": "{}", "unexpected": true}',
+        '{"payload_json": "not JSON"}',
+        '{"payload_json": "{}"}',
+    ],
+)
+def test_payload_envelope_rejects_malformed_or_incomplete_inner_output(response):
+    with pytest.raises(ValidationError):
+        envelope = PayloadEnvelope.model_validate_json(response)
+        BoundedExtraction.model_validate_json(envelope.payload_json)
+
+
+def test_payload_envelope_keeps_source_validation_and_unknowns():
+    source, wire = sample()
+    envelope = PayloadEnvelope.model_validate_json(json.dumps({"payload_json": json.dumps(wire)}))
+    bounded = BoundedExtraction.model_validate_json(envelope.payload_json)
+    candidate = bounded.to_raw(source.record.sha256, source.pages).normalized().candidate
+    assert candidate.closes_on is None
+    assert "human review" in candidate.review_flags[0]
+    wire["candidate"]["requirements"][0]["evidence"]["page"] = 99
+    envelope = PayloadEnvelope.model_validate_json(json.dumps({"payload_json": json.dumps(wire)}))
+    with pytest.raises(ValueError, match="Citation"):
+        BoundedExtraction.model_validate_json(envelope.payload_json).to_raw(
+            source.record.sha256, source.pages
+        )
+
+
+def test_envelope_is_exclusive_to_bounded_gemini_and_fingerprinted():
+    from opportunity_platform.ingestion.corpus_policy.contracts import AIReview, RawPolicyExtraction
+    from opportunity_platform.ingestion.corpus_policy.live import generation_config
+
+    for schema in [AIReview, RawPolicyExtraction]:
+        assert generation_config(schema, 1024).response_json_schema != payload_schema()
+    bounded = GeminiRole("extractor", "explicit-model", bounded_transport=True)
+    ordinary = GeminiRole("extractor", "explicit-model")
+    assert bounded.input_hash != ordinary.input_hash
