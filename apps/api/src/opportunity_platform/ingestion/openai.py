@@ -44,7 +44,7 @@ def request(payload: dict) -> dict:
     from opportunity_platform.ingestion import budget
 
     config = settings()
-    if config.openai_api_key.startswith("AIza"):
+    if config.openai_api_key.startswith(("AIza", "AQ.")):
         raise ProviderFailure("openai_provider_key_mismatch", stage="configuration")
     if not config.openai_api_key:
         raise ProviderFailure("openai_not_configured", stage="configuration")

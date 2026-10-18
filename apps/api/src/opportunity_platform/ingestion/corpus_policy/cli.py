@@ -28,14 +28,16 @@ def main():
         "--execute", action="store_true", help="Explicitly append private DB records"
     )
     parser.add_argument("--actor-uid")
-    parser.add_argument("--authorize-paid", action="store_true")
+    authorization = parser.add_mutually_exclusive_group()
+    authorization.add_argument("--authorize-paid", action="store_true")
+    authorization.add_argument("--authorize-free-gemini", action="store_true")
     parser.add_argument("--model")
     parser.add_argument("--review-model")
     parser.add_argument("--focus")
     parser.add_argument("--candidate-json", type=Path)
-    parser.add_argument("--max-repairs", type=int, choices=[0, 1], default=0)
+    parser.add_argument("--max-repairs", type=int, choices=[0, 1], default=1)
     parser.add_argument("--max-input-tokens", type=int, default=20000)
-    parser.add_argument("--max-output-tokens", type=int, default=8192)
+    parser.add_argument("--max-output-tokens", type=int, default=4096)
     args = parser.parse_args()
     if not 1 <= args.limit <= 20:
         parser.error("Import/test limit must be between 1 and 20")
@@ -51,7 +53,7 @@ def main():
         parser.error("Staging requires one --snapshot-id, --limit 1, --focus and --candidate-json")
     if args.command == "live-test" and args.execute:
         if not (
-            args.authorize_paid
+            (args.authorize_paid or args.authorize_free_gemini)
             and (args.document_id or args.snapshot_id)
             and args.provider in {"gemini", "openai"}
             and args.focus
@@ -60,7 +62,7 @@ def main():
             and args.limit == 1
         ):
             parser.error(
-                "Live test requires --authorize-paid, one document, --limit 1, "
+                "Live test requires explicit paid/free authorization, one document, --limit 1, "
                 "explicit focus, extractor model and review model"
             )
         if len(args.document_id or args.snapshot_id) != 1:
@@ -69,7 +71,22 @@ def main():
         from opportunity_platform.core.config import settings
 
         config = settings()
-        if not (
+        calls_per_cycle = (2 if args.provider == "gemini" else 1) + (
+            2 if (args.review_provider or args.provider) == "gemini" else 1
+        )
+        if config.ai_max_requests_per_run < calls_per_cycle * (1 + args.max_repairs):
+            parser.error(
+                "Request capacity cannot cover extraction/review and the selected repair limit; "
+                "explicitly configure sufficient bounded capacity or select --max-repairs 0"
+            )
+        if args.authorize_free_gemini:
+            from opportunity_platform.ingestion.free_tier import verify
+
+            if args.provider != "gemini" or args.review_provider not in {None, "gemini"}:
+                parser.error("Free worker cannot switch providers")
+            verify(args.model)
+            verify(args.review_model)
+        elif not (
             config.process_role == "ingestion_worker"
             and config.paid_ai_worker_enabled
             and config.ai_global_budget_usd > 0

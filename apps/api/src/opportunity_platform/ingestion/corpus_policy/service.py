@@ -175,6 +175,7 @@ def extract_candidate(session, audited, actor, focus, extractor, reviewer, *, ma
             "reviewer": reviewer.identity,
             "max_repairs": max_repairs,
             "prepared_candidate_hash": getattr(extractor, "input_hash", None),
+            "review_prompt_schema_hash": getattr(reviewer, "input_hash", None),
         }
     )
     run_id = identifier("workflow:" + key)
@@ -199,6 +200,20 @@ def extract_candidate(session, audited, actor, focus, extractor, reviewer, *, ma
     with scope(run.id):
         outcome = run_pipeline(audited, focus, extractor, reviewer, max_repairs=max_repairs)
     run.status = outcome.status
+    generation = next(
+        (
+            u
+            for u in reversed(outcome.usage)
+            if u.get("role") in {"extract", "repair"} and u.get("outcome") != "failed"
+        ),
+        {},
+    )
+    run.provider = (
+        generation.get("provider", extractor.identity)
+        if getattr(extractor, "invokes_model", True)
+        else extractor.identity
+    )
+    run.model = generation.get("model", getattr(extractor, "model", None))
     run.finished_at = datetime.now(UTC)
     run.usage = {
         "calls": sum(u.get("external_api_calls", 0) for u in outcome.usage),
@@ -262,8 +277,8 @@ def extract_candidate(session, audited, actor, focus, extractor, reviewer, *, ma
             content_hash=snapshot.content_hash,
             snapshot_id=snapshot.id,
             extraction=candidate.model_dump(mode="json"),
-            extraction_provider=extractor.identity,
-            extraction_model=getattr(extractor, "model", None),
+            extraction_provider=run.provider,
+            extraction_model=run.model,
             extractor_version=VERSION,
             extraction_usage=run.usage,
         )

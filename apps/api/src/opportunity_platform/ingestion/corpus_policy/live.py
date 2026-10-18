@@ -1,12 +1,15 @@
 """Explicitly authorized future Gemini-only role calls. No calls on import or audit."""
 
+import hashlib
 import json
+import re
+from pathlib import Path
 
 from google import genai
 from google.genai import types
 
 from opportunity_platform.core.config import settings
-from opportunity_platform.ingestion.gemini import SYSTEM
+from opportunity_platform.ingestion.gemini import SYSTEM, structured_schema
 
 from .contracts import AIReview, RawPolicyExtraction
 from .validation import digest
@@ -41,13 +44,57 @@ class GeminiRole:
         self.role, self.model = role, model
         self.identity = f"gemini:{role}:{model}:corpus-policy-v1"
         self.max_input_tokens, self.max_output_tokens = max_input_tokens, max_output_tokens
+        self.input_hash = digest(
+            {
+                "implementation": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                "system": SYSTEM,
+                "review_system": REVIEW_SYSTEM,
+                "extraction_schema": RawPolicyExtraction.model_json_schema(),
+                "review_schema": AIReview.model_json_schema(),
+                "transport_schema": structured_schema(RawPolicyExtraction),
+                "input_limit": max_input_tokens,
+                "output_limit": max_output_tokens,
+                "fallback_enabled": settings().ai_openai_fallback_enabled,
+                "fallback_model": settings().ai_openai_fallback_model,
+            }
+        )
 
     def generate(self, schema, system, payload):
         from opportunity_platform.ingestion import budget
 
+        self.last_usage = {"provider": "gemini", "model": self.model, "external_api_calls": 0}
+        self.last_usage.update(extractor_version=self.identity, prompt_schema_hash=self.input_hash)
+        with budget.worker_slot():
+            try:
+                return self._generate(schema, system, payload)
+            except Exception as error:
+                # Google messages may include a request URL; never retain keys or URLs.
+                if type(getattr(error, "code", None)) is int:
+                    message = str(getattr(error, "message", ""))
+                    key = settings().gemini_api_key
+                    if key:
+                        message = message.replace(key, "[REDACTED]")
+                    self.last_usage["provider_diagnostic"] = re.sub(
+                        r"https?://\S+", "[URL]", message
+                    )[:600]
+                from opportunity_platform.ingestion.providers import controlled_worker_fallback
+
+                return controlled_worker_fallback(self, schema, system, payload, error)
+
+    def _generate(self, schema, system, payload):
+        from opportunity_platform.ingestion import budget
+
+        self.last_usage = {
+            "provider": "gemini",
+            "model": self.model,
+            "external_api_calls": 0,
+            "extractor_version": self.identity,
+            "prompt_schema_hash": self.input_hash,
+        }
         config = settings()
         authorized = config.ai_ingestion_live_enabled or (
-            config.process_role == "ingestion_worker" and config.paid_ai_worker_enabled
+            config.process_role == "ingestion_worker"
+            and (config.paid_ai_worker_enabled or config.gemini_free_worker_enabled)
         )
         if not authorized or not config.gemini_api_key:
             raise ValueError("Live Gemini ingestion is disabled or unconfigured")
@@ -66,6 +113,7 @@ class GeminiRole:
                 timeout=60000, retry_options=types.HttpRetryOptions(attempts=1)
             ),
         ) as client:
+            self.last_usage["external_api_calls"] = 1
             counted = client.models.count_tokens(
                 model=self.model, contents=[system, json.dumps(schema.model_json_schema()), content]
             )
@@ -75,33 +123,39 @@ class GeminiRole:
             permit = budget.reserve(
                 "gemini", self.model, counted.total_tokens + 1024, self.max_output_tokens
             )
+            self.last_usage["external_api_calls"] = 2
             response = client.models.generate_content(
                 model=self.model,
                 contents=content,
                 config=types.GenerateContentConfig(
                     system_instruction=system,
                     response_mime_type="application/json",
-                    response_json_schema=schema.model_json_schema(),
+                    response_json_schema=structured_schema(schema),
                     max_output_tokens=self.max_output_tokens,
                     automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
                 ),
             )
-        if (
-            not response.candidates
-            or response.candidates[0].finish_reason != types.FinishReason.STOP
-        ):
-            raise ValueError("Model output incomplete or blocked")
-        parsed = schema.model_validate_json(response.text)
         usage = response.usage_metadata
         consumed = {
             "external_api_calls": 2,
+            "provider": "gemini",
             "model": self.model,
+            "model_version": getattr(response, "model_version", None),
+            "extractor_version": self.identity,
+            "prompt_schema_hash": digest({"system": system, "schema": schema.model_json_schema()}),
             "counted_input_tokens": counted.total_tokens,
             "input_tokens": getattr(usage, "prompt_token_count", None),
             "output_tokens": getattr(usage, "candidates_token_count", None),
             "thinking_tokens": getattr(usage, "thoughts_token_count", None),
         }
         budget.settle(permit, consumed)
+        self.last_usage = consumed
+        if (
+            not response.candidates
+            or response.candidates[0].finish_reason != types.FinishReason.STOP
+        ):
+            raise ValueError("Model output incomplete or blocked")
+        parsed = schema.model_validate_json(response.text)
         return parsed, consumed
 
     def extract(self, audited, focus, feedback=None, previous=None):
@@ -150,6 +204,7 @@ class OpenAIRole(GeminiRole):
     def generate(self, schema, system, payload):
         from opportunity_platform.ingestion.openai import request, response_text, structured_schema
 
+        self.last_usage = {"provider": "openai", "model": self.model, "external_api_calls": 0}
         config = settings()
         if not (config.process_role == "ingestion_worker" and config.paid_ai_worker_enabled):
             raise ValueError("Paid OpenAI corpus worker is disabled")
@@ -158,23 +213,37 @@ class OpenAIRole(GeminiRole):
         content = json.dumps(payload, ensure_ascii=False)
         if len((system + content).encode()) + 1024 > self.max_input_tokens:
             raise ValueError("Worker input budget exceeded")
-        response = request(
-            {
-                "model": self.model,
-                "instructions": system,
-                "input": content,
-                "store": False,
-                "max_output_tokens": self.max_output_tokens,
-                "text": {
-                    "format": {
-                        "type": "json_schema",
-                        "name": "corpus_policy_" + self.role,
-                        "strict": True,
-                        "schema": structured_schema(schema),
-                    }
-                },
-            }
-        )
+        try:
+            self.last_usage["external_api_calls"] = 1
+            response = request(
+                {
+                    "model": self.model,
+                    "instructions": system,
+                    "input": content,
+                    "store": False,
+                    "max_output_tokens": self.max_output_tokens,
+                    "text": {
+                        "format": {
+                            "type": "json_schema",
+                            "name": "corpus_policy_" + self.role,
+                            "strict": True,
+                            "schema": structured_schema(schema),
+                        }
+                    },
+                }
+            )
+        except Exception as error:
+            if getattr(error, "stage", None) in {"cost_gate", "configuration"}:
+                self.last_usage["external_api_calls"] = 0
+            raise
         text, usage = response_text(response)
-        usage.update(model=self.model, external_api_calls=1)
+        usage.update(
+            provider="openai",
+            model=self.model,
+            external_api_calls=1,
+            extractor_version=self.identity,
+            prompt_schema_hash=self.input_hash,
+            model_version=response.get("model"),
+        )
+        self.last_usage = usage
         return schema.model_validate_json(text), usage

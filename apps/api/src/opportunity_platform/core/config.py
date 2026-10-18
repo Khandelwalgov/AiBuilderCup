@@ -42,6 +42,15 @@ class Settings(BaseSettings):
     neural_model_directory: str = "/app/models/multilingual-minilm"
     process_role: Literal["api", "ingestion_worker"] = "api"
     paid_ai_worker_enabled: bool = False
+    gemini_free_worker_enabled: bool = False
+    gemini_free_project_id: str = ""
+    gemini_free_model: str = ""
+    gemini_free_daily_requests: int = Field(default=8, ge=1, le=8)
+    gemini_free_daily_tokens: int = Field(default=100000, ge=1024, le=100000)
+    ai_openai_fallback_enabled: bool = False
+    ai_openai_fallback_model: str = ""
+    ai_openai_fallback_budget_usd: float = Field(default=0, ge=0, le=100)
+    ai_openai_fallback_run_budget_usd: float = Field(default=0, ge=0, le=10)
     ai_global_budget_usd: float = Field(default=0, ge=0, le=1000)
     ai_run_budget_usd: float = Field(default=0, ge=0, le=100)
     ai_max_requests_per_run: int = Field(default=4, ge=1, le=20)
@@ -57,6 +66,33 @@ class Settings(BaseSettings):
     def production_configuration(self):
         if self.paid_ai_worker_enabled and self.process_role != "ingestion_worker":
             raise ValueError("Paid inference is restricted to an explicitly configured worker")
+        if self.gemini_free_worker_enabled and (
+            self.process_role != "ingestion_worker"
+            or not self.gemini_free_project_id
+            or not self.gemini_free_model
+            or (
+                not self.ai_openai_fallback_enabled
+                and (
+                    self.paid_ai_worker_enabled
+                    or self.ai_global_budget_usd != 0
+                    or self.ai_run_budget_usd != 0
+                )
+            )
+        ):
+            raise ValueError(
+                "Free Gemini requires an explicit worker/project/model and zero paid budgets"
+            )
+        if self.ai_openai_fallback_enabled and not (
+            self.process_role == "ingestion_worker"
+            and self.paid_ai_worker_enabled
+            and self.ai_openai_fallback_model
+            and self.openai_api_key
+            and self.ai_openai_fallback_budget_usd > 0
+            and self.ai_openai_fallback_run_budget_usd > 0
+            and self.ai_global_budget_usd > 0
+            and self.ai_run_budget_usd > 0
+        ):
+            raise ValueError("OpenAI fallback requires explicit worker, model and positive budgets")
         if self.database_provider == "neon":
             from opportunity_platform.core.database import validate_neon_url
 

@@ -50,7 +50,18 @@ def run_pipeline(audited, focus, extractor, reviewer, *, max_repairs=1):
             calls += int(getattr(extractor, "invokes_model", True))
             raw, consumed = extractor.extract(audited, focus, feedback, previous)
             usage.append({"role": "extract" if attempt == 0 else "repair", **consumed})
-        except Exception:
+        except Exception as error:
+            usage.append(
+                {
+                    "role": "extract" if attempt == 0 else "repair",
+                    **getattr(extractor, "last_usage", {}),
+                    "outcome": "failed",
+                    "error_type": type(error).__name__,
+                    "http_status": getattr(error, "code", None)
+                    if type(getattr(error, "code", None)) is int
+                    else None,
+                }
+            )
             problem = issue(
                 "extraction_provider_failed",
                 "provider",
@@ -75,17 +86,32 @@ def run_pipeline(audited, focus, extractor, reviewer, *, max_repairs=1):
         )
         review = None
         if candidate:
+            review_usage_recorded = False
             try:
                 calls += int(getattr(reviewer, "invokes_model", True))
                 output, consumed = reviewer.review(audited, candidate)
                 usage.append({"role": "independent_review", **consumed})
+                review_usage_recorded = True
                 review = validate_review(output, candidate, audited)
                 if getattr(reviewer, "semantic_findings_required", False):
                     from .validation import validate_claim_findings
 
                     validate_claim_findings(review, candidate, audited)
                 problems.extend(review.issues)
-            except Exception:
+            except Exception as error:
+                failed_usage = {
+                    "role": "independent_review",
+                    **getattr(reviewer, "last_usage", {}),
+                    "outcome": "failed",
+                    "error_type": type(error).__name__,
+                    "http_status": getattr(error, "code", None)
+                    if type(getattr(error, "code", None)) is int
+                    else None,
+                }
+                if review_usage_recorded:
+                    usage[-1].update(failed_usage)
+                else:
+                    usage.append(failed_usage)
                 problems.append(
                     issue(
                         "independent_review_failed",

@@ -2,7 +2,7 @@
 
 from contextlib import contextmanager
 from contextvars import ContextVar
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from decimal import ROUND_CEILING, Decimal
 
 from sqlalchemy import func, select
@@ -12,6 +12,7 @@ from opportunity_platform.core.config import settings
 from opportunity_platform.db.models import InferenceReservation
 
 run_key = ContextVar("inference_run_key", default=None)
+fallback_used = ContextVar("inference_fallback_used", default=False)
 
 
 class BudgetDenied(ValueError):
@@ -21,15 +22,19 @@ class BudgetDenied(ValueError):
 @contextmanager
 def scope(key):
     token = run_key.set(str(key))
+    fallback_token = fallback_used.set(False)
     try:
         yield
     finally:
         run_key.reset(token)
+        fallback_used.reset(fallback_token)
 
 
 def reserve_in(session, provider, model, input_bound, output_bound, *, key=None):
     config = settings()
     key = key or run_key.get()
+    if config.gemini_free_worker_enabled and provider == "gemini":
+        return reserve_free_in(session, model, input_bound, output_bound, key=key)
     if not (
         config.paid_ai_worker_enabled
         and config.process_role == "ingestion_worker"
@@ -81,6 +86,16 @@ def reserve_in(session, provider, model, input_bound, output_bound, *, key=None)
         str(config.ai_global_budget_usd)
     ) or sum(row.reserved_usd for row in same) + maximum > Decimal(str(config.ai_run_budget_usd)):
         raise BudgetDenied("Inference spending reservation would exceed the configured budget")
+    if provider == "openai" and config.ai_openai_fallback_enabled:
+        provider_rows = [row for row in rows if row.provider == "openai"]
+        if (
+            model != config.ai_openai_fallback_model
+            or sum(row.reserved_usd for row in provider_rows) + maximum
+            > Decimal(str(config.ai_openai_fallback_budget_usd))
+            or sum(row.reserved_usd for row in provider_rows if row.run_key == key) + maximum
+            > Decimal(str(config.ai_openai_fallback_run_budget_usd))
+        ):
+            raise BudgetDenied("OpenAI fallback provider/run ceiling exhausted or model mismatch")
     reservation = InferenceReservation(
         run_key=key,
         provider=provider,
@@ -96,10 +111,67 @@ def reserve_in(session, provider, model, input_bound, output_bound, *, key=None)
     return reservation.id
 
 
+def reserve_free_in(session, model, input_bound, output_bound, *, key):
+    from opportunity_platform.ingestion.free_tier import verify
+
+    proof = verify(model)
+    config = settings()
+    if not key or not (0 <= input_bound <= 20000 and 0 <= output_bound <= 4096):
+        raise BudgetDenied("Free worker run identity/token bounds exceeded")
+    session.execute(select(func.pg_advisory_xact_lock(837455019)))
+    rows = list(session.scalars(select(InferenceReservation)))
+    if any(row.status == "usage_exceeded_reservation" for row in rows):
+        raise BudgetDenied("Previous usage exceeded token reservation; human review required")
+    free = [row for row in rows if row.prices.get("mode") == "verified_free_gemini"]
+    now = datetime.now(UTC)
+    day = [
+        r for r in free if r.created_at >= now.replace(hour=0, minute=0, second=0, microsecond=0)
+    ]
+    minute = [r for r in free if r.created_at >= now - timedelta(minutes=1)]
+    quotas = proof["free_quotas"]
+    if (
+        len([r for r in rows if r.run_key == key]) >= min(config.ai_max_requests_per_run, 8)
+        or len(day) >= min(config.gemini_free_daily_requests, quotas["rpd"])
+        or len(minute) >= min(4, quotas["rpm"])
+        or sum(r.input_bound for r in minute) + input_bound > quotas["tpm"]
+        or sum(r.input_bound + r.output_bound for r in day) + input_bound + output_bound
+        > config.gemini_free_daily_tokens
+    ):
+        raise BudgetDenied("Free worker request/token limit exhausted; no automatic retry")
+    reservation = InferenceReservation(
+        run_key=key,
+        provider="gemini",
+        model=model,
+        input_bound=input_bound,
+        output_bound=output_bound,
+        reserved_usd=Decimal(0),
+        prices=proof,
+        status="reserved",
+    )
+    session.add(reservation)
+    session.flush()
+    return reservation.id
+
+
+@contextmanager
+def worker_slot():
+    """One Gemini free worker request sequence across processes; fail rather than wait."""
+    if not settings().gemini_free_worker_enabled:
+        yield
+        return
+    from opportunity_platform.db.session import engine
+
+    with Session(engine) as session:
+        if not session.scalar(select(func.pg_try_advisory_xact_lock(837455020))):
+            raise BudgetDenied("Another free Gemini worker is active")
+        yield
+
+
 def reserve(provider, model, input_bound, output_bound):
     # Check default zero policy before opening a connection or constructing a provider client.
     config = settings()
-    if not config.paid_ai_worker_enabled or config.ai_global_budget_usd <= 0:
+    free = config.gemini_free_worker_enabled and provider == "gemini"
+    if not free and (not config.paid_ai_worker_enabled or config.ai_global_budget_usd <= 0):
         raise BudgetDenied("External paid inference budget is zero; no provider request permitted")
     from opportunity_platform.db.session import engine
 
@@ -131,6 +203,10 @@ def settle(identifier, usage):
             + Decimal(output_tokens) * Decimal(str(row.prices["output"]))
         ) / 1_000_000
         row.status = (
-            "usage_exceeded_reservation" if row.recorded_usd > row.reserved_usd else "recorded"
+            "usage_exceeded_reservation"
+            if row.recorded_usd > row.reserved_usd
+            or input_tokens > row.input_bound
+            or output_tokens > row.output_bound
+            else "recorded"
         )
         session.commit()

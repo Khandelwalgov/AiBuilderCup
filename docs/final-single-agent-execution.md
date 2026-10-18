@@ -2,6 +2,22 @@
 
 18 October 2026. One agent, current `master`, existing source corpus first. No new production mutation is authorized for this pass until a final exact-commit approval.
 
+## Current status update — 18 October, after the release
+
+Commit `038594fb823136e6468cfaef79cd80e503800a0c` was subsequently authorized and deployed:
+Cloud Run `opportunity-api-00013-zoj` at 100%, Unclaimed Hosting `375a1c14fd8ab1fe`.
+All 96 research listings and 85 provisional comparison records across 11 programme parents
+were verified live. Signed-in personal Discover, source-page access, enrollment scenario/reset
+and reversible plan progress passed; saved profile facts were unchanged. Six eligibility
+versions remain drafts and zero eligibility policies are published.
+
+The earlier “key missing” and “proposed release” statements below describe the earlier
+checkpoint. They are superseded by this update. The configured Google key and billing-disabled
+project have now been verified. Genuine generation attempts have failed (504 smoke, then two
+400 document requests); no genuine Gemini extraction/reviewer success is claimed. See
+[the current evidence and limitations](gemini-ingestion-evidence.md). Subsequent worker code
+is local only and needs a new exact-commit approval before any production change.
+
 ## Baseline and outstanding acceptance
 
 Production commit `3feee52ac544f6bb12712d17113795df353fdf4c`; Cloud Run `opportunity-api-00011-kit` at 100%; Unclaimed Hosting `b8d03e9d6cfd4da9`. The previously approved application-only release reused the validated image without a new build. Schema and privileges were checked read-only; no migration, grant, import or policy publication occurred. Production retains 129 captures, 124 unique documents, 96 public research listings (74 main / 22 archive), six drafts and zero published eligibility policies. Both candidate and stable smoke validated all 800 listing citations. Local CPU English/Hindi retrieval and disabled paid-AI/upload/synthetic flags were verified live.
