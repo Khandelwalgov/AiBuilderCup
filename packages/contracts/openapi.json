@@ -7455,6 +7455,16 @@
             "title": "Supported Pair Count",
             "default": 0
           },
+          "relevance_counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Relevance Counts"
+          },
+          "research_changes": {
+            "$ref": "#/components/schemas/ResearchChanges"
+          },
           "notice": {
             "type": "string",
             "title": "Notice",
@@ -8971,6 +8981,16 @@
             "type": "array",
             "title": "Conditions",
             "default": []
+          },
+          "relevance_group": {
+            "type": "string",
+            "enum": [
+              "promising",
+              "information_gaps",
+              "known_mismatch"
+            ],
+            "title": "Relevance Group",
+            "default": "information_gaps"
           }
         },
         "type": "object",
@@ -10168,6 +10188,48 @@
           "source_count"
         ],
         "title": "ResearchCard"
+      },
+      "ResearchChanges": {
+        "properties": {
+          "total_conditions": {
+            "type": "integer",
+            "title": "Total Conditions",
+            "default": 0
+          },
+          "changed_conditions": {
+            "type": "integer",
+            "title": "Changed Conditions",
+            "default": 0
+          },
+          "unchanged_conditions": {
+            "type": "integer",
+            "title": "Unchanged Conditions",
+            "default": 0
+          },
+          "improved_conditions": {
+            "type": "integer",
+            "title": "Improved Conditions",
+            "default": 0
+          },
+          "worsened_conditions": {
+            "type": "integer",
+            "title": "Worsened Conditions",
+            "default": 0
+          },
+          "unknown_conditions": {
+            "type": "integer",
+            "title": "Unknown Conditions",
+            "default": 0
+          },
+          "changed_programme_subject_pairs": {
+            "type": "integer",
+            "title": "Changed Programme Subject Pairs",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "title": "ResearchChanges",
+        "description": "Counts across all filtered programme\u2013subject pairs, before pagination."
       },
       "ResearchCitation": {
         "properties": {

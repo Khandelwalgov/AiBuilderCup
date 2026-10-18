@@ -119,7 +119,7 @@ export function GovernmentSources() {
                   OCR render SHA-256: {page.image_sha256} · Text SHA-256: {page.text_sha256}
                 </p>
               )}
-              {page.original_text != null && (
+              {page.original_text?.trim() && (
                 <details>
                   <summary>{hi ? 'मूल निष्कर्षण देखें' : 'Inspect original extraction'}</summary>
                   <pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>
@@ -144,111 +144,125 @@ export function GovernmentSources() {
         </p>
       )}
       <form
-        className="filters"
+        className="source-filters panel"
         onSubmit={(event) => {
           event.preventDefault();
           update('q', String(new FormData(event.currentTarget).get('q') || ''));
         }}
       >
-        <label>
-          {hi ? 'स्रोत का पाठ खोजें' : 'Search source text'}
-          <input key={params.get('q')} name="q" defaultValue={params.get('q') || ''} />
-        </label>
-        <button>{hi ? 'खोजें' : 'Search sources'}</button>
-        <label>
-          {hi ? 'समीक्षा अवस्था' : 'Review state'}
-          <select
-            value={reviewState}
-            onChange={(event) => update('review_state', event.target.value)}
-          >
-            <option value="">{hi ? 'सभी' : 'All'}</option>
-            {reviewStates.map((value) => (
-              <option value={value} key={value}>
-                {reviewLabel(value)}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          {hi ? 'पाठ उपलब्धता' : 'Text availability'}
-          <select
-            value={params.get('text_state') || ''}
-            onChange={(e) => update('text_state', e.target.value)}
-          >
-            <option value="">{hi ? 'सभी' : 'All'}</option>
-            <option value="text_available">{hi ? 'पाठ उपलब्ध' : 'Text available'}</option>
-            <option value="partial_text">
-              {hi ? 'कुछ पृष्ठों की समीक्षा बाकी' : 'Some pages need review'}
-            </option>
-            <option value="unreadable">{hi ? 'अपठनीय' : 'Unreadable'}</option>
-          </select>
-        </label>
-        <label>
-          {hi ? 'विभाग' : 'Department'}
-          <input
-            value={params.get('department') || ''}
-            onChange={(event) => update('department', event.target.value)}
-          />
-        </label>
-        <label>
-          {hi ? 'श्रेणी' : 'Category'}
-          <select
-            value={params.get('category') || ''}
-            onChange={(event) => update('category', event.target.value)}
-          >
-            <option value="">{hi ? 'सभी' : 'All'}</option>
-            {['scholarships', 'procurement', 'msme', 'welfare'].map((value) => (
-              <option key={value}>{value}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          {hi ? 'क्षेत्र' : 'Registry geography'}
-          <select
-            value={params.get('state') || ''}
-            onChange={(event) => update('state', event.target.value)}
-          >
-            <option value="">{hi ? 'सभी' : 'All'}</option>
-            <option>India</option>
-            <option>Rajasthan</option>
-          </select>
-        </label>
-        <label>
-          {hi ? 'फ़ाइल प्रकार' : 'Format'}
-          <select
-            value={params.get('format') || ''}
-            onChange={(event) => update('format', event.target.value)}
-          >
-            <option value="">{hi ? 'सभी' : 'All'}</option>
-            <option value="pdf">PDF</option>
-            <option value="html">HTML</option>
-          </select>
-        </label>
-        <label>
-          {hi ? 'दस्तावेज़ प्रकार' : 'Document type'}
-          <select
-            value={params.get('document_type') || ''}
-            onChange={(event) => update('document_type', event.target.value)}
-          >
-            <option value="">{hi ? 'सभी' : 'All'}</option>
-            {[
-              'policy_guideline',
-              'tender_notice',
-              'general_announcement',
-              'document_index',
-              'amendment',
-              'unclassified',
-              'irrelevant',
-              'institution_compliance',
-              'procedure_or_faq',
-              'administrative_reference',
-            ].map((value) => (
-              <option key={value} value={value}>
-                {displayLabel(value, hi)}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="source-search-row">
+          <label>
+            {hi ? 'स्रोत का पाठ खोजें' : 'Search source text'}
+            <input key={params.get('q')} name="q" defaultValue={params.get('q') || ''} />
+          </label>
+          <div className="document-actions">
+            <button>{hi ? 'खोजें' : 'Search sources'}</button>
+            <button type="button" onClick={() => setParams(new URLSearchParams())}>
+              {hi ? 'फ़िल्टर साफ़ करें' : 'Clear filters'}
+            </button>
+          </div>
+        </div>
+        <div className="source-primary-filters">
+          <label>
+            {hi ? 'समीक्षा अवस्था' : 'Review state'}
+            <select
+              value={reviewState}
+              onChange={(event) => update('review_state', event.target.value)}
+            >
+              <option value="">{hi ? 'सभी' : 'All'}</option>
+              {reviewStates.map((value) => (
+                <option value={value} key={value}>
+                  {reviewLabel(value)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            {hi ? 'श्रेणी' : 'Category'}
+            <select
+              value={params.get('category') || ''}
+              onChange={(event) => update('category', event.target.value)}
+            >
+              <option value="">{hi ? 'सभी' : 'All'}</option>
+              {['scholarships', 'procurement', 'msme', 'welfare'].map((value) => (
+                <option key={value}>{value}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            {hi ? 'क्षेत्र' : 'Registry geography'}
+            <select
+              value={params.get('state') || ''}
+              onChange={(event) => update('state', event.target.value)}
+            >
+              <option value="">{hi ? 'सभी' : 'All'}</option>
+              <option>India</option>
+              <option>Rajasthan</option>
+            </select>
+          </label>
+        </div>
+        <details className="source-advanced-filters">
+          <summary>{hi ? 'अतिरिक्त फ़िल्टर' : 'Advanced filters'}</summary>
+          <div className="source-primary-filters">
+            <label>
+              {hi ? 'पाठ उपलब्धता' : 'Text availability'}
+              <select
+                value={params.get('text_state') || ''}
+                onChange={(e) => update('text_state', e.target.value)}
+              >
+                <option value="">{hi ? 'सभी' : 'All'}</option>
+                <option value="text_available">{hi ? 'पाठ उपलब्ध' : 'Text available'}</option>
+                <option value="partial_text">
+                  {hi ? 'कुछ पृष्ठों की समीक्षा बाकी' : 'Some pages need review'}
+                </option>
+                <option value="unreadable">{hi ? 'अपठनीय' : 'Unreadable'}</option>
+              </select>
+            </label>
+            <label>
+              {hi ? 'विभाग' : 'Department'}
+              <input
+                value={params.get('department') || ''}
+                onChange={(event) => update('department', event.target.value)}
+              />
+            </label>
+            <label>
+              {hi ? 'फ़ाइल प्रकार' : 'Format'}
+              <select
+                value={params.get('format') || ''}
+                onChange={(event) => update('format', event.target.value)}
+              >
+                <option value="">{hi ? 'सभी' : 'All'}</option>
+                <option value="pdf">PDF</option>
+                <option value="html">HTML</option>
+              </select>
+            </label>
+            <label>
+              {hi ? 'दस्तावेज़ प्रकार' : 'Document type'}
+              <select
+                value={params.get('document_type') || ''}
+                onChange={(event) => update('document_type', event.target.value)}
+              >
+                <option value="">{hi ? 'सभी' : 'All'}</option>
+                {[
+                  'policy_guideline',
+                  'tender_notice',
+                  'general_announcement',
+                  'document_index',
+                  'amendment',
+                  'unclassified',
+                  'irrelevant',
+                  'institution_compliance',
+                  'procedure_or_faq',
+                  'administrative_reference',
+                ].map((value) => (
+                  <option key={value} value={value}>
+                    {displayLabel(value, hi)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        </details>
       </form>
       {(listing.isPending || detail.isFetching) && (
         <p role="status">{hi ? 'लोड हो रहा है…' : 'Loading sources…'}</p>

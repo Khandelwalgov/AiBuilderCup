@@ -103,6 +103,19 @@ class GuidanceItem(BaseModel):
     parent_key: str = ""
     components: list[ResearchCard] = []
     conditions: list[Comparison] = []
+    relevance_group: Literal["promising", "information_gaps", "known_mismatch"] = "information_gaps"
+
+
+class ResearchChanges(BaseModel):
+    """Counts across all filtered programme–subject pairs, before pagination."""
+
+    total_conditions: int = 0
+    changed_conditions: int = 0
+    unchanged_conditions: int = 0
+    improved_conditions: int = 0
+    worsened_conditions: int = 0
+    unknown_conditions: int = 0
+    changed_programme_subject_pairs: int = 0
 
 
 class GuidanceResponse(BaseModel):
@@ -113,6 +126,8 @@ class GuidanceResponse(BaseModel):
     neural_status: str = "not_requested"
     actions: list[ActionView] = []
     supported_pair_count: int = 0
+    relevance_counts: dict[str, int] = Field(default_factory=dict)
+    research_changes: ResearchChanges = Field(default_factory=ResearchChanges)
     notice: str = (
         "Provisional source-backed comparisons, not reviewed eligibility. Current "
         "applications, funding and deadlines have NOT been verified."
@@ -192,6 +207,34 @@ def with_overrides(facts: list[FactRecord], updates: list[FactInput]):
     ]
 
 
+def relevance_group(conditions):
+    # Geography and semantic similarity must never outrank a proven mismatch.
+    if any(c.result.outcome == "unsatisfied" for c in conditions):
+        return "known_mismatch"
+    if any(c.result.outcome == "satisfied" for c in conditions):
+        return "promising"
+    return "information_gaps"
+
+
+def summarize_changes(items):
+    summary = ResearchChanges()
+    for item in items:
+        # Repeated mappings of the same source-backed rule count once per subject/programme.
+        unique = {
+            (c.semantic, c.source_hash, c.page, c.rule.model_dump_json()): c
+            for c in item.conditions
+        }
+        summary.changed_programme_subject_pairs += any(c.changed for c in unique.values())
+        for c in unique.values():
+            summary.total_conditions += 1
+            summary.changed_conditions += c.changed
+            summary.unchanged_conditions += not c.changed
+            summary.improved_conditions += c.changed and c.result.outcome == "satisfied"
+            summary.worsened_conditions += c.changed and c.result.outcome == "unsatisfied"
+            summary.unknown_conditions += c.result.outcome == "unknown"
+    return summary
+
+
 def guidance(
     session: Session, uid: str, request: GuidanceRequest, *, exclude_parents=()
 ) -> GuidanceResponse:
@@ -223,7 +266,13 @@ def guidance(
         )
     from .router import card
 
-    rows = list(session.scalars(select(ResearchListing).where(ResearchListing.is_public.is_(True))))
+    rows = list(
+        session.scalars(
+            select(ResearchListing)
+            .where(ResearchListing.is_public.is_(True))
+            .order_by(ResearchListing.identity_key, ResearchListing.id)
+        )
+    )
     from .search import rank
 
     scores, neural_status = rank(rows, request.q)
@@ -303,6 +352,7 @@ def guidance(
                 reason=reason,
                 next_steps=steps,
                 conditions=conditions,
+                relevance_group=relevance_group(conditions),
                 parent_key=parent,
                 subject_id=str(person.id),
                 subject_kind=kind,
@@ -312,28 +362,35 @@ def guidance(
                 ),
             )
             grouped[identity] = entry
-            mismatch = any(c.result.outcome == "unsatisfied" for c in conditions)
             satisfied = sum(c.result.outcome == "satisfied" for c in conditions)
             matches.append(
                 (
                     (
-                        not bool(conditions),
-                        mismatch,
-                        -scores.get(str(item.id), 0),
+                        {"promising": 0, "information_gaps": 1, "known_mismatch": 2}[
+                            entry.relevance_group
+                        ],
                         -satisfied,
+                        -scores.get(str(item.id), 0),
                         -location_rank,
                         source_rank,
                         item.title.casefold(),
                         str(person.id),
+                        str(item.id),
                     ),
                     entry,
                 )
             )
     matches.sort(key=lambda entry: entry[0])
+    all_items = [entry[1] for entry in matches]
     return GuidanceResponse(
         items=[entry[1] for entry in matches[request.offset : request.offset + request.limit]],
         candidate_count=len(matches),
         hypothetical=request.scenario or bool(request.overrides) or bool(request.member_overrides),
         neural_status=neural_status,
         supported_pair_count=sum(bool(entry[1].conditions) for entry in matches),
+        relevance_counts={
+            group: sum(item.relevance_group == group for item in all_items)
+            for group in ("promising", "information_gaps", "known_mismatch")
+        },
+        research_changes=summarize_changes(all_items),
     )

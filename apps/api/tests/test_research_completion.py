@@ -41,7 +41,17 @@ def auth():
 def request(client, **body):
     response = client.post("/v1/research-opportunities/guidance", json={"limit": 24, **body})
     assert response.status_code == 200, response.text
-    return response.json()
+    data = response.json()
+    # Known mismatches now follow unmapped research; inspect all pages when a test
+    # requests the complete corpus rather than assuming every mapped scheme leads.
+    if "limit" not in body and "offset" not in body:
+        for offset in range(24, data["candidate_count"], 24):
+            page = client.post(
+                "/v1/research-opportunities/guidance", json={**body, "limit": 24, "offset": offset}
+            )
+            assert page.status_code == 200, page.text
+            data["items"].extend(page.json()["items"])
+    return data
 
 
 def outcomes(item):

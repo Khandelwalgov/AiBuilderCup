@@ -264,7 +264,7 @@ function FactEditor({
         const field = fields.find((f) => f.key === fact.key)!;
         const choices = field.type === 'boolean' ? ['true', 'false'] : field.options;
         return (
-          <fieldset key={fact.key} style={{ margin: '12px 0', minWidth: 0 }}>
+          <fieldset key={fact.key} className="scenario-fact-override">
             <legend>{hi ? field.hi : field.en}</legend>
             <label>
               {hi ? 'काल्पनिक मान' : 'Hypothetical value'}
@@ -317,7 +317,8 @@ function FactEditor({
               )}
             </label>
             {field.income && (
-              <>
+              <details className="scenario-income-details">
+                <summary>{hi ? 'आय की अवधि और परिभाषा' : 'Income period and definition'}</summary>
                 <label>
                   {hi ? 'आय अवधि (जैसे 2026-27)' : 'Income period (e.g. 2026-27)'}
                   <input
@@ -337,7 +338,7 @@ function FactEditor({
                     ? 'गलत या अज्ञात परिभाषा का परिणाम अज्ञात रहेगा। आय स्वचालित रूप से नहीं जोड़ी जाती।'
                     : 'An unknown or different definition stays unknown. Family incomes are never summed automatically.'}
                 </small>
-              </>
+              </details>
             )}
             <button type="button" onClick={() => onChange(facts.filter((_, i) => i !== index))}>
               {hi ? 'बदलाव हटाएँ' : 'Remove override'}
@@ -671,7 +672,9 @@ function Studio() {
               scenario
             />
           )}
-          <h2>{hi ? 'वास्तविक बनाम काल्पनिक' : 'Actual versus hypothetical'}</h2>
+          <h2>
+            {hi ? 'समीक्षित नीतियों के आकलन में बदलाव' : 'Reviewed-policy assessment changes'}
+          </h2>
           <p>
             {hi
               ? 'नई सूची का अर्थ पात्रता या अपात्रता नहीं है। सीमित सूची से अवसर बाहर रह सकते हैं।'
@@ -686,56 +689,64 @@ function Studio() {
               </li>
             ))}
           </ul>
-          {(['newly_retrieved', 'no_longer_retrieved', 'changed', 'unchanged'] as const).map(
-            (change, i) => (
-              <details key={change} open={i === 0}>
-                <summary>
-                  {
-                    (hi
-                      ? ['नए मिले अवसर', 'अब सूची में नहीं', 'बदले आकलन', 'अपरिवर्तित आकलन']
-                      : [
-                          'Newly retrieved opportunities',
-                          'No longer retrieved',
-                          'Changed assessments',
-                          'Unchanged assessments',
-                        ])[i]
-                  }{' '}
-                  ({mutation.data!.changes.filter((c) => c.change === change).length})
-                </summary>
-                {mutation
-                  .data!.changes.filter((c) => c.change === change)
-                  .map((c, j) => (
-                    <div key={j}>
-                      <strong>
-                        {String(c.title)} · {String(c.subject_name)}
-                      </strong>
-                      <p>
-                        {String(c.before || '—')} → {String(c.after || '—')}
-                      </p>
-                      {change === 'changed' && (
-                        <details>
-                          <summary>
-                            {hi ? 'कौन सी शर्त बदली?' : 'Which conditions changed?'}
-                          </summary>
-                          <strong>{hi ? 'पहले' : 'Before'}</strong>
-                          <ul>
-                            {Array.isArray(c.before_reasons) &&
-                              c.before_reasons.map((reason, k) => (
-                                <li key={k}>{String(reason)}</li>
-                              ))}
-                          </ul>
-                          <strong>{hi ? 'परिदृश्य में' : 'In this scenario'}</strong>
-                          <ul>
-                            {Array.isArray(c.reasons) &&
-                              c.reasons.map((reason, k) => <li key={k}>{String(reason)}</li>)}
-                          </ul>
-                        </details>
-                      )}
-                    </div>
-                  ))}
-              </details>
-            ),
+          {!mutation.data.changes.length && (
+            <p role="status">
+              {hi
+                ? 'इस संदर्भ में तुलना के लिए कोई समीक्षित नीति आकलन नहीं है। शोध शर्तों में बदलाव ऊपर अलग दिखाए गए हैं।'
+                : 'No reviewed-policy assessments to compare in this context. Provisional research-condition changes are reported separately above.'}
+            </p>
           )}
+          {!!mutation.data.changes.length &&
+            (['newly_retrieved', 'no_longer_retrieved', 'changed', 'unchanged'] as const).map(
+              (change, i) => (
+                <details key={change} open={i === 0}>
+                  <summary>
+                    {
+                      (hi
+                        ? ['नए मिले अवसर', 'अब सूची में नहीं', 'बदले आकलन', 'अपरिवर्तित आकलन']
+                        : [
+                            'Newly retrieved opportunities',
+                            'No longer retrieved',
+                            'Changed assessments',
+                            'Unchanged assessments',
+                          ])[i]
+                    }{' '}
+                    ({mutation.data!.changes.filter((c) => c.change === change).length})
+                  </summary>
+                  {mutation
+                    .data!.changes.filter((c) => c.change === change)
+                    .map((c, j) => (
+                      <div key={j}>
+                        <strong>
+                          {String(c.title)} · {String(c.subject_name)}
+                        </strong>
+                        <p>
+                          {String(c.before || '—')} → {String(c.after || '—')}
+                        </p>
+                        {change === 'changed' && (
+                          <details>
+                            <summary>
+                              {hi ? 'कौन सी शर्त बदली?' : 'Which conditions changed?'}
+                            </summary>
+                            <strong>{hi ? 'पहले' : 'Before'}</strong>
+                            <ul>
+                              {Array.isArray(c.before_reasons) &&
+                                c.before_reasons.map((reason, k) => (
+                                  <li key={k}>{String(reason)}</li>
+                                ))}
+                            </ul>
+                            <strong>{hi ? 'परिदृश्य में' : 'In this scenario'}</strong>
+                            <ul>
+                              {Array.isArray(c.reasons) &&
+                                c.reasons.map((reason, k) => <li key={k}>{String(reason)}</li>)}
+                            </ul>
+                          </details>
+                        )}
+                      </div>
+                    ))}
+                </details>
+              ),
+            )}
           <IntelligenceMap
             plan={mutation.data.plan}
             selected={selected}

@@ -517,21 +517,23 @@ export function Detail() {
                       </ul>
                     </>
                   )}
-                  {item.field_evidence.length > 0 && (
+                  {item.field_evidence.some((entry) => entry.citation.passage?.trim()) && (
                     <details>
                       <summary>{t.sourceEvidence}</summary>
-                      {item.field_evidence.map((entry, i) => (
-                        <blockquote key={i}>
-                          <strong>{entry.field}</strong>
-                          <p>{entry.citation.passage}</p>
-                          <a href={entry.citation.source_url} target="_blank" rel="noreferrer">
-                            {t.officialCitation} · {t.page} {entry.citation.page}
-                          </a>
-                          <p>
-                            {entry.citation.language} · {entry.citation.basis}
-                          </p>
-                        </blockquote>
-                      ))}
+                      {item.field_evidence
+                        .filter((entry) => entry.citation.passage?.trim())
+                        .map((entry, i) => (
+                          <blockquote key={i}>
+                            <strong>{entry.field}</strong>
+                            <p>{entry.citation.passage}</p>
+                            <a href={entry.citation.source_url} target="_blank" rel="noreferrer">
+                              {t.officialCitation} · {t.page} {entry.citation.page}
+                            </a>
+                            <p>
+                              {entry.citation.language} · {entry.citation.basis}
+                            </p>
+                          </blockquote>
+                        ))}
                     </details>
                   )}
                   {item.review_flags.length > 0 && (
@@ -573,14 +575,16 @@ export function Detail() {
                               </Link>
                             </div>
                           ))}
-                        {req.citations.map((citation, i) => (
-                          <blockquote key={i}>
-                            <p>{citation.passage}</p>
-                            <a href={citation.source_url} target="_blank" rel="noreferrer">
-                              {t.officialCitation} · {t.page} {citation.page}
-                            </a>
-                          </blockquote>
-                        ))}
+                        {req.citations
+                          .filter((citation) => citation.passage?.trim())
+                          .map((citation, i) => (
+                            <blockquote key={i}>
+                              <p>{citation.passage}</p>
+                              <a href={citation.source_url} target="_blank" rel="noreferrer">
+                                {t.officialCitation} · {t.page} {citation.page}
+                              </a>
+                            </blockquote>
+                          ))}
                       </div>
                     ))
                   )}

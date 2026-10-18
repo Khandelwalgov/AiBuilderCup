@@ -40,14 +40,18 @@ test('real Firebase/API/PostgreSQL search and ephemeral future family', async ({
   await page.getByRole('button', { name: 'Add fictional person', exact: true }).click();
   await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Fictional future child');
   await page.getByRole('button', { name: 'Run scenario', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Actual versus hypothetical' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Reviewed-policy assessment changes' }),
+  ).toBeVisible();
   await expect(page.getByText('No scenario data was saved.', { exact: true })).toBeVisible();
   await expect(page.locator('[aria-label="Scenario results"]')).toContainText('scenario');
   await productCapture(page, 'phase4-scenario-family');
   await page.setViewportSize({ width: 390, height: 844 });
   await productCapture(page, 'phase4-scenario-mobile');
   await page.getByRole('button', { name: 'Reset / discard', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Actual versus hypothetical' })).toHaveCount(0);
+  await expect(
+    page.getByRole('heading', { name: 'Reviewed-policy assessment changes' }),
+  ).toHaveCount(0);
   await expect(page.getByRole('textbox', { name: 'Name', exact: true })).toHaveCount(0);
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/family');

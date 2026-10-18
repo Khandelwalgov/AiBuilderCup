@@ -1202,6 +1202,11 @@ export interface components {
              * @default 0
              */
             supported_pair_count: number;
+            /** Relevance Counts */
+            relevance_counts?: {
+                [key: string]: number;
+            };
+            research_changes?: components["schemas"]["ResearchChanges"];
             /**
              * Notice
              * @default Provisional source-backed comparisons, not reviewed eligibility. Current applications, funding and deadlines have NOT been verified.
@@ -1795,6 +1800,12 @@ export interface components {
              * @default []
              */
             conditions: components["schemas"]["Comparison"][];
+            /**
+             * Relevance Group
+             * @default information_gaps
+             * @enum {string}
+             */
+            relevance_group: "promising" | "information_gaps" | "known_mismatch";
         };
         /** GuidanceRequest */
         GuidanceRequest: {
@@ -2278,6 +2289,47 @@ export interface components {
              * @constant
              */
             eligibility_verified: false;
+        };
+        /**
+         * ResearchChanges
+         * @description Counts across all filtered programme–subject pairs, before pagination.
+         */
+        ResearchChanges: {
+            /**
+             * Total Conditions
+             * @default 0
+             */
+            total_conditions: number;
+            /**
+             * Changed Conditions
+             * @default 0
+             */
+            changed_conditions: number;
+            /**
+             * Unchanged Conditions
+             * @default 0
+             */
+            unchanged_conditions: number;
+            /**
+             * Improved Conditions
+             * @default 0
+             */
+            improved_conditions: number;
+            /**
+             * Worsened Conditions
+             * @default 0
+             */
+            worsened_conditions: number;
+            /**
+             * Unknown Conditions
+             * @default 0
+             */
+            unknown_conditions: number;
+            /**
+             * Changed Programme Subject Pairs
+             * @default 0
+             */
+            changed_programme_subject_pairs: number;
         };
         /** ResearchCitation */
         ResearchCitation: {

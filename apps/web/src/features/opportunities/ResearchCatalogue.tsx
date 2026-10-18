@@ -157,7 +157,7 @@ function ResearchCard({ item }: { item: Card }) {
             <ContextLink to={`/government-sources?source=${doc.snapshot_id}&page=${doc.pages[0]}`}>
               {t.document} · {t.pages} {doc.pages.join(', ')}
             </ContextLink>
-            <blockquote>{doc.excerpt}…</blockquote>
+            {doc.excerpt?.trim() && <blockquote>{doc.excerpt}…</blockquote>}
           </div>
         ))}
       </div>
@@ -455,7 +455,7 @@ export function ResearchDetail() {
               <ContextLink to={`/government-sources?source=${c.snapshot_id}&page=${c.page}`}>
                 {hi ? 'आधिकारिक साक्ष्य · पृष्ठ' : 'Official evidence · Page'} {c.page}
               </ContextLink>
-              <blockquote>{c.passage}</blockquote>
+              {c.passage?.trim() && <blockquote>{c.passage}</blockquote>}
             </details>
           ))}
         </section>
@@ -470,25 +470,27 @@ export function ResearchDetail() {
       </section>
       <section className="panel">
         <h2>{t.evidence}</h2>
-        {citations.map((c, i) => {
-          const source = item.sources.find((s) => s.snapshot_id === c.snapshot_id)!;
-          return (
-            <blockquote key={i}>
-              <p>{c.passage}</p>
-              <a
-                href={
-                  source.source_url.toLowerCase().includes('.pdf')
-                    ? `${source.source_url}#page=${c.page}`
-                    : source.source_url
-                }
-                target="_blank"
-                rel="noreferrer"
-              >
-                {t.source} · {c.page}
-              </a>
-            </blockquote>
-          );
-        })}
+        {citations
+          .filter((c) => c.passage?.trim())
+          .map((c, i) => {
+            const source = item.sources.find((s) => s.snapshot_id === c.snapshot_id)!;
+            return (
+              <blockquote key={i}>
+                <p>{c.passage}</p>
+                <a
+                  href={
+                    source.source_url.toLowerCase().includes('.pdf')
+                      ? `${source.source_url}#page=${c.page}`
+                      : source.source_url
+                  }
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {t.source} · {c.page}
+                </a>
+              </blockquote>
+            );
+          })}
       </section>
       {item.sources.map((source) => (
         <section className="panel" key={source.snapshot_id}>

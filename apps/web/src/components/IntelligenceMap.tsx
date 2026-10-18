@@ -2,7 +2,16 @@ import { documentStatus } from '../features/documents/Documents';
 import { useSubject, ContextLink as Link } from '../app/subject-context';
 import { useEffect, useRef, useState } from 'react';
 
-import { Focus, Minus, Plus, Fingerprint, GitBranch, FileCheck2, ArrowUpRight } from 'lucide-react';
+import {
+  Focus,
+  Minus,
+  Plus,
+  Fingerprint,
+  GitBranch,
+  FileCheck2,
+  ArrowUpRight,
+  Info,
+} from 'lucide-react';
 import { useLanguage, useStrings } from '../app/App';
 import type { components } from '../lib/api/schema';
 type Plan = components['schemas']['PlanView'];
@@ -27,6 +36,7 @@ export function IntelligenceMap({
   const [zoom, setZoom] = useState(1);
   const viewport = useRef<HTMLDivElement>(null);
   const fit = useRef(1);
+  const hasGraph = Boolean(plan.actions.length || plan.evaluations.length);
   useEffect(() => {
     const el = viewport.current;
     if (!el) return;
@@ -40,7 +50,7 @@ export function IntelligenceMap({
     });
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [hasGraph]);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [hover, setHover] = useState<string | null>(null);
   const drag = useRef<{ x: number; y: number; ox: number; oy: number } | null>(null);
@@ -48,6 +58,15 @@ export function IntelligenceMap({
   const evaluations = plan.evaluations.slice(0, 6);
   const height = Math.max(390, actions.length * 136 + 70, evaluations.length * 180 + 70);
   const active = hover ?? selected?.id;
+  if (!hasGraph) {
+    return (
+      <p className="notice" role="status">
+        {hi
+          ? 'अभी कोई समीक्षित आकलन या जुड़ा कदम नहीं है। शोध की तैयारी के कदम अलग दिखाए गए हैं।'
+          : 'No reviewed assessments or connected actions yet. Research preparation steps are shown separately.'}
+      </p>
+    );
+  }
   return (
     <section className="intelligence-map">
       {plan.retrieval_truncated && (
@@ -76,7 +95,34 @@ export function IntelligenceMap({
       <div className="map-legend">
         <span>
           <Fingerprint size={15} />
-          {hi ? 'संदर्भ' : 'Context'}
+          {plan.subject.kind === 'business'
+            ? hi
+              ? 'व्यवसाय'
+              : 'Business'
+            : plan.subject.kind === 'household'
+              ? hi
+                ? 'परिवार के लोग'
+                : 'Household members'
+              : hi
+                ? 'व्यक्ति'
+                : 'Person'}
+          <span
+            tabIndex={0}
+            className="map-context-info"
+            role="note"
+            aria-label={
+              hi
+                ? 'चुना गया अधिकृत व्यक्ति या व्यवसाय, जिसकी जानकारी से योजना बनती है।'
+                : 'The selected authorized person or business whose facts this plan uses.'
+            }
+            title={
+              hi
+                ? 'चुना गया अधिकृत व्यक्ति या व्यवसाय, जिसकी जानकारी से योजना बनती है।'
+                : 'The selected authorized person or business whose facts this plan uses.'
+            }
+          >
+            <Info size={14} aria-hidden="true" />
+          </span>
         </span>
         <span>
           <FileCheck2 size={15} />
@@ -272,7 +318,9 @@ export function IntelligenceMap({
           >
             <Minus size={17} />
           </button>
-          <output aria-label="Graph zoom">{Math.round(zoom * 100)}%</output>
+          <output aria-label="Graph zoom">
+            {hi ? 'ज़ूम' : 'Zoom'} {Math.round(zoom * 100)}%
+          </output>
           <button
             aria-label={hi ? 'बड़ा करें' : 'Zoom in'}
             onClick={() => setZoom((v) => Math.min(1.7, v + 0.15))}

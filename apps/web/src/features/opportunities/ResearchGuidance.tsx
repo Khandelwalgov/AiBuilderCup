@@ -289,209 +289,317 @@ function SubjectResearch({
               ))}
             </section>
           )}
-          <div className="card-grid">
-            {response.items.map((item) => (
-              <article
-                className="panel research-guide-card"
-                key={`${item.subject_id}:${item.parent_key || item.listing.id}`}
+          {variant === 'scenario' && response.hypothetical && response.research_changes && (
+            <section
+              className="panel research-change-summary"
+              aria-label={hi ? 'शोध शर्तों में बदलाव' : 'Provisional research changes'}
+            >
+              <h3>
+                {hi ? 'असत्यापित शोध शर्तों में बदलाव' : 'Provisional research-condition changes'}
+              </h3>
+              <p>
+                {hi
+                  ? 'सभी फ़िल्टर किए परिणाम; प्रति व्यक्ति और कार्यक्रम की अलग उद्धृत शर्त एक बार गिनी गई है।'
+                  : 'Across all filtered results; each distinct mapped condition is counted once per programme and subject. These are not approved-policy assessments.'}
+              </p>
+              <dl className="research-change-counts">
+                {[
+                  [
+                    hi ? 'बदली शर्तें' : 'Changed conditions',
+                    response.research_changes.changed_conditions,
+                  ],
+                  [
+                    hi ? 'अब मेल खाती हैं' : 'Now meet supplied facts',
+                    response.research_changes.improved_conditions,
+                  ],
+                  [
+                    hi ? 'अब ज्ञात अंतर' : 'Now known mismatches',
+                    response.research_changes.worsened_conditions,
+                  ],
+                  [
+                    hi ? 'अपरिवर्तित शर्तें' : 'Unchanged conditions',
+                    response.research_changes.unchanged_conditions,
+                  ],
+                ].map(([label, value]) => (
+                  <div key={label}>
+                    <dt>{label}</dt>
+                    <dd>{value}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p>
+                {response.research_changes.changed_programme_subject_pairs}{' '}
+                {hi ? 'कार्यक्रम–व्यक्ति तुलनाएँ बदलीं' : 'programme–subject comparisons changed'} ·{' '}
+                {response.research_changes.unknown_conditions}{' '}
+                {hi ? 'दर्ज शर्तें अभी अज्ञात' : 'mapped conditions remain unknown'}
+              </p>
+            </section>
+          )}
+          {(['promising', 'information_gaps', 'known_mismatch'] as const).map((group) => {
+            const items = response.items.filter(
+              (item) =>
+                (item.relevance_group ||
+                  (item.conditions.some((c) => c.result.outcome === 'unsatisfied')
+                    ? 'known_mismatch'
+                    : item.conditions.some((c) => c.result.outcome === 'satisfied')
+                      ? 'promising'
+                      : 'information_gaps')) === group,
+            );
+            if (!items.length) return null;
+            const label = {
+              promising: hi
+                ? 'संभावित तुलना · पात्रता असत्यापित'
+                : 'Promising comparisons · eligibility unverified',
+              information_gaps: hi
+                ? 'जानकारी या नियमों की तुलना बाकी'
+                : 'Information gaps and unmapped research',
+              known_mismatch: hi ? 'ज्ञात शर्तों में अंतर' : 'Known condition mismatches',
+            }[group];
+            return (
+              <details
+                className="research-relevance-group"
+                key={group}
+                open={group !== 'known_mismatch'}
               >
-                <span className="eyebrow">
-                  {item.subject_name} · {item.listing.jurisdiction}
-                </span>
-                <h3>
-                  <ContextLink to={`/research-opportunities/${item.listing.id}`}>
-                    {item.parent_key === 'msme-team' ? 'MSME TEAM' : item.listing.title}
-                  </ContextLink>
-                </h3>
-                <p>{item.listing.summary}</p>
-                <p>
-                  <strong>{hi ? 'क्यों दिखाई दे रहा है' : 'Why it may fit'}:</strong> {item.reason}{' '}
-                  {item.conditions?.length > 0 && (
-                    <span>
-                      {item.conditions.filter((c) => c.result.outcome === 'satisfied').length}{' '}
-                      {hi
-                        ? 'उद्धृत तुलनाएँ बताई जानकारी से मेल खाती हैं।'
-                        : 'cited comparisons match supplied facts.'}
-                    </span>
-                  )}
-                </p>
-                <p>
-                  {hi ? 'लाभ का स्रोत-विवरण' : 'Source-described benefit'}:{' '}
-                  {item.listing.benefit || (hi ? 'स्थापित नहीं' : 'Not established')}
-                </p>
-                {!!item.components?.length && (
-                  <details>
-                    <summary>
-                      {hi ? 'कार्यक्रम के घटक' : 'Programme components'} (
-                      {item.components.length + 1})
-                    </summary>
-                    {[item.listing, ...item.components].map((c) => (
-                      <p key={c.id}>
-                        <ContextLink to={`/research-opportunities/${c.id}`}>{c.title}</ContextLink>
+                <summary>
+                  {label} ({response.relevance_counts?.[group] ?? items.length})
+                </summary>
+                <div className="card-grid">
+                  {items.map((item) => (
+                    <article
+                      className="panel research-guide-card"
+                      key={`${item.subject_id}:${item.parent_key || item.listing.id}`}
+                    >
+                      <span className="eyebrow">
+                        {item.subject_name} · {item.listing.jurisdiction}
+                      </span>
+                      <h3>
+                        <ContextLink to={`/research-opportunities/${item.listing.id}`}>
+                          {item.parent_key === 'msme-team' ? 'MSME TEAM' : item.listing.title}
+                        </ContextLink>
+                      </h3>
+                      <span className="research-relevance-label">
+                        {group === 'known_mismatch'
+                          ? hi
+                            ? 'ज्ञात अंतर'
+                            : 'Known mismatch'
+                          : group === 'promising'
+                            ? hi
+                              ? 'कुछ शर्तें मेल खाती हैं'
+                              : 'Some cited conditions match'
+                            : hi
+                              ? 'अधिक जानकारी चाहिए'
+                              : 'More information needed'}
+                      </span>
+                      <p>
+                        <strong>{hi ? 'तुलना का सार' : 'Comparison summary'}:</strong>{' '}
+                        {item.conditions.find((c) => c.result.outcome === 'unsatisfied')?.title ||
+                          item.conditions.find((c) => c.result.outcome === 'satisfied')?.title ||
+                          item.reason}{' '}
                       </p>
-                    ))}
-                  </details>
-                )}
-                {item.conditions?.length ? (
-                  <details open={variant === 'scenario' && item.conditions.some((c) => c.changed)}>
-                    <summary>
-                      {hi ? 'शर्तें, अंतर और अगले कदम' : 'Conditions, gaps and next steps'}
-                    </summary>
-                    {item.conditions.map((c, i) => (
-                      <section key={i} className="research-condition">
-                        <h4>{c.title}</h4>
-                        <strong>{outcome(c.result.outcome)}</strong>
-                        {response.hypothetical && (
-                          <p>
-                            {hi ? 'वास्तविक → काल्पनिक' : 'Actual → hypothetical'}:{' '}
-                            {outcome(c.baseline.outcome)} → {outcome(c.result.outcome)} ·{' '}
-                            {c.changed
-                              ? hi
-                                ? 'बदला'
-                                : 'Changed'
-                              : hi
-                                ? 'अपरिवर्तित'
-                                : 'Unchanged'}
-                          </p>
-                        )}
-                        <p>
-                          {hi
-                            ? {
-                                potentially_actionable_gap: 'परिस्थिति बदलने पर तैयारी का संभव कदम',
-                                information_gap: 'जानकारी की कमी',
-                                evidence_gap: 'सत्यापित प्रमाण बाकी',
-                                unknown_policy: 'नीति की व्याख्या अधूरी',
-                                known_substantive_mismatch: 'ज्ञात शर्त में अंतर',
-                                condition_met_by_supplied_facts: 'बताई जानकारी पर तुलना',
-                              }[c.gap_kind] || ''
-                            : c.gap_kind.replaceAll('_', ' ')}
-                        </p>
-                        <p>{c.result.reason}</p>
-                        {c.rule.op !== 'condition' && (
-                          <ConditionLogic rule={c.rule} result={c.result} hi={hi} />
-                        )}
-                        {c.rule.op === 'condition' && c.rule.condition?.income_definition && (
-                          <ConditionLogic rule={c.rule} hi={hi} />
-                        )}
-                        {c.interpretation_note && <p role="note">{c.interpretation_note}</p>}
-                        {!!c.exceptions?.length && (
-                          <details>
-                            <summary>
-                              {hi ? 'स्रोत के अपवाद और सीमाएँ' : 'Source exceptions and limits'}
-                            </summary>
-                            <ul>
-                              {c.exceptions.map((x, i) => (
-                                <li key={i}>{x}</li>
-                              ))}
-                            </ul>
-                          </details>
-                        )}
-                        {!!c.unresolved_conditions?.length && (
-                          <details>
-                            <summary>
-                              {hi ? 'कौनसी शर्तें अभी अज्ञात हैं' : 'Conditions still unassessed'}
-                            </summary>
-                            <ul>
-                              {c.unresolved_conditions.map((x, i) => (
-                                <li key={i}>{x}</li>
-                              ))}
-                            </ul>
-                          </details>
-                        )}
-                        {!response.hypothetical &&
-                          !item.fictional &&
-                          c.result.missing.map((key) => (
-                            <p key={key}>
-                              <ContextLink
-                                to={`${item.subject_kind === 'business' ? '/businesses' : '/profile'}?kind=${item.subject_kind}${context.options.some((o) => o.id === item.subject_id) ? `&id=${item.subject_id}` : ''}&mode=${item.subject_kind === 'business' ? 'business' : context.options.some((o) => o.id === item.subject_id) ? 'member' : 'me'}&field=${key}&research_listing=${item.listing.id}&criterion=${encodeURIComponent(c.semantic)}`}
-                              >
-                                {hi ? 'यह जानकारी जाँचें / दें' : 'Check or provide this fact'}:{' '}
-                                {key.replaceAll('_', ' ')}
+                      <p className="research-preview-benefit">
+                        {hi ? 'लाभ का स्रोत-विवरण' : 'Source-described benefit'}:{' '}
+                        {item.listing.benefit || (hi ? 'स्थापित नहीं' : 'Not established')}
+                      </p>
+                      <p className="research-preview-unknowns">
+                        {hi ? 'मुख्य अज्ञात जानकारी' : 'Key unknowns'}:{' '}
+                        {Array.from(new Set(item.conditions.flatMap((c) => c.result.missing)))
+                          .slice(0, 3)
+                          .map((key) => key.replaceAll('_', ' '))
+                          .join(', ') ||
+                          (hi
+                            ? 'शेष नियम और वर्तमान आवेदन की पुष्टि'
+                            : 'Remaining requirements and current application availability')}
+                      </p>
+                      {!!item.components?.length && (
+                        <details>
+                          <summary>
+                            {hi ? 'कार्यक्रम के घटक' : 'Programme components'} (
+                            {item.components.length + 1})
+                          </summary>
+                          {[item.listing, ...item.components].map((c) => (
+                            <p key={c.id}>
+                              <ContextLink to={`/research-opportunities/${c.id}`}>
+                                {c.title}
                               </ContextLink>
                             </p>
                           ))}
-                        {c.result.facts.map((f) => (
-                          <p key={f.id}>
-                            {f.key.replaceAll('_', ' ')}: {String(f.value ?? 'unknown')} ·{' '}
-                            {f.origin === 'verified_document' && f.verification === 'verified'
-                              ? hi
-                                ? 'सत्यापित प्रमाण'
-                                : 'Verified document fact'
-                              : hi
-                                ? 'स्वयं बताई जानकारी · प्रमाण सत्यापित नहीं'
-                                : 'Supplied fact · documentary evidence unverified'}
-                          </p>
-                        ))}
-                        {c.action && (
-                          <p>
-                            <strong>{hi ? 'तैयारी का कदम' : 'Readiness step'}:</strong> {c.action}{' '}
-                            {hi
-                              ? 'यह स्वीकृति की गारंटी नहीं है।'
-                              : 'This does not guarantee admission, selection or funding.'}
-                          </p>
-                        )}
-                        <ContextLink
-                          to={`/government-sources?source=${c.snapshot_id}&page=${c.page}`}
-                        >
-                          {hi ? 'आधिकारिक साक्ष्य · पृष्ठ' : 'Official evidence · Page'} {c.page}
-                        </ContextLink>
+                        </details>
+                      )}
+                      {item.conditions?.length ? (
                         <details>
                           <summary>
-                            {hi ? 'उद्धृत मूल अंश पढ़ें' : 'Read the cited original passage'}
+                            {hi ? 'शर्तें, अंतर और अगले कदम' : 'Conditions, gaps and next steps'}
                           </summary>
-                          <blockquote>{c.passage}</blockquote>
+                          {item.conditions.map((c, i) => (
+                            <section key={i} className="research-condition">
+                              <h4>{c.title}</h4>
+                              <strong>{outcome(c.result.outcome)}</strong>
+                              {response.hypothetical && (
+                                <p>
+                                  {hi ? 'वास्तविक → काल्पनिक' : 'Actual → hypothetical'}:{' '}
+                                  {outcome(c.baseline.outcome)} → {outcome(c.result.outcome)} ·{' '}
+                                  {c.changed
+                                    ? hi
+                                      ? 'बदला'
+                                      : 'Changed'
+                                    : hi
+                                      ? 'अपरिवर्तित'
+                                      : 'Unchanged'}
+                                </p>
+                              )}
+
+                              <p>{c.result.reason}</p>
+                              {c.rule.op !== 'condition' && (
+                                <ConditionLogic rule={c.rule} result={c.result} hi={hi} />
+                              )}
+                              {c.rule.op === 'condition' && c.rule.condition?.income_definition && (
+                                <ConditionLogic rule={c.rule} hi={hi} />
+                              )}
+                              {c.interpretation_note && <p role="note">{c.interpretation_note}</p>}
+                              {!!c.exceptions?.length && (
+                                <details>
+                                  <summary>
+                                    {hi
+                                      ? 'स्रोत के अपवाद और सीमाएँ'
+                                      : 'Source exceptions and limits'}
+                                  </summary>
+                                  <ul>
+                                    {c.exceptions.map((x, i) => (
+                                      <li key={i}>{x}</li>
+                                    ))}
+                                  </ul>
+                                </details>
+                              )}
+                              {!!c.unresolved_conditions?.length && (
+                                <details>
+                                  <summary>
+                                    {hi
+                                      ? 'कौनसी शर्तें अभी अज्ञात हैं'
+                                      : 'Conditions still unassessed'}
+                                  </summary>
+                                  <ul>
+                                    {c.unresolved_conditions.map((x, i) => (
+                                      <li key={i}>{x}</li>
+                                    ))}
+                                  </ul>
+                                </details>
+                              )}
+                              {!response.hypothetical &&
+                                !item.fictional &&
+                                c.result.missing.map((key) => (
+                                  <p key={key}>
+                                    <ContextLink
+                                      to={`${item.subject_kind === 'business' ? '/businesses' : '/profile'}?kind=${item.subject_kind}${context.options.some((o) => o.id === item.subject_id) ? `&id=${item.subject_id}` : ''}&mode=${item.subject_kind === 'business' ? 'business' : context.options.some((o) => o.id === item.subject_id) ? 'member' : 'me'}&field=${key}&research_listing=${item.listing.id}&criterion=${encodeURIComponent(c.semantic)}`}
+                                    >
+                                      {hi
+                                        ? 'यह जानकारी जाँचें / दें'
+                                        : 'Check or provide this fact'}
+                                      : {key.replaceAll('_', ' ')}
+                                    </ContextLink>
+                                  </p>
+                                ))}
+                              {c.result.facts.map((f) => (
+                                <p key={f.id}>
+                                  {f.key.replaceAll('_', ' ')}: {String(f.value ?? 'unknown')} ·{' '}
+                                  {f.origin === 'verified_document' && f.verification === 'verified'
+                                    ? hi
+                                      ? 'सत्यापित प्रमाण'
+                                      : 'Verified document fact'
+                                    : hi
+                                      ? 'स्वयं बताई जानकारी · प्रमाण सत्यापित नहीं'
+                                      : 'Supplied fact · documentary evidence unverified'}
+                                </p>
+                              ))}
+                              {c.action && (
+                                <p>
+                                  <strong>{hi ? 'तैयारी का कदम' : 'Readiness step'}:</strong>{' '}
+                                  {c.action}{' '}
+                                  {hi
+                                    ? 'यह स्वीकृति की गारंटी नहीं है।'
+                                    : 'This does not guarantee admission, selection or funding.'}
+                                </p>
+                              )}
+                              <ContextLink
+                                to={`/government-sources?source=${c.snapshot_id}&page=${c.page}`}
+                              >
+                                {hi ? 'आधिकारिक साक्ष्य · पृष्ठ' : 'Official evidence · Page'}{' '}
+                                {c.page}
+                              </ContextLink>
+                              {c.passage?.trim() && (
+                                <details>
+                                  <summary>
+                                    {hi
+                                      ? 'उद्धृत मूल अंश पढ़ें'
+                                      : 'Read the cited original passage'}
+                                  </summary>
+                                  <blockquote>{c.passage}</blockquote>
+                                </details>
+                              )}
+                            </section>
+                          ))}
                         </details>
-                      </section>
-                    ))}
-                  </details>
-                ) : (
-                  <p>
-                    {hi
-                      ? 'इस रिकॉर्ड में विस्तृत शर्तों की तुलना उपलब्ध नहीं है।'
-                      : 'Detailed conditions have not been mapped for comparison in this record.'}
-                  </p>
-                )}
-                {(item.listing.documents || []).map((doc) => (
-                  <p key={doc.snapshot_id}>
-                    <ContextLink
-                      to={`/government-sources?source=${doc.snapshot_id}&page=${doc.pages[0]}`}
-                    >
-                      {hi ? 'दस्तावेज़ पढ़ें · पृष्ठ' : 'Read captured document · Pages'}{' '}
-                      {doc.pages.join(', ')}
-                    </ContextLink>
-                  </p>
-                ))}
-                <p>
-                  {hi ? 'आवेदन अवधि' : 'Application window'}:{' '}
-                  {item.listing.application_status === 'not_established'
-                    ? hi
-                      ? 'स्थापित नहीं'
-                      : 'Not established'
-                    : item.listing.application_status}
-                </p>
-                <a
-                  href={item.listing.apply_url || item.listing.source_url}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {item.listing.apply_url
-                    ? hi
-                      ? 'आवेदन जानकारी'
-                      : 'Application information'
-                    : hi
-                      ? 'मूल आधिकारिक स्रोत · आवेदन पोर्टल की पुष्टि नहीं'
-                      : 'Original official source · application route unconfirmed'}
-                </a>
-                <p>
-                  <ContextLink to={`/research-opportunities/${item.listing.id}`}>
-                    {hi ? 'स्रोत और विवरण' : 'Official evidence and details'}{' '}
-                    <ArrowRight size={14} />
-                  </ContextLink>
-                </p>
-              </article>
-            ))}
-          </div>
-          {variant === 'discover' && (
+                      ) : (
+                        <p>
+                          {hi
+                            ? 'इस रिकॉर्ड में विस्तृत शर्तों की तुलना उपलब्ध नहीं है।'
+                            : 'Detailed conditions have not been mapped for comparison in this record.'}
+                        </p>
+                      )}
+                      <details className="research-card-sources">
+                        <summary>
+                          {hi
+                            ? 'दस्तावेज़ और आवेदन जानकारी'
+                            : 'Source documents and application information'}
+                        </summary>
+                        {(item.listing.documents || []).map((doc) => (
+                          <p key={doc.snapshot_id}>
+                            <ContextLink
+                              to={`/government-sources?source=${doc.snapshot_id}&page=${doc.pages[0]}`}
+                            >
+                              {hi ? 'दस्तावेज़ पढ़ें · पृष्ठ' : 'Read captured document · Pages'}{' '}
+                              {doc.pages.join(', ')}
+                            </ContextLink>
+                          </p>
+                        ))}
+                        <p>
+                          {hi ? 'आवेदन अवधि' : 'Application window'}:{' '}
+                          {item.listing.application_status === 'not_established'
+                            ? hi
+                              ? 'स्थापित नहीं'
+                              : 'Not established'
+                            : item.listing.application_status}
+                        </p>
+                        <a
+                          href={item.listing.apply_url || item.listing.source_url}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {item.listing.apply_url
+                            ? hi
+                              ? 'आवेदन जानकारी'
+                              : 'Application information'
+                            : hi
+                              ? 'मूल आधिकारिक स्रोत · आवेदन पोर्टल की पुष्टि नहीं'
+                              : 'Original official source · application route unconfirmed'}
+                        </a>
+                      </details>
+                      <p>
+                        <ContextLink
+                          className="button secondary"
+                          to={`/research-opportunities/${item.listing.id}`}
+                        >
+                          {hi ? 'स्रोत और विवरण' : 'Official evidence and details'}{' '}
+                          <ArrowRight size={14} />
+                        </ContextLink>
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              </details>
+            );
+          })}
+          {variant !== 'overview' && (
             <div className="document-actions">
               <button disabled={!offset} onClick={() => setOffset(Math.max(0, offset - limit))}>
                 {hi ? 'पिछले परिणाम' : 'Previous results'}

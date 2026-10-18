@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page, type Locator } from '@playwright/test';
 import { productCapture } from './product-capture';
 async function login(page: Page) {
   await page.goto('/tests/emulator-login.html');
@@ -19,6 +19,29 @@ async function profile(page: Page) {
     const { api } = await import('/src/lib/api/client.ts');
     return (await api.GET('/v1/profile/me')).data;
   });
+}
+async function reachCard(page: Page, card: Locator) {
+  // Source-backed mismatches remain reachable, but no longer lead recommendations.
+  for (let attempt = 0; attempt < 20 && !(await card.count()); attempt++) {
+    const more = page.getByRole('button', { name: 'More personalized results' });
+    await expect(more).toBeEnabled();
+    const priorTitle = await page.locator('.research-guide-card h3').first().textContent();
+    await Promise.all([
+      page.waitForResponse(
+        (r) =>
+          r.url().endsWith('/v1/research-opportunities/guidance') &&
+          r.request().method() === 'POST',
+      ),
+      more.click(),
+    ]);
+    await expect(page.locator('.research-guide-card h3').first()).not.toHaveText(priorTitle || '');
+  }
+  await expect(card).toHaveCount(1);
+  const group = card.locator(
+    'xpath=ancestor::details[contains(@class,"research-relevance-group")][1]',
+  );
+  if ((await group.count()) && !(await group.evaluate((el) => (el as HTMLDetailsElement).open)))
+    await group.locator(':scope > summary').click();
 }
 test('real-source automatic personal discovery, cited plan and nonpersistent enrollment scenario', async ({
   page,
@@ -53,6 +76,7 @@ test('real-source automatic personal discovery, cited plan and nonpersistent enr
       exact: true,
     }),
   });
+  await reachCard(page, st);
   await expect(st).toBeVisible();
   await st.getByText('Conditions, gaps and next steps', { exact: true }).click();
   await expect(st).toContainText('Known mismatch');
@@ -129,6 +153,7 @@ test('real-source business requirements, grouped components and hypothetical Udy
   const team = page
     .getByRole('article')
     .filter({ has: page.getByRole('heading', { name: 'MSME TEAM', exact: true }) });
+  await reachCard(page, team);
   await expect(team).toBeVisible();
   await team.getByText('Conditions, gaps and next steps', { exact: true }).click();
   await expect(team).toContainText('Known mismatch');
@@ -213,7 +238,7 @@ test('real family research compares each dependent and revocation removes their 
   await first.getByText('Conditions, gaps and next steps', { exact: true }).click();
   await expect(first).toContainText('Condition met by supplied facts');
   // Expanded programme coverage is paginated; later known mismatches remain reachable.
-  await page.getByRole('button', { name: 'More personalized results' }).click();
+  await reachCard(page, second);
   await expect(second).toBeVisible();
   await second.getByText('Conditions, gaps and next steps', { exact: true }).click();
   await expect(second).toContainText('Known mismatch');
