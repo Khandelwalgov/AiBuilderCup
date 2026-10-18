@@ -1,3 +1,4 @@
+import { BrandLogo } from '../components/BrandLogo';
 import { ResearchGuidance } from '../features/opportunities/ResearchGuidance';
 import { ResearchDetail } from '../features/opportunities/ResearchCatalogue';
 import { ScenarioStudio } from '../features/intelligence/ScenarioStudio';
@@ -17,7 +18,6 @@ import { useQuery } from '@tanstack/react-query';
 import { metadataFor, routeMetadata, routeTitle } from './routes';
 import { useFirebaseSession, type SessionState } from './session';
 import {
-  ArrowDownLeft,
   ArrowRight,
   Blocks,
   Compass,
@@ -731,13 +731,7 @@ function AccountMenu({
 function Logo() {
   return (
     <Link to="/" className="brand" aria-label={`${brand}.`}>
-      <span className="brand-icon">
-        <ArrowDownLeft size={22} />
-      </span>
-      <span className="brand-name">
-        {brand}
-        <span className="brand-dot">.</span>
-      </span>
+      <BrandLogo />
     </Link>
   );
 }
