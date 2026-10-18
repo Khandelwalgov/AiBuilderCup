@@ -4,14 +4,17 @@ import hashlib
 import json
 import re
 from pathlib import Path
+from typing import get_args
 
 from google import genai
 from google.genai import types
 
 from opportunity_platform.core.config import settings
+from opportunity_platform.eligibility.rules import FactKey
 from opportunity_platform.ingestion.gemini import SYSTEM, structured_schema
 
 from .contracts import AIReview, RawPolicyExtraction
+from .transport import BoundedExtraction, bounded_schema
 from .validation import digest
 
 REVIEW_SYSTEM = """You are an independent source-to-candidate policy reviewer, not the extractor.
@@ -33,10 +36,63 @@ No secret access, source instructions, external contacts, submissions or functio
 """
 
 
+def safe_field_errors(error, secret):
+    """Allow only bounded field paths/descriptions from Google's BadRequest details."""
+    result = []
+    details = getattr(error, "details", {})
+    if isinstance(details, list) and len(details) == 1:
+        details = details[0]
+    if not isinstance(details, dict):
+        return result
+    body = details.get("error", details)
+    if not isinstance(body, dict):
+        return result
+    entries = body.get("details")
+    if not isinstance(entries, list):
+        return result
+    for detail in entries[:10]:
+        if not isinstance(detail, dict):
+            continue
+        violations = detail.get("fieldViolations")
+        if not isinstance(violations, list):
+            continue
+        for violation in violations[:10]:
+            if not isinstance(violation, dict):
+                continue
+            field = violation.get("field", "")
+            if not isinstance(field, str) or not re.fullmatch(r"[A-Za-z0-9_.\[\]-]{1,200}", field):
+                continue
+            description = str(violation.get("description", ""))
+            if secret:
+                description = description.replace(secret, "[REDACTED]")
+            description = re.sub(r"https?://\S+", "[URL]", description)[:400]
+            result.append({"field": field, "description": description})
+    return result[:10]
+
+
+def generation_config(schema, output_limit):
+    return types.GenerateContentConfig(
+        response_mime_type="application/json",
+        response_json_schema=bounded_schema()
+        if schema is BoundedExtraction
+        else structured_schema(schema),
+        max_output_tokens=output_limit,
+        automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
+    )
+
+
 class GeminiRole:
     semantic_findings_required = True
 
-    def __init__(self, role, model, *, max_input_tokens=20000, max_output_tokens=8192):
+    def __init__(
+        self,
+        role,
+        model,
+        *,
+        max_input_tokens=20000,
+        max_output_tokens=8192,
+        bounded_transport=False,
+    ):
         if role not in {"extractor", "reviewer"} or not model:
             raise ValueError("Explicit role/model required")
         if not 1024 <= max_input_tokens <= 20000 or not 1024 <= max_output_tokens <= 8192:
@@ -44,6 +100,7 @@ class GeminiRole:
         self.role, self.model = role, model
         self.identity = f"gemini:{role}:{model}:corpus-policy-v1"
         self.max_input_tokens, self.max_output_tokens = max_input_tokens, max_output_tokens
+        self.bounded_transport = bounded_transport
         self.input_hash = digest(
             {
                 "implementation": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
@@ -52,6 +109,13 @@ class GeminiRole:
                 "extraction_schema": RawPolicyExtraction.model_json_schema(),
                 "review_schema": AIReview.model_json_schema(),
                 "transport_schema": structured_schema(RawPolicyExtraction),
+                "bounded_transport": bounded_transport,
+                "bounded_schema": bounded_schema() if bounded_transport else None,
+                "bounded_normalization": hashlib.sha256(
+                    Path(__file__).with_name("transport.py").read_bytes()
+                ).hexdigest()
+                if bounded_transport
+                else None,
                 "input_limit": max_input_tokens,
                 "output_limit": max_output_tokens,
                 "fallback_enabled": settings().ai_openai_fallback_enabled,
@@ -77,6 +141,9 @@ class GeminiRole:
                     self.last_usage["provider_diagnostic"] = re.sub(
                         r"https?://\S+", "[URL]", message
                     )[:600]
+                    self.last_usage["field_errors"] = safe_field_errors(
+                        error, settings().gemini_api_key
+                    )
                 from opportunity_platform.ingestion.providers import controlled_worker_fallback
 
                 return controlled_worker_fallback(self, schema, system, payload, error)
@@ -92,6 +159,7 @@ class GeminiRole:
             "prompt_schema_hash": self.input_hash,
         }
         config = settings()
+        self.last_usage["request_stage"] = "cost_gate"
         authorized = config.ai_ingestion_live_enabled or (
             config.process_role == "ingestion_worker"
             and (config.paid_ai_worker_enabled or config.gemini_free_worker_enabled)
@@ -99,12 +167,15 @@ class GeminiRole:
         if not authorized or not config.gemini_api_key:
             raise ValueError("Live Gemini ingestion is disabled or unconfigured")
         content = json.dumps(payload, ensure_ascii=False)
+        transport_schema = (
+            bounded_schema() if schema is BoundedExtraction else structured_schema(schema)
+        )
         if len(payload.get("untrusted_source_pages", [])) > 20:
             raise ValueError("Worker page budget exceeded")
         counted_permit = budget.reserve(
             "gemini",
             self.model,
-            len((system + json.dumps(schema.model_json_schema()) + content).encode()) + 1024,
+            len((system + json.dumps(transport_schema) + content).encode()) + 1024,
             0,
         )
         with genai.Client(
@@ -114,8 +185,9 @@ class GeminiRole:
             ),
         ) as client:
             self.last_usage["external_api_calls"] = 1
+            self.last_usage["request_stage"] = "count_tokens"
             counted = client.models.count_tokens(
-                model=self.model, contents=[system, json.dumps(schema.model_json_schema()), content]
+                model=self.model, contents=[system, json.dumps(transport_schema), content]
             )
             budget.settle(counted_permit, {"input_tokens": 0, "output_tokens": 0})
             if counted.total_tokens is None or counted.total_tokens + 1024 > self.max_input_tokens:
@@ -124,15 +196,12 @@ class GeminiRole:
                 "gemini", self.model, counted.total_tokens + 1024, self.max_output_tokens
             )
             self.last_usage["external_api_calls"] = 2
+            self.last_usage["request_stage"] = "generate_content"
             response = client.models.generate_content(
                 model=self.model,
                 contents=content,
-                config=types.GenerateContentConfig(
-                    system_instruction=system,
-                    response_mime_type="application/json",
-                    response_json_schema=structured_schema(schema),
-                    max_output_tokens=self.max_output_tokens,
-                    automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
+                config=generation_config(schema, self.max_output_tokens).model_copy(
+                    update={"system_instruction": system}
                 ),
             )
         usage = response.usage_metadata
@@ -140,6 +209,9 @@ class GeminiRole:
             "external_api_calls": 2,
             "provider": "gemini",
             "model": self.model,
+            "request_stage": "validate_response",
+            "generation_succeeded": True,
+            "transport_schema_valid": False,
             "model_version": getattr(response, "model_version", None),
             "extractor_version": self.identity,
             "prompt_schema_hash": digest({"system": system, "schema": schema.model_json_schema()}),
@@ -156,13 +228,16 @@ class GeminiRole:
         ):
             raise ValueError("Model output incomplete or blocked")
         parsed = schema.model_validate_json(response.text)
+        consumed["transport_schema_valid"] = True
         return parsed, consumed
 
     def extract(self, audited, focus, feedback=None, previous=None):
         if self.role != "extractor":
             raise ValueError("Separate extractor role required")
+        if self.bounded_transport and (len(audited.pages) > 3 or len(audited.clauses) > 24):
+            raise ValueError("Bounded transport supports at most three pages and 24 clauses")
         result, usage = self.generate(
-            RawPolicyExtraction,
+            BoundedExtraction if self.bounded_transport else RawPolicyExtraction,
             SYSTEM + "\nAccount for every supplied "
             "material clause ID in coverage. Represent with requirement indexes or field_names; "
             "unrepresentable/excluded clauses require explicit reasons and human review. "
@@ -173,8 +248,24 @@ class GeminiRole:
                 "clauses": [c.model_dump() for c in audited.clauses],
                 "feedback": feedback or [],
                 "previous_untrusted_candidate": previous,
+                **(
+                    {
+                        "source_hash": audited.record.sha256,
+                        "allowed_fact_keys": list(get_args(FactKey)),
+                        "wire_instructions": (
+                            "Echo source_hash exactly. Empty optional strings mean unknown. "
+                            "value_json is JSON scalar/list/null; use only allowed fact keys. "
+                            "Include evidence; never invent a passage. This excerpt is incomplete."
+                        ),
+                    }
+                    if self.bounded_transport
+                    else {}
+                ),
             },
         )
+        if self.bounded_transport:
+            self.last_usage["request_stage"] = "normalize_and_validate_source"
+            result = result.to_raw(audited.record.sha256, audited.pages, validation_sink=usage)
         return result.normalized(), usage
 
     def review(self, audited, candidate):

@@ -142,3 +142,11 @@ production build passed; the existing large-chunk advisory remains. Backend Ruff
 `git diff --check`, and OpenAPI/TypeScript regeneration passed with no contract changes.
 The final immutable-source demonstration **plan-only** command passed. No Docker/model build,
 production deployment/import, source acquisition, OCR or scheduler activation was performed.
+
+## Subsequent offline transport investigation
+
+See [the current offline SDK audit and proposed request](gemini-offline-transport-audit.md).
+It corrects the earlier implication that reference/union keywords were unsupported: Google's
+GenerateContent JSON-schema API explicitly supports them. The exact 400 field is still unknown.
+A smaller explicit excerpt envelope and truthful stage diagnostics are locally tested; no
+additional real request has run under this follow-up. A new exact one-request approval is required.

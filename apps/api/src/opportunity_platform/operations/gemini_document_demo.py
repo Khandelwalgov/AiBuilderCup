@@ -5,7 +5,9 @@ Output is an evidence-bound, incomplete candidate dossier for human review, not 
 """
 
 import argparse
+import importlib.metadata
 import json
+import re
 from pathlib import Path
 
 from opportunity_platform.corpus.schemas import ManifestRecord
@@ -17,8 +19,25 @@ from opportunity_platform.ingestion.corpus_policy.archive import (
     registry_from,
 )
 from opportunity_platform.ingestion.corpus_policy.live import GeminiRole
+from opportunity_platform.ingestion.corpus_policy.transport import bounded_schema
 from opportunity_platform.ingestion.corpus_policy.validation import digest
 from opportunity_platform.ingestion.corpus_policy.workflow import run_pipeline
+
+
+def attempt_key(report, prompt_schema_hash, focus):
+    # Account verification timestamps and report paths are audit data, not attempt identity.
+    return "free-document:" + digest(
+        {
+            "source_hash": report["source"]["sha256"],
+            "selected_text_sha256": report["selected_text_sha256"],
+            "selected_pages": report["selected_pages"],
+            "model": report["model"],
+            "focus": focus,
+            "prompt_schema_hash": prompt_schema_hash,
+            "independent_review_authorized": report["independent_review_authorized"],
+            "maximum_role_requests": report["maximum_role_requests"],
+        }
+    )
 
 
 def main():
@@ -31,6 +50,7 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--execute-authorized-free-worker", action="store_true")
     parser.add_argument("--authorize-independent-review", action="store_true")
+    parser.add_argument("--local-schema", help="Exact isolated gemini_demo_<32 hex> schema")
     args = parser.parse_args()
     # Snapshot identity cannot select arbitrary files outside the preserved packet directory.
     import uuid
@@ -80,6 +100,13 @@ def main():
         "maximum_external_calls": 8 if args.authorize_independent_review else 2,
         "maximum_repair_cycles": 1 if args.authorize_independent_review else 0,
         "independent_review_authorized": args.authorize_independent_review,
+        "transport": {
+            "name": "bounded_extraction_v1",
+            "schema_sha256": digest(bounded_schema()),
+            "sdk_version": importlib.metadata.version("google-genai"),
+            "max_input_tokens": 20000,
+            "max_output_tokens": 4096,
+        },
     }
     if args.output.exists():
         raise ValueError("Evidence output already exists; never overwrite a genuine attempt")
@@ -92,9 +119,33 @@ def main():
 
         if make_url(settings().database_url).host not in {"localhost", "127.0.0.1", "::1"}:
             raise ValueError("This demonstration requires an isolated local PostgreSQL database")
+        config = settings()
+        if (
+            config.paid_ai_worker_enabled
+            or config.ai_openai_fallback_enabled
+            or (config.ai_global_budget_usd != 0 or config.ai_run_budget_usd != 0)
+        ):
+            raise ValueError(
+                "This operation authorizes free Gemini only; paid fallback is forbidden"
+            )
+        if not args.local_schema or not re.fullmatch(
+            r"gemini_demo_[a-f0-9]{32}", args.local_schema
+        ):
+            raise ValueError("An explicitly selected isolated local demo schema is required")
+
+        from sqlalchemy import text
+        from sqlalchemy.orm import Session
+
+        from opportunity_platform.db.session import engine
+
+        with Session(engine) as session:
+            if session.scalar(text("SELECT current_schema()")) != args.local_schema:
+                raise ValueError("Database search_path does not select the isolated demo schema")
 
         report["account_proof"] = verify(args.model)
-        extractor = GeminiRole("extractor", args.model, max_output_tokens=4096)
+        extractor = GeminiRole(
+            "extractor", args.model, max_output_tokens=4096, bounded_transport=True
+        )
         if args.authorize_independent_review:
             reviewer = GeminiRole("reviewer", args.model, max_output_tokens=4096)
         else:
@@ -111,12 +162,7 @@ def main():
             "Keep each quote concise and return no more than six requirements. "
             "Include bounded_excerpt_not_complete_policy in review_flags."
         )
-        key = "free-document:" + digest(
-            {
-                "request": report,
-                "prompt_schema_hash": extractor.input_hash,
-            }
-        )
+        key = attempt_key(report, extractor.input_hash, focus)
         from sqlalchemy import func, select
         from sqlalchemy.orm import Session
 
@@ -143,6 +189,26 @@ def main():
                     max_repairs=1 if args.authorize_independent_review else 0,
                 )
         report.update(mode="genuine_provider_attempt", workflow=outcome.model_dump(mode="json"))
+        report["validation_stages"] = {
+            key: bool(extractor.last_usage.get(key))
+            for key in [
+                "generation_succeeded",
+                "transport_schema_valid",
+                "original_contract_valid",
+                "source_passages_valid",
+            ]
+        }
+        report["validation_stages"].update(
+            incomplete_draft_awaiting_human_review=outcome.candidate is not None,
+            independent_ai_review_completed=bool(
+                args.authorize_independent_review
+                and any(
+                    stage.independent_review
+                    and not any(issue.code == "independent_review_failed" for issue in stage.issues)
+                    for stage in outcome.stages
+                )
+            ),
+        )
     with args.output.open("x") as stream:
         json.dump(report, stream, ensure_ascii=False, indent=2)
         stream.write("\n")
