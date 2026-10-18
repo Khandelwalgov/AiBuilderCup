@@ -1068,10 +1068,6 @@ export interface components {
         Comparison: {
             /** Title */
             title: string;
-            result: components["schemas"]["Result"];
-            baseline: components["schemas"]["Result"];
-            /** Changed */
-            changed: boolean;
             rule: components["schemas"]["Rule-Output"];
             /** Snapshot Id */
             snapshot_id: string;
@@ -1089,6 +1085,29 @@ export interface components {
             semantic: string;
             /** Evidence Available */
             evidence_available: boolean;
+            /**
+             * Applicability
+             * @default Captured source baseline; current application availability is unverified.
+             */
+            applicability: string;
+            /**
+             * Exceptions
+             * @default []
+             */
+            exceptions: string[];
+            /**
+             * Unresolved Conditions
+             * @default []
+             */
+            unresolved_conditions: string[];
+            /** Interpretation Note */
+            interpretation_note?: string | null;
+            /** Visual Review Image Sha256 */
+            visual_review_image_sha256?: string | null;
+            result: components["schemas"]["Result"];
+            baseline: components["schemas"]["Result"];
+            /** Changed */
+            changed: boolean;
             /** Gap Kind */
             gap_kind: string;
         };
@@ -1098,9 +1117,9 @@ export interface components {
              * Op
              * @enum {string}
              */
-            op: "eq" | "gte" | "lte" | "in" | "document" | "unknown";
+            op: "eq" | "gte" | "lte" | "gt" | "lt" | "in" | "document" | "unknown";
             /** Fact */
-            fact?: ("age" | "annual_personal_income" | "annual_parental_income" | "annual_household_income" | "disability_percentage" | "nationality" | "domicile_state" | "domicile_district" | "residence_state" | "residence_district" | "education_level" | "current_education_level" | "highest_completed_education" | "business_registration_state" | "business_registration_district" | "business_operating_status" | "enrollment_mode" | "school_recognized_or_government" | "school_government" | "business_udyam_registered" | "business_size" | "business_sector" | "business_similar_assistance" | "student_status" | "employment_status" | "has_bank_account" | "auto_debit_consent" | "has_income_certificate" | "business_registered" | "business_turnover" | "has_registration_certificate" | "has_disability_certificate" | "has_udid_certificate") | null;
+            fact?: ("age" | "annual_personal_income" | "annual_parental_income" | "annual_household_income" | "disability_percentage" | "nationality" | "domicile_state" | "domicile_district" | "residence_state" | "residence_district" | "education_level" | "current_education_level" | "highest_completed_education" | "business_registration_state" | "business_registration_district" | "business_operating_status" | "enrollment_mode" | "school_recognized_or_government" | "school_government" | "business_udyam_registered" | "business_size" | "business_sector" | "business_similar_assistance" | "business_udyam_assist_registered" | "business_gst_registered" | "business_online_trade_scope" | "beneficiary_category" | "category_domicile_recognized" | "institution_recognized" | "course_recognized" | "studying_in_india" | "receives_other_scholarship" | "other_support_only_incidental" | "same_stage_second_course" | "top_class_school_listed" | "top_class_college_listed" | "orphan_supported_by_guardian" | "parental_income_salary_basis" | "education_admission_year" | "student_status" | "employment_status" | "has_bank_account" | "auto_debit_consent" | "has_income_certificate" | "business_registered" | "business_turnover" | "has_registration_certificate" | "has_disability_certificate" | "has_udid_certificate") | null;
             /** Value */
             value?: string | number | boolean | (string | number | boolean)[] | null;
             /** Income Period */
@@ -1457,7 +1476,7 @@ export interface components {
              * Key
              * @enum {string}
              */
-            key: "age" | "annual_personal_income" | "annual_parental_income" | "annual_household_income" | "disability_percentage" | "nationality" | "domicile_state" | "domicile_district" | "residence_state" | "residence_district" | "education_level" | "current_education_level" | "highest_completed_education" | "business_registration_state" | "business_registration_district" | "business_operating_status" | "enrollment_mode" | "school_recognized_or_government" | "school_government" | "business_udyam_registered" | "business_size" | "business_sector" | "business_similar_assistance" | "student_status" | "employment_status" | "has_bank_account" | "auto_debit_consent" | "has_income_certificate" | "business_registered" | "business_turnover" | "has_registration_certificate" | "has_disability_certificate" | "has_udid_certificate";
+            key: "age" | "annual_personal_income" | "annual_parental_income" | "annual_household_income" | "disability_percentage" | "nationality" | "domicile_state" | "domicile_district" | "residence_state" | "residence_district" | "education_level" | "current_education_level" | "highest_completed_education" | "business_registration_state" | "business_registration_district" | "business_operating_status" | "enrollment_mode" | "school_recognized_or_government" | "school_government" | "business_udyam_registered" | "business_size" | "business_sector" | "business_similar_assistance" | "business_udyam_assist_registered" | "business_gst_registered" | "business_online_trade_scope" | "beneficiary_category" | "category_domicile_recognized" | "institution_recognized" | "course_recognized" | "studying_in_india" | "receives_other_scholarship" | "other_support_only_incidental" | "same_stage_second_course" | "top_class_school_listed" | "top_class_college_listed" | "orphan_supported_by_guardian" | "parental_income_salary_basis" | "education_admission_year" | "student_status" | "employment_status" | "has_bank_account" | "auto_debit_consent" | "has_income_certificate" | "business_registered" | "business_turnover" | "has_registration_certificate" | "has_disability_certificate" | "has_udid_certificate";
             /** Value */
             value?: string | number | boolean | null;
             /** Valid From */
@@ -2357,6 +2376,11 @@ export interface components {
              * @constant
              */
             eligibility_verified: false;
+            /**
+             * Provisional Conditions
+             * @default []
+             */
+            provisional_conditions: components["schemas"]["SourceCondition"][];
             /** Limitations */
             limitations: string[];
             /** Sources */
@@ -2806,6 +2830,47 @@ export interface components {
             text: string;
             /** Source Url */
             source_url: string;
+        };
+        /** SourceCondition */
+        SourceCondition: {
+            /** Title */
+            title: string;
+            rule: components["schemas"]["Rule-Output"];
+            /** Snapshot Id */
+            snapshot_id: string;
+            /** Source Hash */
+            source_hash: string;
+            /** Source Url */
+            source_url: string;
+            /** Page */
+            page: number;
+            /** Passage */
+            passage: string;
+            /** Action */
+            action: string | null;
+            /** Semantic */
+            semantic: string;
+            /** Evidence Available */
+            evidence_available: boolean;
+            /**
+             * Applicability
+             * @default Captured source baseline; current application availability is unverified.
+             */
+            applicability: string;
+            /**
+             * Exceptions
+             * @default []
+             */
+            exceptions: string[];
+            /**
+             * Unresolved Conditions
+             * @default []
+             */
+            unresolved_conditions: string[];
+            /** Interpretation Note */
+            interpretation_note?: string | null;
+            /** Visual Review Image Sha256 */
+            visual_review_image_sha256?: string | null;
         };
         /** SourceItem */
         SourceItem: {

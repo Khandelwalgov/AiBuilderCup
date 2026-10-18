@@ -604,6 +604,7 @@
   margin: 24px 0;
 }
 .research-guide-card {
+  align-self: start;
   min-width: 0;
   overflow-wrap: anywhere;
 }

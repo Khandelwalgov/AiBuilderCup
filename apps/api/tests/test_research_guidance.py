@@ -154,6 +154,25 @@ def real_guidance(client, db):
             facts=[FactInput(key="domicile_state", value="Rajasthan")],
         ),
     )
+    # Complete already-captured public evidence pages, never new acquisition or changed snapshots.
+    import json
+    from pathlib import Path
+
+    from opportunity_platform.db.models import SourceSnapshot
+
+    evidence = json.loads(
+        (
+            Path(__file__).resolve().parents[3] / "data/research/condition-evidence-v2.json"
+        ).read_text()
+    )
+    for source in evidence["sources"]:
+        snapshot = db.get(SourceSnapshot, source["snapshot_id"])
+        assert snapshot and snapshot.content_hash == source["content_hash"]
+        assert snapshot.source_url == source["source_url"]
+        pages = {p["page"]: p for p in snapshot.pages}
+        for page in source["pages"]:
+            pages[page["page"]] = page
+        snapshot.pages = list(pages.values())
     db.commit()
     return client, db
 

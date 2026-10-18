@@ -68,6 +68,19 @@ class ScenarioResponse(BaseModel):
 
 
 PERSON_KEYS = {
+    "beneficiary_category",
+    "category_domicile_recognized",
+    "institution_recognized",
+    "course_recognized",
+    "studying_in_india",
+    "receives_other_scholarship",
+    "other_support_only_incidental",
+    "same_stage_second_course",
+    "top_class_school_listed",
+    "top_class_college_listed",
+    "orphan_supported_by_guardian",
+    "parental_income_salary_basis",
+    "education_admission_year",
     "age",
     "annual_personal_income",
     "annual_parental_income",
@@ -86,6 +99,9 @@ PERSON_KEYS = {
     "employment_status",
 }
 BUSINESS_KEYS = {
+    "business_udyam_assist_registered",
+    "business_gst_registered",
+    "business_online_trade_scope",
     "business_udyam_registered",
     "business_size",
     "business_sector",

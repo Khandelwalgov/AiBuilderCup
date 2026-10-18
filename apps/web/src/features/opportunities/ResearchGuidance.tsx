@@ -1,3 +1,4 @@
+import { ConditionLogic } from './ConditionLogic';
 import { useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
@@ -240,6 +241,54 @@ function SubjectResearch({
                 : 'No research matches this context and these filters. You can also browse the full public catalogue.'}
             </p>
           )}
+          {!!response.actions?.length && (
+            <section aria-label={hi ? 'शोध तैयारी के कार्य' : 'Research readiness tasks'}>
+              <h3>{hi ? 'दोबारा उपयोग होने वाले तैयारी के कदम' : 'Reusable readiness steps'}</h3>
+              {response.actions.map((action) => (
+                <article className="panel" key={action.id}>
+                  <h4>{action.title}</h4>
+                  <p>
+                    {action.opportunities.length}{' '}
+                    {hi ? 'संबंधित घटक / अवसर' : 'affected components / opportunities'} ·{' '}
+                    {action.status}
+                  </p>
+                  <p>
+                    {hi
+                      ? 'कार्य पूरा करना प्रमाण या पात्रता सत्यापित नहीं करता।'
+                      : action.explanation}
+                  </p>
+                  {action.opportunities.map((op, i) => (
+                    <p key={i}>
+                      <ContextLink
+                        to={`/government-sources?source=${op.snapshot_id}&page=${op.page}`}
+                      >
+                        {String(op.title)} · {hi ? 'पृष्ठ' : 'Page'} {String(op.page)}
+                      </ContextLink>
+                    </p>
+                  ))}
+                  {!response.hypothetical && (
+                    <button
+                      disabled={progress.isPending}
+                      onClick={() =>
+                        progress.mutate({
+                          id: action.id,
+                          status: action.status === 'completed' ? 'pending' : 'completed',
+                        })
+                      }
+                    >
+                      {action.status === 'completed'
+                        ? hi
+                          ? 'दोबारा खोलें'
+                          : 'Reopen task'
+                        : hi
+                          ? 'अपनी तैयारी का कार्य पूरा चिह्नित करें'
+                          : 'Mark my preparation task complete'}
+                    </button>
+                  )}
+                </article>
+              ))}
+            </section>
+          )}
           <div className="card-grid">
             {response.items.map((item) => (
               <article
@@ -284,7 +333,7 @@ function SubjectResearch({
                   </details>
                 )}
                 {item.conditions?.length ? (
-                  <details open={variant === 'scenario' || variant === 'plan'}>
+                  <details open={variant === 'scenario' && item.conditions.some((c) => c.changed)}>
                     <summary>
                       {hi ? 'शर्तें, अंतर और अगले कदम' : 'Conditions, gaps and next steps'}
                     </summary>
@@ -318,12 +367,43 @@ function SubjectResearch({
                             : c.gap_kind.replaceAll('_', ' ')}
                         </p>
                         <p>{c.result.reason}</p>
+                        {c.rule.op !== 'condition' && (
+                          <ConditionLogic rule={c.rule} result={c.result} hi={hi} />
+                        )}
+                        {c.rule.op === 'condition' && c.rule.condition?.income_definition && (
+                          <ConditionLogic rule={c.rule} hi={hi} />
+                        )}
+                        {c.interpretation_note && <p role="note">{c.interpretation_note}</p>}
+                        {!!c.exceptions?.length && (
+                          <details>
+                            <summary>
+                              {hi ? 'स्रोत के अपवाद और सीमाएँ' : 'Source exceptions and limits'}
+                            </summary>
+                            <ul>
+                              {c.exceptions.map((x, i) => (
+                                <li key={i}>{x}</li>
+                              ))}
+                            </ul>
+                          </details>
+                        )}
+                        {!!c.unresolved_conditions?.length && (
+                          <details>
+                            <summary>
+                              {hi ? 'कौनसी शर्तें अभी अज्ञात हैं' : 'Conditions still unassessed'}
+                            </summary>
+                            <ul>
+                              {c.unresolved_conditions.map((x, i) => (
+                                <li key={i}>{x}</li>
+                              ))}
+                            </ul>
+                          </details>
+                        )}
                         {!response.hypothetical &&
                           !item.fictional &&
                           c.result.missing.map((key) => (
                             <p key={key}>
                               <ContextLink
-                                to={`${item.subject_kind === 'business' ? '/businesses' : '/profile'}?kind=${item.subject_kind}${context.options.some((o) => o.id === item.subject_id) ? `&id=${item.subject_id}` : ''}&mode=${item.subject_kind === 'business' ? 'business' : context.options.some((o) => o.id === item.subject_id) ? 'member' : 'me'}&field=${key}`}
+                                to={`${item.subject_kind === 'business' ? '/businesses' : '/profile'}?kind=${item.subject_kind}${context.options.some((o) => o.id === item.subject_id) ? `&id=${item.subject_id}` : ''}&mode=${item.subject_kind === 'business' ? 'business' : context.options.some((o) => o.id === item.subject_id) ? 'member' : 'me'}&field=${key}&research_listing=${item.listing.id}&criterion=${encodeURIComponent(c.semantic)}`}
                               >
                                 {hi ? 'यह जानकारी जाँचें / दें' : 'Check or provide this fact'}:{' '}
                                 {key.replaceAll('_', ' ')}
@@ -423,54 +503,6 @@ function SubjectResearch({
                 {hi ? 'अगले परिणाम' : 'More personalized results'}
               </button>
             </div>
-          )}
-          {!!response.actions?.length && (
-            <section aria-label={hi ? 'शोध तैयारी के कार्य' : 'Research readiness tasks'}>
-              <h3>{hi ? 'दोबारा उपयोग होने वाले तैयारी के कदम' : 'Reusable readiness steps'}</h3>
-              {response.actions.map((action) => (
-                <article className="panel" key={action.id}>
-                  <h4>{action.title}</h4>
-                  <p>
-                    {action.opportunities.length}{' '}
-                    {hi ? 'संबंधित घटक / अवसर' : 'affected components / opportunities'} ·{' '}
-                    {action.status}
-                  </p>
-                  <p>
-                    {hi
-                      ? 'कार्य पूरा करना प्रमाण या पात्रता सत्यापित नहीं करता।'
-                      : action.explanation}
-                  </p>
-                  {action.opportunities.map((op, i) => (
-                    <p key={i}>
-                      <ContextLink
-                        to={`/government-sources?source=${op.snapshot_id}&page=${op.page}`}
-                      >
-                        {String(op.title)} · {hi ? 'पृष्ठ' : 'Page'} {String(op.page)}
-                      </ContextLink>
-                    </p>
-                  ))}
-                  {!response.hypothetical && (
-                    <button
-                      disabled={progress.isPending}
-                      onClick={() =>
-                        progress.mutate({
-                          id: action.id,
-                          status: action.status === 'completed' ? 'pending' : 'completed',
-                        })
-                      }
-                    >
-                      {action.status === 'completed'
-                        ? hi
-                          ? 'दोबारा खोलें'
-                          : 'Reopen task'
-                        : hi
-                          ? 'अपनी तैयारी का कार्य पूरा चिह्नित करें'
-                          : 'Mark my preparation task complete'}
-                    </button>
-                  )}
-                </article>
-              ))}
-            </section>
           )}
           {progress.isError && <p role="alert">{progress.error.message}</p>}
         </>

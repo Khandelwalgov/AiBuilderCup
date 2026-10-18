@@ -16,7 +16,7 @@ from opportunity_platform.profiles.persistence import reconcile, revision
 class ProfileWrite(BaseModel):
     model_config = ConfigDict(extra="forbid")
     display_name: str = Field(min_length=1, max_length=80)
-    facts: list[FactInput] = Field(max_length=30)
+    facts: list[FactInput] = Field(max_length=48)
     expected_revision: str | None = Field(default=None, min_length=64, max_length=64)
 
     @model_validator(mode="after")

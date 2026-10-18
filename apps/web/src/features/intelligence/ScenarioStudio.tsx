@@ -126,6 +126,96 @@ const fields: Array<{
     type: 'number',
     income: true,
   },
+  {
+    key: 'beneficiary_category',
+    en: 'Beneficiary category, if you choose to provide it',
+    hi: 'लाभार्थी वर्ग, यदि आप बताना चाहें',
+    options: ['SC', 'ST', 'OBC', 'EBC', 'DNT', 'other'],
+  },
+  {
+    key: 'category_domicile_recognized',
+    en: 'Category recognized for your domicile state?',
+    hi: 'क्या मूल निवास राज्य में यह वर्ग मान्य है?',
+    type: 'boolean',
+  },
+  {
+    key: 'institution_recognized',
+    en: 'Is the current institution recognized?',
+    hi: 'क्या वर्तमान शिक्षण संस्था मान्यता प्राप्त है?',
+    type: 'boolean',
+  },
+  {
+    key: 'course_recognized',
+    en: 'Is the current course recognized?',
+    hi: 'क्या वर्तमान पाठ्यक्रम मान्यता प्राप्त है?',
+    type: 'boolean',
+  },
+  {
+    key: 'studying_in_india',
+    en: 'Is your current study in India?',
+    hi: 'क्या आप अभी भारत में पढ़ रहे हैं?',
+    type: 'boolean',
+  },
+  {
+    key: 'receives_other_scholarship',
+    en: 'Currently receiving another scholarship or stipend?',
+    hi: 'क्या अभी अन्य छात्रवृत्ति या वृत्तिका मिल रही है?',
+    type: 'boolean',
+  },
+  {
+    key: 'other_support_only_incidental',
+    en: 'Is all other support only books, equipment or lodging expenses?',
+    hi: 'क्या अन्य सहायता केवल पुस्तक, उपकरण या आवास व्यय है?',
+    type: 'boolean',
+  },
+  {
+    key: 'same_stage_second_course',
+    en: 'A second course at an already completed education stage?',
+    hi: 'क्या पूर्ण किए स्तर पर दूसरा पाठ्यक्रम है?',
+    type: 'boolean',
+  },
+  {
+    key: 'top_class_school_listed',
+    en: 'Current school on the applicable Top Class School list?',
+    hi: 'क्या वर्तमान विद्यालय लागू टॉप क्लास सूची में है?',
+    type: 'boolean',
+  },
+  {
+    key: 'top_class_college_listed',
+    en: 'Current institution on the applicable Top Class College list?',
+    hi: 'क्या वर्तमान संस्था लागू टॉप क्लास कॉलेज सूची में है?',
+    type: 'boolean',
+  },
+  {
+    key: 'orphan_supported_by_guardian',
+    en: 'Orphan supported by a guardian, as this source defines?',
+    hi: 'क्या स्रोत की परिभाषा अनुसार अभिभावक के संरक्षण में अनाथ हैं?',
+    type: 'boolean',
+  },
+  {
+    key: 'parental_income_salary_basis',
+    en: 'Does the cited salaried-parent income timing apply?',
+    hi: 'क्या उद्धृत वेतनभोगी माता-पिता की आय अवधि लागू है?',
+    type: 'boolean',
+  },
+  {
+    key: 'education_admission_year',
+    en: 'Academic year of admission to this course (e.g. 2026-27)',
+    hi: 'इस पाठ्यक्रम में प्रवेश का शैक्षणिक वर्ष (जैसे 2026-27)',
+  },
+  {
+    key: 'business_udyam_assist_registered',
+    en: 'Registered on Udyam Assist Platform',
+    hi: 'उद्यम असिस्ट प्लेटफ़ॉर्म पर पंजीकृत',
+    type: 'boolean',
+  },
+  { key: 'business_gst_registered', en: 'GST registered', hi: 'जीएसटी पंजीकृत', type: 'boolean' },
+  {
+    key: 'business_online_trade_scope',
+    en: 'Online business across state boundaries',
+    hi: 'ऑनलाइन व्यवसाय की राज्य सीमा',
+    options: ['intra_state', 'inter_state', 'unknown'],
+  },
 ];
 const labels: Record<string, [string, string]> = {
   below_IX: ['Below class IX', 'कक्षा IX से नीचे'],
@@ -385,9 +475,6 @@ function Studio() {
           reset();
         }}
       />
-      {!mutation.data && correct && context.available && params.get('development') !== 'true' && (
-        <ResearchGuidance variant="scenario" mode={mode} />
-      )}
       <section className="panel" style={{ padding: 20 }}>
         <h2>
           {hi ? 'वास्तविक आधार' : 'Actual base'} ·{' '}
@@ -395,7 +482,7 @@ function Studio() {
         </h2>
         <p>
           {hi
-            ? 'सहेजी गई अधिकृत जानकारी आधार है। बदलाव काल्पनिक हैं। शोध सूची केवल स्थान के बदलाव पर प्रतिक्रिया देती है; पात्रता सत्यापित नहीं है।'
+            ? 'सहेजी गई अधिकृत जानकारी आधार है। बदलाव काल्पनिक हैं। केवल उद्धृत और दर्ज शर्तों की तुलना होती है; शेष शर्तें और पात्रता असत्यापित हैं।'
             : 'The server uses your saved facts as the starting point. Changes below are hypothetical. Research comparisons respond only to mapped, cited conditions. Unmapped conditions remain unknown and eligibility policies still require review.'}
         </p>
         <FactEditor
@@ -560,6 +647,9 @@ function Studio() {
         </button>
         <button onClick={reset}>{hi ? 'रीसेट / त्यागें' : 'Reset / discard'}</button>
       </div>
+      {!mutation.data && correct && context.available && params.get('development') !== 'true' && (
+        <ResearchGuidance variant="scenario" mode={mode} />
+      )}
       {mutation.isPending && (
         <p role="status">
           {hi

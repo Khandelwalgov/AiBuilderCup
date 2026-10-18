@@ -183,7 +183,7 @@ export const questions: Question[] = [
   {
     key: 'annual_parental_income',
     category: 'income',
-    label: ['Annual income of your parents', 'माता-पिता की वार्षिक आय'],
+    label: ['Annual income of the source-defined parents/guardians', 'माता-पिता की वार्षिक आय'],
     type: 'number',
     min: 0,
   },
@@ -204,6 +204,177 @@ export const questions: Question[] = [
     type: 'number',
     min: 0,
     max: 100,
+  },
+  {
+    key: 'beneficiary_category',
+    category: 'support',
+    label: [
+      'Beneficiary category, if you choose to provide it',
+      'लाभार्थी वर्ग, यदि आप बताना चाहें',
+    ],
+    type: 'select',
+    help: [
+      'Optional supplied information, not documentary verification. Leave unknown if the source interpretation or your answer is unclear.',
+      'यह वैकल्पिक बताई जानकारी है, दस्तावेज़ सत्यापन नहीं। स्रोत या उत्तर स्पष्ट न हो तो अज्ञात छोड़ें।',
+    ],
+    choices: [
+      ['SC', 'SC', 'SC'],
+      ['ST', 'ST', 'ST'],
+      ['OBC', 'OBC', 'OBC'],
+      ['EBC', 'EBC', 'EBC'],
+      ['DNT', 'DNT', 'DNT'],
+      ['other', 'other', 'other'],
+    ],
+  },
+  {
+    key: 'category_domicile_recognized',
+    category: 'support',
+    label: [
+      'Category recognized for your domicile state?',
+      'क्या मूल निवास राज्य में यह वर्ग मान्य है?',
+    ],
+    type: 'boolean',
+    help: [
+      'Optional supplied information, not documentary verification. Leave unknown if the source interpretation or your answer is unclear.',
+      'यह वैकल्पिक बताई जानकारी है, दस्तावेज़ सत्यापन नहीं। स्रोत या उत्तर स्पष्ट न हो तो अज्ञात छोड़ें।',
+    ],
+  },
+  {
+    key: 'institution_recognized',
+    category: 'education',
+    label: [
+      'Is the current institution recognized?',
+      'क्या वर्तमान शिक्षण संस्था मान्यता प्राप्त है?',
+    ],
+    type: 'boolean',
+    help: [
+      'Optional supplied information, not documentary verification. Leave unknown if the source interpretation or your answer is unclear.',
+      'यह वैकल्पिक बताई जानकारी है, दस्तावेज़ सत्यापन नहीं। स्रोत या उत्तर स्पष्ट न हो तो अज्ञात छोड़ें।',
+    ],
+  },
+  {
+    key: 'course_recognized',
+    category: 'education',
+    label: ['Is the current course recognized?', 'क्या वर्तमान पाठ्यक्रम मान्यता प्राप्त है?'],
+    type: 'boolean',
+    help: [
+      'Optional supplied information, not documentary verification. Leave unknown if the source interpretation or your answer is unclear.',
+      'यह वैकल्पिक बताई जानकारी है, दस्तावेज़ सत्यापन नहीं। स्रोत या उत्तर स्पष्ट न हो तो अज्ञात छोड़ें।',
+    ],
+  },
+  {
+    key: 'studying_in_india',
+    category: 'education',
+    label: ['Is your current study in India?', 'क्या आप अभी भारत में पढ़ रहे हैं?'],
+    type: 'boolean',
+    help: [
+      'Optional supplied information, not documentary verification. Leave unknown if the source interpretation or your answer is unclear.',
+      'यह वैकल्पिक बताई जानकारी है, दस्तावेज़ सत्यापन नहीं। स्रोत या उत्तर स्पष्ट न हो तो अज्ञात छोड़ें।',
+    ],
+  },
+  {
+    key: 'receives_other_scholarship',
+    category: 'education',
+    label: [
+      'Currently receiving another scholarship or stipend?',
+      'क्या अभी अन्य छात्रवृत्ति या वृत्तिका मिल रही है?',
+    ],
+    type: 'boolean',
+    help: [
+      'Optional supplied information, not documentary verification. Leave unknown if the source interpretation or your answer is unclear.',
+      'यह वैकल्पिक बताई जानकारी है, दस्तावेज़ सत्यापन नहीं। स्रोत या उत्तर स्पष्ट न हो तो अज्ञात छोड़ें।',
+    ],
+  },
+  {
+    key: 'other_support_only_incidental',
+    category: 'education',
+    label: [
+      'Is all other support only books, equipment or lodging expenses?',
+      'क्या अन्य सहायता केवल पुस्तक, उपकरण या आवास व्यय है?',
+    ],
+    type: 'boolean',
+    help: [
+      'Optional supplied information, not documentary verification. Leave unknown if the source interpretation or your answer is unclear.',
+      'यह वैकल्पिक बताई जानकारी है, दस्तावेज़ सत्यापन नहीं। स्रोत या उत्तर स्पष्ट न हो तो अज्ञात छोड़ें।',
+    ],
+  },
+  {
+    key: 'same_stage_second_course',
+    category: 'education',
+    label: [
+      'A second course at an already completed education stage?',
+      'क्या पूर्ण किए स्तर पर दूसरा पाठ्यक्रम है?',
+    ],
+    type: 'boolean',
+    help: [
+      'Optional supplied information, not documentary verification. Leave unknown if the source interpretation or your answer is unclear.',
+      'यह वैकल्पिक बताई जानकारी है, दस्तावेज़ सत्यापन नहीं। स्रोत या उत्तर स्पष्ट न हो तो अज्ञात छोड़ें।',
+    ],
+  },
+  {
+    key: 'top_class_school_listed',
+    category: 'education',
+    label: [
+      'Current school on the applicable Top Class School list?',
+      'क्या वर्तमान विद्यालय लागू टॉप क्लास सूची में है?',
+    ],
+    type: 'boolean',
+    help: [
+      'Optional supplied information, not documentary verification. Leave unknown if the source interpretation or your answer is unclear.',
+      'यह वैकल्पिक बताई जानकारी है, दस्तावेज़ सत्यापन नहीं। स्रोत या उत्तर स्पष्ट न हो तो अज्ञात छोड़ें।',
+    ],
+  },
+  {
+    key: 'top_class_college_listed',
+    category: 'education',
+    label: [
+      'Current institution on the applicable Top Class College list?',
+      'क्या वर्तमान संस्था लागू टॉप क्लास कॉलेज सूची में है?',
+    ],
+    type: 'boolean',
+    help: [
+      'Optional supplied information, not documentary verification. Leave unknown if the source interpretation or your answer is unclear.',
+      'यह वैकल्पिक बताई जानकारी है, दस्तावेज़ सत्यापन नहीं। स्रोत या उत्तर स्पष्ट न हो तो अज्ञात छोड़ें।',
+    ],
+  },
+  {
+    key: 'orphan_supported_by_guardian',
+    category: 'support',
+    label: [
+      'Orphan supported by a guardian, as this source defines?',
+      'क्या स्रोत की परिभाषा अनुसार अभिभावक के संरक्षण में अनाथ हैं?',
+    ],
+    type: 'boolean',
+    help: [
+      'Optional supplied information, not documentary verification. Leave unknown if the source interpretation or your answer is unclear.',
+      'यह वैकल्पिक बताई जानकारी है, दस्तावेज़ सत्यापन नहीं। स्रोत या उत्तर स्पष्ट न हो तो अज्ञात छोड़ें।',
+    ],
+  },
+  {
+    key: 'parental_income_salary_basis',
+    category: 'income',
+    label: [
+      'Does the cited salaried-parent income timing apply?',
+      'क्या उद्धृत वेतनभोगी माता-पिता की आय अवधि लागू है?',
+    ],
+    type: 'boolean',
+    help: [
+      'Optional supplied information, not documentary verification. Leave unknown if the source interpretation or your answer is unclear.',
+      'यह वैकल्पिक बताई जानकारी है, दस्तावेज़ सत्यापन नहीं। स्रोत या उत्तर स्पष्ट न हो तो अज्ञात छोड़ें।',
+    ],
+  },
+  {
+    key: 'education_admission_year',
+    category: 'education',
+    label: [
+      'Academic year of admission to this course (e.g. 2026-27)',
+      'इस पाठ्यक्रम में प्रवेश का शैक्षणिक वर्ष (जैसे 2026-27)',
+    ],
+    type: 'text',
+    help: [
+      'Optional supplied information, not documentary verification. Leave unknown if the source interpretation or your answer is unclear.',
+      'यह वैकल्पिक बताई जानकारी है, दस्तावेज़ सत्यापन नहीं। स्रोत या उत्तर स्पष्ट न हो तो अज्ञात छोड़ें।',
+    ],
   },
 ];
 export function valuesOf(facts: Fact[]): Values {

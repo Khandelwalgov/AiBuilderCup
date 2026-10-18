@@ -57,10 +57,11 @@ test('real-source automatic personal discovery, cited plan and nonpersistent enr
   await st.getByText('Conditions, gaps and next steps', { exact: true }).click();
   await expect(st).toContainText('Known mismatch');
   await expect(st).toContainText('Condition met by supplied facts');
-  await expect(st).toContainText('ST domicile recognition');
+  await expect(st).toContainText('ST category recognized for the actual domicile state');
   await expect(
     st.getByRole('link', { name: 'Official evidence · Page 3' }).first(),
   ).toHaveAttribute('href', /government-sources.*page=3/);
+  await productCapture(page, 'research-real-discover-cited');
   await st.getByRole('link', { name: 'Official evidence · Page 3' }).first().click();
   await expect(page.locator('#page-3')).toHaveAttribute('open', '');
   await expect(page.locator('#page-3')).toContainText('Conditions of eligibility');
@@ -73,6 +74,7 @@ test('real-source automatic personal discovery, cited plan and nonpersistent enr
   await expect(tasks).toContainText('Record enrollment only after it occurs');
   await tasks.getByRole('button', { name: 'Mark my preparation task complete' }).first().click();
   await expect(tasks.getByRole('button', { name: 'Reopen task' }).first()).toBeVisible();
+  await productCapture(page, 'research-real-unlock-task');
   expect(await profile(page)).toEqual(before);
   await page.goto('/scenarios');
   await page
@@ -208,10 +210,12 @@ test('real family research compares each dependent and revocation removes their 
     .filter({ hasText: 'Fictional daughter XII' })
     .filter({ hasText: 'PM-YASASVI — Pre-Matric Scholarship' });
   await expect(first).toBeVisible();
-  await expect(second).toBeVisible();
   await first.getByText('Conditions, gaps and next steps', { exact: true }).click();
-  await second.getByText('Conditions, gaps and next steps', { exact: true }).click();
   await expect(first).toContainText('Condition met by supplied facts');
+  // Expanded programme coverage is paginated; later known mismatches remain reachable.
+  await page.getByRole('button', { name: 'More personalized results' }).click();
+  await expect(second).toBeVisible();
+  await second.getByText('Conditions, gaps and next steps', { exact: true }).click();
   await expect(second).toContainText('Known mismatch');
   await productCapture(page, 'research-real-family-separate-conditions');
   const status = await page.evaluate(async (id) => {

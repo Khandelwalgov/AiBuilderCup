@@ -342,6 +342,12 @@ function workspaceLabel(key: string, hi: boolean) {
     business_registration_state: ['Registration state', 'पंजीकरण का राज्य'],
     business_registration_district: ['Registration district', 'पंजीकरण का जिला'],
     business_operating_status: ['Business activity', 'व्यवसाय की गतिविधि'],
+    business_udyam_assist_registered: [
+      'Registered on Udyam Assist Platform',
+      'उद्यम असिस्ट प्लेटफ़ॉर्म पर पंजीकृत',
+    ],
+    business_gst_registered: ['GST registered', 'जीएसटी पंजीकृत'],
+    business_online_trade_scope: ['Online trade scope', 'ऑनलाइन व्यवसाय की राज्य सीमा'],
     residence_state: ['Operating state', 'संचालन राज्य'],
     residence_district: ['Operating district', 'संचालन जिला'],
     has_registration_certificate: [
@@ -366,6 +372,9 @@ function initial(current?: Workspace) {
     legal: current?.legal_status ?? 'unknown',
     registered: get('business_registered'),
     udyam: get('business_udyam_registered'),
+    udyamAssist: get('business_udyam_assist_registered'),
+    gst: get('business_gst_registered'),
+    tradeScope: get('business_online_trade_scope'),
     size: get('business_size'),
     sector: get('business_sector'),
     similar: get('business_similar_assistance'),
@@ -445,6 +454,12 @@ function WorkspaceForm({
           ]),
       );
       const supplied: Fact[] = [
+        {
+          key: 'business_udyam_assist_registered',
+          value: draft.udyamAssist === '' ? null : draft.udyamAssist === 'true',
+        },
+        { key: 'business_gst_registered', value: draft.gst === '' ? null : draft.gst === 'true' },
+        { key: 'business_online_trade_scope', value: draft.tradeScope || null },
         {
           key: 'business_udyam_registered',
           value: draft.udyam === '' ? null : draft.udyam === 'true',
@@ -634,6 +649,19 @@ function WorkspaceForm({
                     {(
                       [
                         ['udyam', 'Udyam registered', 'उद्यम पंजीकृत', ['true', 'false']],
+                        [
+                          'udyamAssist',
+                          'Registered on Udyam Assist Platform',
+                          'उद्यम असिस्ट प्लेटफ़ॉर्म पर पंजीकृत',
+                          ['true', 'false'],
+                        ],
+                        ['gst', 'GST registered', 'जीएसटी पंजीकृत', ['true', 'false']],
+                        [
+                          'tradeScope',
+                          'Online trade scope',
+                          'ऑनलाइन व्यवसाय की राज्य सीमा',
+                          ['intra_state', 'inter_state', 'unknown'],
+                        ],
                         [
                           'size',
                           'Udyam classification',

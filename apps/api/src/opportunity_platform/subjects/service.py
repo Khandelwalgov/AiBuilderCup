@@ -67,7 +67,7 @@ class BusinessWrite(BaseModel):
     legal_status: Literal[
         "unknown", "unregistered", "sole_proprietor", "partnership", "company", "other"
     ]
-    facts: list[FactInput] = Field(default_factory=list, max_length=14)
+    facts: list[FactInput] = Field(default_factory=list, max_length=20)
     expected_revision: str | None = Field(default=None, min_length=64, max_length=64)
 
 
@@ -153,6 +153,9 @@ def replace_facts(session, kind, identifier, facts):
         not in {
             "business_registered",
             "business_udyam_registered",
+            "business_udyam_assist_registered",
+            "business_gst_registered",
+            "business_online_trade_scope",
             "business_size",
             "business_sector",
             "business_similar_assistance",

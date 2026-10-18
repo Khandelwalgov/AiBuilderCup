@@ -410,7 +410,9 @@ def research_actions(session, uid, request, *, persist=False):
                     {
                         "title": condition.action,
                         "kind": "provisional_research",
-                        "fact": condition.rule.condition.fact,
+                        "fact": condition.rule.condition.fact
+                        if condition.rule.op == "condition"
+                        else None,
                         "opportunities": [],
                         "subject_id": item.subject_id,
                         "subject_kind": item.subject_kind,

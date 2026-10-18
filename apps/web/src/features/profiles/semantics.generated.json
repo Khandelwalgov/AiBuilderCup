@@ -1,10 +1,13 @@
 {
-  "version": "education-v2",
+  "version": "source-comparisons-v3",
   "rules": [
     {
       "code": "not_enrolled_current_course",
       "severity": "error",
-      "fields": ["student_status", "current_education_level"],
+      "fields": [
+        "student_status",
+        "current_education_level"
+      ],
       "when": [
         {
           "key": "student_status",
@@ -23,7 +26,10 @@
     {
       "code": "not_enrolled_study_mode",
       "severity": "error",
-      "fields": ["student_status", "enrollment_mode"],
+      "fields": [
+        "student_status",
+        "enrollment_mode"
+      ],
       "when": [
         {
           "key": "student_status",
@@ -42,7 +48,10 @@
     {
       "code": "not_enrolled_school",
       "severity": "error",
-      "fields": ["student_status", "school_recognized_or_government"],
+      "fields": [
+        "student_status",
+        "school_recognized_or_government"
+      ],
       "when": [
         {
           "key": "student_status",
@@ -61,11 +70,18 @@
     {
       "code": "course_school_scope",
       "severity": "error",
-      "fields": ["current_education_level", "school_recognized_or_government"],
+      "fields": [
+        "current_education_level",
+        "school_recognized_or_government"
+      ],
       "when": [
         {
           "key": "current_education_level",
-          "one_of": ["undergraduate", "postgraduate", "other"]
+          "one_of": [
+            "undergraduate",
+            "postgraduate",
+            "other"
+          ]
         },
         {
           "key": "school_recognized_or_government",
@@ -80,7 +96,9 @@
     {
       "code": "legacy_education_ambiguous",
       "severity": "warning",
-      "fields": ["education_level"],
+      "fields": [
+        "education_level"
+      ],
       "when": [
         {
           "key": "education_level",
@@ -90,6 +108,28 @@
       "message": [
         "The earlier education answer does not say whether it was a current course or a completed qualification. It is preserved as legacy information and will not decide education eligibility. Add the separate answers only if known.",
         "पुराने शिक्षा उत्तर से वर्तमान पाठ्यक्रम या पूरी की गई शिक्षा स्पष्ट नहीं है। वह पुराने उत्तर के रूप में बना रहेगा और शिक्षा पात्रता तय नहीं करेगा। पता होने पर अलग उत्तर दें।"
+      ]
+    },
+    {
+      "code": "overlapping_scholarship_expenses_conflict",
+      "severity": "error",
+      "fields": [
+        "receives_other_scholarship",
+        "other_support_only_incidental"
+      ],
+      "when": [
+        {
+          "key": "receives_other_scholarship",
+          "eq": true
+        },
+        {
+          "key": "other_support_only_incidental",
+          "eq": true
+        }
+      ],
+      "message": [
+        "Receiving another scholarship/stipend conflicts with saying all other support consists only of permitted books, equipment or lodging expenses. Clarify the actual support; no award choice is made automatically.",
+        "अन्य छात्रवृत्ति/वृत्तिका प्राप्त करने और अन्य सहायता केवल पुस्तक, उपकरण या आवास व्यय होने के उत्तर अलग हैं। वास्तविक सहायता स्पष्ट करें; कोई पुरस्कार अपने आप नहीं चुना जाएगा।"
       ]
     }
   ]

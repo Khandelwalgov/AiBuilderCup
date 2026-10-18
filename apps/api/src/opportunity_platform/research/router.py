@@ -209,9 +209,14 @@ def detail(identifier: uuid.UUID, session: DB):
     if row is None:
         raise APIError(404, "research_listing_not_found", "This research listing is unavailable.")
     data = ResearchInput.model_validate(row.payload)
+    from .conditions import SourceCondition, compare
+
     return ResearchDetail(
         **card(row).model_dump(),
         limitations=data.limitations,
         sources=data.sources,
         citations=data.citations,
+        provisional_conditions=[
+            SourceCondition.model_validate(c.model_dump()) for c in compare(session, row, [], [])
+        ],
     )

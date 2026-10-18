@@ -1,3 +1,4 @@
+import { ConditionLogic } from './ConditionLogic';
 import { useEffect, useState } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
@@ -378,6 +379,7 @@ export function ResearchCatalogue() {
 }
 
 export function ResearchDetail() {
+  const hi = useLanguage() === 'hi';
   const t = useCopy();
   const { id } = useParams();
   const query = useQuery({
@@ -423,6 +425,40 @@ export function ResearchDetail() {
         <a href={item.apply_url} target="_blank" rel="noreferrer">
           {t.application}
         </a>
+      )}
+      {!!item.provisional_conditions?.length && (
+        <section className="panel">
+          <h2>{hi ? 'उद्धृत प्रारंभिक शर्तें' : 'Cited provisional conditions'}</h2>
+          <p>
+            {hi
+              ? 'यह समीक्षित पात्रता निर्धारण नहीं है। वर्तमान आवेदन और प्रमाण की पुष्टि बाकी है।'
+              : 'These source comparisons are not reviewed eligibility determinations. Current applications and documentary verification remain unconfirmed.'}
+          </p>
+          {item.provisional_conditions.map((c, i) => (
+            <details key={i}>
+              <summary>{c.title}</summary>
+              <p>{c.applicability}</p>
+              {!c.evidence_available && (
+                <p role="alert">
+                  {hi
+                    ? 'सटीक स्रोत साक्ष्य उपलब्ध नहीं; तुलना बंद है।'
+                    : 'Exact source evidence unavailable; comparison is disabled.'}
+                </p>
+              )}
+              <ConditionLogic rule={c.rule} hi={hi} />
+              {c.interpretation_note && <p role="note">{c.interpretation_note}</p>}
+              <ul>
+                {[...(c.exceptions ?? []), ...(c.unresolved_conditions ?? [])].map((x, j) => (
+                  <li key={j}>{x}</li>
+                ))}
+              </ul>
+              <ContextLink to={`/government-sources?source=${c.snapshot_id}&page=${c.page}`}>
+                {hi ? 'आधिकारिक साक्ष्य · पृष्ठ' : 'Official evidence · Page'} {c.page}
+              </ContextLink>
+              <blockquote>{c.passage}</blockquote>
+            </details>
+          ))}
+        </section>
       )}
       <section className="panel">
         <h2>{t.limitations}</h2>

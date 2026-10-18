@@ -24,6 +24,14 @@ import {
 import type { components } from '../../lib/api/schema';
 type View = components['schemas']['ProfileView'];
 type Draft = { name: string; facts: Fact[] };
+type SourceRule = components['schemas']['Rule-Output'];
+function incomeClause(
+  rule: SourceRule,
+  key: string,
+): components['schemas']['Condition'] | undefined {
+  if (rule.op === 'condition') return rule.condition?.fact === key ? rule.condition : undefined;
+  return rule.children?.map((child) => incomeClause(child, key)).find(Boolean);
+}
 const today = () => new Date().toLocaleDateString('en-CA');
 const yesterday = () => {
   const date = new Date();
@@ -87,6 +95,25 @@ function PersonProfile() {
   )
     ? (params.get('section') as Category)
     : null;
+  const researchId = params.get('research_listing');
+  const researchSource = useQuery({
+    queryKey: ['profile-research-source', researchId],
+    enabled: !!researchId,
+    retry: false,
+    queryFn: async () => {
+      const { data, error } = await api.GET('/v1/research-opportunities/{identifier}', {
+        params: { path: { identifier: researchId! } },
+      });
+      return data ?? fail(error);
+    },
+  });
+  const researchCondition = researchSource.data?.provisional_conditions.find(
+    (c) => c.semantic === params.get('criterion') && c.evidence_available,
+  );
+  const citedIncome =
+    researchCondition && requested && incomeKeys.has(requested.key)
+      ? incomeClause(researchCondition.rule, requested.key)
+      : undefined;
   const opportunityId = params.get('opportunity');
   const source = useQuery({
     queryKey: ['profile-opportunity', opportunityId, params.get('development')],
@@ -452,6 +479,37 @@ function PersonProfile() {
                 ? 'इस आय का उपयोग तभी होगा जब अवधि और शामिल आय अवसर की शर्त से मेल खाएँ।'
                 : 'This amount can only be assessed when its period and included income match the opportunity.'}
             </p>
+            {citedIncome?.income_definition && (
+              <div>
+                <p>
+                  {hi ? 'स्रोत का आय आधार' : 'Cited income basis'}: {citedIncome.income_definition}
+                </p>
+                <button
+                  type="button"
+                  disabled={save.isPending}
+                  onClick={() => {
+                    const admission = values.education_admission_year;
+                    const period =
+                      citedIncome.income_period === 'previous_admission_financial_year'
+                        ? typeof admission === 'string' && /^20[0-9]{2}-[0-9]{2}$/.test(admission)
+                          ? `${Number(admission.slice(0, 4)) - 1}-${admission.slice(2, 4)}`
+                          : null
+                        : citedIncome.income_period;
+                    update(q.key, value, {
+                      income_definition: citedIncome.income_definition,
+                      income_period: period,
+                    });
+                  }}
+                >
+                  {hi ? 'स्रोत का आधार ड्राफ्ट में इस्तेमाल करें' : 'Use cited basis in this draft'}
+                </button>
+                <p>
+                  {hi
+                    ? 'राशि अपनी वास्तविक जानकारी से दें; अज्ञात प्रवेश वर्ष से अवधि नहीं मानी जाएगी। सहेजने से पहले जाँचें।'
+                    : 'Supply your actual amount. An unknown admission year leaves the period blank. Review before saving.'}
+                </p>
+              </div>
+            )}
             <label className="field">
               {hi ? 'किस वर्ष या अवधि की आय?' : 'Which year or period does this cover?'}
               <input
@@ -518,6 +576,23 @@ function PersonProfile() {
               </a>
             </blockquote>
           ))}
+        </section>
+      )}
+      {researchCondition && (
+        <section className="panel">
+          <h2>{hi ? 'स्रोत-आधारित अस्थायी तुलना' : 'Source-backed provisional comparison'}</h2>
+          <p>{researchCondition.title}</p>
+          <blockquote>{researchCondition.passage}</blockquote>
+          <Link
+            to={`/government-sources?source=${researchCondition.snapshot_id}&page=${researchCondition.page}`}
+          >
+            {hi ? 'स्रोत पृष्ठ पढ़ें' : 'Read captured source page'} · {researchCondition.page}
+          </Link>
+          <p>
+            {hi
+              ? 'उत्तर देना प्रमाणपत्र सत्यापन या आधिकारिक पात्रता नहीं है।'
+              : 'Supplying an answer does not verify a certificate or establish official eligibility.'}
+          </p>
         </section>
       )}
       {requestedDocument && (

@@ -7,6 +7,7 @@ from urllib.parse import urlsplit
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from opportunity_platform.corpus.schemas import ManifestRecord
+from opportunity_platform.research.conditions import SourceCondition
 
 Category = Literal["education", "welfare", "business", "procurement", "healthcare", "employment"]
 Availability = Literal["verified_current", "historical", "unknown", "potentially_expired"]
@@ -187,6 +188,7 @@ class ResearchCard(ClosedModel):
 
 
 class ResearchDetail(ResearchCard):
+    provisional_conditions: list[SourceCondition] = []
     limitations: list[str]
     sources: list[ResearchSource]
     citations: list[ResearchCitation]

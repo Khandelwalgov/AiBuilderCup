@@ -85,6 +85,67 @@ def evaluate(rule: Rule, facts: list[FactRecord], today: date) -> Result:
             blockers=[identity],
         )
     when = c.as_of or today
+    if c.fact in {"receives_other_scholarship", "other_support_only_incidental"}:
+        active = [
+            f
+            for f in facts
+            if f.origin != "ai_inference"
+            and (not f.valid_from or f.valid_from <= when)
+            and (not f.valid_until or f.valid_until >= when)
+        ]
+        if all(
+            any(f.key == key and f.value is True for f in active)
+            for key in ("receives_other_scholarship", "other_support_only_incidental")
+        ):
+            return Result(
+                outcome="unknown",
+                reason=(
+                    "Conflicting scholarship and incidental-only answers require clarification; "
+                    "no award choice is inferred."
+                ),
+                missing=["receives_other_scholarship", "other_support_only_incidental"],
+                blockers=[identity],
+            )
+    income_period = c.income_period
+    period_facts = []
+    if income_period == "previous_admission_financial_year":
+        period_facts = [
+            f
+            for f in facts
+            if f.key == "education_admission_year"
+            and f.origin != "ai_inference"
+            and f.value is not None
+            and (not f.valid_from or f.valid_from <= when)
+            and (not f.valid_until or f.valid_until >= when)
+        ]
+        years = {str(f.value) for f in period_facts}
+        if len(years) != 1:
+            return Result(
+                outcome="unknown",
+                reason=(
+                    "This income clause uses the financial year before admission. "
+                    "The actual admission year is missing or conflicting; today's year "
+                    "is not substituted."
+                ),
+                facts=period_facts,
+                missing=["education_admission_year"],
+                blockers=[identity],
+            )
+        try:
+            from opportunity_platform.eligibility.rules import FactInput
+
+            year = next(iter(years))
+            FactInput(key="education_admission_year", value=year)
+            first = int(year[:4])
+            income_period = f"{first - 1}-{first % 100:02}"
+        except ValueError:
+            return Result(
+                outcome="unknown",
+                reason="Clarify the actual admission academic year.",
+                facts=period_facts,
+                missing=["education_admission_year"],
+                blockers=[identity],
+            )
     if c.fact == "education_level":
         return Result(
             outcome="unknown",
@@ -101,6 +162,11 @@ def evaluate(rule: Rule, facts: list[FactRecord], today: date) -> Result:
         "enrollment_mode",
         "school_recognized_or_government",
         "school_government",
+        "institution_recognized",
+        "course_recognized",
+        "studying_in_india",
+        "top_class_school_listed",
+        "top_class_college_listed",
     }:
         enrollment = [
             f
@@ -169,7 +235,7 @@ def evaluate(rule: Rule, facts: list[FactRecord], today: date) -> Result:
         records = [
             f
             for f in records
-            if f.context.get("income_period") == c.income_period
+            if f.context.get("income_period") == income_period
             and f.context.get("income_definition") == c.income_definition
         ]
     if c.as_of:
@@ -206,7 +272,7 @@ def evaluate(rule: Rule, facts: list[FactRecord], today: date) -> Result:
         known = [
             f
             for f in known
-            if (c.income_period is None or f.context.get("income_period") == c.income_period)
+            if (income_period is None or f.context.get("income_period") == income_period)
             and (
                 c.income_definition is None
                 or f.context.get("income_definition") == c.income_definition
@@ -249,7 +315,7 @@ def evaluate(rule: Rule, facts: list[FactRecord], today: date) -> Result:
         "annual_household_income",
         "business_turnover",
     } and any(
-        f.context.get("income_period") != c.income_period
+        f.context.get("income_period") != income_period
         or f.context.get("income_definition") != c.income_definition
         for f in known
     ):
@@ -280,6 +346,11 @@ def evaluate(rule: Rule, facts: list[FactRecord], today: date) -> Result:
         return aliases.get(text, text)
 
     value = known[0].value
+    if c.fact in {"highest_completed_education", "current_education_level"} and value == "other":
+        return unknown(
+            "Another qualification/course does not establish its level or equivalence. "
+            "Clarify the qualification against the cited source; no lower level is inferred."
+        )
     if c.fact == "nationality" and value == "other":
         return unknown(
             "The previous Other nationality answer does not identify a country. "
@@ -329,17 +400,30 @@ def evaluate(rule: Rule, facts: list[FactRecord], today: date) -> Result:
         else:
             if type(value) not in (int, float):
                 return unknown("This fact has the wrong type for a numeric requirement.")
-            satisfied = value >= c.value if c.op == "gte" else value <= c.value
+            satisfied = {
+                "gte": value >= c.value,
+                "lte": value <= c.value,
+                "gt": value > c.value,
+                "lt": value < c.value,
+            }[c.op]
     except (TypeError, ValueError):
         return unknown("The stored fact cannot be compared safely.")
     return Result(
         outcome="satisfied" if satisfied else "unsatisfied",
         reason=(
-            "The supplied fact satisfies this condition; it is not an official "
-            "eligibility decision."
+            (
+                "The supplied fact satisfies this condition; it is not an official "
+                "eligibility decision."
+            )
+            if satisfied
+            else "The supplied fact does not satisfy this condition."
         )
-        if satisfied
-        else "The supplied fact does not satisfy this condition.",
-        facts=known,
+        + (
+            f" Income period: {income_period}, derived from the supplied admission year; "
+            "income ownership/definition must match the cited clause."
+            if period_facts
+            else ""
+        ),
+        facts=known + period_facts,
         blockers=[] if satisfied else [identity],
     )

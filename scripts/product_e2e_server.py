@@ -249,13 +249,18 @@ try:
             make_public=True,
             captured_sources=research_data["captured_sources"],
         )
-        dossier = json.loads(
+        evidence = json.loads(
             (
-                Path(__file__).resolve().parents[1] / "data/policy-review/2026-10-17/team.json"
+                Path(__file__).resolve().parents[1] / "data/research/condition-evidence-v2.json"
             ).read_text()
         )
-        snapshot = session.get(SourceSnapshot, dossier["baseline"]["snapshot_id"])
-        snapshot.pages = [*snapshot.pages, next(p for p in dossier["pages"] if p["page"] == 12)]
+        for captured in evidence["sources"]:
+            snapshot = session.get(SourceSnapshot, captured["snapshot_id"])
+            assert snapshot and snapshot.content_hash == captured["content_hash"]
+            assert snapshot.source_url == captured["source_url"]
+            pages = {p["page"]: p for p in snapshot.pages}
+            pages.update({p["page"]: p for p in captured["pages"]})
+            snapshot.pages = list(pages.values())
         session.commit()
 
         corpus_root = os.environ.get("PRODUCT_E2E_CORPUS_ROOT")
@@ -271,7 +276,9 @@ try:
                 PendingIndependentReview,
                 PreparedExtractor,
             )
-            from opportunity_platform.ingestion.corpus_policy.service import extract_candidate
+            from opportunity_platform.ingestion.corpus_policy.service import (
+                extract_candidate,
+            )
 
             repo = Path(__file__).resolve().parents[1]
             public_root = Path(corpus_root).resolve()
@@ -344,7 +351,10 @@ try:
 
     DisposableServer(
         uvicorn.Config(
-            "opportunity_platform.main:app", host="127.0.0.1", port=18210, access_log=False
+            "opportunity_platform.main:app",
+            host="127.0.0.1",
+            port=18210,
+            access_log=False,
         )
     ).run()
 finally:

@@ -6435,7 +6435,7 @@
               "$ref": "#/components/schemas/FactInput"
             },
             "type": "array",
-            "maxItems": 14,
+            "maxItems": 20,
             "title": "Facts"
           },
           "expected_revision": {
@@ -7005,16 +7005,6 @@
             "type": "string",
             "title": "Title"
           },
-          "result": {
-            "$ref": "#/components/schemas/Result"
-          },
-          "baseline": {
-            "$ref": "#/components/schemas/Result"
-          },
-          "changed": {
-            "type": "boolean",
-            "title": "Changed"
-          },
           "rule": {
             "$ref": "#/components/schemas/Rule-Output"
           },
@@ -7024,6 +7014,7 @@
           },
           "source_hash": {
             "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
             "title": "Source Hash"
           },
           "source_url": {
@@ -7032,10 +7023,13 @@
           },
           "page": {
             "type": "integer",
+            "maximum": 10000.0,
+            "minimum": 1.0,
             "title": "Page"
           },
           "passage": {
             "type": "string",
+            "minLength": 1,
             "title": "Passage"
           },
           "action": {
@@ -7057,6 +7051,60 @@
             "type": "boolean",
             "title": "Evidence Available"
           },
+          "applicability": {
+            "type": "string",
+            "title": "Applicability",
+            "default": "Captured source baseline; current application availability is unverified."
+          },
+          "exceptions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Exceptions",
+            "default": []
+          },
+          "unresolved_conditions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unresolved Conditions",
+            "default": []
+          },
+          "interpretation_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Interpretation Note"
+          },
+          "visual_review_image_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Visual Review Image Sha256"
+          },
+          "result": {
+            "$ref": "#/components/schemas/Result"
+          },
+          "baseline": {
+            "$ref": "#/components/schemas/Result"
+          },
+          "changed": {
+            "type": "boolean",
+            "title": "Changed"
+          },
           "gap_kind": {
             "type": "string",
             "title": "Gap Kind"
@@ -7065,9 +7113,6 @@
         "type": "object",
         "required": [
           "title",
-          "result",
-          "baseline",
-          "changed",
           "rule",
           "snapshot_id",
           "source_hash",
@@ -7077,6 +7122,9 @@
           "action",
           "semantic",
           "evidence_available",
+          "result",
+          "baseline",
+          "changed",
           "gap_kind"
         ],
         "title": "Comparison"
@@ -7089,6 +7137,8 @@
               "eq",
               "gte",
               "lte",
+              "gt",
+              "lt",
               "in",
               "document",
               "unknown"
@@ -7123,6 +7173,22 @@
                   "business_size",
                   "business_sector",
                   "business_similar_assistance",
+                  "business_udyam_assist_registered",
+                  "business_gst_registered",
+                  "business_online_trade_scope",
+                  "beneficiary_category",
+                  "category_domicile_recognized",
+                  "institution_recognized",
+                  "course_recognized",
+                  "studying_in_india",
+                  "receives_other_scholarship",
+                  "other_support_only_incidental",
+                  "same_stage_second_course",
+                  "top_class_school_listed",
+                  "top_class_college_listed",
+                  "orphan_supported_by_guardian",
+                  "parental_income_salary_basis",
+                  "education_admission_year",
                   "student_status",
                   "employment_status",
                   "has_bank_account",
@@ -7303,7 +7369,7 @@
               "$ref": "#/components/schemas/FactInput"
             },
             "type": "array",
-            "maxItems": 30,
+            "maxItems": 48,
             "title": "Facts"
           },
           "expected_revision": {
@@ -8109,6 +8175,22 @@
               "business_size",
               "business_sector",
               "business_similar_assistance",
+              "business_udyam_assist_registered",
+              "business_gst_registered",
+              "business_online_trade_scope",
+              "beneficiary_category",
+              "category_domicile_recognized",
+              "institution_recognized",
+              "course_recognized",
+              "studying_in_india",
+              "receives_other_scholarship",
+              "other_support_only_incidental",
+              "same_stage_second_course",
+              "top_class_school_listed",
+              "top_class_college_listed",
+              "orphan_supported_by_guardian",
+              "parental_income_salary_basis",
+              "education_admission_year",
               "student_status",
               "employment_status",
               "has_bank_account",
@@ -9646,7 +9728,7 @@
               "$ref": "#/components/schemas/FactInput"
             },
             "type": "array",
-            "maxItems": 30,
+            "maxItems": 48,
             "title": "Facts"
           },
           "expected_revision": {
@@ -10290,6 +10372,14 @@
             "const": false,
             "title": "Eligibility Verified",
             "default": false
+          },
+          "provisional_conditions": {
+            "items": {
+              "$ref": "#/components/schemas/SourceCondition"
+            },
+            "type": "array",
+            "title": "Provisional Conditions",
+            "default": []
           },
           "limitations": {
             "items": {
@@ -11517,6 +11607,118 @@
           "source_url"
         ],
         "title": "SnapshotPage"
+      },
+      "SourceCondition": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "rule": {
+            "$ref": "#/components/schemas/Rule-Output"
+          },
+          "snapshot_id": {
+            "type": "string",
+            "title": "Snapshot Id"
+          },
+          "source_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Source Hash"
+          },
+          "source_url": {
+            "type": "string",
+            "title": "Source Url"
+          },
+          "page": {
+            "type": "integer",
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Page"
+          },
+          "passage": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Passage"
+          },
+          "action": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Action"
+          },
+          "semantic": {
+            "type": "string",
+            "title": "Semantic"
+          },
+          "evidence_available": {
+            "type": "boolean",
+            "title": "Evidence Available"
+          },
+          "applicability": {
+            "type": "string",
+            "title": "Applicability",
+            "default": "Captured source baseline; current application availability is unverified."
+          },
+          "exceptions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Exceptions",
+            "default": []
+          },
+          "unresolved_conditions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unresolved Conditions",
+            "default": []
+          },
+          "interpretation_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Interpretation Note"
+          },
+          "visual_review_image_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Visual Review Image Sha256"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "rule",
+          "snapshot_id",
+          "source_hash",
+          "source_url",
+          "page",
+          "passage",
+          "action",
+          "semantic",
+          "evidence_available"
+        ],
+        "title": "SourceCondition"
       },
       "SourceItem": {
         "properties": {

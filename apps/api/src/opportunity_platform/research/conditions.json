@@ -1,5 +1,5 @@
 {
-  "version": "research-conditions-v1",
+  "version": "research-conditions-v2",
   "verification": "provisional_source_comparisons_not_policy_publication",
   "conditions": [
     {
@@ -20,7 +20,9 @@
         }
       },
       "action": "Confirm actual current enrollment; if planning further study, investigate qualifying admission. Record enrollment only after it occurs.",
-      "semantic": "student_status"
+      "semantic": "student_status",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "post-matric-st",
@@ -46,7 +48,9 @@
         }
       },
       "action": "Provide your completed qualification; recognition still needs confirmation.",
-      "semantic": "highest_completed_education"
+      "semantic": "highest_completed_education",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "post-matric-st",
@@ -66,7 +70,9 @@
         }
       },
       "action": "Check whether you hold the specified bank account. Do not enter account or identity numbers here.",
-      "semantic": "has_bank_account"
+      "semantic": "has_bank_account",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "post-matric-st",
@@ -76,7 +82,7 @@
       "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
       "page": 3,
       "passage": "3  \n1. Introduction \n \nIt is a Centrally Sponsored Scheme implemented by Ministry of Tribal Affairs to grant \nscholarship to eligible ST students for pursuing higher education starting from class \nXI to Post Graduation courses in India. \n \n2. Objective \n \n \na. To enable eligible Scheduled Tribe students to undertake quality education \nfrom Post Matric to Post Graduate level by providing them financial \nassistance. \nb. To create an error free platform ensuring that the targeted beneficiaries \nreceive scholarship on time. \n \n3. Salient features of the Scheme \n \n3.1. Scope \n \nScholarship under the Scheme will be available to ST students for studies in India and \nwill be directly transferred to the account of students. The scholarship will be awarded \nby the Government of the State/Union Territory to which the applicant belongs as per \nthe terms of domicile decided by the State/UT. \n \n3.2. Conditions of eligibility  \n \n \na. The student should belong to Scheduled Tribe so specified in relation to the \nState/Union Territory to which he/she actually belongs (Domicile State). \nb. Student should have passed the Matriculation or Higher Secondary or any higher \nexamination of a recognized University or Board of Secondary Education. \nc. The family income of student from all sources should not exceed Rs.2.50 lakh per \nannum. \nd. The student should have a valid account in a Schedule Bank linked with Aadhar \nand Mobile number. \ne. The student should not be getting any other scholarship. \nf. The scholarships will be given for study of recognized post-matriculation/ post-\nsecondary courses, recognized by the concerned approving authority, pursued in \nfollowing category of Institutions/Universities/Colleges. \n \ni. All Government Institutes/Colleges/Universities \nii. Institutions of National Importance;",
-      "title": "ST domicile recognition, income definition, institution recognition, linkage and other-award exclusions remain unassessed",
+      "title": "Remaining certification, institution/course exceptions, award selection and current application checks are unverified",
       "rule": {
         "op": "condition",
         "condition": {
@@ -86,7 +92,9 @@
         }
       },
       "action": null,
-      "semantic": "ST domicile recognition, income definition, institution recognition, linkage and other-award exclusions remain unassessed"
+      "semantic": "ST domicile recognition, income definition, institution recognition, linkage and other-award exclusions remain unassessed",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "pm-yasasvi-pre-matric",
@@ -106,7 +114,9 @@
         }
       },
       "action": null,
-      "semantic": "nationality"
+      "semantic": "nationality",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "pm-yasasvi-pre-matric",
@@ -129,7 +139,9 @@
         }
       },
       "action": "Confirm actual current class and enrollment; completed qualifications do not establish current study.",
-      "semantic": "current_education_level"
+      "semantic": "current_education_level",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "pm-yasasvi-pre-matric",
@@ -149,7 +161,9 @@
         }
       },
       "action": "Provide the actual enrollment mode for the same current course.",
-      "semantic": "enrollment_mode"
+      "semantic": "enrollment_mode",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "pm-yasasvi-pre-matric",
@@ -169,7 +183,9 @@
         }
       },
       "action": "Confirm whether the current school is government-run. A recognized private school is different.",
-      "semantic": "school_government"
+      "semantic": "school_government",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "pm-yasasvi-pre-matric",
@@ -179,7 +195,7 @@
       "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
       "page": 3,
       "passage": "3  \n(iii) Top Class School Education for OBC, EBC and DNT Students \n(iv) Top Class College Education for OBC, EBC and DNT Students \n(v)      Construction of Hostel for OBC Boys and Girls \n \n(A) CENTRALLY SPONSORED SCHEME OF PRE -MATRIC SCHOLARSHIPS TO \nOBC, EBC AND DNT STUDENTS \n \n1. OBJECTIVE \n \nThe objective of the Centrally Sponsored Scheme of Pre -Matric Scholarship for OBC, EBC \nand DNT students (who are not covered under SC, ST or OBC) is welfare and motivation to \nthe children of these categories by providing financial assistance at pre matricu lation or \nsecondary stage.  \n \n2. SCOPE \n \n2.1. Scholarship under the Scheme will be available for studies in India only and will be \nawarded by the Government of the State/Union Territory to which the applicant belongs i.e. \nwhere he is domiciled.  \n2.2. The scholarship will be provided for students studying in Government Schools only. \n \n3. CONDITIONS OF ELIGIBILITY \n \n3.1. The scholarships are open to Nationals of India only. \n \n3.2. Scholarship award will be sanctioned in the case of students whose parents/guardians \nincome from all sources does not exceed Rs.2,50,000/- per annum. \n \n3.3.  The students should be studying in class IX and X on a full-time basis in Government \nSchools only. \n \n3.4. They should belong to either of OBC, EBC and DNT (who are not covered under SC, \nST or OBC) categories through valid certificate.  \n \n3.5. A scholarship holder under this scheme will not hold any other educational scholarship \nfor the purpose of studying in class IX and X. If awarded any other educational scholarship \nfor studying in clas ses IX and X, the students can avail of either of the two scholarships as \nper his/her choice and should inform the awarding authority to the Head of the Institution \nabout the option made.",
-      "title": "Certified beneficiary category, parental/guardian income, domicile implementation and other-award exclusions remain unassessed",
+      "title": "Remaining certification, institution/course exceptions, award selection and current application checks are unverified",
       "rule": {
         "op": "condition",
         "condition": {
@@ -189,7 +205,9 @@
         }
       },
       "action": null,
-      "semantic": "Certified beneficiary category, parental/guardian income, domicile implementation and other-award exclusions remain unassessed"
+      "semantic": "Certified beneficiary category, parental/guardian income, domicile implementation and other-award exclusions remain unassessed",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-catalogue",
@@ -209,7 +227,9 @@
         }
       },
       "action": "Check Udyam registration through the official authority; record only your actual status.",
-      "semantic": "udyam-registration"
+      "semantic": "udyam-registration",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-catalogue",
@@ -232,7 +252,9 @@
         }
       },
       "action": "Confirm your current Udyam classification; turnover alone does not establish it.",
-      "semantic": "business_size"
+      "semantic": "business_size",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-catalogue",
@@ -255,7 +277,9 @@
         }
       },
       "action": null,
-      "semantic": "business_sector"
+      "semantic": "business_sector",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-catalogue",
@@ -275,7 +299,9 @@
         }
       },
       "action": "Check prior assistance against this exact exclusion; do not omit previous support.",
-      "semantic": "business_similar_assistance"
+      "semantic": "business_similar_assistance",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-catalogue",
@@ -295,7 +321,9 @@
         }
       },
       "action": null,
-      "semantic": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed"
+      "semantic": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-account-management",
@@ -315,7 +343,9 @@
         }
       },
       "action": "Check Udyam registration through the official authority; record only your actual status.",
-      "semantic": "udyam-registration"
+      "semantic": "udyam-registration",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-account-management",
@@ -338,7 +368,9 @@
         }
       },
       "action": "Confirm your current Udyam classification; turnover alone does not establish it.",
-      "semantic": "business_size"
+      "semantic": "business_size",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-account-management",
@@ -361,7 +393,9 @@
         }
       },
       "action": null,
-      "semantic": "business_sector"
+      "semantic": "business_sector",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-account-management",
@@ -381,7 +415,9 @@
         }
       },
       "action": "Check prior assistance against this exact exclusion; do not omit previous support.",
-      "semantic": "business_similar_assistance"
+      "semantic": "business_similar_assistance",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-account-management",
@@ -401,7 +437,9 @@
         }
       },
       "action": null,
-      "semantic": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed"
+      "semantic": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-logistics",
@@ -421,7 +459,9 @@
         }
       },
       "action": "Check Udyam registration through the official authority; record only your actual status.",
-      "semantic": "udyam-registration"
+      "semantic": "udyam-registration",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-logistics",
@@ -444,7 +484,9 @@
         }
       },
       "action": "Confirm your current Udyam classification; turnover alone does not establish it.",
-      "semantic": "business_size"
+      "semantic": "business_size",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-logistics",
@@ -467,7 +509,9 @@
         }
       },
       "action": null,
-      "semantic": "business_sector"
+      "semantic": "business_sector",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-logistics",
@@ -487,7 +531,9 @@
         }
       },
       "action": "Check prior assistance against this exact exclusion; do not omit previous support.",
-      "semantic": "business_similar_assistance"
+      "semantic": "business_similar_assistance",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-logistics",
@@ -507,7 +553,9 @@
         }
       },
       "action": null,
-      "semantic": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed"
+      "semantic": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-packaging-material",
@@ -527,7 +575,9 @@
         }
       },
       "action": "Check Udyam registration through the official authority; record only your actual status.",
-      "semantic": "udyam-registration"
+      "semantic": "udyam-registration",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-packaging-material",
@@ -550,7 +600,9 @@
         }
       },
       "action": "Confirm your current Udyam classification; turnover alone does not establish it.",
-      "semantic": "business_size"
+      "semantic": "business_size",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-packaging-material",
@@ -573,7 +625,9 @@
         }
       },
       "action": null,
-      "semantic": "business_sector"
+      "semantic": "business_sector",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-packaging-material",
@@ -593,7 +647,9 @@
         }
       },
       "action": "Check prior assistance against this exact exclusion; do not omit previous support.",
-      "semantic": "business_similar_assistance"
+      "semantic": "business_similar_assistance",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-packaging-material",
@@ -613,7 +669,9 @@
         }
       },
       "action": null,
-      "semantic": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed"
+      "semantic": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-packaging-design",
@@ -633,7 +691,9 @@
         }
       },
       "action": "Check Udyam registration through the official authority; record only your actual status.",
-      "semantic": "udyam-registration"
+      "semantic": "udyam-registration",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-packaging-design",
@@ -656,7 +716,9 @@
         }
       },
       "action": "Confirm your current Udyam classification; turnover alone does not establish it.",
-      "semantic": "business_size"
+      "semantic": "business_size",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-packaging-design",
@@ -679,7 +741,9 @@
         }
       },
       "action": null,
-      "semantic": "business_sector"
+      "semantic": "business_sector",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-packaging-design",
@@ -699,7 +763,9 @@
         }
       },
       "action": "Check prior assistance against this exact exclusion; do not omit previous support.",
-      "semantic": "business_similar_assistance"
+      "semantic": "business_similar_assistance",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "msme-team-packaging-design",
@@ -719,7 +785,9 @@
         }
       },
       "action": null,
-      "semantic": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed"
+      "semantic": "Prior SNP onboarding at operationalisation, transaction-data authorization, GST scope and component conditions remain unassessed",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "pm-yasasvi-post-matric",
@@ -739,7 +807,9 @@
         }
       },
       "action": "Confirm actual current enrollment; if planning further study, investigate qualifying admission. Record enrollment only after it occurs.",
-      "semantic": "student_status"
+      "semantic": "student_status",
+      "exceptions": [],
+      "unresolved_conditions": []
     },
     {
       "listing_key": "pm-yasasvi-post-matric",
@@ -749,7 +819,7 @@
       "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
       "page": 12,
       "passage": "The objective   of   the scheme is to provide financial assistance to the OBC, EBC and DNT \nstudents studying at post -matriculation or post-secondary stage to enable them to complete \ntheir education.",
-      "title": "Beneficiary category, course classification and remaining conditions are unassessed",
+      "title": "Remaining certification, institution/course exceptions, award selection and current application checks are unverified",
       "rule": {
         "op": "condition",
         "condition": {
@@ -759,7 +829,1383 @@
         }
       },
       "action": null,
-      "semantic": "yasasvi-post-matric-unassessed"
+      "semantic": "yasasvi-post-matric-unassessed",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "post-matric-st",
+      "parent": "post-matric-st",
+      "source_hash": "0a198cda53699cce97f72c59608f63a5d282cee33e591ebb57b4d04b6efedc83",
+      "snapshot_id": "132c820f-cf6e-5e69-be30-12e0b53aa421",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "page": 3,
+      "passage": "The student should belong to Scheduled Tribe so specified in relation to the \nState/Union Territory to which he/she actually belongs (Domicile State).",
+      "title": "Scheduled Tribe category, explicitly supplied",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "beneficiary_category",
+          "value": "ST"
+        }
+      },
+      "action": null,
+      "semantic": "beneficiary_category",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "post-matric-st",
+      "parent": "post-matric-st",
+      "source_hash": "0a198cda53699cce97f72c59608f63a5d282cee33e591ebb57b4d04b6efedc83",
+      "snapshot_id": "132c820f-cf6e-5e69-be30-12e0b53aa421",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "page": 3,
+      "passage": "The student should belong to Scheduled Tribe so specified in relation to the \nState/Union Territory to which he/she actually belongs (Domicile State).",
+      "title": "ST category recognized for the actual domicile state",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "category_domicile_recognized",
+          "value": true
+        }
+      },
+      "action": null,
+      "semantic": "category_domicile_recognized",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "unresolved_conditions": [
+        "Certificate and State-specific recognition require verification."
+      ],
+      "exceptions": []
+    },
+    {
+      "listing_key": "post-matric-st",
+      "parent": "post-matric-st",
+      "source_hash": "0a198cda53699cce97f72c59608f63a5d282cee33e591ebb57b4d04b6efedc83",
+      "snapshot_id": "132c820f-cf6e-5e69-be30-12e0b53aa421",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "page": 3,
+      "passage": "The scholarships will be given for study of recognized post-matriculation/ post-\nsecondary courses, recognized by the concerned approving authority, pursued in \nfollowing category of Institutions/Universities/Colleges.",
+      "title": "Recognized post-matric course — specific course class remains unassessed",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "course_recognized",
+          "value": true
+        }
+      },
+      "action": null,
+      "semantic": "course_recognized",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "post-matric-st",
+      "parent": "post-matric-st",
+      "source_hash": "0a198cda53699cce97f72c59608f63a5d282cee33e591ebb57b4d04b6efedc83",
+      "snapshot_id": "132c820f-cf6e-5e69-be30-12e0b53aa421",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "page": 3,
+      "passage": "The scholarships will be given for study of recognized post-matriculation/ post-\nsecondary courses, recognized by the concerned approving authority, pursued in \nfollowing category of Institutions/Universities/Colleges.",
+      "title": "Institution recognition — specific permitted institution category remains unassessed",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "institution_recognized",
+          "value": true
+        }
+      },
+      "action": null,
+      "semantic": "institution_recognized",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "post-matric-st",
+      "parent": "post-matric-st",
+      "source_hash": "0a198cda53699cce97f72c59608f63a5d282cee33e591ebb57b4d04b6efedc83",
+      "snapshot_id": "132c820f-cf6e-5e69-be30-12e0b53aa421",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "page": 3,
+      "passage": "Scholarship under the Scheme will be available to ST students for studies in India and \nwill be directly transferred to the account of students.",
+      "title": "Study in India",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "studying_in_india",
+          "value": true
+        }
+      },
+      "action": null,
+      "semantic": "studying_in_india",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "post-matric-st",
+      "parent": "post-matric-st",
+      "source_hash": "0a198cda53699cce97f72c59608f63a5d282cee33e591ebb57b4d04b6efedc83",
+      "snapshot_id": "132c820f-cf6e-5e69-be30-12e0b53aa421",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "page": 4,
+      "passage": "Scholarship holder under this scheme can hold only one scholarship/stipend at a \ntime. If awarded any other scholarship/stipend, the student can exercise his/her option \nfor either of the two scholarships/stipends, whichever is more beneficial to him/her and",
+      "title": "No overlapping scholarship/stipend",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "receives_other_scholarship",
+          "value": false
+        }
+      },
+      "action": "Clarify other support and the source-defined award choice with the issuing authority. Do not hide another scholarship or treat this task as relinquishing an award.",
+      "semantic": "scholarship_overlap",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [
+        "A source-permitted award choice must be confirmed with the authority; the app does not submit or select awards."
+      ],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "post-matric-st",
+      "parent": "post-matric-st",
+      "source_hash": "0a198cda53699cce97f72c59608f63a5d282cee33e591ebb57b4d04b6efedc83",
+      "snapshot_id": "132c820f-cf6e-5e69-be30-12e0b53aa421",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+      "page": 5,
+      "passage": "3.3. Income Criteria \n \nScholarships will be paid to the students whose family income from all sources \ndoes not exceed Rs.2,50,000/- (Rs. Two lakh fifty thousand only) per annum. \n \nThe family income shall be computed in the following manner: - \n \nI. In case where both father and mother are working, the combined income of both \nof them from all sources shall be taken into account in computing total family \nincome. \nII. In case any other member of the family, other than father and mother is an earning \nmember, his or her income shall not be included in computing total family income. \nIII. In case only one parent is alive, the income of that parent shall be taken into \naccount for considering total family income . If other sibling or family member \nis an earning member, their income shall not be included in computing total family \nincome. \nIV. In case of an orphan, supported by a guardian, income criteria shall not apply. \n \n \nNote 1: Definition of Income - Income means gross income including income from all \nsources without any exemption and deductions available in the Income Tax Act. \n \nNote 2: Income certificate is required to be taken once only i.e. at the time of admission \nto course which will be valid for the entire duration of the course. At the time of renewal \nin second or subsequent year of the course, fresh income certificate is not required. \n \nNote 3: The income certificate given at the time of admission should be taken in the \nsame year for which the admission is taken. In the case of salaried employee, the income \nof previous financial year will be considered for the purpose of eligibility. For example, if \ncandidate applies afresh for academic year 2021-22, the family income for financial \nyear 2020-21 would be required. \n \n \n3.4. Value of scholarship",
+      "title": "Parental gross-income ceiling or the cited orphan/guardian exemption",
+      "rule": {
+        "op": "any",
+        "children": [
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "orphan_supported_by_guardian",
+              "value": true
+            }
+          },
+          {
+            "op": "all",
+            "children": [
+              {
+                "op": "condition",
+                "condition": {
+                  "op": "eq",
+                  "fact": "parental_income_salary_basis",
+                  "value": true
+                }
+              },
+              {
+                "op": "condition",
+                "condition": {
+                  "op": "lte",
+                  "fact": "annual_parental_income",
+                  "value": 250000,
+                  "income_period": "previous_admission_financial_year",
+                  "income_definition": "ST PMS: gross income of father and mother only; exclude siblings and other family members"
+                }
+              }
+            ]
+          },
+          {
+            "op": "all",
+            "children": [
+              {
+                "op": "condition",
+                "condition": {
+                  "op": "eq",
+                  "fact": "parental_income_salary_basis",
+                  "value": false
+                }
+              },
+              {
+                "op": "condition",
+                "condition": {
+                  "op": "unknown",
+                  "fact": null,
+                  "value": null
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "action": "Clarify the admission year and the source-defined parental gross income. Exclude siblings and other relatives; do not infer orphan status or add household totals.",
+      "semantic": "st_parental_income",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [
+        "For an orphan supported by a guardian, the source exempts the income criterion.",
+        "For salaried-parent cases the relevant income is the financial year before admission.",
+        "The income certificate taken at admission remains valid for the course; renewal is not a demand for a new certificate."
+      ],
+      "unresolved_conditions": [
+        "Non-salaried income timing requires clarification.",
+        "Documentary proof and remaining institution/course exclusions are unverified."
+      ]
+    },
+    {
+      "listing_key": "post-matric-sc",
+      "parent": "post-matric-sc",
+      "source_hash": "cf73697baff4d7ebaf5919363296479b501ea9efc146a27de50623a9472cfa57",
+      "snapshot_id": "8ea07734-d6cf-50aa-8e34-647bb956eb7f",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+      "page": 4,
+      "passage": "Scholarships will be given for the study of all recognized post-matriculation or post-\n\nsecondary courses (Intermediate/Senior Secondary, Diploma, long-term Vocational\n\nTraining Certificate, Graduate, Post Graduate courses etc.) pursued in recognized\n\nInstitutions/ Universities/ Colleges falling in any of the following 9 categories:",
+      "title": "Currently studying — admission and course recognition remain separate",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "student_status",
+          "value": true
+        }
+      },
+      "action": "Confirm actual current enrollment; if planning further study, investigate qualifying admission. Record enrollment only after it occurs.",
+      "semantic": "student_status",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "post-matric-sc",
+      "parent": "post-matric-sc",
+      "source_hash": "cf73697baff4d7ebaf5919363296479b501ea9efc146a27de50623a9472cfa57",
+      "snapshot_id": "8ea07734-d6cf-50aa-8e34-647bb956eb7f",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+      "page": 5,
+      "passage": "The scholarships are open to Nationals of India only.\n\n5.2 Only those candidates who belong to Scheduled Castes so specified in relation to\nthe State/Union Territory to which the applicant actually belongs /domiciled as determined\nby the State/UT and who have passed the Matriculation or Higher Secondary or any higher\nexamination of a recognized University or Board of Secondary Education will be eligible.\n5.3. Scholarships will be paid to the students whose parents’/guardians' income from all\nsources does not exceed Rs. 2,50,000/- (Rupees Two lakh Fifty thousand only) during the\nlast Financial Year. Income certificate is required to be taken once only i.e. at the time of\nadmission only to courses which are continuing for more than one year. The income\ncertificate shall be issued by the Authority as decided by the State Government.\n\n5.4 The ceiling on age limit for admission as regular student in different classes should\nbe decided by concerned Institutions.\n\n5.5 Candidates who, after passing one stage of education are studying in the same\nstage of education in a different subject e.g. Intermediate Science after Intermediate Arts\nor B.Com after B.A. or M.A in one subject after M.A in other subjects will not be eligible.\n\n5.6 Students, who pursue their studies through correspondence/online courses, are also\neligible. The term correspondence includes distant and continuous education for courses in\nCentral/ State Universities only. Non-refundable fees shall be paid and no academic\nallowance will be paid.\n\n5.7. All the children of any parent/guardian will be entitled to receive benefits of the\nscheme.\n\n5.8 A scholarship holder under this scheme will not hold any other scholarship/stipend.\nIf awarded any other scholarship/stipend, the student can exercise his/her option for either\nof the two scholarships/stipends, whichever is more beneficial to him/her, and should\ninform the awarding authority through the Head of the Institution about the option made. No\nscholarship will be paid to the students under this scheme from the date he/she accepts\nanother scholarship/stipend. The student can however, accept free lodging or a grant or\n\nad-hoc monetary help from the State Government or any other source for the purchase of\n\nPage 5 of 8",
+      "title": "Indian nationality",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "nationality",
+          "value": "India"
+        }
+      },
+      "action": null,
+      "semantic": "nationality",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "post-matric-sc",
+      "parent": "post-matric-sc",
+      "source_hash": "cf73697baff4d7ebaf5919363296479b501ea9efc146a27de50623a9472cfa57",
+      "snapshot_id": "8ea07734-d6cf-50aa-8e34-647bb956eb7f",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+      "page": 5,
+      "passage": "Only those candidates who belong to Scheduled Castes so specified in relation to\nthe State/Union Territory to which the applicant actually belongs /domiciled as determined\nby the State/UT and who have passed the Matriculation or Higher Secondary or any higher\nexamination of a recognized University or Board of Secondary Education will be eligible.",
+      "title": "Scheduled Caste category, explicitly supplied",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "beneficiary_category",
+          "value": "SC"
+        }
+      },
+      "action": null,
+      "semantic": "beneficiary_category",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "post-matric-sc",
+      "parent": "post-matric-sc",
+      "source_hash": "cf73697baff4d7ebaf5919363296479b501ea9efc146a27de50623a9472cfa57",
+      "snapshot_id": "8ea07734-d6cf-50aa-8e34-647bb956eb7f",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+      "page": 5,
+      "passage": "Only those candidates who belong to Scheduled Castes so specified in relation to\nthe State/Union Territory to which the applicant actually belongs /domiciled as determined\nby the State/UT and who have passed the Matriculation or Higher Secondary or any higher\nexamination of a recognized University or Board of Secondary Education will be eligible.",
+      "title": "Completed class X or higher — recognition still needs confirmation",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "highest_completed_education",
+          "value": [
+            "X",
+            "XI",
+            "XII",
+            "undergraduate",
+            "postgraduate"
+          ]
+        }
+      },
+      "action": "Provide your completed qualification; recognition still needs confirmation.",
+      "semantic": "highest_completed_education",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "post-matric-sc",
+      "parent": "post-matric-sc",
+      "source_hash": "cf73697baff4d7ebaf5919363296479b501ea9efc146a27de50623a9472cfa57",
+      "snapshot_id": "8ea07734-d6cf-50aa-8e34-647bb956eb7f",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+      "page": 5,
+      "passage": "Candidates who, after passing one stage of education are studying in the same\nstage of education in a different subject e.g. Intermediate Science after Intermediate Arts\nor B.Com after B.A. or M.A in one subject after M.A in other subjects will not be eligible.",
+      "title": "Not repeating a completed education stage in a different subject",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "same_stage_second_course",
+          "value": false
+        }
+      },
+      "action": null,
+      "semantic": "same_stage_second_course",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "post-matric-sc",
+      "parent": "post-matric-sc",
+      "source_hash": "cf73697baff4d7ebaf5919363296479b501ea9efc146a27de50623a9472cfa57",
+      "snapshot_id": "8ea07734-d6cf-50aa-8e34-647bb956eb7f",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+      "page": 5,
+      "passage": "Scholarships will be paid to the students whose parents’/guardians' income from all\nsources does not exceed Rs. 2,50,000/- (Rupees Two lakh Fifty thousand only) during the\nlast Financial Year. Income certificate is required to be taken once only i.e. at the time of\nadmission only to courses which are continuing for more than one year. The income\ncertificate shall be issued by the Authority as decided by the State Government.",
+      "title": "Parents/guardians income for the financial year before admission",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "lte",
+          "fact": "annual_parental_income",
+          "value": 250000,
+          "income_period": "previous_admission_financial_year",
+          "income_definition": "SC PMS: parents/guardians income from all sources during the last financial year before admission"
+        }
+      },
+      "action": "Provide the source-defined parents/guardians income and the actual admission year; do not sum every household member.",
+      "semantic": "sc_parental_income",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [
+        "The income certificate is taken once at admission for courses longer than one year.",
+        "ST orphan exemptions are not transferred to this SC baseline."
+      ],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "post-matric-sc",
+      "parent": "post-matric-sc",
+      "source_hash": "cf73697baff4d7ebaf5919363296479b501ea9efc146a27de50623a9472cfa57",
+      "snapshot_id": "8ea07734-d6cf-50aa-8e34-647bb956eb7f",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+      "page": 5,
+      "passage": "A scholarship holder under this scheme will not hold any other scholarship/stipend.\nIf awarded any other scholarship/stipend, the student can exercise his/her option for either\nof the two scholarships/stipends, whichever is more beneficial to him/her, and should\ninform the awarding authority through the Head of the Institution about the option made. No\nscholarship will be paid to the students under this scheme from the date he/she accepts\nanother scholarship/stipend. The student can however, accept free lodging or a grant or\n\nad-hoc monetary help from the State Government or any other source for the purchase of",
+      "title": "No overlapping scholarship/stipend",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "receives_other_scholarship",
+          "value": false
+        }
+      },
+      "action": "Clarify other support and the source-defined award choice with the issuing authority. Do not hide another scholarship or treat this task as relinquishing an award.",
+      "semantic": "scholarship_overlap",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [
+        "A source-permitted award choice must be confirmed with the authority; the app does not submit or select awards."
+      ],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "post-matric-sc",
+      "parent": "post-matric-sc",
+      "source_hash": "cf73697baff4d7ebaf5919363296479b501ea9efc146a27de50623a9472cfa57",
+      "snapshot_id": "8ea07734-d6cf-50aa-8e34-647bb956eb7f",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+      "page": 5,
+      "passage": "Post Matric Scholarship for SCs: Scheme Guidelines|_—__ Matric Scholarship for SCs: Scheme Guidelines\n\nProvided that where a particular number of seats for a particular course have\nbeen recognized / authorized by the concerned regulatory authority, the\nscholarships shall be restricted to those numbers and courses.\n\n5. Conditions of Eligibility of Students\n\n5.4. The scholarships are open to Nationals of India only.\n\n5.2 Only those candidates who belong to Scheduled Castes so specified in relation to\nthe State/Union Territory to which the applicant actually belongs /domiciled as determined\nby the State/UT and who have passed the Matriculation or Higher Secondary or any higher\nexamination of a recognized University or Board of Secondary Education will be eligible.\n5.3. Scholarships will be paid to the students whose parents’/guardians' income from all\nsources does not exceed Rs. 2,50,000/- (Rupees Two lakh Fifty thousand only) during the\nlast Financial Year. Income certificate is required to be taken once only i.e. at the time of\nadmission only to courses which are continuing for more than one year. The income\ncertificate shall be issued by the Authority as decided by the State Government.\n\n5.4 The ceiling on age limit for admission as regular student in different classes should\nbe decided by concerned Institutions.\n\n5.5 Candidates who, after passing one stage of education are studying in the same\nstage of education in a different subject e.g. Intermediate Science after Intermediate Arts\nor B.Com after B.A. or M.A in one subject after M.A in other subjects will not be eligible.\n\n5.6 Students, who pursue their studies through correspondence/online courses, are also\neligible. The term correspondence includes distant and continuous education for courses in\nCentral/ State Universities only. Non-refundable fees shall be paid and no academic\nallowance will be paid.\n\n5.7. All the children of any parent/guardian will be entitled to receive benefits of the\nscheme.\n\n5.8 A scholarship holder under this scheme will not hold any other scholarship/stipend.\nIf awarded any other scholarship/stipend, the student can exercise his/her option for either\nof the two scholarships/stipends, whichever is more beneficial to him/her, and should\ninform the awarding authority through the Head of the Institution about the option made. No\nscholarship will be paid to the students under this scheme from the date he/she accepts\nanother scholarship/stipend. The student can however, accept free lodging or a grant or\n\nad-hoc monetary help from the State Government or any other source for the purchase of\n\nPage 5 of 8\n",
+      "title": "SC domicile recognition, permitted institution/seat, documentary proof and present continuation remain unverified",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "unknown",
+          "fact": null,
+          "value": null
+        }
+      },
+      "action": null,
+      "semantic": "unassessed:post-matric-sc",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-pre-matric",
+      "parent": "pm-yasasvi-pre-matric",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 3,
+      "passage": "They should belong to either of OBC, EBC and DNT (who are not covered under SC, \nST or OBC) categories through valid certificate.",
+      "title": "OBC/EBC/DNT category — valid certification remains unverified",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "beneficiary_category",
+          "value": [
+            "OBC",
+            "EBC",
+            "DNT"
+          ]
+        }
+      },
+      "action": null,
+      "semantic": "beneficiary_category",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [
+        "DNT subcategory recognition and exclusions are not inferred."
+      ],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-pre-matric",
+      "parent": "pm-yasasvi-pre-matric",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 3,
+      "passage": "Scholarship under the Scheme will be available for studies in India only and will be \nawarded by the Government of the State/Union Territory to which the applicant belongs i.e. \nwhere he is domiciled.",
+      "title": "Study in India",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "studying_in_india",
+          "value": true
+        }
+      },
+      "action": null,
+      "semantic": "studying_in_india",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-pre-matric",
+      "parent": "pm-yasasvi-pre-matric",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 3,
+      "passage": "A scholarship holder under this scheme will not hold any other educational scholarship \nfor the purpose of studying in class IX and X. If awarded any other educational scholarship \nfor studying in clas ses IX and X, the students can avail of either of the two scholarships as \nper his/her choice and should inform the awarding authority to the Head of the Institution \nabout the option made.",
+      "title": "No overlapping scholarship/stipend",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "receives_other_scholarship",
+          "value": false
+        }
+      },
+      "action": "Clarify other support and the source-defined award choice with the issuing authority. Do not hide another scholarship or treat this task as relinquishing an award.",
+      "semantic": "scholarship_overlap",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [
+        "A source-permitted award choice must be confirmed with the authority; the app does not submit or select awards."
+      ],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-post-matric",
+      "parent": "pm-yasasvi-post-matric",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 14,
+      "passage": "The scholarships will be open to Indian nationals belonging to OBCs, EBCs and \nDNTs, as notified by the Central Govt./State Govt./ UT Admin.",
+      "title": "Indian nationality",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "nationality",
+          "value": "India"
+        }
+      },
+      "action": null,
+      "semantic": "nationality",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-post-matric",
+      "parent": "pm-yasasvi-post-matric",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 14,
+      "passage": "The scholarships will be open to Indian nationals belonging to OBCs, EBCs and \nDNTs, as notified by the Central Govt./State Govt./ UT Admin.",
+      "title": "OBC/EBC/DNT category — certification remains separate",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "beneficiary_category",
+          "value": [
+            "OBC",
+            "EBC",
+            "DNT"
+          ]
+        }
+      },
+      "action": null,
+      "semantic": "beneficiary_category",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-post-matric",
+      "parent": "pm-yasasvi-post-matric",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 14,
+      "passage": "Only those candidates who belong to OBCs/EBCs/DNTs so specified in relation to \nthe State/UT to which the applicant actually belongs, i.e.  permanently settled and who have \npassed the Matriculation or Higher secondary or any higher examination of a recognized \nUniversity or Board of Secondary Education will be eligible.",
+      "title": "Completed class X or higher",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "highest_completed_education",
+          "value": [
+            "X",
+            "XI",
+            "XII",
+            "undergraduate",
+            "postgraduate"
+          ]
+        }
+      },
+      "action": null,
+      "semantic": "highest_completed_education",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-post-matric",
+      "parent": "pm-yasasvi-post-matric",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 14,
+      "passage": "Candidates who, after passing one stage o f education, are studying in the same stage \nof education in different subject e.g. B.Sc.  after B.A or B.Com.after B.A. or M.A. in a subject \nafter M.A in another subject will not be eligible.",
+      "title": "Not repeating a completed education stage in another subject",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "same_stage_second_course",
+          "value": false
+        }
+      },
+      "action": null,
+      "semantic": "same_stage_second_course",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-post-matric",
+      "parent": "pm-yasasvi-post-matric",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 15,
+      "passage": "A   scholarship   holder   under   this   Scheme   will   not   hold   any   other scholarship/ \nstipend. If awarded any other scholarship/ stipend, the students can ex ercise his/her option \nfor either of the two Scholarships / stipends, whichever is more beneficial to him/her and \nshould inform the awarding authority through the Head of the Institution about the option \nmade. No scholarship will be paid to the students und er this Scheme from the date he/she \naccepts anyother scholarships/ stipend. The student can however, accept free lodging or a \ngrant or ad -hoc monetary help from the State Government or any other source for the \npurchase of books, equipment or for meeting the expenses on board and lodging, in addition \nto the scholarship amount paid under the Scheme.",
+      "title": "No overlapping scholarship/stipend — permitted expense-only assistance is distinct",
+      "rule": {
+        "op": "any",
+        "children": [
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "receives_other_scholarship",
+              "value": false
+            }
+          },
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "other_support_only_incidental",
+              "value": true
+            }
+          }
+        ]
+      },
+      "action": "Clarify other support and the source-defined award choice with the issuing authority. Do not hide another scholarship or treat this task as relinquishing an award.",
+      "semantic": "scholarship_overlap",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [
+        "A source-permitted award choice must be confirmed with the authority; the app does not submit or select awards."
+      ],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-top-class-school",
+      "parent": "pm-yasasvi-top-class-school",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 30,
+      "passage": "All the OBC, EBC and DNT students studying in the Top Class Schools identified as per the \nmodalities of the scheme with household annual income of less than Rs. 2.5 lakhs would be \neligible for the scheme.",
+      "title": "Currently studying — admission and course recognition remain separate",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "student_status",
+          "value": true
+        }
+      },
+      "action": "Confirm actual current enrollment; if planning further study, investigate qualifying admission. Record enrollment only after it occurs.",
+      "semantic": "student_status",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-top-class-school",
+      "parent": "pm-yasasvi-top-class-school",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 30,
+      "passage": "All the OBC, EBC and DNT students studying in the Top Class Schools identified as per the \nmodalities of the scheme with household annual income of less than Rs. 2.5 lakhs would be \neligible for the scheme.",
+      "title": "OBC/EBC/DNT category — certification and selection are unverified",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "beneficiary_category",
+          "value": [
+            "OBC",
+            "EBC",
+            "DNT"
+          ]
+        }
+      },
+      "action": null,
+      "semantic": "beneficiary_category",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-top-class-school",
+      "parent": "pm-yasasvi-top-class-school",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 30,
+      "passage": "The objective of the scheme  is to provide premium education to the meritorious \nstudents belonging to OBC, EBC and DNT categories by funding their education from Class \n9 onwards till they complete Class 12.",
+      "title": "Current class IX to XII",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "current_education_level",
+          "value": [
+            "IX",
+            "X",
+            "XI",
+            "XII"
+          ]
+        }
+      },
+      "action": "Confirm the actual current school class and admission; a completed class does not establish current study.",
+      "semantic": "current_education_level",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-top-class-school",
+      "parent": "pm-yasasvi-top-class-school",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 30,
+      "passage": "All the OBC, EBC and DNT students studying in the Top Class Schools identified as per the \nmodalities of the scheme with household annual income of less than Rs. 2.5 lakhs would be \neligible for the scheme.",
+      "title": "Current school on the applicable Top Class School list",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "top_class_school_listed",
+          "value": true
+        }
+      },
+      "action": "Check the applicable official notified-school list for this scheme and year.",
+      "semantic": "top_class_school_listed",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [
+        "The source permits public, aided and private Top Class Schools. A government-school answer alone is insufficient."
+      ],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-top-class-school",
+      "parent": "pm-yasasvi-top-class-school",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 30,
+      "passage": "30  \n(C) CENTRAL SECTOR SCHEME OF TOP CLASS EDUCATION IN \nSCHOOLS FOR OBC, EBC AND DNT STUDENTS  \n \n \n1. OBJECTIVE \n The objective of the scheme  is to provide premium education to the meritorious \nstudents belonging to OBC, EBC and DNT categories by funding their education from Class \n9 onwards till they complete Class 12.    \n \n2. SCOPE AND COVERAGE \n \nAll the OBC, EBC and DNT students studying in the Top Class Schools identified as per the \nmodalities of the scheme with household annual income of less than Rs. 2.5 lakhs would be \neligible for the scheme. The number of slots for each State would be allocated based on  the \nOBC population data available. The sanction of scholarship would be based on merit and is \ndone using online portal.  \n3. MODALITIES  \n \nThe scheme would be implemented in the following manner:  \n \na) The top performing schools which consistently secure 100% passes in the Classes 10th \n12th would be selected by a selection committee constituted under the Chairmanship \nof Joint Secretary (BC) and with representation from Department of School Education \nand the NITI Ayog. These schools will be termed as ‘Top Class Schools (TCSs)’ for \nthe purpose of this scheme.  \nb) The TCSs can be public (Central/State/Local Body) or aided schools or private \nschools.  \nc) The number of slots available under the scheme for each State and each class would \nbe announced in the month of April each year.  \nd) At least 30% of these scholarships are reserved for girls.  \ne) The OBC/EBC/DNT students already studying in the TCSs can apply on the National \nScholarship Portal for the scholarship along with the marks they have obtained in the \nfinal exam of the previous class.   \nf) These applications have to be verified online by the Nodal Officers of the School, and \nconfirmed by the State Government online.  \ng) There shall be a State -wise merit list for each class for boys and girls separately \nprepared on the basis of  the marks obtained in the final exam of the previous class, \nand allocation of the scholarships shall be automatically be done on the merit.  \n ",
+      "title": "Source-defined household income, merit/slots, annual school list and current continuation need confirmation",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "unknown",
+          "fact": null,
+          "value": null
+        }
+      },
+      "action": null,
+      "semantic": "unassessed:pm-yasasvi-top-class-school",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-top-class-college",
+      "parent": "pm-yasasvi-top-class-college",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 33,
+      "passage": "Those OBC/EBC/DNT students having total annual family income from all sources up \nto Rs. 2.50 lakh and having secured admission in a full -time prescribed course in any of the \nnotified institutions according to the general selection criteria prescribed by the concerned \ninstitution, will be eligible for scholarship under the Sc heme to the extent of the number of \nscholarships (slots) allocated to the institution for the course.",
+      "title": "Currently studying — admission and course recognition remain separate",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "student_status",
+          "value": true
+        }
+      },
+      "action": "Confirm actual current enrollment; if planning further study, investigate qualifying admission. Record enrollment only after it occurs.",
+      "semantic": "student_status",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-top-class-college",
+      "parent": "pm-yasasvi-top-class-college",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 33,
+      "passage": "Those OBC/EBC/DNT students having total annual family income from all sources up \nto Rs. 2.50 lakh and having secured admission in a full -time prescribed course in any of the \nnotified institutions according to the general selection criteria prescribed by the concerned \ninstitution, will be eligible for scholarship under the Sc heme to the extent of the number of \nscholarships (slots) allocated to the institution for the course.",
+      "title": "OBC/EBC/DNT category — certification remains separate",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "beneficiary_category",
+          "value": [
+            "OBC",
+            "EBC",
+            "DNT"
+          ]
+        }
+      },
+      "action": null,
+      "semantic": "beneficiary_category",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-top-class-college",
+      "parent": "pm-yasasvi-top-class-college",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 33,
+      "passage": "Those OBC/EBC/DNT students having total annual family income from all sources up \nto Rs. 2.50 lakh and having secured admission in a full -time prescribed course in any of the \nnotified institutions according to the general selection criteria prescribed by the concerned \ninstitution, will be eligible for scholarship under the Sc heme to the extent of the number of \nscholarships (slots) allocated to the institution for the course.",
+      "title": "Full-time current enrollment",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "enrollment_mode",
+          "value": "full_time"
+        }
+      },
+      "action": null,
+      "semantic": "enrollment_mode",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-top-class-college",
+      "parent": "pm-yasasvi-top-class-college",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 33,
+      "passage": "Those OBC/EBC/DNT students having total annual family income from all sources up \nto Rs. 2.50 lakh and having secured admission in a full -time prescribed course in any of the \nnotified institutions according to the general selection criteria prescribed by the concerned \ninstitution, will be eligible for scholarship under the Sc heme to the extent of the number of \nscholarships (slots) allocated to the institution for the course.",
+      "title": "Current institution on the applicable Top Class College list",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "top_class_college_listed",
+          "value": true
+        }
+      },
+      "action": "Check the applicable institution list and actual admission.",
+      "semantic": "top_class_college_listed",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "pm-yasasvi-top-class-college",
+      "parent": "pm-yasasvi-top-class-college",
+      "source_hash": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+      "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+      "page": 33,
+      "passage": "33  \n(D)  CENTRAL SECTOR SCHEME OF TOP CLA SS EDUCATION IN \nCOLLEGE FOR OBC, EBC AND DNT STUDENTS  \n \n \n1. OBJECTIVE  \n \n The objective of the scheme is to recognize and promote quality education amongst \nStudents belonging to OBC, EBC and DNT categories by providing full financial support. \nThe Scheme will cover OBC/EBC/DNT students for pursuing studies beyond class XIIth.  \n \n2. SCOPE AND COVERAGE \n \n(i) The Scheme will operate in all the institutions notified by the Ministry of Social Justice \nand Empowerment for every financial year 2021-22 onwards. \n \n(ii)   The scholarship, once awarded, will continue till the completion ofthe course, subject \nto satisfactory performance of thestudent. The students are required to apply for scholarship \nevery year even in case of renewal also. \n \n3. ELIGIBILITY \n \n(i) Those OBC/EBC/DNT students having total annual family income from all sources up \nto Rs. 2.50 lakh and having secured admission in a full -time prescribed course in any of the \nnotified institutions according to the general selection criteria prescribed by the concerned \ninstitution, will be eligible for scholarship under the Sc heme to the extent of the number of \nscholarships (slots) allocated to the institution for the course. \n \n(ii) In case the number of eligible students admitted exceeds the number of slots allotted to \nthe institution, the scholarship will be restricted to the top students in the inter-se merit list based \non the admission criteria for the course as mentioned in Annexure-II. However, if there is more \nthan one student with equal marks for the last available slot in an institution, preference should \nbe given to the  student with the lower family income. The remaining students from \nOBC/EBC/DNT category admitted in the institution shall be eligible for the Post -Matric \nScholarship (PMS) administered by this Ministry through State Governments/UT \nAdministrations, provided such students are otherwise eligible under the saidscheme. \n \n(iii) In case the institution finds that the number of eligible candidates in the 1st year are less \nthan the number of slots allotted to it, the balance slots may be offered to eligible students \nstudying in 2nd, 3rd and 4th year, etc. on the basis of inter -se merit of previous year’s result \ngiving priority to those with higher number of years left to complete their respective course i.e. \n2nd year students are to get priority over the 3rd year students and soon.  \n \n(iv) Thirty percent (30%) of slots allotted to the Institution shall be reserved for eligible girl ",
+      "title": "Family income composition, prescribed course, institutional slots, merit and continuation remain unverified",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "unknown",
+          "fact": null,
+          "value": null
+        }
+      },
+      "action": null,
+      "semantic": "unassessed:pm-yasasvi-top-class-college",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "rajasthan-mirasi-bhishti-post-matric",
+      "parent": "rajasthan-mirasi-bhishti-post-matric",
+      "source_hash": "486bb4568c6a4b40385289337e48da9e70899b1d6db7835eeaa59b6d1c1a87ce",
+      "snapshot_id": "ab5dcaa2-4ef5-5567-8530-5a7ba94468c0",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202301171154461099.pdf",
+      "page": 3,
+      "passage": "ii. मिरासी (मिरासी, ad, मीर, मांगनियार, दमामी, नगारची, लंगा, राणा)\nएवं भिश्ती समुदाय के विद्यार्थियों के लिए उत्तर मैट्रिक छात्रवृति हेतु सक्षम\nप्राधिकारी द्वारा जारी Bret एवं भिश्ती समुदाय का प्रमाण पत्र होना\nआवश्यक है।\n\niii, मिरासी (मिरासी, ad, aft, मांगनियार, दमामी, नगारची, लंगा, राणा)\nएवं भिश्ती समुदाय के अभ्यर्थी के माता-पिता/ अभिभावक की वरर्थिक\nआय (अभ्यर्थी की आय को सम्मिलित करते हुये यदि है तो) राशि रूपये\n2.50 लाख दो लाख पचास हजार रुपये) से अधिक न हो। यदि अभ्यर्थी\nके माता-पिता/अभिभावक राजकीय/बोर्ड/निगम/निजी सेवा में सेवारत/ कार्यरत\nवेतनभोगी है तो विभागाध्यक्ष / कार्यालयाध्यक्ष / Prete द्वारा जारी किया\nगया आय प्रमाण पत्र मान्य होगा।\n\niv. 36 छात्रवृति राजकीय एवं मान्यता प्राप्त शिक्षण संस्थाओं में मैट्रिकोत्तर\nपाद्यक्रमों (Post Matriculation or Post Secondary Courses) #\nअध्ययन हेतु देय होगी, लेकिन एयरक्राफ्ट मेन्टेनेंस इंजीनियर्स तथा प्राईवेट\nपायलट लाईसेंस पाठ्यक्रमों, प्रशिक्षण पोत डफरिन (वर्तमान में राजेन्द्रा) पर\nसंचालित पाठ्यक्रमों, सैन्य महाविद्यालय देहरादून के प्रशिक्षण पाठ्यक्रमों तथा\nअखिल भारतीय और राज्य स्तर के पूर्व परीक्षा प्रशिक्षण dat के पाठ्यक्रमों\nमें यह छात्रवृति नही दी जायेगी।\n\nv. कोई भी छात्र एक बार किसी भी विषय से कोई कक्षा पास कर लेने\nके बाद किसी दूसरे विषय से उसी स्तर में पढाई करने के लिए\nछात्रवृति का पात्र नहीं होगा। जैसे बी.ए. करने के बाद बी.कॉम या\nअन्य विषय से ग्रेजुएशन करना इसी प्रकार एम.ए. किसी अन्य विषय\nमें करने के लिए छात्रवृति नहीं दी जायेगी।\n\nVii . अगर कोई छात्र चिकित्सा में स्नातकोत्तर स्तर का अध्ययन कर रहा है\nतो वह छात्रवृति का पात्र होगा, यदि पाठ्यकम के दौरान उसे प्रेक्टिस\nकरने की अनुमति नहीं दी गई हो।\n\nVi. इस योजना के अन्तर्गत छात्रवृति लेने वाले छात्र कोई. अन्य\nछात्रवृति/वृत्तिका नहीं लेंगे, अगर किसी छात्र को कोई दूसरी\nछात्रवृति/वृत्तिका मिलती है, तो दोनो में से किसी एक लाभकारी\n\n9:643,6886 SCHOLARSHIPS RULE 208.dor,\n",
+      "title": "Currently studying — admission and course recognition remain separate",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "student_status",
+          "value": true
+        }
+      },
+      "action": "Confirm actual current enrollment; if planning further study, investigate qualifying admission. Record enrollment only after it occurs.",
+      "semantic": "student_status",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "rajasthan-mirasi-bhishti-post-matric",
+      "parent": "rajasthan-mirasi-bhishti-post-matric",
+      "source_hash": "486bb4568c6a4b40385289337e48da9e70899b1d6db7835eeaa59b6d1c1a87ce",
+      "snapshot_id": "ab5dcaa2-4ef5-5567-8530-5a7ba94468c0",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202301171154461099.pdf",
+      "page": 3,
+      "passage": "ii. मिरासी (मिरासी, ad, मीर, मांगनियार, दमामी, नगारची, लंगा, राणा)\nएवं भिश्ती समुदाय के विद्यार्थियों के लिए उत्तर मैट्रिक छात्रवृति हेतु सक्षम\nप्राधिकारी द्वारा जारी Bret एवं भिश्ती समुदाय का प्रमाण पत्र होना\nआवश्यक है।\n\niii, मिरासी (मिरासी, ad, aft, मांगनियार, दमामी, नगारची, लंगा, राणा)\nएवं भिश्ती समुदाय के अभ्यर्थी के माता-पिता/ अभिभावक की वरर्थिक\nआय (अभ्यर्थी की आय को सम्मिलित करते हुये यदि है तो) राशि रूपये\n2.50 लाख दो लाख पचास हजार रुपये) से अधिक न हो। यदि अभ्यर्थी\nके माता-पिता/अभिभावक राजकीय/बोर्ड/निगम/निजी सेवा में सेवारत/ कार्यरत\nवेतनभोगी है तो विभागाध्यक्ष / कार्यालयाध्यक्ष / Prete द्वारा जारी किया\nगया आय प्रमाण पत्र मान्य होगा।\n\niv. 36 छात्रवृति राजकीय एवं मान्यता प्राप्त शिक्षण संस्थाओं में मैट्रिकोत्तर\nपाद्यक्रमों (Post Matriculation or Post Secondary Courses) #\nअध्ययन हेतु देय होगी, लेकिन एयरक्राफ्ट मेन्टेनेंस इंजीनियर्स तथा प्राईवेट\nपायलट लाईसेंस पाठ्यक्रमों, प्रशिक्षण पोत डफरिन (वर्तमान में राजेन्द्रा) पर\nसंचालित पाठ्यक्रमों, सैन्य महाविद्यालय देहरादून के प्रशिक्षण पाठ्यक्रमों तथा\nअखिल भारतीय और राज्य स्तर के पूर्व परीक्षा प्रशिक्षण dat के पाठ्यक्रमों\nमें यह छात्रवृति नही दी जायेगी।\n\nv. कोई भी छात्र एक बार किसी भी विषय से कोई कक्षा पास कर लेने\nके बाद किसी दूसरे विषय से उसी स्तर में पढाई करने के लिए\nछात्रवृति का पात्र नहीं होगा। जैसे बी.ए. करने के बाद बी.कॉम या\nअन्य विषय से ग्रेजुएशन करना इसी प्रकार एम.ए. किसी अन्य विषय\nमें करने के लिए छात्रवृति नहीं दी जायेगी।\n\nVii . अगर कोई छात्र चिकित्सा में स्नातकोत्तर स्तर का अध्ययन कर रहा है\nतो वह छात्रवृति का पात्र होगा, यदि पाठ्यकम के दौरान उसे प्रेक्टिस\nकरने की अनुमति नहीं दी गई हो।\n\nVi. इस योजना के अन्तर्गत छात्रवृति लेने वाले छात्र कोई. अन्य\nछात्रवृति/वृत्तिका नहीं लेंगे, अगर किसी छात्र को कोई दूसरी\nछात्रवृति/वृत्तिका मिलती है, तो दोनो में से किसी एक लाभकारी\n\n9:643,6886 SCHOLARSHIPS RULE 208.dor,\n",
+      "title": "Recognized institution and course — listed exclusions remain unassessed",
+      "rule": {
+        "op": "all",
+        "children": [
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "institution_recognized",
+              "value": true
+            }
+          },
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "course_recognized",
+              "value": true
+            }
+          }
+        ]
+      },
+      "action": null,
+      "semantic": "recognized_course_and_institution",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "rajasthan-mirasi-bhishti-post-matric",
+      "parent": "rajasthan-mirasi-bhishti-post-matric",
+      "source_hash": "486bb4568c6a4b40385289337e48da9e70899b1d6db7835eeaa59b6d1c1a87ce",
+      "snapshot_id": "ab5dcaa2-4ef5-5567-8530-5a7ba94468c0",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202301171154461099.pdf",
+      "page": 3,
+      "passage": "ii. मिरासी (मिरासी, ad, मीर, मांगनियार, दमामी, नगारची, लंगा, राणा)\nएवं भिश्ती समुदाय के विद्यार्थियों के लिए उत्तर मैट्रिक छात्रवृति हेतु सक्षम\nप्राधिकारी द्वारा जारी Bret एवं भिश्ती समुदाय का प्रमाण पत्र होना\nआवश्यक है।\n\niii, मिरासी (मिरासी, ad, aft, मांगनियार, दमामी, नगारची, लंगा, राणा)\nएवं भिश्ती समुदाय के अभ्यर्थी के माता-पिता/ अभिभावक की वरर्थिक\nआय (अभ्यर्थी की आय को सम्मिलित करते हुये यदि है तो) राशि रूपये\n2.50 लाख दो लाख पचास हजार रुपये) से अधिक न हो। यदि अभ्यर्थी\nके माता-पिता/अभिभावक राजकीय/बोर्ड/निगम/निजी सेवा में सेवारत/ कार्यरत\nवेतनभोगी है तो विभागाध्यक्ष / कार्यालयाध्यक्ष / Prete द्वारा जारी किया\nगया आय प्रमाण पत्र मान्य होगा।\n\niv. 36 छात्रवृति राजकीय एवं मान्यता प्राप्त शिक्षण संस्थाओं में मैट्रिकोत्तर\nपाद्यक्रमों (Post Matriculation or Post Secondary Courses) #\nअध्ययन हेतु देय होगी, लेकिन एयरक्राफ्ट मेन्टेनेंस इंजीनियर्स तथा प्राईवेट\nपायलट लाईसेंस पाठ्यक्रमों, प्रशिक्षण पोत डफरिन (वर्तमान में राजेन्द्रा) पर\nसंचालित पाठ्यक्रमों, सैन्य महाविद्यालय देहरादून के प्रशिक्षण पाठ्यक्रमों तथा\nअखिल भारतीय और राज्य स्तर के पूर्व परीक्षा प्रशिक्षण dat के पाठ्यक्रमों\nमें यह छात्रवृति नही दी जायेगी।\n\nv. कोई भी छात्र एक बार किसी भी विषय से कोई कक्षा पास कर लेने\nके बाद किसी दूसरे विषय से उसी स्तर में पढाई करने के लिए\nछात्रवृति का पात्र नहीं होगा। जैसे बी.ए. करने के बाद बी.कॉम या\nअन्य विषय से ग्रेजुएशन करना इसी प्रकार एम.ए. किसी अन्य विषय\nमें करने के लिए छात्रवृति नहीं दी जायेगी।\n\nVii . अगर कोई छात्र चिकित्सा में स्नातकोत्तर स्तर का अध्ययन कर रहा है\nतो वह छात्रवृति का पात्र होगा, यदि पाठ्यकम के दौरान उसे प्रेक्टिस\nकरने की अनुमति नहीं दी गई हो।\n\nVi. इस योजना के अन्तर्गत छात्रवृति लेने वाले छात्र कोई. अन्य\nछात्रवृति/वृत्तिका नहीं लेंगे, अगर किसी छात्र को कोई दूसरी\nछात्रवृति/वृत्तिका मिलती है, तो दोनो में से किसी एक लाभकारी\n\n9:643,6886 SCHOLARSHIPS RULE 208.dor,\n",
+      "title": "Not repeating a passed education stage in another subject",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "eq",
+          "fact": "same_stage_second_course",
+          "value": false
+        }
+      },
+      "action": null,
+      "semantic": "same_stage_second_course",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "rajasthan-mirasi-bhishti-post-matric",
+      "parent": "rajasthan-mirasi-bhishti-post-matric",
+      "source_hash": "486bb4568c6a4b40385289337e48da9e70899b1d6db7835eeaa59b6d1c1a87ce",
+      "snapshot_id": "ab5dcaa2-4ef5-5567-8530-5a7ba94468c0",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202301171154461099.pdf",
+      "page": 3,
+      "passage": "ii. मिरासी (मिरासी, ad, मीर, मांगनियार, दमामी, नगारची, लंगा, राणा)\nएवं भिश्ती समुदाय के विद्यार्थियों के लिए उत्तर मैट्रिक छात्रवृति हेतु सक्षम\nप्राधिकारी द्वारा जारी Bret एवं भिश्ती समुदाय का प्रमाण पत्र होना\nआवश्यक है।\n\niii, मिरासी (मिरासी, ad, aft, मांगनियार, दमामी, नगारची, लंगा, राणा)\nएवं भिश्ती समुदाय के अभ्यर्थी के माता-पिता/ अभिभावक की वरर्थिक\nआय (अभ्यर्थी की आय को सम्मिलित करते हुये यदि है तो) राशि रूपये\n2.50 लाख दो लाख पचास हजार रुपये) से अधिक न हो। यदि अभ्यर्थी\nके माता-पिता/अभिभावक राजकीय/बोर्ड/निगम/निजी सेवा में सेवारत/ कार्यरत\nवेतनभोगी है तो विभागाध्यक्ष / कार्यालयाध्यक्ष / Prete द्वारा जारी किया\nगया आय प्रमाण पत्र मान्य होगा।\n\niv. 36 छात्रवृति राजकीय एवं मान्यता प्राप्त शिक्षण संस्थाओं में मैट्रिकोत्तर\nपाद्यक्रमों (Post Matriculation or Post Secondary Courses) #\nअध्ययन हेतु देय होगी, लेकिन एयरक्राफ्ट मेन्टेनेंस इंजीनियर्स तथा प्राईवेट\nपायलट लाईसेंस पाठ्यक्रमों, प्रशिक्षण पोत डफरिन (वर्तमान में राजेन्द्रा) पर\nसंचालित पाठ्यक्रमों, सैन्य महाविद्यालय देहरादून के प्रशिक्षण पाठ्यक्रमों तथा\nअखिल भारतीय और राज्य स्तर के पूर्व परीक्षा प्रशिक्षण dat के पाठ्यक्रमों\nमें यह छात्रवृति नही दी जायेगी।\n\nv. कोई भी छात्र एक बार किसी भी विषय से कोई कक्षा पास कर लेने\nके बाद किसी दूसरे विषय से उसी स्तर में पढाई करने के लिए\nछात्रवृति का पात्र नहीं होगा। जैसे बी.ए. करने के बाद बी.कॉम या\nअन्य विषय से ग्रेजुएशन करना इसी प्रकार एम.ए. किसी अन्य विषय\nमें करने के लिए छात्रवृति नहीं दी जायेगी।\n\nVii . अगर कोई छात्र चिकित्सा में स्नातकोत्तर स्तर का अध्ययन कर रहा है\nतो वह छात्रवृति का पात्र होगा, यदि पाठ्यकम के दौरान उसे प्रेक्टिस\nकरने की अनुमति नहीं दी गई हो।\n\nVi. इस योजना के अन्तर्गत छात्रवृति लेने वाले छात्र कोई. अन्य\nछात्रवृति/वृत्तिका नहीं लेंगे, अगर किसी छात्र को कोई दूसरी\nछात्रवृति/वृत्तिका मिलती है, तो दोनो में से किसी एक लाभकारी\n\n9:643,6886 SCHOLARSHIPS RULE 208.dor,\n",
+      "title": "Mirasi/Bhishti community certificate, combined applicant/parent income, excluded courses and scholarship choice remain unverified",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "unknown",
+          "fact": null,
+          "value": null
+        }
+      },
+      "action": null,
+      "semantic": "unassessed:rajasthan-mirasi-bhishti-post-matric",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "mse-odr-delayed-payments",
+      "parent": "mse-odr-delayed-payments",
+      "source_hash": "ae5963a82cdfe822034d0085c198da96dc9d57af02fd175c09c56bda8c2a42e6",
+      "snapshot_id": "65696e81-536b-5661-821e-55c7779b5f09",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/odr-guidelines.pdf",
+      "page": 7,
+      "passage": "The Micro and Small Enterprises registered on Udyam (UR) or Udyam Assist Platform (UAP) are eligible \nunder the Scheme.",
+      "title": "Micro or small enterprise",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "in",
+          "fact": "business_size",
+          "value": [
+            "micro",
+            "small"
+          ]
+        }
+      },
+      "action": null,
+      "semantic": "business_size",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "mse-odr-delayed-payments",
+      "parent": "mse-odr-delayed-payments",
+      "source_hash": "ae5963a82cdfe822034d0085c198da96dc9d57af02fd175c09c56bda8c2a42e6",
+      "snapshot_id": "65696e81-536b-5661-821e-55c7779b5f09",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/odr-guidelines.pdf",
+      "page": 7,
+      "passage": "The Micro and Small Enterprises registered on Udyam (UR) or Udyam Assist Platform (UAP) are eligible \nunder the Scheme.",
+      "title": "Registered on Udyam OR Udyam Assist Platform",
+      "rule": {
+        "op": "any",
+        "children": [
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "business_udyam_registered",
+              "value": true
+            }
+          },
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "business_udyam_assist_registered",
+              "value": true
+            }
+          }
+        ]
+      },
+      "action": "Check existing Udyam or Udyam Assist registration. If neither exists, investigate the lawful applicable official registration route; this alone does not establish a valid delayed-payment claim.",
+      "semantic": "odr_registration",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "mse-odr-delayed-payments",
+      "parent": "mse-odr-delayed-payments",
+      "source_hash": "ae5963a82cdfe822034d0085c198da96dc9d57af02fd175c09c56bda8c2a42e6",
+      "snapshot_id": "65696e81-536b-5661-821e-55c7779b5f09",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/odr-guidelines.pdf",
+      "page": 7,
+      "passage": " \n \n  \n                                                                                                                                                                                                            Page 7 of 29   \n \n Guidelines on MSE Scheme on Online Dispute Resolution \n(ODR) for Delayed Payments \n \n6.1. Development of the MSME ODR Portal : To promote and support the end -to-end digitization of the \ndelayed payment applications by creating a digital public infrastructure.  \n \n6.2. Operations and Maintenance of the MSME ODR Portal : To enable the operationalization and \nmaintenance. \n \n6.3. Support to MSEFCs for Online Dispute Resolution Implementation: To support the Micro and Small \nEnterprises Facilitation Councils (MSEFCs) in establishing the state-of-the-art IT infrastructure . \nAdditionally, to support MSEFCs with human resources (Legal and Office/Secretarial) for the effective \nimplementation of the scheme. The financial limit for support for one Human Resource (Legal) will be Rs. \n80,000 per month. This would create an institutional legal support mechanism.  The support for human \nresources (Office/Secretarial) will be Rs. 40,000 per month.  The MSEFC can engage up to two \noffice/secretarial resources within the above financial limit. \n \n6.4. Financial Assistance to MSEs:  The Ministry of MSME will support the micro or small enterprises by \nproviding one-time financial assistance for documentation and application fees charged by MSEFCs (if any), \nlimited to a maximum grant of Rs. 4,000 per MSE. \n \n7. ELIGIBILITY CRITERION \n7.1. The Micro and Small Enterprises registered on Udyam (UR) or Udyam Assist Platform (UAP) are eligible \nunder the Scheme. \n \n8. IMPLEMENTATION PERIOD OF THE SCHEME \n8.1. The scheme will be operational from 2023-2024 to 2026-2027.  \n9. STAKEHOLDERS AND THEIR EXPECTED ROLES \n \n9.1. THE MINISTRY OF MSME \n \nThe Ministry of MSME shall create an enabling \nenvironment and assist its partners in achieving the \nabove-mentioned objectives by: \n \n \n \ni. Overseeing the development, operations , \nand maintenance of the MSME ODR Portal being \ndeveloped by the implementing agency and its \nintegration with the existing MSME Samadhaan \nPortal. The ownership of the MSME ODR Portal will \nremain with the Ministry of MSME.  ",
+      "title": "Actual delayed-payment claim, MSEFC procedure, fee evidence and current portal availability remain unverified",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "unknown",
+          "fact": null,
+          "value": null
+        }
+      },
+      "action": null,
+      "semantic": "unassessed:mse-odr-delayed-payments",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "msme-team-catalogue",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws.",
+      "title": "GST present OR online trade restricted to intra-state",
+      "rule": {
+        "op": "any",
+        "children": [
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "business_gst_registered",
+              "value": true
+            }
+          },
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "business_online_trade_scope",
+              "value": "intra_state"
+            }
+          }
+        ]
+      },
+      "action": "Check the source-defined GST/trade restriction. Do not conduct an unsupported inter-state transaction or misstate registration.",
+      "semantic": "team_gst_trade_scope",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [
+        "A missing GST registration does not automatically exclude intra-state participation.",
+        "Other applicable tax and transaction laws are not determined here."
+      ],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "msme-team-account-management",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws.",
+      "title": "GST present OR online trade restricted to intra-state",
+      "rule": {
+        "op": "any",
+        "children": [
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "business_gst_registered",
+              "value": true
+            }
+          },
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "business_online_trade_scope",
+              "value": "intra_state"
+            }
+          }
+        ]
+      },
+      "action": "Check the source-defined GST/trade restriction. Do not conduct an unsupported inter-state transaction or misstate registration.",
+      "semantic": "team_gst_trade_scope",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [
+        "A missing GST registration does not automatically exclude intra-state participation.",
+        "Other applicable tax and transaction laws are not determined here."
+      ],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "msme-team-logistics",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws.",
+      "title": "GST present OR online trade restricted to intra-state",
+      "rule": {
+        "op": "any",
+        "children": [
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "business_gst_registered",
+              "value": true
+            }
+          },
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "business_online_trade_scope",
+              "value": "intra_state"
+            }
+          }
+        ]
+      },
+      "action": "Check the source-defined GST/trade restriction. Do not conduct an unsupported inter-state transaction or misstate registration.",
+      "semantic": "team_gst_trade_scope",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [
+        "A missing GST registration does not automatically exclude intra-state participation.",
+        "Other applicable tax and transaction laws are not determined here."
+      ],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "msme-team-packaging-material",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws.",
+      "title": "GST present OR online trade restricted to intra-state",
+      "rule": {
+        "op": "any",
+        "children": [
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "business_gst_registered",
+              "value": true
+            }
+          },
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "business_online_trade_scope",
+              "value": "intra_state"
+            }
+          }
+        ]
+      },
+      "action": "Check the source-defined GST/trade restriction. Do not conduct an unsupported inter-state transaction or misstate registration.",
+      "semantic": "team_gst_trade_scope",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [
+        "A missing GST registration does not automatically exclude intra-state participation.",
+        "Other applicable tax and transaction laws are not determined here."
+      ],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "msme-team-packaging-design",
+      "parent": "msme-team",
+      "source_hash": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+      "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+      "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+      "page": 12,
+      "passage": "The MSEs who \nhave Udyam Registration certificate without a GST will only be able to do intra -state \nonline business as per applicable laws.",
+      "title": "GST present OR online trade restricted to intra-state",
+      "rule": {
+        "op": "any",
+        "children": [
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "business_gst_registered",
+              "value": true
+            }
+          },
+          {
+            "op": "condition",
+            "condition": {
+              "op": "eq",
+              "fact": "business_online_trade_scope",
+              "value": "intra_state"
+            }
+          }
+        ]
+      },
+      "action": "Check the source-defined GST/trade restriction. Do not conduct an unsupported inter-state transaction or misstate registration.",
+      "semantic": "team_gst_trade_scope",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [
+        "A missing GST registration does not automatically exclude intra-state participation.",
+        "Other applicable tax and transaction laws are not determined here."
+      ],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "rajasthan-pension-national-old-age",
+      "parent": "rajasthan-pension-national-old-age",
+      "source_hash": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+      "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+      "page": 6,
+      "passage": "अनुरूप सूचीबद्ध बी.पी.एल. परिवार के 60 वर्ष व | आवेदकों के प्रस्तुत करने पर | जिले का\nयोजना अधिक आयु के व्यक्तियों को पेंशन देय है।",
+      "title": "Age at least 60 in the captured national old-age pension baseline",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "gte",
+          "fact": "age",
+          "value": 60
+        }
+      },
+      "action": null,
+      "semantic": "national_old_age",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "rajasthan-pension-national-old-age",
+      "parent": "rajasthan-pension-national-old-age",
+      "source_hash": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+      "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+      "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+      "page": 6,
+      "passage": "पात्र नही होगा।\n\nक्र.सं, य का नाम पात्रता निस्तारण हेतु निस्तारण निस्तारण\nनोडल अधिकारी अवधि अवधि में\nसमाधान न\nहोने पर\nनियंत्रण\nअधिकारी\n4 2 3 4 5 | 6 |\n4. | इंदिरा गांधी राष्ट्रीय भारत सरकार द्वारा निर्धारित मापदण्डों के | ग्रामीण क्षेत्र. के | प्रार्थना पत्र संबंधित\nवृद्धावस्था पेंशन अनुरूप सूचीबद्ध बी.पी.एल. परिवार के 60 वर्ष व | आवेदकों के प्रस्तुत करने पर | जिले का\nयोजना अधिक आयु के व्यक्तियों को पेंशन देय है। लिये संबंधित | आवेदन की जांच | जिला\nक्षेत्र का विकास | एवं सत्यापन हेतु | कलक्टर»\nनोट:- यदि प्रार्थी स्वंय या पति या पत्नि या पुत्र | अधिकारी 30 दिवस, पेंशन | आयुक्त\nकेन्द्र सरकार /अन्य WI सरकार राज्य | (पंचायत स्वीकृति हेतु 5° | अथवा\nसरकार /राजकीय उपक्रम में सेवारत हो या | समिति)एवं दिवस तथा निदेशक,\nकेन्द्र सरकार/अन्य राज्य सरकार »राज्य | शहरी क्षेत्र में भुगतान हेतु 45 | सामाजिक\nसरकार /राजकीय उपक्रम का पेंशनर हो, तो | संबंधित दिवस निर्धारित | न्याय एवं\nवह इन नियमों के अन्तर्गत पेंशन प्राप्त करने का | उपखण्ड का है। कुल 90 अधिकारिता\nपात्र नही होगा। उपखण्ड दिवस | विभाग,\nअधिकारी जयपुर |\n2. | इंदिरा गांधी राष्ट्रीय भारत सरकार द्वारा निर्धारित मापदण्डों के | ग्रामीण क्षेत्र. के | प्रार्थना पत्र संबंधित\nविधवा पेंशन योजना | अनुरूप चयनित बी.पी.एल. परिवार की 40 वर्ष | आवेदकों के प्रस्तुत करने पर | जिले का\nसे अधिक आयु की विधवा महिलाऐं पेंशन की | लिये संबंधित | आवेदन की जांच | जिला\nपात्र है (जो भारत सरकार द्वारा निर्धारित | क्षेत्र का विकास | एवं सत्यापन हेतु | कलक्टर»\nमापदण्डों के अनुसार बी.पी.एल. सूची में सूचीबद्ध | अधिकारी 30 दिवस, पेंशन | आयुक्त\nहो) (पंचायत स्वीकृति हेतु 5 | अथवा\nनोट:- यदि प्रार्थी eda या पति या पत्नि या पुत्र | समिति) एवं दिवस तथा निदेशक,\nकेन्द्र सरकार/अन्य राज्य सरकार /राज्य | शहरी क्षेत्र में भुगतान हेतु 45 | सामाजिक\nसरकार / राजकीय उपक्रम में सेवारत हो या | संबंधित कार्य दिवस न्याय एवं\nकेन्द्र सरकार /अन्य राज्य सरकार/ राज्य | उपखण्ड का निर्धारित है। अधिकारिता\nसरकार / राजकीय उपक्रम का पेंशनर हो, तो | उपखण्ड कुल 90 fea) | विभाग,\nवह इन नियमों के अन्तर्गत पेंशन प्राप्त करने का | अधिकारी जयपुर |\n\n",
+      "title": "BPL listing, family government-service/pension exclusions, operative rules and current application route remain unverified",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "unknown",
+          "fact": null,
+          "value": null
+        }
+      },
+      "action": null,
+      "semantic": "unassessed:rajasthan-pension-national-old-age",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
+    },
+    {
+      "listing_key": "rajasthan-disability-self-employment",
+      "parent": "rajasthan-disability-self-employment",
+      "source_hash": "d1039c17b4d0958f497451b52dc2b9b3cfe4a839fb321b76be2842f18b6ee4e1",
+      "snapshot_id": "8774dfc5-a489-5a55-94d4-e31847359720",
+      "source_url": "https://sje.rajasthan.gov.in/sap_welfare_schemes.pdf",
+      "page": 1,
+      "passage": "विशेष योग्यजनों जिनकी आयु is से 55 वर्ष के बीच हो तथा जिनकी स्वयं की एवं परिवार\nकी वार्षिक आय 2.00 लाख रुपये तक हो।",
+      "title": "Captured self-employment age band: 18 to 55 (not a current-round finding)",
+      "rule": {
+        "op": "all",
+        "children": [
+          {
+            "op": "condition",
+            "condition": {
+              "op": "gte",
+              "fact": "age",
+              "value": 18
+            }
+          },
+          {
+            "op": "condition",
+            "condition": {
+              "op": "lte",
+              "fact": "age",
+              "value": 55
+            }
+          }
+        ]
+      },
+      "action": null,
+      "semantic": "disability_self_employment_age",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "visual_review_image_sha256": "3dbb2c99cd81f77b7e93c3d35d426522b3ff9262ae8719de3a288fbfe92e7a62",
+      "interpretation_note": "The preserved official page render was visually read on 18 October 2026: the lower age is 18; the existing OCR spells that token as “is”. Original snapshot and OCR text are unchanged. This is a bounded transcription check, not independent eligibility verification.",
+      "unresolved_conditions": [
+        "Disability recognition, applicant-plus-family income definition/period, lending process and current continuation are unverified."
+      ],
+      "exceptions": []
+    },
+    {
+      "listing_key": "rajasthan-disability-self-employment",
+      "parent": "rajasthan-disability-self-employment",
+      "source_hash": "d1039c17b4d0958f497451b52dc2b9b3cfe4a839fb321b76be2842f18b6ee4e1",
+      "snapshot_id": "8774dfc5-a489-5a55-94d4-e31847359720",
+      "source_url": "https://sje.rajasthan.gov.in/sap_welfare_schemes.pdf",
+      "page": 1,
+      "passage": "विशेष योग्यजनों जिनकी आयु is से 55 वर्ष के बीच हो तथा जिनकी स्वयं की एवं परिवार\nकी वार्षिक आय 2.00 लाख रुपये तक हो।",
+      "title": "Disability status/certification, applicant-plus-family income and current operative scheme remain unverified",
+      "rule": {
+        "op": "condition",
+        "condition": {
+          "op": "unknown",
+          "fact": null,
+          "value": null
+        }
+      },
+      "action": null,
+      "semantic": "unassessed:rajasthan-disability-self-employment",
+      "applicability": "Necessary condition from the captured baseline only. Current continuation, application window, source exceptions and documentary verification are separate checks.",
+      "exceptions": [],
+      "unresolved_conditions": []
     }
   ]
 }

@@ -1,0 +1,1661 @@
+{
+  "as_of": "2026-10-18",
+  "baseline_commit": "3feee52ac544f6bb12712d17113795df353fdf4c",
+  "main_listing_count": 74,
+  "archive_count": 22,
+  "no_new_source_collection": true,
+  "independent_policy_verification": false,
+  "classification_counts": {
+    "mapped_provisional_subset": 15,
+    "informational_institutional_route": 4,
+    "captured_guideline_clause_review_needed": 20,
+    "detailed_official_guideline_needed": 35
+  },
+  "listings": [
+    {
+      "key": "post-matric-sc",
+      "title": "Post-Matric Scholarship for Scheduled Caste Students (PMS-SC)",
+      "kind": "scheme",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "mapped_provisional_subset",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "8ea07734-d6cf-50aa-8e34-647bb956eb7f",
+          "sha256": "cf73697baff4d7ebaf5919363296479b501ea9efc146a27de50623a9472cfa57",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202112101717026729.pdf",
+          "existing_pages": 18,
+          "listing_citation_pages": [
+            1,
+            2
+          ]
+        }
+      ],
+      "note": "Selected cited baseline comparisons; remaining eligibility, documentary verification, exceptions and current application windows remain unknown. This is not administrator-reviewed eligibility."
+    },
+    {
+      "key": "post-matric-st",
+      "title": "Post-Matric Scholarship for Scheduled Tribe Students",
+      "kind": "scheme",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "mapped_provisional_subset",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "132c820f-cf6e-5e69-be30-12e0b53aa421",
+          "sha256": "0a198cda53699cce97f72c59608f63a5d282cee33e591ebb57b4d04b6efedc83",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202402081254549787.pdf",
+          "existing_pages": 19,
+          "listing_citation_pages": [
+            1,
+            3,
+            6,
+            7
+          ]
+        }
+      ],
+      "note": "Selected cited baseline comparisons; remaining eligibility, documentary verification, exceptions and current application windows remain unknown. This is not administrator-reviewed eligibility."
+    },
+    {
+      "key": "pm-yasasvi-pre-matric",
+      "title": "PM-YASASVI — Pre-Matric Scholarship",
+      "kind": "scheme_component",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "mapped_provisional_subset",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+          "sha256": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+          "existing_pages": 66,
+          "listing_citation_pages": [
+            1,
+            3
+          ]
+        }
+      ],
+      "note": "Selected cited baseline comparisons; remaining eligibility, documentary verification, exceptions and current application windows remain unknown. This is not administrator-reviewed eligibility."
+    },
+    {
+      "key": "pm-yasasvi-post-matric",
+      "title": "PM-YASASVI — Post-Matric Scholarship",
+      "kind": "scheme_component",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "mapped_provisional_subset",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+          "sha256": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+          "existing_pages": 66,
+          "listing_citation_pages": [
+            1,
+            12
+          ]
+        }
+      ],
+      "note": "Selected cited baseline comparisons; remaining eligibility, documentary verification, exceptions and current application windows remain unknown. This is not administrator-reviewed eligibility."
+    },
+    {
+      "key": "pm-yasasvi-top-class-school",
+      "title": "PM-YASASVI — Top Class School Education",
+      "kind": "scheme_component",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "mapped_provisional_subset",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+          "sha256": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+          "existing_pages": 66,
+          "listing_citation_pages": [
+            1,
+            30
+          ]
+        }
+      ],
+      "note": "Selected cited baseline comparisons; remaining eligibility, documentary verification, exceptions and current application windows remain unknown. This is not administrator-reviewed eligibility."
+    },
+    {
+      "key": "pm-yasasvi-top-class-college",
+      "title": "PM-YASASVI — Top Class College Education",
+      "kind": "scheme_component",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "mapped_provisional_subset",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+          "sha256": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+          "existing_pages": 66,
+          "listing_citation_pages": [
+            1,
+            33
+          ]
+        }
+      ],
+      "note": "Selected cited baseline comparisons; remaining eligibility, documentary verification, exceptions and current application windows remain unknown. This is not administrator-reviewed eligibility."
+    },
+    {
+      "key": "pm-yasasvi-hostel-construction",
+      "title": "PM-YASASVI — Construction of Hostels for OBC Boys and Girls",
+      "kind": "scheme_component",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "informational_institutional_route",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "faf6020f-4f1d-5204-88a4-4a592588913d",
+          "sha256": "4241720de7314a384a7b2f4c595066c974752aedf721e86dd160dc8e824c63d8",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312121314406874.pdf",
+          "existing_pages": 66,
+          "listing_citation_pages": [
+            1,
+            40
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-mirasi-bhishti-post-matric",
+      "title": "Post-Matric Scholarship for Mirasi and Bhishti Communities",
+      "kind": "scheme",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "mapped_provisional_subset",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "ab5dcaa2-4ef5-5567-8530-5a7ba94468c0",
+          "sha256": "486bb4568c6a4b40385289337e48da9e70899b1d6db7835eeaa59b6d1c1a87ce",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202301171154461099.pdf",
+          "existing_pages": 14,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Selected cited baseline comparisons; remaining eligibility, documentary verification, exceptions and current application windows remain unknown. This is not administrator-reviewed eligibility."
+    },
+    {
+      "key": "rajasthan-ews-development-fund-post-matric",
+      "title": "Rajasthan EWS Development Fund — Post-Matric Scholarship",
+      "kind": "scheme",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "86c01faa-d093-57fd-95bb-73ea4e97714a",
+          "sha256": "b27e8d99f470dd3d610cab291ae165dd45eb7a1d2ff367207b9fdcb60da9d27d",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202309111736417369.pdf",
+          "existing_pages": 3,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-mbc-post-matric",
+      "title": "Rajasthan Post-Matric Scholarship for Most Backward Classes",
+      "kind": "scheme",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "f7a322c8-b6f2-5297-866c-342982be234e",
+          "sha256": "fabde7a56554e82bf61d554bbea0d25320584c86fdf6c2c0f271a0157b2a1980",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202608031618291309.pdf",
+          "existing_pages": 5,
+          "listing_citation_pages": [
+            1,
+            2
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "mukhyamantri-sarvjan-higher-education",
+      "title": "Mukhyamantri Sarvjan Higher Education Post-Matric Scholarship",
+      "kind": "scheme",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "f7a322c8-b6f2-5297-866c-342982be234e",
+          "sha256": "fabde7a56554e82bf61d554bbea0d25320584c86fdf6c2c0f271a0157b2a1980",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202608031618291309.pdf",
+          "existing_pages": 5,
+          "listing_citation_pages": [
+            1,
+            2
+          ]
+        },
+        {
+          "snapshot_id": "ebeb2636-0825-5cbc-8a73-3f9bb08a00cd",
+          "sha256": "cfe0ddfc04eaf0c114f515e2ab6bea3810de54beae935102a8b1a6f3bd122bd5",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202312071248517061.pdf",
+          "existing_pages": 27,
+          "listing_citation_pages": [
+            7
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "ambedkar-international-scholarship-sc",
+      "title": "Ambedkar International Scholarship Scheme for SC Students",
+      "kind": "scheme",
+      "category": "education",
+      "evidence_strength": "directory_reference",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "5f32a295-8925-5fbc-be5c-388c91529569",
+          "sha256": "c8ff29923dcf6b9406338ac6e1b36cff6d6384168dadc14f6631cec681f4b74c",
+          "source_url": "https://sje.rajasthan.gov.in/Default.aspx?PageID=81",
+          "existing_pages": 1,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "ambedkar-fellowship-sc",
+      "title": "Ambedkar Fellowship Scheme for SC Students",
+      "kind": "scheme",
+      "category": "education",
+      "evidence_strength": "directory_reference",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "5f32a295-8925-5fbc-be5c-388c91529569",
+          "sha256": "c8ff29923dcf6b9406338ac6e1b36cff6d6384168dadc14f6631cec681f4b74c",
+          "source_url": "https://sje.rajasthan.gov.in/Default.aspx?PageID=81",
+          "existing_pages": 1,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-disability-scholarship-support",
+      "title": "Scholarship Support for Students with Disabilities — Rajasthan Source Overview",
+      "kind": "scheme",
+      "category": "education",
+      "evidence_strength": "source_overview",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "8774dfc5-a489-5a55-94d4-e31847359720",
+          "sha256": "d1039c17b4d0958f497451b52dc2b9b3cfe4a839fb321b76be2842f18b6ee4e1",
+          "source_url": "https://sje.rajasthan.gov.in/sap_welfare_schemes.pdf",
+          "existing_pages": 2,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-residential-ambedkar",
+      "title": "Dr Bhimrao Ambedkar Government Residential Schools",
+      "kind": "scheme_component",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "a88a3369-ac77-5f54-bc1f-5be0a0a6b716",
+          "sha256": "732db9d6c4e9c027230644ca31b1288e9690a760e4626835809033afeb97459f",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202205161644028109.pdf",
+          "existing_pages": 7,
+          "listing_citation_pages": [
+            1,
+            2
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-residential-devnarayan",
+      "title": "Devnarayan Government Residential Schools",
+      "kind": "scheme_component",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "a88a3369-ac77-5f54-bc1f-5be0a0a6b716",
+          "sha256": "732db9d6c4e9c027230644ca31b1288e9690a760e4626835809033afeb97459f",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202205161644028109.pdf",
+          "existing_pages": 7,
+          "listing_citation_pages": [
+            1,
+            3
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-residential-pastoralist",
+      "title": "Residential Schools for Children of Nomadic Pastoralist Families",
+      "kind": "scheme_component",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "a88a3369-ac77-5f54-bc1f-5be0a0a6b716",
+          "sha256": "732db9d6c4e9c027230644ca31b1288e9690a760e4626835809033afeb97459f",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202205161644028109.pdf",
+          "existing_pages": 7,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-residential-begging-affected-families",
+      "title": "Residential Schooling for Children of Families Affected by Begging",
+      "kind": "scheme_component",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "a88a3369-ac77-5f54-bc1f-5be0a0a6b716",
+          "sha256": "732db9d6c4e9c027230644ca31b1288e9690a760e4626835809033afeb97459f",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202205161644028109.pdf",
+          "existing_pages": 7,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-residential-sarvjan",
+      "title": "Mukhyamantri Sarvjan Government Residential School",
+      "kind": "scheme_component",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "a88a3369-ac77-5f54-bc1f-5be0a0a6b716",
+          "sha256": "732db9d6c4e9c027230644ca31b1288e9690a760e4626835809033afeb97459f",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202205161644028109.pdf",
+          "existing_pages": 7,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-government-student-hostels",
+      "title": "Government Student Hostels — Rajasthan",
+      "kind": "scheme",
+      "category": "education",
+      "evidence_strength": "directory_reference",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "0e8074a9-c645-576b-a150-27440dbf094f",
+          "sha256": "f86ce6fcd14136d452a62bba286249dd17fda929bd0facf9537b7db09566fdac",
+          "source_url": "https://sje.rajasthan.gov.in/Default.aspx?PageID=78",
+          "existing_pages": 1,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-disability-pension",
+      "title": "Disability Pension Assistance — Rajasthan Source Overview",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "source_overview",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "8774dfc5-a489-5a55-94d4-e31847359720",
+          "sha256": "d1039c17b4d0958f497451b52dc2b9b3cfe4a839fb321b76be2842f18b6ee4e1",
+          "source_url": "https://sje.rajasthan.gov.in/sap_welfare_schemes.pdf",
+          "existing_pages": 2,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-disability-self-employment",
+      "title": "Mukhyamantri Vishesh Yogyajan Self-Employment Scheme",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "source_overview",
+      "classification": "mapped_provisional_subset",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "8774dfc5-a489-5a55-94d4-e31847359720",
+          "sha256": "d1039c17b4d0958f497451b52dc2b9b3cfe4a839fb321b76be2842f18b6ee4e1",
+          "source_url": "https://sje.rajasthan.gov.in/sap_welfare_schemes.pdf",
+          "existing_pages": 2,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Selected cited baseline comparisons; remaining eligibility, documentary verification, exceptions and current application windows remain unknown. This is not administrator-reviewed eligibility."
+    },
+    {
+      "key": "rajasthan-sukhad-dampatya",
+      "title": "Sukhad Dampatya Marriage Grant Scheme",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "source_overview",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "8774dfc5-a489-5a55-94d4-e31847359720",
+          "sha256": "d1039c17b4d0958f497451b52dc2b9b3cfe4a839fb321b76be2842f18b6ee4e1",
+          "source_url": "https://sje.rajasthan.gov.in/sap_welfare_schemes.pdf",
+          "existing_pages": 2,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-disability-aids-assistance",
+      "title": "Assistance for Artificial Limbs and Assistive Devices — Rajasthan",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "source_overview",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "8774dfc5-a489-5a55-94d4-e31847359720",
+          "sha256": "d1039c17b4d0958f497451b52dc2b9b3cfe4a839fb321b76be2842f18b6ee4e1",
+          "source_url": "https://sje.rajasthan.gov.in/sap_welfare_schemes.pdf",
+          "existing_pages": 2,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-disability-anuprati",
+      "title": "Vishesh Yogyajan Anuprati Incentive Scheme",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "source_overview",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "8774dfc5-a489-5a55-94d4-e31847359720",
+          "sha256": "d1039c17b4d0958f497451b52dc2b9b3cfe4a839fb321b76be2842f18b6ee4e1",
+          "source_url": "https://sje.rajasthan.gov.in/sap_welfare_schemes.pdf",
+          "existing_pages": 2,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-palanhar",
+      "title": "Palanhar Yojana — Child Care and Education Support",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "source_overview",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "8774dfc5-a489-5a55-94d4-e31847359720",
+          "sha256": "d1039c17b4d0958f497451b52dc2b9b3cfe4a839fb321b76be2842f18b6ee4e1",
+          "source_url": "https://sje.rajasthan.gov.in/sap_welfare_schemes.pdf",
+          "existing_pages": 2,
+          "listing_citation_pages": [
+            2
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-aastha",
+      "title": "Aastha Scheme — Families with Multiple Persons with Disabilities",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "source_overview",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "8774dfc5-a489-5a55-94d4-e31847359720",
+          "sha256": "d1039c17b4d0958f497451b52dc2b9b3cfe4a839fb321b76be2842f18b6ee4e1",
+          "source_url": "https://sje.rajasthan.gov.in/sap_welfare_schemes.pdf",
+          "existing_pages": 2,
+          "listing_citation_pages": [
+            2
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "mukhyamantri-punarvas-grih",
+      "title": "Mukhyamantri Punarvas Grih Yojana — Rehabilitation Homes",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "substantive_document",
+      "classification": "informational_institutional_route",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "02c71e9d-b810-538c-b85e-1dbcf8d57b54",
+          "sha256": "5742f547fa695fc04843ebaf175896716642640ad3f991fc8d54b090a2295f94",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202503041430346860.pdf",
+          "existing_pages": 9,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "antyeshti-funeral-grant",
+      "title": "Antyeshti Funeral Grant Scheme — Rajasthan",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "substantive_document",
+      "classification": "informational_institutional_route",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "6cc98bc2-c6fb-5402-9d15-78d26c2ec580",
+          "sha256": "3a91db551c5b09d2b7b3979f06bc23b07f2dd4c3bfd55401893bd57b8f558264",
+          "source_url": "https://sje.rajasthan.gov.in/Schemes/Antheyesthi_Scheme.pdf",
+          "existing_pages": 6,
+          "listing_citation_pages": [
+            1,
+            3
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-silicosis-rehabilitation",
+      "title": "Rajasthan Pneumoconiosis and Silicosis Detection, Prevention and Rehabilitation",
+      "kind": "scheme",
+      "category": "healthcare",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "8f82f0cc-9d02-58db-8971-e93ecaf18b1f",
+          "sha256": "6877927cb8ad289635b1c3d26f9e48d164ebfa335c4b4217b082119556798486",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/201911211545271328.pdf",
+          "existing_pages": 20,
+          "listing_citation_pages": [
+            1,
+            10,
+            12
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "sambal-gram",
+      "title": "Sambal Gram Scheme — Rajasthan Directory Entry",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "directory_reference",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "91cd2508-c759-5b9d-9880-2b5a03546a11",
+          "sha256": "88165e97abb65183272a99642032997a23c5a597326b96b93a918805fafd6228",
+          "source_url": "https://sje.rajasthan.gov.in/Default.aspx?PageID=287",
+          "existing_pages": 1,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-ambedkar-award-social-service",
+      "title": "Ambedkar Social Service Award",
+      "kind": "award",
+      "category": "welfare",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "a0270c77-7ef2-5f60-adc2-76ef7413ef97",
+          "sha256": "108e66f51124caa19d12eb2e871ea904e2290e72898ec5f838f28554822941a6",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202302241355250776.pdf",
+          "existing_pages": 5,
+          "listing_citation_pages": [
+            1
+          ]
+        },
+        {
+          "snapshot_id": "64f87edc-39de-58c8-a74a-23b31f89e93a",
+          "sha256": "02b4ed7272378681e3ea67d6982699d1c2fcc12124e055c6a7267781fc0193a0",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202302241449266853.pdf",
+          "existing_pages": 3,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-ambedkar-award-women",
+      "title": "Ambedkar Women Award",
+      "kind": "award",
+      "category": "welfare",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "a0270c77-7ef2-5f60-adc2-76ef7413ef97",
+          "sha256": "108e66f51124caa19d12eb2e871ea904e2290e72898ec5f838f28554822941a6",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202302241355250776.pdf",
+          "existing_pages": 5,
+          "listing_citation_pages": [
+            2
+          ]
+        },
+        {
+          "snapshot_id": "64f87edc-39de-58c8-a74a-23b31f89e93a",
+          "sha256": "02b4ed7272378681e3ea67d6982699d1c2fcc12124e055c6a7267781fc0193a0",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202302241449266853.pdf",
+          "existing_pages": 3,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-ambedkar-award-education",
+      "title": "Ambedkar Education Award",
+      "kind": "award",
+      "category": "education",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "a0270c77-7ef2-5f60-adc2-76ef7413ef97",
+          "sha256": "108e66f51124caa19d12eb2e871ea904e2290e72898ec5f838f28554822941a6",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202302241355250776.pdf",
+          "existing_pages": 5,
+          "listing_citation_pages": [
+            2
+          ]
+        },
+        {
+          "snapshot_id": "64f87edc-39de-58c8-a74a-23b31f89e93a",
+          "sha256": "02b4ed7272378681e3ea67d6982699d1c2fcc12124e055c6a7267781fc0193a0",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202302241449266853.pdf",
+          "existing_pages": 3,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-ambedkar-award-justice",
+      "title": "Ambedkar Justice Award",
+      "kind": "award",
+      "category": "welfare",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "a0270c77-7ef2-5f60-adc2-76ef7413ef97",
+          "sha256": "108e66f51124caa19d12eb2e871ea904e2290e72898ec5f838f28554822941a6",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202302241355250776.pdf",
+          "existing_pages": 5,
+          "listing_citation_pages": [
+            2
+          ]
+        },
+        {
+          "snapshot_id": "64f87edc-39de-58c8-a74a-23b31f89e93a",
+          "sha256": "02b4ed7272378681e3ea67d6982699d1c2fcc12124e055c6a7267781fc0193a0",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202302241449266853.pdf",
+          "existing_pages": 3,
+          "listing_citation_pages": [
+            1
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "msme-team-catalogue",
+      "title": "MSME TEAM — ONDC Onboarding and Digital Catalogue Support",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "substantive_document",
+      "classification": "mapped_provisional_subset",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+          "sha256": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "existing_pages": 4,
+          "listing_citation_pages": [
+            1,
+            9,
+            11
+          ]
+        }
+      ],
+      "note": "Selected cited baseline comparisons; remaining eligibility, documentary verification, exceptions and current application windows remain unknown. This is not administrator-reviewed eligibility."
+    },
+    {
+      "key": "msme-team-account-management",
+      "title": "MSME TEAM — ONDC Account Management Support",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "substantive_document",
+      "classification": "mapped_provisional_subset",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+          "sha256": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "existing_pages": 4,
+          "listing_citation_pages": [
+            1,
+            9,
+            11
+          ]
+        }
+      ],
+      "note": "Selected cited baseline comparisons; remaining eligibility, documentary verification, exceptions and current application windows remain unknown. This is not administrator-reviewed eligibility."
+    },
+    {
+      "key": "msme-team-logistics",
+      "title": "MSME TEAM — Transportation and Logistics Support",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "substantive_document",
+      "classification": "mapped_provisional_subset",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+          "sha256": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "existing_pages": 4,
+          "listing_citation_pages": [
+            1,
+            10,
+            11
+          ]
+        }
+      ],
+      "note": "Selected cited baseline comparisons; remaining eligibility, documentary verification, exceptions and current application windows remain unknown. This is not administrator-reviewed eligibility."
+    },
+    {
+      "key": "msme-team-packaging-material",
+      "title": "MSME TEAM — Packaging Material Support",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "substantive_document",
+      "classification": "mapped_provisional_subset",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+          "sha256": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "existing_pages": 4,
+          "listing_citation_pages": [
+            1,
+            10,
+            11
+          ]
+        }
+      ],
+      "note": "Selected cited baseline comparisons; remaining eligibility, documentary verification, exceptions and current application windows remain unknown. This is not administrator-reviewed eligibility."
+    },
+    {
+      "key": "msme-team-packaging-design",
+      "title": "MSME TEAM — Packaging Design Support through IIP",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "substantive_document",
+      "classification": "mapped_provisional_subset",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "e9350348-91af-566c-ab85-135f384066d2",
+          "sha256": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_1.pdf",
+          "existing_pages": 4,
+          "listing_citation_pages": [
+            1,
+            10,
+            11
+          ]
+        }
+      ],
+      "note": "Selected cited baseline comparisons; remaining eligibility, documentary verification, exceptions and current application windows remain unknown. This is not administrator-reviewed eligibility."
+    },
+    {
+      "key": "mse-odr-delayed-payments",
+      "title": "MSE Online Dispute Resolution Scheme for Delayed Payments",
+      "kind": "scheme",
+      "category": "business",
+      "evidence_strength": "substantive_document",
+      "classification": "mapped_provisional_subset",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "65696e81-536b-5661-821e-55c7779b5f09",
+          "sha256": "ae5963a82cdfe822034d0085c198da96dc9d57af02fd175c09c56bda8c2a42e6",
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/odr-guidelines.pdf",
+          "existing_pages": 29,
+          "listing_citation_pages": [
+            5,
+            7
+          ]
+        }
+      ],
+      "note": "Selected cited baseline comparisons; remaining eligibility, documentary verification, exceptions and current application windows remain unknown. This is not administrator-reviewed eligibility."
+    },
+    {
+      "key": "pms-trade-fairs",
+      "title": "PMS — Individual MSE Participation in Trade Fairs and Exhibitions",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "db9e80cc-f579-5671-bbe7-4f624e7ec05b",
+          "sha256": "a0bbff9257700b9d8dac83f6e20122bf45b90982a6edfe6b8fa4730e5fd8172d",
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "existing_pages": 4,
+          "listing_citation_pages": [
+            1,
+            2
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "pms-vendor-development",
+      "title": "PMS — Vendor Development Programmes",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "db9e80cc-f579-5671-bbe7-4f624e7ec05b",
+          "sha256": "a0bbff9257700b9d8dac83f6e20122bf45b90982a6edfe6b8fa4730e5fd8172d",
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "existing_pages": 4,
+          "listing_citation_pages": [
+            1,
+            4
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "pms-packaging",
+      "title": "PMS — Cluster Packaging and Branding Support",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "db9e80cc-f579-5671-bbe7-4f624e7ec05b",
+          "sha256": "a0bbff9257700b9d8dac83f6e20122bf45b90982a6edfe6b8fa4730e5fd8172d",
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "existing_pages": 4,
+          "listing_citation_pages": [
+            1,
+            4
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "pms-barcodes",
+      "title": "PMS — Bar-Code Adoption Assistance",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "db9e80cc-f579-5671-bbe7-4f624e7ec05b",
+          "sha256": "a0bbff9257700b9d8dac83f6e20122bf45b90982a6edfe6b8fa4730e5fd8172d",
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "existing_pages": 4,
+          "listing_citation_pages": [
+            1,
+            4
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "pms-ecommerce",
+      "title": "PMS — E-Commerce Adoption through MSME Global Mart",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "db9e80cc-f579-5671-bbe7-4f624e7ec05b",
+          "sha256": "a0bbff9257700b9d8dac83f6e20122bf45b90982a6edfe6b8fa4730e5fd8172d",
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "existing_pages": 4,
+          "listing_citation_pages": [
+            1,
+            5
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "pms-workshops",
+      "title": "PMS — National Workshop and Seminar Support",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "db9e80cc-f579-5671-bbe7-4f624e7ec05b",
+          "sha256": "a0bbff9257700b9d8dac83f6e20122bf45b90982a6edfe6b8fa4730e5fd8172d",
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "existing_pages": 4,
+          "listing_citation_pages": [
+            1,
+            5
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "pms-gi-retail",
+      "title": "PMS — Retail Outlets for Geographical Indication Products",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "substantive_document",
+      "classification": "captured_guideline_clause_review_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "db9e80cc-f579-5671-bbe7-4f624e7ec05b",
+          "sha256": "a0bbff9257700b9d8dac83f6e20122bf45b90982a6edfe6b8fa4730e5fd8172d",
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/PMS_Scheme_Guidelines_0.pdf",
+          "existing_pages": 4,
+          "listing_citation_pages": [
+            1,
+            5
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "msme-international-cooperation",
+      "title": "MSME International Cooperation Scheme",
+      "kind": "scheme",
+      "category": "business",
+      "evidence_strength": "substantive_document",
+      "classification": "informational_institutional_route",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "f389f2ec-5f53-5c81-b60f-895449a34c07",
+          "sha256": "97823f93eb6497934eceaa51f58e1a9b11812eadd2e080f517bbf82b7a90b6a3",
+          "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/IC_MDAGuidelines_2024_1.pdf",
+          "existing_pages": 22,
+          "listing_citation_pages": [
+            1,
+            3,
+            5
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-pension-national-old-age",
+      "title": "Indira Gandhi National Old Age Pension — Rajasthan Route",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "charter_summary",
+      "classification": "mapped_provisional_subset",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            1,
+            6
+          ]
+        }
+      ],
+      "note": "Selected cited baseline comparisons; remaining eligibility, documentary verification, exceptions and current application windows remain unknown. This is not administrator-reviewed eligibility."
+    },
+    {
+      "key": "rajasthan-pension-national-widow",
+      "title": "Indira Gandhi National Widow Pension — Rajasthan Route",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            1,
+            6
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-pension-national-disability",
+      "title": "Indira Gandhi National Disability Pension — Rajasthan Route",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            1,
+            7
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-pension-state-old-age",
+      "title": "Mukhyamantri Vriddhjan Samman Pension",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            1,
+            7
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-pension-state-single-woman",
+      "title": "Mukhyamantri Ekal Nari Samman Pension",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            1,
+            8
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-pension-small-marginal-farmer",
+      "title": "Small and Marginal Elderly Farmer Samman Pension — Rajasthan",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            1,
+            9
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "ambedkar-dbt-voucher",
+      "title": "Ambedkar DBT Voucher Scheme — Rajasthan",
+      "kind": "scheme",
+      "category": "education",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            13
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-widow-remarriage-gift",
+      "title": "Widow Remarriage Gift Scheme — Rajasthan",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            14
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "mukhyamantri-kanyadan",
+      "title": "Mukhyamantri Kanyadan Yojana — Rajasthan",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            14
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-disability-sports",
+      "title": "Sports and Cultural Participation Support for Persons with Disabilities — Rajasthan",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            16
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-disability-state-awards",
+      "title": "State-Level Awards for Persons with Disabilities — Rajasthan",
+      "kind": "award",
+      "category": "welfare",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            16
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-sc-special-central-assistance",
+      "title": "Special Central Assistance — SC Self-Employment Routes in Rajasthan",
+      "kind": "scheme",
+      "category": "business",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            18
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-national-corporation-nsfdc",
+      "title": "NSFDC Assistance Routes for SC Applicants — Rajasthan Channel",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            19
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-national-corporation-nstfdc",
+      "title": "NSTFDC Assistance Routes for ST Applicants — Rajasthan Channel",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            20
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-national-corporation-nskfdc",
+      "title": "NSKFDC Assistance Routes — Rajasthan Channel",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            20
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-national-corporation-nhfdc",
+      "title": "NHFDC Assistance Routes for Persons with Disabilities — Rajasthan Channel",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            20
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-national-corporation-nbcfdc",
+      "title": "NBCFDC Assistance Routes for Backward Classes — Rajasthan Channel",
+      "kind": "scheme_component",
+      "category": "business",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            21
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "rajasthan-st-pop-banking",
+      "title": "ST POP Banking Assistance Scheme — Rajasthan",
+      "kind": "scheme",
+      "category": "business",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            21
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "maharana-pratap-housing",
+      "title": "Maharana Pratap House Construction Scheme for Gadiya Lohar Families",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            21
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "gadiya-lohar-raw-material",
+      "title": "Raw-Material Purchase Grant for Gadiya Lohar Applicants — Rajasthan",
+      "kind": "scheme",
+      "category": "business",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            21
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "devnarayan-pre-matric",
+      "title": "Devnarayan Pre-Matric Scholarship",
+      "kind": "scheme",
+      "category": "education",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            22
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "devnarayan-gurukul",
+      "title": "Devnarayan Gurukul Yojana",
+      "kind": "scheme",
+      "category": "education",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            23
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "devnarayan-scooty-incentive",
+      "title": "Devnarayan Girls Scooty Distribution and Incentive Scheme",
+      "kind": "scheme",
+      "category": "education",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            23,
+            24
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "kalibai-bhil-scooty",
+      "title": "Kalibai Bhil Meritorious Girls Scooty Scheme — Captured SC Route",
+      "kind": "scheme",
+      "category": "education",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            24
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    },
+    {
+      "key": "savita-ben-ambedkar-intercaste-marriage",
+      "title": "Dr Savita Ben Ambedkar Inter-Caste Marriage Incentive Scheme",
+      "kind": "scheme",
+      "category": "welfare",
+      "evidence_strength": "charter_summary",
+      "classification": "detailed_official_guideline_needed",
+      "current_application_window": "not_verified",
+      "sources": [
+        {
+          "snapshot_id": "7ff930ec-22f9-51a4-b718-94ab113fb8e3",
+          "sha256": "67c8878aa77c5222938f2fa2935222b8549bf8a8a5789a1b6756be471b6fcd73",
+          "source_url": "https://sje.rajasthan.gov.in/siteadmin/Uploads/202406271148090737.pdf",
+          "existing_pages": 25,
+          "listing_citation_pages": [
+            25
+          ]
+        }
+      ],
+      "note": "Identity/source-evidence triage, not a finding of legal completeness. Existing source summaries and charter entries need operative guidelines before complete eligibility decisions."
+    }
+  ],
+  "mapped_programme_parents": 11,
+  "mapped_listing_rows": 15,
+  "comparison_records": 85
+}

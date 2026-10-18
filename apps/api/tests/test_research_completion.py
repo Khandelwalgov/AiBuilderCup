@@ -45,23 +45,27 @@ def request(client, **body):
 
 
 def outcomes(item):
-    return {c["rule"]["condition"].get("fact"): c["result"]["outcome"] for c in item["conditions"]}
+    return {
+        (c["rule"].get("condition") or {}).get("fact"): c["result"]["outcome"]
+        for c in item["conditions"]
+    }
 
 
 def test_all_condition_mappings_are_bound_to_existing_captured_documents():
     bundle = json.loads((ROOT / "data/research/catalogue-v1.json").read_text())
     rows = {r["key"]: r for r in bundle["listings"]}
-    team = json.loads((ROOT / "data/policy-review/2026-10-17/team.json").read_text())
+    evidence = json.loads((ROOT / "data/research/condition-evidence-v2.json").read_text())
+    captured = {s["snapshot_id"]: s for s in evidence["sources"]}
     from opportunity_platform.ingestion.schemas import normalize
 
     for c in definitions():
         sources = rows[c["listing_key"]]["sources"]
         source = next(s for s in sources if s["content_hash"] == c["source_hash"])
         assert source["snapshot_id"] == c["snapshot_id"] and source["source_url"] == c["source_url"]
-        pages = team["pages"] if c["listing_key"].startswith("msme-team") else source["pages"]
+        pages = captured[c["snapshot_id"]]["pages"]
         page = next(p for p in pages if p["page"] == c["page"])
         assert normalize(c["passage"]) in normalize(page["text"])
-    assert len({c["parent"] for c in definitions()}) == 4
+    assert len({c["parent"] for c in definitions()}) == 11
 
 
 def test_personal_discovery_education_scenario_and_plan_are_source_backed(real_guidance):
@@ -90,7 +94,7 @@ def test_personal_discovery_education_scenario_and_plan_are_source_backed(real_g
     assert outcomes(st)["has_bank_account"] == "unknown"
     assert data["reviewed"]["catalogue_count"] == 0 and data["eligible_count"] == 0
     assert data["candidate_count"] > 8
-    assert data["supported_pair_count"] == 3
+    assert data["supported_pair_count"] == 9
     assert any(i["listing"]["jurisdiction"] == "Rajasthan" for i in data["items"])
     simulation = request(
         client, scenario=True, overrides=[{"key": "student_status", "value": True}]
@@ -98,7 +102,7 @@ def test_personal_discovery_education_scenario_and_plan_are_source_backed(real_g
     simulated = next(i for i in simulation["items"] if i["parent_key"] == "post-matric-st")
     assert outcomes(simulated)["student_status"] == "satisfied"
     assert outcomes(simulated)[None] == "unknown"
-    assert sum(c["changed"] for c in simulated["conditions"]) == 1
+    assert sum(c["changed"] for c in simulated["conditions"]) == 4
     assert simulation["actions"] and not list(db.scalars(select(ActionItem)))
     assert before == [(f.id, copy.deepcopy(f.value)) for f in db.scalars(select(ProfileFact))]
     plan = client.post("/v1/research-opportunities/plan", json={}).json()
@@ -139,7 +143,7 @@ def test_family_members_have_separate_conditions_and_revocation(real_guidance):
         children.append(child)
     body = {"subject": {"kind": "household", "id": str(household.id)}, "q": "YASASVI"}
     result = request(client, **body)
-    assert result["supported_pair_count"] == 6
+    assert result["supported_pair_count"] == 12
     first = next(
         i
         for i in result["items"]
@@ -210,7 +214,7 @@ def test_business_specific_readiness_components_and_hypothesis(real_guidance):
     db.commit()
     body = {"subject": {"kind": "business", "id": str(business.id)}}
     result = request(client, **body)
-    assert result["supported_pair_count"] == 1
+    assert result["supported_pair_count"] == 2
     team = next(i for i in result["items"] if i["parent_key"] == "msme-team")
     assert len(team["components"]) == 4
     assert outcomes(team)["business_udyam_registered"] == "unsatisfied"

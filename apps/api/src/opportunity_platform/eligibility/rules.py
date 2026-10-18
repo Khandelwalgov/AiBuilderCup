@@ -29,6 +29,22 @@ FactKey = Literal[
     "business_size",
     "business_sector",
     "business_similar_assistance",
+    "business_udyam_assist_registered",
+    "business_gst_registered",
+    "business_online_trade_scope",
+    "beneficiary_category",
+    "category_domicile_recognized",
+    "institution_recognized",
+    "course_recognized",
+    "studying_in_india",
+    "receives_other_scholarship",
+    "other_support_only_incidental",
+    "same_stage_second_course",
+    "top_class_school_listed",
+    "top_class_college_listed",
+    "orphan_supported_by_guardian",
+    "parental_income_salary_basis",
+    "education_admission_year",
     "student_status",
     "employment_status",
     "has_bank_account",
@@ -45,7 +61,7 @@ Scalar = str | int | float | bool
 
 class Condition(BaseModel):
     model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
-    op: Literal["eq", "gte", "lte", "in", "document", "unknown"]
+    op: Literal["eq", "gte", "lte", "gt", "lt", "in", "document", "unknown"]
     fact: FactKey | None = None
     value: Scalar | list[Scalar] | None = None
     income_period: str | None = None
@@ -56,7 +72,7 @@ class Condition(BaseModel):
     def shape(self):
         if self.op != "unknown" and self.fact is None:
             raise ValueError("A condition needs a known fact key")
-        if self.op in {"gte", "lte"} and (type(self.value) not in (int, float)):
+        if self.op in {"gte", "lte", "gt", "lt"} and (type(self.value) not in (int, float)):
             raise ValueError("Numeric comparison requires a number")
         if self.op == "in" and not isinstance(self.value, list):
             raise ValueError("Membership comparison requires a list")
@@ -86,13 +102,13 @@ class Condition(BaseModel):
             "has_udid_certificate",
         } and self.op not in {"document", "unknown"}:
             raise ValueError("Document possession must be evaluated as an evidence dependency")
-        if self.op in {"eq", "in", "gte", "lte"}:
+        if self.op in {"eq", "in", "gte", "lte", "gt", "lt"}:
             values = self.value if self.op == "in" else [self.value]
             if not values or any(value is None for value in values):
                 raise ValueError("Comparisons need explicit, nonempty values")
             for value in values:
                 FactInput(key=self.fact, value=value)
-            if self.op in {"gte", "lte"} and self.fact not in {
+            if self.op in {"gte", "lte", "gt", "lt"} and self.fact not in {
                 "age",
                 "annual_personal_income",
                 "annual_parental_income",
@@ -139,9 +155,20 @@ class FactInput(BaseModel):
 
     @model_validator(mode="after")
     def valid(self):
+        if self.key == "education_admission_year" and self.value is not None:
+            import re
+
+            if not isinstance(self.value, str) or not re.fullmatch(
+                r"20[0-9]{2}-[0-9]{2}", self.value
+            ):
+                raise ValueError("Use an academic admission year such as 2026-27")
+            if int(self.value[-2:]) != (int(self.value[:4]) + 1) % 100:
+                raise ValueError("Admission year must span consecutive years")
         choices = {
             "business_size": {"micro", "small", "medium", "other"},
             "business_sector": {"manufacturing", "services", "trading", "other"},
+            "business_online_trade_scope": {"intra_state", "inter_state", "unknown"},
+            "beneficiary_category": {"SC", "ST", "OBC", "EBC", "DNT", "other"},
         }
         if self.key in choices and self.value is not None and self.value not in choices[self.key]:
             raise ValueError("Choose a supported business classification")
@@ -200,6 +227,19 @@ class FactInput(BaseModel):
                 "school_government",
                 "business_udyam_registered",
                 "business_similar_assistance",
+                "business_udyam_assist_registered",
+                "business_gst_registered",
+                "category_domicile_recognized",
+                "institution_recognized",
+                "course_recognized",
+                "studying_in_india",
+                "receives_other_scholarship",
+                "other_support_only_incidental",
+                "same_stage_second_course",
+                "top_class_school_listed",
+                "top_class_college_listed",
+                "orphan_supported_by_guardian",
+                "parental_income_salary_basis",
                 "auto_debit_consent",
                 "business_registered",
             }:

@@ -271,7 +271,7 @@ def validate(raw, audited):
                             human=True,
                         )
                     )
-            if condition.op in {"gte", "lte"}:
+            if condition.op in {"gte", "lte", "gt", "lt"}:
                 problems.append(
                     issue(
                         "comparison_semantics_review",
