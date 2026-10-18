@@ -148,3 +148,24 @@ research mappings, catalogue records, source snapshots and production resources 
 Weekly collection implementation/activation is deferred under the user's priority ordering
 until qualifying Gemini evidence and submission-critical tasks. The existing separately scoped
 [weekly plan](weekly-source-monitoring-plan.md) is still a plan, not a running scheduler.
+
+## Authorized bounded live attempt — 18 October 2026
+
+Executed exactly commit `86075e0b1f24f1191d0c3cb3e6abf33cd6805469` after explicit one-attempt
+approval. Fresh account ownership/model/free-quota and billing-disabled checks passed.
+The preserved TEAM pages 1 and 12 were used with the smaller bounded envelope. Exactly one
+countTokens call succeeded (**2,976 tokens**) and one generation request returned **HTTP 400**
+at `generate_content`: `Request contains an invalid argument.` No field violations were
+provided. The narrower schema therefore has **not** resolved the server rejection.
+
+No response output exists: JSON/Pydantic/citation checks were **not run**, rather than failed
+against generated content. No candidate was created and no independent reviewer, repair,
+OpenAI fallback, import, publication or production mutation ran. All four prior durable
+reservations were retained and two new zero-dollar reservations were appended to the same
+isolated local schema. Generation token usage was not supplied by the provider. No further
+provider request is authorized or attempted.
+
+[Sanitized actual request receipt](evidence/gemini-bounded-attempt-2026-10-18.json).
+This is failure evidence, not a successful Google GenAI demonstration. The root cause remains
+unresolved; further genuine inference needs a new explicit bounded authorization and should
+follow a concrete diagnostic change, not a blind retry.

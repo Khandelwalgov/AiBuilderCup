@@ -1,0 +1,47 @@
+{
+  "executed_commit": "86075e0b1f24f1191d0c3cb3e6abf33cd6805469",
+  "date": "2026-10-18",
+  "mode": "genuine_provider_attempt",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_0.pdf",
+  "source_sha256": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+  "selected_pages": [
+    1,
+    12
+  ],
+  "selected_text_sha256": "dbf691c8771448baa8720ae79c97021358f38b0339b808cca519fa16c139119b",
+  "schema_sha256": "57ab7baa65ac1f0a7b87bd2246b6164ada8d36b355393789ed1d3c355ac6eea3",
+  "account_checks": {
+    "billing_enabled": false,
+    "positive_model_free_quota_confirmed": true
+  },
+  "calls": {
+    "count_tokens": 1,
+    "generate_content": 1,
+    "reviewer": 0,
+    "repair": 0,
+    "openai": 0
+  },
+  "counted_input_tokens": 2976,
+  "reserved_generation_input_bound": 4000,
+  "max_output_tokens": 4096,
+  "generation_http_status": 400,
+  "request_stage": "generate_content",
+  "provider_diagnostic": "Request contains an invalid argument.",
+  "field_errors": [],
+  "generation_success": false,
+  "output_schema_validation": "not_run_no_output",
+  "original_contract_validation": "not_run_no_output",
+  "source_passage_validation": "not_run_no_output",
+  "candidate_created": false,
+  "independent_review": "not_authorized_not_run",
+  "publication": "none",
+  "previous_reservations_retained": 4,
+  "new_durable_reservations": 2,
+  "reserved_usd": "0",
+  "generation_usage": "not_reported_by_provider",
+  "paid_inference_calls": 0,
+  "production_mutations": 0,
+  "source_snapshot_mutations": 0
+}
