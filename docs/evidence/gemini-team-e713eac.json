@@ -1,0 +1,64 @@
+{
+  "executed_commit": "e713eac46beb3a32f50fe65c3509f6ec6e4a96b0",
+  "executed_at_utc": "2026-10-18T08:24:09+00:00",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "model_version": "gemini-3.5-flash-lite",
+  "source_snapshot_id": "0394eb41-267e-4a9d-8259-65d20a7ef6c7",
+  "source_url": "https://ramp.msme.gov.in/ramp/sites/default/files/2026-05/Approved-msme-team-guidelines_0.pdf",
+  "source_sha256": "0b9e09be6960b07d22013cf9fa52e0e0a9f6040d03df6799be100db7f76b4eaf",
+  "selected_pages": [
+    1,
+    12
+  ],
+  "selected_text_sha256": "dbf691c8771448baa8720ae79c97021358f38b0339b808cca519fa16c139119b",
+  "transport": {
+    "name": "payload_json_bounded_v1",
+    "schema_sha256": "180e2321ff96678fc08cdf3648b9a7f7e1e60ec342b66c5d43eff032fcc01b2a",
+    "inner_schema_sha256": "57ab7baa65ac1f0a7b87bd2246b6164ada8d36b355393789ed1d3c355ac6eea3",
+    "sdk_version": "2.29.0",
+    "max_input_tokens": 20000,
+    "max_output_tokens": 4096
+  },
+  "prompt_schema_sha256": "a1ecc89ee2deb6068b9709e298e7d4e3a6c5f31ffd528fd4f4c161b0251a0417",
+  "account_proof": {
+    "project": "gen-lang-client-0305465449",
+    "billing_enabled": false,
+    "free_quotas": {
+      "tpm": 250000,
+      "rpm": 15,
+      "rpd": 500
+    }
+  },
+  "genuine_model_generation_calls": 1,
+  "count_tokens_calls": 1,
+  "counted_input_tokens": 3051,
+  "actual_input_tokens": 3017,
+  "actual_output_tokens": 1785,
+  "thinking_tokens": null,
+  "generation_sdk_response": "successful; numeric HTTP status was not retained",
+  "validation_stages": {
+    "generation_succeeded": true,
+    "transport_schema_valid": true,
+    "bounded_payload_valid": false,
+    "original_contract_valid": false,
+    "source_passages_valid": false,
+    "incomplete_draft_awaiting_human_review": false,
+    "independent_ai_review_completed": false
+  },
+  "workflow_status": "human_escalation",
+  "failure_type": "ValidationError",
+  "failure_stage": "validate_response",
+  "failure_detail": "Inner BoundedExtraction rejected generated JSON. This attempt did not retain field paths or raw generated content; exact invalid fields cannot be recovered from the dossier.",
+  "recorded_model_cost_usd": "0",
+  "prior_local_reservations_retained": 6,
+  "new_local_reservations": 2,
+  "total_local_reservations": 8,
+  "independent_ai_review_calls": 0,
+  "repair_calls": 0,
+  "fallback_calls": 0,
+  "candidate_staged": false,
+  "catalogue_imports": 0,
+  "policy_publications": 0,
+  "production_requests_or_mutations": 0
+}

@@ -5,6 +5,14 @@ commit `038594fb823136e6468cfaef79cd80e503800a0c`, Cloud Run
 `opportunity-api-00013-zoj`, Hosting `375a1c14fd8ab1fe` on
 [Unclaimed](https://unclaimed-ai-cup.web.app).
 
+## Latest result: authorized payload-envelope attempt
+
+On 18 October, exact commit `e713eac46beb3a32f50fe65c3509f6ec6e4a96b0` made one authorized genuine `gemini-3.5-flash-lite` generation on the preserved TEAM pages 1/12. **Generation succeeded and the outer envelope validated; the inner extraction failed Pydantic validation. No candidate was staged.** Actual usage: 3,017 input / 1,785 output tokens; countTokens reported 3,051; recorded model charge US$0 with freshly verified billing disabled. Six previous local reservations were retained and two added, reaching the configured eight-reservation daily cap. No retry, reviewer, repair, fallback, import or publication ran.
+
+The original trace did not retain inner validation paths, so its exact invalid fields cannot be recovered. A subsequent offline-only diagnostic change records bounded schema paths/error types without generated inputs, messages or untrusted extra-field names. It has not been invoked against Google. See [sanitized genuine-call evidence](evidence/gemini-team-e713eac.json). A successful Google response is now demonstrated; **validated document-to-policy ingestion remains blocked**.
+
+The production acceptance below is historical. Neon is now operator-reported paused for its transfer limit; no production requests were made in this pass.
+
 ## Product acceptance actually completed
 
 The live public API was rechecked: **96 research listings (74 main / 22 archive),

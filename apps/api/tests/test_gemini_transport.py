@@ -324,8 +324,8 @@ def test_bounded_role_uses_existing_review_workflow_and_never_publishes(monkeypa
     )
 
 
-@pytest.mark.parametrize("fabricated", [False, True])
-def test_full_bounded_sdk_response_stages_are_truthful_with_mocked_http(monkeypatch, fabricated):
+@pytest.mark.parametrize("defect", ["none", "fabricated", "incomplete"])
+def test_full_bounded_sdk_response_stages_are_truthful_with_mocked_http(monkeypatch, defect):
     from contextlib import nullcontext
 
     from opportunity_platform.core.config import settings
@@ -333,8 +333,11 @@ def test_full_bounded_sdk_response_stages_are_truthful_with_mocked_http(monkeypa
     from opportunity_platform.ingestion.corpus_policy import live
 
     source, wire = sample()
-    if fabricated:
+    if defect == "fabricated":
         wire["candidate"]["requirements"][0]["evidence"]["passage"] = "Unsupported claim."
+    if defect == "incomplete":
+        del wire["candidate"]["field_evidence"]
+        wire["candidate"]["untrusted-secret-extra-field"] = "never-record-this-value"
     monkeypatch.setattr(settings(), "process_role", "ingestion_worker")
     monkeypatch.setattr(settings(), "gemini_free_worker_enabled", True)
     monkeypatch.setattr(settings(), "gemini_api_key", "dummy-not-real")
@@ -346,7 +349,8 @@ def test_full_bounded_sdk_response_stages_are_truthful_with_mocked_http(monkeypa
         return "mock-reservation"
 
     monkeypatch.setattr(budget, "reserve", reserve)
-    monkeypatch.setattr(budget, "settle", lambda *args: None)
+    settlements = []
+    monkeypatch.setattr(budget, "settle", lambda *args: settlements.append(args))
     captured = []
 
     def handler(request):
@@ -392,7 +396,10 @@ def test_full_bounded_sdk_response_stages_are_truthful_with_mocked_http(monkeypa
             ),
         )
         role = GeminiRole("extractor", "explicit-model", bounded_transport=True)
-        if fabricated:
+        if defect == "incomplete":
+            with pytest.raises(ValidationError):
+                role.extract(source, "Fictional offline fixture")
+        elif defect == "fabricated":
             with pytest.raises(ValueError, match="Citation"):
                 role.extract(source, "Fictional offline fixture")
         else:
@@ -401,9 +408,23 @@ def test_full_bounded_sdk_response_stages_are_truthful_with_mocked_http(monkeypa
             assert usage["source_passages_valid"]
     assert role.last_usage["generation_succeeded"]
     assert role.last_usage["transport_schema_valid"]
-    assert role.last_usage["bounded_payload_valid"]
-    assert role.last_usage["original_contract_valid"]
-    assert role.last_usage.get("source_passages_valid", False) is (not fabricated)
+    if defect == "incomplete":
+        assert not role.last_usage.get("bounded_payload_valid", False)
+        assert {
+            (item["type"], tuple(item["location"])) for item in role.last_usage["validation_errors"]
+        } == {
+            ("missing", ("candidate", "field_evidence")),
+            ("extra_forbidden", ("candidate", "[unrecognized_field]")),
+        }
+        assert "untrusted-secret" not in json.dumps(role.last_usage)
+        assert "never-record-this-value" not in json.dumps(role.last_usage)
+    else:
+        assert role.last_usage["bounded_payload_valid"]
+        assert role.last_usage["original_contract_valid"]
+    assert role.last_usage.get("source_passages_valid", False) is (defect == "none")
+    assert len(settlements) == 2
+    assert settlements[-1][1]["input_tokens"] == 100
+    assert settlements[-1][1]["output_tokens"] == 200
     assert role.last_usage["model_version"] == "simulated-version"
     assert len(captured) == 2
 

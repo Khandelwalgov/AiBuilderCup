@@ -1,8 +1,8 @@
-# Next Gemini attempt — approval required
+# Gemini attempt plan — authorization consumed
 
-Prepared 18 October 2026. This is a plan, not evidence of a successful model call.
+Prepared 18 October 2026. **This plan was subsequently authorized and executed once from `e713eac46beb3a32f50fe65c3509f6ec6e4a96b0`. Do not run it again.** Generation and outer-envelope validation succeeded; inner extraction failed. No candidate, reviewer, repair or import. See `evidence/gemini-team-e713eac.json`. The local ledger now holds eight reservations, its configured daily cap. The text below preserves the pre-execution authorization scope; it is not permission for another request.
 Application transport implementation: `0b8237e4f2122a3c5ccd7e2b3b5383c419b37d48`.
-No real Google request was made during this verification pass.
+The offline verification itself made no Google requests; the later separately authorized attempt did.
 
 ## Verified offline
 

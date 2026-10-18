@@ -8,6 +8,7 @@ from typing import get_args
 
 from google import genai
 from google.genai import types
+from pydantic import ValidationError
 
 from opportunity_platform.core.config import settings
 from opportunity_platform.eligibility.rules import FactKey
@@ -68,6 +69,32 @@ def safe_field_errors(error, secret):
             description = re.sub(r"https?://\S+", "[URL]", description)[:400]
             result.append({"field": field, "description": description})
     return result[:10]
+
+
+def safe_validation_errors(error):
+    """Keep schema paths/types only; never retain generated values or extra field names."""
+    fields = {"payload_json"}
+
+    def collect(node):
+        if isinstance(node, dict):
+            fields.update(node.get("properties", {}))
+            for value in node.values():
+                collect(value)
+        elif isinstance(node, list):
+            for value in node:
+                collect(value)
+
+    collect(bounded_schema())
+    return [
+        {
+            "type": item["type"],
+            "location": [
+                part if isinstance(part, int) or part in fields else "[unrecognized_field]"
+                for part in item["loc"][:16]
+            ],
+        }
+        for item in error.errors(include_input=False, include_context=False, include_url=False)[:10]
+    ]
 
 
 def generation_config(schema, output_limit):
@@ -133,6 +160,8 @@ class GeminiRole:
             try:
                 return self._generate(schema, system, payload)
             except Exception as error:
+                if isinstance(error, ValidationError):
+                    self.last_usage["validation_errors"] = safe_validation_errors(error)
                 # Google messages may include a request URL; never retain keys or URLs.
                 if type(getattr(error, "code", None)) is int:
                     message = str(getattr(error, "message", ""))
